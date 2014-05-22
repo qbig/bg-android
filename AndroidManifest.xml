@@ -53,6 +53,10 @@
             android:name="sg.com.bigspoon.www.MainActivity"
              android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+         <activity
+            android:name="sg.com.bigspoon.www.SignUpActivity"
+             android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>
