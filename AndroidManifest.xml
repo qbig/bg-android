@@ -10,12 +10,24 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/bigspoonmobileappiconwithname"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="sg.com.bigspoon.www.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:name="sg.com.bigspoon.www.TutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.TutorialScreen1"
+            android:label="@string/title_activity_tutorial_screen1"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.LaunchActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +35,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.DummyActivity"
-            android:label="@string/title_activity_dummy" >
+            android:name="sg.com.bigspoon.www.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.EntryActivity"
+            android:label="@string/title_activity_entry"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.TutorialScreen6"
+            android:label="@string/title_activity_tutorial_screen6"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.MainActivity"
+             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>
 
