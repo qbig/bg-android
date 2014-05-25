@@ -1,7 +1,5 @@
 package sg.com.bigspoon.www;
 
-import com.viewpagerindicator.TabPageIndicator;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
