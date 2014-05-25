@@ -518,33 +518,33 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tutorial_screen6=0x7f0b000f;
     }
     public static final class string {
-        public static final int action_settings=0x7f0a0001;
-        public static final int app_id=0x7f0a0010;
+        public static final int action_settings=0x7f0a0017;
+        public static final int app_id=0x7f0a000d;
         public static final int app_name=0x7f0a0000;
-        public static final int email=0x7f0a000b;
-        public static final int emailAddress=0x7f0a000d;
-        public static final int fullName=0x7f0a000e;
-        public static final int hello_blank_fragment=0x7f0a0015;
-        public static final int hello_world=0x7f0a0002;
-        public static final int password=0x7f0a000c;
-        public static final int title_activity_blank=0x7f0a0012;
-        public static final int title_activity_categories_list=0x7f0a0011;
-        public static final int title_activity_custom_list=0x7f0a0018;
-        public static final int title_activity_entry=0x7f0a0006;
+        public static final int email=0x7f0a0008;
+        public static final int emailAddress=0x7f0a000a;
+        public static final int fullName=0x7f0a000b;
+        public static final int hello_blank_fragment=0x7f0a0012;
+        public static final int hello_world=0x7f0a0018;
+        public static final int password=0x7f0a0009;
+        public static final int title_activity_blank=0x7f0a000f;
+        public static final int title_activity_categories_list=0x7f0a000e;
+        public static final int title_activity_custom_list=0x7f0a0015;
+        public static final int title_activity_entry=0x7f0a0004;
         public static final int title_activity_items=0x7f0a001a;
-        public static final int title_activity_launch=0x7f0a0005;
-        public static final int title_activity_launcher=0x7f0a0004;
-        public static final int title_activity_login=0x7f0a0008;
-        public static final int title_activity_main_list=0x7f0a0013;
-        public static final int title_activity_menu_list=0x7f0a0014;
-        public static final int title_activity_out_list=0x7f0a0017;
-        public static final int title_activity_sign_up=0x7f0a000a;
-        public static final int title_activity_tutorial=0x7f0a0007;
-        public static final int title_activity_tutorial_screen1=0x7f0a0003;
-        public static final int title_activity_tutorial_screen6=0x7f0a0009;
-        public static final int title_activity_xyz=0x7f0a000f;
-        public static final int title_outlet=0x7f0a0016;
-        public static final int title_testingBg=0x7f0a0019;
+        public static final int title_activity_launch=0x7f0a0003;
+        public static final int title_activity_launcher=0x7f0a0002;
+        public static final int title_activity_login=0x7f0a0019;
+        public static final int title_activity_main_list=0x7f0a0010;
+        public static final int title_activity_menu_list=0x7f0a0011;
+        public static final int title_activity_out_list=0x7f0a0014;
+        public static final int title_activity_sign_up=0x7f0a0007;
+        public static final int title_activity_tutorial=0x7f0a0005;
+        public static final int title_activity_tutorial_screen1=0x7f0a0001;
+        public static final int title_activity_tutorial_screen6=0x7f0a0006;
+        public static final int title_activity_xyz=0x7f0a000c;
+        public static final int title_outlet=0x7f0a0013;
+        public static final int title_testingBg=0x7f0a0016;
     }
     public static final class style {
         /** 
