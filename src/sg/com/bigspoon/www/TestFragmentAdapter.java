@@ -1,11 +1,8 @@
 package sg.com.bigspoon.www;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -59,7 +56,7 @@ class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapt
 
     public void setCount(int count) {
         if (count > 0 && count <= 6) {
-            int mCount = count;
+           // int mCount = count;
             notifyDataSetChanged();
         }
     }
