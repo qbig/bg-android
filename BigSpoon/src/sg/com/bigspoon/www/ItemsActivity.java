@@ -38,7 +38,7 @@ public class ItemsActivity extends Activity {
 		        @Override
 		        public void onClick(View view) {
 		                	Intent intent = new Intent(getApplicationContext(),
-							MenuListActivity.class);
+							MenuPhotoListActivity.class);
 					startActivity(intent);
 		        }
 		    });

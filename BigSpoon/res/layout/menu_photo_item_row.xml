@@ -11,19 +11,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/fb_2" />
+        android:src="@drawable/fb_2"
+        android:scaleType="fitXY" />
 
-<!--     <TextView -->
-<!--         android:id="@+id/itemdesc" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentBottom="true" -->
-<!--         android:text="Testing.....!!!!!!" /> -->
+    <TextView
+        android:id="@+id/itemdesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Testing.....!!!!!!" />
 
     <ImageButton
         android:id="@+id/addbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/add_button_with_circle" />
 

@@ -72,7 +72,8 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.CategoriesListActivity"
-            android:label="@string/title_activity_categories_list" >
+            android:label="@string/title_activity_categories_list"
+             android:theme="@android:style/Theme.Holo.Light"  >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.BlankActivity"
@@ -83,9 +84,16 @@
             android:label="@string/title_activity_main_list" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.MenuListActivity"
-            android:label="@string/title_activity_menu_list" >
+            android:name="sg.com.bigspoon.www.MenuPhotoListActivity"
+            android:label="@string/title_activity_menu_list"
+             android:theme="@android:style/Theme.Holo.Light"  >
         </activity>
+         <activity
+            android:name="sg.com.bigspoon.www.MenuTextListActivity"
+            android:label="@string/title_activity_menu_list"
+             android:theme="@android:style/Theme.Holo.Light"  >
+        </activity>
+       
     </application>
 
 </manifest>
