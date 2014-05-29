@@ -25,3 +25,5 @@ proguard/
 
 # Mac .DS_Store files
 .DS_Store
+
+.metadata
