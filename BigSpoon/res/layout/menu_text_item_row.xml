@@ -6,8 +6,8 @@
 
     <ImageButton
         android:id="@+id/addbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+     	android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/add_button_with_circle" />
 
@@ -26,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textitemdesc"
@@ -35,6 +36,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textitemname"
         android:layout_marginTop="33dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="italic" />
 
 </RelativeLayout>

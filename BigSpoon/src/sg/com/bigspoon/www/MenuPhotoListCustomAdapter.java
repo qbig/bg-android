@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MenuPhotoListCustomAdapter extends ArrayAdapter<String>{
 	Context context;
 	int[] images;
 	String[] categories;
 	public MenuPhotoListCustomAdapter(Context context,String[] categories,int[] images) {
-		super(context, R.layout.menu_photo_item_row);
+		super(context, R.layout.menu_photo_item_row,R.id.itemdesc,categories);
 		this.context=context;
 		this.images=images;
 		this.categories=categories;
@@ -30,8 +31,9 @@ public class MenuPhotoListCustomAdapter extends ArrayAdapter<String>{
 		}
 		ImageView image= (ImageView) row.findViewById(R.id.menuitem);
 		ImageButton ibutton = (ImageButton) row.findViewById(R.id.addbutton);
-		//TextView categoryName=(TextView) row.findViewById(R.id.itemdesc);
+		TextView categoryName=(TextView) row.findViewById(R.id.itemdesc);
 		image.setImageResource(images[position]);
+		//categoryName.setText(categories[position]);
 		//categoryName.setText("Testing...!!!");
 		
 		return row;
