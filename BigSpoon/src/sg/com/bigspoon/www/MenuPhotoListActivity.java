@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MenuPhotoListActivity extends FragmentActivity implements
+public class MenuPhotoListActivity extends ActionBarActivity implements
 		TabListener {
 	ViewPager viewpager;
 	ActionBar actionbar;
@@ -160,6 +160,11 @@ public class MenuPhotoListActivity extends FragmentActivity implements
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadMenu();
 	}
 
 }

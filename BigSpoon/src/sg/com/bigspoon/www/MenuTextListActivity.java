@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MenuTextListActivity extends FragmentActivity implements TabListener {
+public class MenuTextListActivity extends ActionBarActivity implements TabListener {
 	ViewPager viewpager;
 	ActionBar actionbar;
 	private static final String[] CONTENT = new String[] { "Popular Items", "Brunch", "Dinner", "BreakFast",
@@ -25,7 +25,7 @@ public class MenuTextListActivity extends FragmentActivity implements TabListene
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
 		viewpager = (ViewPager) findViewById(R.id.pager);
 		viewpager.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));
@@ -156,6 +156,11 @@ public class MenuTextListActivity extends FragmentActivity implements TabListene
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadMenu();
 	}
 
 }
