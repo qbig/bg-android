@@ -53,7 +53,7 @@ public class ItemsActivity extends Activity {
 		            // ...
 		        	
 		        	Intent intent = new Intent(getApplicationContext(),
-							EntryActivity.class);
+							OrderHistoryListActivity.class);
 					startActivity(intent);
 		        }
 		    });
