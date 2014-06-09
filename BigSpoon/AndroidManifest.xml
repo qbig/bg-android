@@ -33,18 +33,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>\ <activity
+        </activity>
+\ 
+        <activity
             android:name="sg.com.bigspoon.www.CustomList"
             android:label="@string/title_activity_custom_list" >
         </activity>
-         <activity
+        <activity
             android:name="sg.com.bigspoon.www.OutListActivity"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-      
         <activity
             android:name="sg.com.bigspoon.www.ItemsActivity"
-            android:label="@string/title_activity_items" 
+            android:label="@string/title_activity_items"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
@@ -73,7 +74,7 @@
         <activity
             android:name="sg.com.bigspoon.www.CategoriesListActivity"
             android:label="@string/title_activity_categories_list"
-             android:theme="@android:style/Theme.Holo.Light"  >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.BlankActivity"
@@ -86,14 +87,26 @@
         <activity
             android:name="sg.com.bigspoon.www.MenuPhotoListActivity"
             android:label="@string/title_activity_menu_list"
-             android:theme="@android:style/Theme.Holo.Light"  >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-         <activity
+        <activity
             android:name="sg.com.bigspoon.www.MenuTextListActivity"
             android:label="@string/title_activity_menu_list"
-             android:theme="@android:style/Theme.Holo.Light"  >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-       
+        <activity
+            android:name="sg.com.bigspoon.www.ActionBarActivity"
+            android:label="@string/title_activity_action_bar" >
+        </activity>
+         <activity
+            android:name="sg.com.bigspoon.www.OrderHistoryListActivity"
+            android:label="@string/title_activity_order_history"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+         <activity
+            android:name="sg.com.bigspoon.www.OrderHistoryDetailsActivity"
+            android:label="@string/title_activity_order_history_details" >
+        </activity>
     </application>
 
 </manifest>

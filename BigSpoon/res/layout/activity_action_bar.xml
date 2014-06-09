@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="#CCCCCC"
+    android:layout_alignParentBottom="true"
+    tools:context=".MenuLayout" >
+
+    <GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+    	android:stretchMode="columnWidth" 
+        android:listSelector="@null"
+        android:numColumns="4"
+        android:background="@drawable/bottom_buttons" >
+    </GridView>
+
+</LinearLayout>
