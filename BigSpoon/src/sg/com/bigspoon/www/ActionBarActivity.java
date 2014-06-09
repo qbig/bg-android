@@ -57,7 +57,7 @@ public class ActionBarActivity extends FragmentActivity {
 					// i = new Intent(ctx, CartActivity.class);
 					break;
 				case 3:
-					//i = new Intent(ctx, CartActivity.class);
+					i = new Intent(ctx, ItemsActivity.class);
 					break;
 				}
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
