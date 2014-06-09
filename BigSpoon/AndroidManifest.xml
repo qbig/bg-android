@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-\ 
+\ 
         <activity
             android:name="sg.com.bigspoon.www.CustomList"
             android:label="@string/title_activity_custom_list" >
@@ -98,14 +98,19 @@
             android:name="sg.com.bigspoon.www.ActionBarActivity"
             android:label="@string/title_activity_action_bar" >
         </activity>
-         <activity
+        <activity
             android:name="sg.com.bigspoon.www.OrderHistoryListActivity"
             android:label="@string/title_activity_order_history"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-         <activity
+        <activity
             android:name="sg.com.bigspoon.www.OrderHistoryDetailsActivity"
             android:label="@string/title_activity_order_history_details" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.WaterServiceActivity"
+            android:label="@string/title_activity_call_water_service"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
     </application>
 
