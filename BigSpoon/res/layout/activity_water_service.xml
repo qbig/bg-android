@@ -26,12 +26,12 @@
             android:text="Cold Water"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <sg.com.bigspoon.www.WaterQuantityPicker
+        <sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter
             android:id="@+id/Picker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-        </sg.com.bigspoon.www.WaterQuantityPicker>
+        </sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter>
     </TableRow>
 
     <TableRow
@@ -44,12 +44,12 @@
             android:text="Warm Water"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <sg.com.bigspoon.www.WaterQuantityPicker
+        <sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter
             android:id="@+id/Picker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-        </sg.com.bigspoon.www.WaterQuantityPicker>
+        </sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter>
     </TableRow>
 
     <TableRow
