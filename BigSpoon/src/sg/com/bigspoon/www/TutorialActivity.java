@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -20,6 +21,7 @@ public class TutorialActivity extends BaseSampleActivity {
         CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
         mIndicator = indicator;
         mIndicator.setViewPager(mPager);
+        
         
         final float density = getResources().getDisplayMetrics().density;
         //indicator.setBackgroundColor(0x#2EFEF7);

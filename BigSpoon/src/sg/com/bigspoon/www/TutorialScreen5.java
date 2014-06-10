@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,5 +14,6 @@ public class TutorialScreen5 extends Fragment {
 		View v = inflater.inflate(R.layout.activity_tutorial_screen5, null);
 		return v;
 	}
+	
 
 }

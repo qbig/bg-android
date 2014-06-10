@@ -1,5 +1,7 @@
 package sg.com.bigspoon.www;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -7,13 +9,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.viewpagerindicator.IconPagerAdapter;
 
 class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+	
+	//private Activity avRef;
 
     public TestFragmentAdapter(FragmentManager fm) {
         super(fm);
+       // avRef=av;
     }
 
     @Override
-    public Fragment getItem(int position) 
+    public Fragment getItem(int position)
     {
         // TODO Auto-generated method stub
         Fragment fragment = null;
@@ -35,13 +40,17 @@ class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapt
     		break;
     	case 5:
     		fragment = new TutorialScreen6();
-    		break;	
-    	case 6:
-    		fragment = new TutorialScreenLast();
+        	break;	
+        case 6:
+            fragment = new TutorialScreenLast();
+    		//Intent intent = new Intent(avRef, MainActivity.class);
+    		//avRef.startActivity(intent);
     		break;
 		}
         return fragment;
-    }
+
+    }    
+    
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
@@ -60,4 +69,9 @@ class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapt
             notifyDataSetChanged();
         }
     }
+    
 }
+
+
+
+
