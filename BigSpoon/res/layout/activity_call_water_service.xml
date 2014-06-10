@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 2 columns -->
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/CallforService"
+            android:text="CallforService"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </TableRow>
+
+    <!-- edittext span 2 column -->
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/ColdWater"
+            android:text="Cold Water"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/addbutton"
+            android:layout_width="35dp"
+             android:layout_height="35dp"
+            android:src="@drawable/button_add_with_circle" />
+
+        <TextView
+            android:id="@+id/ColdWaterValue"
+                 android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/circle_text" />
+
+        <ImageButton
+            android:id="@+id/addbutton"
+                android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/button_minus_with_circle" />
+    </TableRow>
+
+    <!-- 3 columns -->
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/HotWater"
+            android:text="Warm Water"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/addbutton"
+          android:layout_width="35dp"
+             android:layout_height="35dp"
+            android:src="@drawable/button_add_with_circle" />
+
+        <TextView
+            android:id="@+id/HotWaterValue"
+            android:text="1"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/circle_text" />
+
+        <ImageButton
+            android:id="@+id/addbutton"
+         android:layout_width="35dp"
+             android:layout_height="35dp"
+            android:src="@drawable/button_minus_with_circle" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_gravity="center_horizontal"
+            android:text="Column 3" />
+
+        <Button
+            android:id="@+id/cancle"
+            android:text="Column 3" />
+    </TableRow>
+
+</TableLayout>

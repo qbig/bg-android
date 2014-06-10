@@ -23,20 +23,22 @@
     <string name="title_outlet">Outlets</string>
     <string name="title_activity_out_list">OutListActivity</string>
     <string name="title_activity_custom_list">CustomList</string>
-    
     <string name="title_testingBg">Testingbg!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">LoginActivity</string>
 
+      <string name="testingbg">Testingbg!</string>
+    <string name="orderDate">2014/05/05 (14 days ago)</string>
+    
     <color name="white">#FFFFFF</color>
     <color name="blue">#0000FF</color>
     <color name="green">#00FF00</color>
 
     <string name="title_activity_order_history">OrderHistoryActivity</string>
     <string name="title_activity_order_history_details">OrderHistoryDetailsActivity</string>
-    
     <string name="title_activity_items">ItemsActivity</string>
     <string name="title_activity_action_bar">ActionBarActivity</string>
+    <string name="title_activity_call_water_service">CallWaterServiceActivity</string>
 
 </resources>

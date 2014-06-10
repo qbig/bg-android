@@ -14,47 +14,45 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="sg.com.bigspoon.www.TutorialActivity"
+            android:name="sg.com.bigspoon.www.activities.TutorialActivity"
             android:label="@string/title_activity_tutorial"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.TutorialScreen1"
+            android:name="sg.com.bigspoon.www.fragments.TutorialScreen1"
             android:label="@string/title_activity_tutorial_screen1"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.LaunchActivity"
+            android:name="sg.com.bigspoon.www.activities.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-\ 
         <activity
-            android:name="sg.com.bigspoon.www.CustomList"
+            android:name="sg.com.bigspoon.www.adapters.CustomListAdapter"
             android:label="@string/title_activity_custom_list" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.OutListActivity"
+            android:name="sg.com.bigspoon.www.activities.OutListActivity"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.ItemsActivity"
+            android:name="sg.com.bigspoon.www.activities.ItemsActivity"
             android:label="@string/title_activity_items"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.LoginActivity"
+            android:name="sg.com.bigspoon.www.activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.EntryActivity"
+            android:name="sg.com.bigspoon.www.activities.EntryActivity"
             android:label="@string/title_activity_entry"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
@@ -64,15 +62,15 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.MainActivity"
+            android:name="sg.com.bigspoon.www.activities.MainActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.SignUpActivity"
+            android:name="sg.com.bigspoon.www.activities.SignUpActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.CategoriesListActivity"
+            android:name="sg.com.bigspoon.www.activities.CategoriesListActivity"
             android:label="@string/title_activity_categories_list"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
@@ -85,28 +83,33 @@
             android:label="@string/title_activity_main_list" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.MenuPhotoListActivity"
+            android:name="sg.com.bigspoon.www.activities.MenuPhotoListActivity"
             android:label="@string/title_activity_menu_list"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.MenuTextListActivity"
+            android:name="sg.com.bigspoon.www.activities.MenuTextListActivity"
             android:label="@string/title_activity_menu_list"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.ActionBarActivity"
-            android:label="@string/title_activity_action_bar" >
+            android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
+            android:label="@string/title_activity_order_history" >
         </activity>
-         <activity
-            android:name="sg.com.bigspoon.www.OrderHistoryListActivity"
-            android:label="@string/title_activity_order_history"
-            android:theme="@android:style/Theme.Holo.Light" >
-        </activity>
-         <activity
-            android:name="sg.com.bigspoon.www.OrderHistoryDetailsActivity"
+        <activity
+            android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
             android:label="@string/title_activity_order_history_details" >
         </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
+            android:label="@string/title_activity_call_water_service"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
+            android:label="@string/title_activity_call_water_service" >
+        </activity>
+        
     </application>
 
 </manifest>
