@@ -1,0 +1,154 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".OrderHistoryDetailsActivity" >
+
+    <TextView
+       android:id="@+id/historyTitle"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:textColor="#00FF00"
+       android:text="@string/testingbg"
+       android:textSize="25dp" />
+      
+      <TextView
+        android:id="@+id/orderDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/historyTitle"
+        android:layout_centerHorizontal="true"
+        android:text="@string/orderDate" 
+        android:textSize="20dp"/>
+      
+       <ListView
+       android:id="@+id/listoforderDetails"
+       	android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:layout_below="@+id/orderDate"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_weight="1"
+        android:dividerHeight="10.0sp" 
+        android:layout_marginTop="15dp" >         
+    
+    </ListView>
+    
+       
+       
+       
+         <TableLayout
+        android:id="@+id/tableLayoutOrderHistoryDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listoforderDetails"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" >
+
+        
+        <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listoforderDetails"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal :"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="          $0.00"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </TableRow>
+            
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Charge(1%)" 
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GST (0%) :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00"
+                android:textStyle="bold" />
+        </TableRow>
+        
+    
+      
+        
+            </TableLayout>
+            
+         
+             <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tableLayoutOrderHistoryDetails"
+        android:layout_centerHorizontal="true"
+        android:background="@color/blue"
+        android:text="Add to items list " 
+        android:layout_marginTop="15dp" />
+        
+
+</RelativeLayout>

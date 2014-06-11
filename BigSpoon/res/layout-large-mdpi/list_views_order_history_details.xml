@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >  
+     
+     <TableRow>
+         
+        <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        
+        android:textSize="16sp"  />
+         
+        <TextView
+        android:id="@+id/descriptionOrder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+  
+          android:textSize="16sp"  />
+        
+        <TextView
+        android:id="@+id/price"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+
+          android:textSize="16sp" />
+        
+        
+         
+      </TableRow>
+
+</TableLayout>
