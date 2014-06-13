@@ -51,10 +51,13 @@ public class OutListActivity extends Activity {
 		ImageButton togglebutton = (ImageButton) mActionBarView
 				.findViewById(R.id.toggleButton);
 		togglebutton.setVisibility(View.GONE);
-		ibItem1.setBackgroundResource(R.drawable.logout_button);
-		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 50));
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(0, 50, 50, 0);
+		ibItem1.setImageResource(R.drawable.logout_button);
+		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    params.addRule(RelativeLayout.CENTER_VERTICAL);
+		ibItem1.setLayoutParams(params);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(15, 0, 0, 0);
+
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
