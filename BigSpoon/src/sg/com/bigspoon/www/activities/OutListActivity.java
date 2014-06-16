@@ -8,6 +8,8 @@ import sg.com.bigspoon.www.adapters.CustomListAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -41,9 +43,10 @@ public class OutListActivity extends Activity {
 		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
 				null);
 		actionBar.setCustomView(mActionBarView);
-
+		//actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+        
 		title.setText("OutLets");
 
 		ImageButton ibItem1 = (ImageButton) mActionBarView

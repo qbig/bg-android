@@ -4,11 +4,12 @@
 
     <ImageView
         android:id="@+id/categoryimage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:paddingBottom="10dp"
         android:src="@drawable/shin_kushiya" />
 
     <TextView
