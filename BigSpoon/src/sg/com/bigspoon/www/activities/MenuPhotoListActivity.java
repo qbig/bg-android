@@ -40,7 +40,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 				.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));
 		actionbar = getActionBar();
 		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		//actionbar.setBackgroundStacked="#FFFFFF";
 		for (int i = 0; i < CONTENT.length; i++) {
 			actionbar.addTab(actionbar.newTab().setText(CONTENT[i])
 					.setTabListener(this));
