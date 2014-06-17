@@ -47,12 +47,12 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OutListActivity"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ItemsActivity"
             android:label="@string/title_activity_items"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.LoginActivity"
@@ -80,7 +80,7 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.CategoriesListActivity"
             android:label="@string/title_activity_categories_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.BlankActivity"
@@ -93,12 +93,12 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.MenuPhotoListActivity"
             android:label="@string/title_activity_menu_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.MenuTextListActivity"
             android:label="@string/title_activity_menu_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
@@ -119,5 +119,6 @@
         </activity>
              
     </application>
+    
 
 </manifest>

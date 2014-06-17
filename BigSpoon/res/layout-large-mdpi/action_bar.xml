@@ -16,7 +16,6 @@
          android:textColor="#000000"
          android:textSize="@dimen/default_title_indicator_text_size"
          android:textStyle="bold" />
-    
 
     <ImageButton 
         android:id="@+id/btn_logout"
@@ -46,11 +45,10 @@
 
      <ImageButton
          android:id="@+id/toggleButton"
-         android:layout_width="50dp"
-         android:layout_height="75dp"
-         android:layout_alignParentTop="true"
-         android:layout_marginTop="7dp"
-         android:layout_marginBottom="7dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginRight="10dp"
+         android:layout_centerVertical="true"
          android:layout_toLeftOf="@+id/order_history" />
 
      

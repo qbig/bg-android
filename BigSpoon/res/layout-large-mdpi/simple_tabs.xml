@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:orientation="vertical" >
-
-        <android.support.v4.view.ViewPager
+    <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="match_parent"/>
+    
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+    <GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_buttons"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@null"
+        android:numColumns="4"
+        android:stretchMode="columnWidth" >
+    </GridView>
 
-        <include layout="@layout/activity_action_bar" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

@@ -59,7 +59,7 @@ public class OutListActivity extends Activity {
 	    params.addRule(RelativeLayout.CENTER_VERTICAL);
 		ibItem1.setLayoutParams(params);
 	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(15, 0, 0, 0);
+		ibItem1.setPadding(22, 0, 0, 0);
 
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
