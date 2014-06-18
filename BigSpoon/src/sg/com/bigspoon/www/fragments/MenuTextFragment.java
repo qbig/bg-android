@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www.fragments;
 
+import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuTextListCustomeAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,14 +15,14 @@ import android.widget.ListView;
 public final class MenuTextFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";
     String[] itemnames = { "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs",
-			"Bread", "Roasted Chicken" };
+			"Bread", "Roasted Chicken"};
     String[] itemdesc = { "refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
     		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
     		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
     		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
     		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
-    		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash " };
-    String[] itemprice = { "8.0", "8.0", "8.0", "8.0","8.0", "8.0" };
+    		"refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "};
+    String[] itemprice = { "8.0", "8.0", "8.0", "8.0","8.0", "8.0"};
 
     public static MenuTextFragment newInstance(String content) {
         MenuTextFragment fragment = new MenuTextFragment();
@@ -50,6 +51,10 @@ public final class MenuTextFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ListView list = new ListView(getActivity());
+        
+        ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, list,false);
+        list.addFooterView(footer, null, false);
+        
         MenuTextListCustomeAdapter menuTextListCustomeAdapter = new MenuTextListCustomeAdapter(
         		getActivity(),itemnames,itemdesc,itemprice);
         list.setAdapter(menuTextListCustomeAdapter);

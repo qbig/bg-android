@@ -106,9 +106,13 @@ public class MenuTextListActivity extends ActionBarActivity implements TabListen
 		togglebutton.setBackgroundResource(R.drawable.photo_icon);
 		ImageButton ibItem1 = (ImageButton) mActionBarView
 				.findViewById(R.id.btn_logout);
-		ibItem1.setBackgroundResource(R.drawable.home_with_arrow);
-		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 100));
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setImageResource(R.drawable.home_with_arrow);
+		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    params.addRule(RelativeLayout.CENTER_VERTICAL);
+		ibItem1.setLayoutParams(params);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(-2, 0, 0, 0);
+		
 		
 		StateListDrawable states = new StateListDrawable();
 		states.addState(new int[] {android.R.attr.state_pressed},

@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.fragments;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuPhotoListCustomAdapter;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -15,9 +16,9 @@ import android.widget.ListView;
 public final class MenuPhotoFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";
     String[] categories = { "Popular Items", "Brunch", "Dinner", "BreakFast",
-			"Beers", "Roasted" };
+			"Beers", "Roasted"}; 
 	int[] images = { R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400,
-			R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400 };
+			R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400};
 
     public static MenuPhotoFragment newInstance(String content) {
         MenuPhotoFragment fragment = new MenuPhotoFragment();
@@ -49,6 +50,9 @@ public final class MenuPhotoFragment extends Fragment {
         //MenuTextListCustomeAdapter menuTextListCustomeAdapter = new MenuTextListCustomeAdapter(
         //		getActivity(),itemnames,itemdesc,itemprice);
        // list.setAdapter(menuTextListCustomeAdapter);
+        ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, list,false);
+        list.addFooterView(footer, null, false);
+        
        MenuPhotoListCustomAdapter menuPhotoListCustomAdapter = new MenuPhotoListCustomAdapter(
        		getActivity(), categories, images);
        list.setAdapter(menuPhotoListCustomAdapter);

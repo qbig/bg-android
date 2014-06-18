@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:paddingTop="4dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:paddingBottom="6dp"
+    android:background="@color/white">
 
 
     <ImageButton
         android:id="@+id/addbutton"
-     	android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/add_button_with_circle" />
+        android:layout_marginTop="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/add_btn_with_circle"
+        android:background="@android:color/transparent" 
+       />
 
     <TextView
         android:id="@+id/textitemprice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/itemnametext"
-        android:layout_alignBottom="@+id/itemnametext"
+        android:layout_alignBaseline="@+id/textitemname"
+        android:layout_alignBottom="@+id/textitemname"
         android:layout_toLeftOf="@+id/addbutton"
-        android:text="TextView" />
+        android:layout_marginRight="3dp"
+        android:text="TextView" 
+        />
 
     <TextView
         android:id="@+id/textitemname"
@@ -26,8 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:text="TextView"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+         />
 
     <TextView
         android:id="@+id/textitemdesc"
@@ -35,8 +49,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textitemname"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="33dp"
         android:text="TextView"
-        android:textStyle="italic" />
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="italic" 
+        />
 
 </RelativeLayout>
