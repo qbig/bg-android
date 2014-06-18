@@ -17,9 +17,10 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/bottom_buttons"
         android:horizontalSpacing="2dp"
-        android:listSelector="@null"
+        android:listSelector="@android:color/transparent"
         android:numColumns="4"
-        android:stretchMode="columnWidth" >
+        android:stretchMode="columnWidth" 
+        >
     </GridView>
 
 </RelativeLayout>

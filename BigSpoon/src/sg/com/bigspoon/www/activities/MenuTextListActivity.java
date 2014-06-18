@@ -10,6 +10,7 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -108,6 +109,14 @@ public class MenuTextListActivity extends ActionBarActivity implements TabListen
 		ibItem1.setBackgroundResource(R.drawable.home_with_arrow);
 		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 100));
 		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] {android.R.attr.state_pressed},
+		    getResources().getDrawable(R.drawable.home_with_arrow_pressed));
+		states.addState(new int[] { },
+		    getResources().getDrawable(R.drawable.home_with_arrow));
+		ibItem1.setImageDrawable(states);
+		
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

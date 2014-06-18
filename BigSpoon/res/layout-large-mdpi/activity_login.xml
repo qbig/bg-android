@@ -56,7 +56,7 @@ android:orientation="vertical" >
                 android:layout_marginTop="20dp"
                 android:padding="0dp"
                 android:background="@null"
-                android:src="@drawable/login_bt" />
+                android:src="@drawable/login_button" />
 
             
     

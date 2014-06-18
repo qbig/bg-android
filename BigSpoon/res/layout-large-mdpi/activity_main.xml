@@ -32,7 +32,7 @@ android:orientation="vertical" >
           android:layout_centerHorizontal="true"
           android:layout_marginBottom="20dp"
           android:background="@null"
-          android:src="@drawable/new_fb_btn" />
+          android:src="@drawable/fb_btn" />
 
 
       
@@ -44,7 +44,7 @@ android:orientation="vertical" >
           android:layout_alignBottom="@+id/imageButton3"
           android:layout_marginLeft="80dp"
           android:background="@null"
-          android:src="@drawable/signup_btn_new" />
+          android:src="@drawable/signup_btn" />
 
       <ImageButton
           android:id="@+id/imageButton3"
@@ -55,7 +55,7 @@ android:orientation="vertical" >
           android:layout_alignParentRight="true"
           android:layout_marginRight="80dp"
           android:background="@null"
-          android:src="@drawable/login_btn_new" />
+          android:src="@drawable/login_btn" />
 
       
      </RelativeLayout>

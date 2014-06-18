@@ -56,7 +56,7 @@ android:orientation="vertical" >
          android:layout_below="@+id/bottom"
          android:background="@null"
          android:layout_marginTop="5dp"
-         android:src="@drawable/new_signup_btn" />
+         android:src="@drawable/new_signup_button" />
 
      <EditText
          android:id="@+id/middle"
