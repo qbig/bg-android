@@ -111,7 +111,7 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
             android:label="@string/title_activity_call_water_service"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
