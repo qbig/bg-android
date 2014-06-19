@@ -115,7 +115,7 @@
   
     <!-- ActionBar title text -->  
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">  
-        <item name="android:textColor">@android:color/holo_blue_light</item>  
+        <item name="android:textColor">@color/BigSpoonBlue</item>  
     </style>  
   
     <!-- ActionBar tabs text -->  

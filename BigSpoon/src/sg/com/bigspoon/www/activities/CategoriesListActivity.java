@@ -33,7 +33,6 @@ public class CategoriesListActivity extends Activity implements
 		setContentView(R.layout.activity_categories_list);
 
 		catrgoriesList = (ListView) findViewById(R.id.list);
-
 		CategoriesCustomAdapter categoriesCustomAdapter = new CategoriesCustomAdapter(
 				this, categories, images);
 		catrgoriesList.setAdapter(categoriesCustomAdapter);

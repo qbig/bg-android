@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -34,10 +35,19 @@ public class ItemsActivity extends Activity {
 		    //displaying custom ActionBar
 		    View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
 		    actionBar.setCustomView(mActionBarView);
-		    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		    
-		    
+		    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);    
 		    ImageButton ibItem1 = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
+		    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+			ibItem1.setPadding(22, 0, 0, 0);
+		    
+			StateListDrawable states = new StateListDrawable();
+			states.addState(new int[] {android.R.attr.state_pressed},
+			    getResources().getDrawable(R.drawable.menu_pressed));
+			states.addState(new int[] { },
+			    getResources().getDrawable(R.drawable.menu));
+			ibItem1.setImageDrawable(states);
+
+			
 		    ibItem1.setOnClickListener(new View.OnClickListener() {
 		        @Override
 		        public void onClick(View view) {

@@ -145,7 +145,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						ItemsActivity.class);
+						OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});

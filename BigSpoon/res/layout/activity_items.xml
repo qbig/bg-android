@@ -6,17 +6,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     tools:context=".ItemsActivity" >
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="83dp"
-        android:background="@color/green"
-        android:text="Place Order" />
 
     <Button
         android:id="@+id/button1"
@@ -24,18 +16,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/neworder"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:background="@color/blue"
-        android:text="Add Notes" />
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="@color/BigSpoonBlue"
+        android:text="Add Notes"
+        android:textColor="@color/white" />
 
     <CheckedTextView
         android:id="@+id/neworder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="17dp"
-        android:text="New Order " />
+        android:text="New Order: " />
 
     <CheckedTextView
         android:id="@+id/ordereditems"
@@ -43,7 +37,118 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="10dp"
         android:text="Ordered Items: " />
+
+    <GridLayout
+        android:id="@+id/gridlayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="15dp"
+        android:columnCount="3"
+        android:orientation="vertical"
+        android:rowCount="4" >
+        
+        <TextView
+        android:layout_row="0" 
+        android:layout_column="0" 
+        android:id="@+id/Subtotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="Subtotal:"
+        android:textStyle="bold" />
+        
+        <TextView
+        android:layout_row="0" 
+        android:layout_column="2" 
+        android:id="@+id/SubtotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:text="$0.00"
+        android:textStyle="bold" />
+        
+        <TextView
+            android:layout_row="1"
+            android:layout_column="0"
+            android:id="@+id/ServiceCharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"       
+            android:text="Service Charge (0%):"
+            android:textStyle="normal" />
+        
+        <TextView
+            android:layout_row="1"
+            android:layout_column="2"
+            android:id="@+id/ServiceChargePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"        
+            android:layout_marginRight="15dp"
+            android:text="$0.00"
+            android:textStyle="normal" />
+        
+        <TextView
+            android:layout_row="2"
+            android:layout_column="0"
+            android:id="@+id/Gst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"       
+            android:text="GST (0%):"
+            android:textStyle="normal" />
+        
+        <TextView
+            android:layout_row="2"
+            android:layout_column="2"
+            android:id="@+id/GstPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"    
+            android:layout_marginRight="15dp"
+            android:text="$0.00"
+            android:textStyle="normal" />
+        
+        
+     <TextView
+        android:layout_row="3" 
+        android:layout_column="0" 
+        android:id="@+id/Total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="Total:"
+        android:textStyle="bold" />
+        
+        <TextView
+        android:layout_row="3" 
+        android:layout_column="2" 
+        android:id="@+id/TotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:text="$0.00"
+        android:textStyle="bold" />
+        
+        
+    </GridLayout>
+    
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gridlayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_green_light"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Place Order"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

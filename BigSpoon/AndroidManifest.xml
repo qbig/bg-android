@@ -115,7 +115,8 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
-            android:label="@string/title_activity_call_water_service" >
+            android:label="@string/title_activity_call_water_service"
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
              
     </application>

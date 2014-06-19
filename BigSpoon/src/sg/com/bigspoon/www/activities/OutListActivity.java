@@ -88,7 +88,7 @@ public class OutListActivity extends Activity {
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						ItemsActivity.class);
+						OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});
