@@ -6,7 +6,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".OrderHistoryDetailsActivity" >
+    tools:context=".OrderHistoryDetailsActivity" 
+    android:background="@color/white">
 
     <TextView
        android:id="@+id/historyTitle"
@@ -28,12 +29,12 @@
       
        <ListView
        android:id="@+id/listoforderDetails"
-       	android:layout_width="match_parent"
+       	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:layout_below="@+id/orderDate"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_weight="1"
         android:dividerHeight="10.0sp" 
         android:layout_marginTop="15dp" >         
@@ -47,6 +48,8 @@
         android:id="@+id/tableLayoutOrderHistoryDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/listoforderDetails"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" >
@@ -56,8 +59,7 @@
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listoforderDetails"
-        android:layout_centerHorizontal="true" >
+        android:gravity="center" >
 
         <TextView
             android:id="@+id/textView1"
@@ -71,15 +73,17 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="          $0.00"
+            android:text="$0.00"
             android:textSize="16sp"
+            android:layout_alignParentRight="true"
             android:textStyle="bold" />
     </TableRow>
             
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:gravity="center"  >
 
             <TextView
                 android:id="@+id/textView3"
@@ -92,13 +96,15 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:text="$0.00" 
+                android:layout_gravity="right"/>
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:gravity="center"  >
 
             <TextView
                 android:id="@+id/textView5"
@@ -111,13 +117,15 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:text="$0.00" 
+                android:layout_gravity="right"/>
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:gravity="center"  >
 
             <TextView
                 android:id="@+id/textView7"
@@ -130,8 +138,9 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00"
-                android:textStyle="bold" />
+                android:text="$0.00"
+                android:textStyle="bold" 
+                android:layout_gravity="right"/>
         </TableRow>
         
     
@@ -146,7 +155,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tableLayoutOrderHistoryDetails"
         android:layout_centerHorizontal="true"
-        android:background="@color/blue"
+        android:background="@color/BigSpoonBlue"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="Add to items list " 
         android:layout_marginTop="15dp" />
         

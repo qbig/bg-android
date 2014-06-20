@@ -97,7 +97,7 @@ public class CategoriesListActivity extends Activity implements
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						ItemsActivity.class);
+						OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});

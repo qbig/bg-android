@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >  
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="horizontal" >  
      
-     <TableRow>
+     <TableRow android:gravity="center">
          
         <TextView
-        android:id="@+id/number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:textStyle="bold"
-        
-        android:textSize="16sp"  />
+            android:id="@+id/number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
          
         <TextView
         android:id="@+id/descriptionOrder"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="3"
-  
+        android:layout_weight="1"
+        android:gravity="center"
           android:textSize="16sp"  />
         
         <TextView
         android:id="@+id/price"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="3"
-
-          android:textSize="16sp" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="16sp" />
         
         
          

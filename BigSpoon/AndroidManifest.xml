@@ -106,7 +106,8 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
-            android:label="@string/title_activity_order_history_details" >
+            android:label="@string/title_activity_order_history_details"
+             android:theme="@style/CustomActionBarTheme"  >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"

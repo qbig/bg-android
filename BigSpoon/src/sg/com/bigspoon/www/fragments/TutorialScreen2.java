@@ -15,7 +15,6 @@ public class TutorialScreen2 extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.activity_tutorial_screen2, null);
-		
 		return v;
 
 	}
