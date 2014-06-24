@@ -1,5 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
+import com.facebook.Session;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.R.drawable;
 import sg.com.bigspoon.www.R.id;
@@ -73,7 +75,10 @@ public class OutListActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				// ...
-
+				Session session = Session.getActiveSession();  
+	        	if (!session.isClosed()) {
+	                session.closeAndClearTokenInformation();
+	            }
 				Intent intent = new Intent(getApplicationContext(),
 						EntryActivity.class);
 				startActivity(intent);
