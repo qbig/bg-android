@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 	            public void onClick(View arg0) {
 
 	                Intent intent = new Intent
-	                        (getApplicationContext(), SignUpActivity.class);
+	                        (getApplicationContext(), ModifierActivity.class);
 	                    startActivity(intent); 
 	            }
 	        });

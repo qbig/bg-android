@@ -125,11 +125,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.ModifierActivity"
+            android:name="sg.com.bigspoon.www.activities.ModifierActivity"
             android:label="@string/title_activity_modifier" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.ModifierAdapter"
+            android:name="sg.com.bigspoon.www.adapters.ModifierAdapter"
             android:label="@string/title_activity_modifier_adapter" >
         </activity>
     </application>
