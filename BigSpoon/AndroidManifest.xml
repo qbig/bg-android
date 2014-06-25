@@ -7,15 +7,14 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    <supports-screens 
-                  android:smallScreens="true"
-                  android:normalScreens="true"
-                  android:largeScreens="true"
-                  android:xlargeScreens="true"
-                  android:anyDensity="true"
-     /> 
-     
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/bigspoonmobileappiconwithname"
@@ -38,6 +37,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -107,7 +107,7 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
             android:label="@string/title_activity_order_history_details"
-             android:theme="@style/CustomActionBarTheme"  >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
@@ -119,13 +119,19 @@
             android:label="@string/title_activity_call_water_service"
             android:theme="@style/CustomActionBarTheme" >
         </activity>
-          <activity
+        <activity
             android:name="sg.com.bigspoon.www.activities.UserReviewActivity"
-            android:label="@string/title_activity_user_review" 
-               android:theme="@android:style/Theme.NoTitleBar" >
+            android:label="@string/title_activity_user_review"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-             
+        <activity
+            android:name="sg.com.bigspoon.www.ModifierActivity"
+            android:label="@string/title_activity_modifier" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.ModifierAdapter"
+            android:label="@string/title_activity_modifier_adapter" >
+        </activity>
     </application>
-    
 
 </manifest>
