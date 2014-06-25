@@ -119,6 +119,11 @@
             android:label="@string/title_activity_call_water_service"
             android:theme="@style/CustomActionBarTheme" >
         </activity>
+          <activity
+            android:name="sg.com.bigspoon.www.activities.UserReviewActivity"
+            android:label="@string/title_activity_user_review" 
+               android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
              
     </application>
     

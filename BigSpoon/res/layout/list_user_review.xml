@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <TableRow>
+  <TextView
+        android:id="@+id/list_review_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignLeft="@+id/ratingBar1"
+        android:textColor="@color/black"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="14dip" />   
+       
+      <RatingBar
+      android:id="@+id/ratingBar1"
+      android:scaleX="0.6"
+      android:layout_gravity="center_vertical"
+      android:scaleY="0.6" />
+     
+</TableRow>
+</TableLayout>

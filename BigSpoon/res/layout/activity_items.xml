@@ -1,35 +1,41 @@
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <RelativeLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/white"
     tools:context=".ItemsActivity" >
 
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        
+         <ListView
+       android:id="@+id/listofFinalOrder"
+       	android:layout_width="match_parent"
+        android:layout_height="275sp"
+        android:divider="@android:color/transparent"
         android:layout_below="@+id/neworder"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:background="@color/BigSpoonBlue"
-        android:text="Add Notes"
-        android:textColor="@color/white" />
-
-    <CheckedTextView
-        android:id="@+id/neworder"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_weight="1"
+        
+        android:dividerHeight="10.0sp" 
+        android:layout_marginTop="15dp" >         
+        </ListView>
+        
+    <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:text="New Order: " />
+        android:layout_alignLeft="@+id/button1"
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="124dp"
+        android:background="@color/green"
+        android:text="Place Order" />
 
     <CheckedTextView
         android:id="@+id/ordereditems"
@@ -37,118 +43,273 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Ordered Items: " />
+        android:text="Ordered Items: " 
+        android:textSize="sp"/>
 
-    <GridLayout
-        android:id="@+id/gridlayout1"
+        <TableLayout
+        android:id="@+id/tableLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
-        android:layout_marginTop="15dp"
-        android:columnCount="3"
-        android:orientation="vertical"
-        android:rowCount="4" >
-        
-        <TextView
-        android:layout_row="0" 
-        android:layout_column="0" 
-        android:id="@+id/Subtotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:text="Subtotal:"
-        android:textStyle="bold" />
-        
-        <TextView
-        android:layout_row="0" 
-        android:layout_column="2" 
-        android:id="@+id/SubtotalPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:text="$0.00"
-        android:textStyle="bold" />
-        
-        <TextView
-            android:layout_row="1"
-            android:layout_column="0"
-            android:id="@+id/ServiceCharge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"       
-            android:text="Service Charge (0%):"
-            android:textStyle="normal" />
-        
-        <TextView
-            android:layout_row="1"
-            android:layout_column="2"
-            android:id="@+id/ServiceChargePrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"        
-            android:layout_marginRight="15dp"
-            android:text="$0.00"
-            android:textStyle="normal" />
-        
-        <TextView
-            android:layout_row="2"
-            android:layout_column="0"
-            android:id="@+id/Gst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"       
-            android:text="GST (0%):"
-            android:textStyle="normal" />
-        
-        <TextView
-            android:layout_row="2"
-            android:layout_column="2"
-            android:id="@+id/GstPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"    
-            android:layout_marginRight="15dp"
-            android:text="$0.00"
-            android:textStyle="normal" />
-        
-        
-     <TextView
-        android:layout_row="3" 
-        android:layout_column="0" 
-        android:id="@+id/Total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:text="Total:"
-        android:textStyle="bold" />
-        
-        <TextView
-        android:layout_row="3" 
-        android:layout_column="2" 
-        android:id="@+id/TotalPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:text="$0.00"
-        android:textStyle="bold" />
-        
-        
-    </GridLayout>
-    
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/gridlayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/holo_green_light"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Place Order"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="15dp" >
 
-</RelativeLayout>
+        
+        <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal :"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="          $0.00"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Charge(1%)" 
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GST (0%) :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+
+    <CheckedTextView
+        android:id="@+id/neworder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:text="New Order "
+        android:layout_marginTop="12dp" 
+        android:textSize="24dp"
+        android:textStyle="bold"  />
+    
+    
+     <TableLayout 
+         android:id="@+id/tableLayoutmain"
+    	 android:layout_width="match_parent"
+    	android:layout_height="match_parent" 
+     	android:layout_below="@+id/neworder">  
+     <TableRow>
+        
+     
+         
+         
+         <ListView android:id="@+id/ilistViewForItesmActivity"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:layout_weight="1"
+/>
+         
+         
+         
+          <ImageView
+            android:id="@+id/img_minu"
+            android:layout_width="150dp"
+            android:layout_height="100dp"/>
+           <TextView
+            android:id="@+id/txt_numberOfQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/img_add"
+            android:layout_width="150dp"
+            android:layout_height="100dp"/>
+               
+         <TextView
+        android:id="@+id/item_desc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@android:color/black"
+        android:textSize="13dip" />
+        <TextView
+        android:id="@+id/item_price"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@android:color/black"
+        android:textSize="13dip" />
+                 
+        </TableRow>
+</TableLayout>
+    
+     
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listofFinalOrder"
+        android:layout_centerHorizontal="true"
+        android:background="@color/blue"
+        android:text="Add Notes" />
+    
+    
+     <TableLayout
+        android:id="@+id/tableLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" >
+
+        
+         <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal :"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="          $0.00"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Charge(1%)" 
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GST (0%) :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total :"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="          $0.00"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+    
+  </RelativeLayout>
+  </ScrollView>
