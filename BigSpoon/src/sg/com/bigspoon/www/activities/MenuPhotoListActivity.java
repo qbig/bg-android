@@ -1,34 +1,111 @@
 package sg.com.bigspoon.www.activities;
 
+import java.util.ArrayList;
+
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.drawable;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
-import sg.com.bigspoon.www.fragments.MenuPhotoFragment;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MenuPhotoListActivity extends ActionBarActivity implements
-		TabListener {
-	ViewPager viewpager;
+public class MenuPhotoListActivity extends ActionBarActivity implements TabListener{
+	//ViewPager viewpager;
 	ActionBar actionbar;
+	ListView listview;
+	MainListViewAdapter adapter;
+	Boolean isPhoto=true;
+	//private ArrayList<ListItem> mList;  
 	private static final String[] CONTENT = new String[] { "Popular Items",
 			"Brunch", "Dinner", "BreakFast", "Beers", "Roasted" };
+	
+	String[] categories = { "Popular Items", "Brunch", "Dinner", "BreakFast",
+			"Beers", "Roasted"}; 
+	
+	int[][] images = new int[][]{
+			{ R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400,R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400},
+			{ R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400,R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400,R.drawable.babycinno_640_400},
+			{ R.drawable.honey_paprika_crispy_wings_640_400,R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400,R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400},
+			{ R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400,R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400},
+			{ R.drawable.mushroom_melt_640_400, R.drawable.wittekerke_belguim_wheat_ale_1_640_400,R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400,R.drawable.iced_mocha_640_400},
+			{ R.drawable.wittekerke_belguim_wheat_ale_1_640_400,R.drawable.babycinno_640_400, R.drawable.banana_earl_grey_tart_640_400, R.drawable.honey_paprika_crispy_wings_640_400,R.drawable.iced_mocha_640_400, R.drawable.mushroom_melt_640_400}
+	};
+	
+    String[][] itemnames = new String[][]{
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
+    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"}
+    };
+    
+    String[][] itemdesc =new String[][]{ { "**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+    		"**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+    		"**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+    		"**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+    		"**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+    		"**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "},
+    		{ "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+        	  "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+        	  "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+        	  "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+        	  "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+        	  "**2**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "},
+      		{ "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+              "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+              "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**3**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "},
+           	{ "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+          	  "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+              "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+          	  "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+          	  "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+          	  "**4**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "},
+          	{ "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+              "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**5**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "},
+      		{ "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
+              "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+              "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+           	  "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+          	  "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ",
+              "**6**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash "}
+    };
+    
+    String[][] itemprice = new String[][]{
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"},
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"},
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"},
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"},
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"},
+    		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"}
+    };
+	
+	ArrayList<MenuPhotoListActivity.ListItem>[] totalList= (ArrayList<MenuPhotoListActivity.ListItem>[]) new ArrayList[categories.length];
+	
+	ArrayList<MenuPhotoListActivity.ListTextItem>[] totalTextList= (ArrayList<MenuPhotoListActivity.ListTextItem>[]) new ArrayList[categories.length];
+
+	int m=0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +113,60 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 		setContentView(R.layout.simple_tabs);
 		View v = findViewById(R.id.gv_action_menu);
 		v.getBackground().setAlpha(230);
-		viewpager = (ViewPager) findViewById(R.id.pager);
+		
+	   	for(int k=0;k<totalList.length;k++)
+	   	{
+	   		totalList[k] = new ArrayList<MenuPhotoListActivity.ListItem>();  
+	   	}
+	   	
+	   	for(int k=0;k<totalTextList.length;k++)
+	   	{
+	   		totalTextList[k] = new ArrayList<MenuPhotoListActivity.ListTextItem>();  
+	   	}
+	   	
+		listview = (ListView)findViewById(R.id.list); 
+		Resources res = this.getResources();  
+		//mList = new ArrayList<MenuPhotoListActivity.ListItem>();  
+		
+		for(int i=0;i<6;i++){
+		  for(int j=0;j<6;j++){
+		   ListItem item = new ListItem();  
+           item.setImage(res.getDrawable(images[i][j]));  
+           totalList[i].add(item);  
+		  }
+		}
+		
+		
+		for(int i=0;i<6;i++){
+			  for(int j=0;j<6;j++){
+			   ListTextItem item = new ListTextItem();  
+	           item.setItemname(itemnames[i][j]);  
+	           item.setItemDesc(itemdesc[i][j]); 
+	           item.setItemPrice(itemprice[i][j]); 
+	           totalTextList[i].add(item);  
+			  }
+			}
+		
+		LayoutInflater inflater=getLayoutInflater();
+		
+		ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview,false);
+		listview.addFooterView(footer, null, false);
+		
+		
+		adapter = new MainListViewAdapter();  
+		listview.setAdapter(adapter);
+		
+       // ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview,false);
+       // listview.addFooterView(footer, null, false);		
+		/*viewpager = (ViewPager) findViewById(R.id.pager);
 		viewpager
-				.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));
+				.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));*/
 		actionbar = getActionBar();
 		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		for (int i = 0; i < CONTENT.length; i++) {
-			actionbar.addTab(actionbar.newTab().setText(CONTENT[i])
-					.setTabListener(this));
+			actionbar.addTab(actionbar.newTab().setText(CONTENT[i]).setTabListener(this));
 		}
-		viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		/*viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int position) {
@@ -65,31 +186,94 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 				// TODO Auto-generated method stub
 
 			}
-		});
+		});*/
 
 	}
 
-	class GoogleMusicAdapter extends FragmentPagerAdapter {
-		public GoogleMusicAdapter(FragmentManager fm) {
+	class MainListViewAdapter extends BaseAdapter  {
+		/*public GoogleMusicAdapter(FragmentManager fm) {
 			super(fm);
-		}
+		}*/
 
 		@Override
-		public Fragment getItem(int position) {
-			return MenuPhotoFragment.newInstance(CONTENT[position
-					% CONTENT.length]);
+		public Object getItem(int position) {
+			if(isPhoto==true){return totalList[m].get(position); }
+			else{return totalTextList[m].get(position);}
 		}
-
-		@Override
+		
+        @Override  
+	    public long getItemId(int position) {  
+	            // TODO Auto-generated method stub  
+	            return position;  
+	    }  
+	       
+		/*@Override
 		public CharSequence getPageTitle(int position) {
 			return CONTENT[position % CONTENT.length];
-		}
+		}*/
 
 		@Override
 		public int getCount() {
-			return CONTENT.length;
+			if(isPhoto==true){return totalList[m].size();}
+			else{return totalTextList[m].size();}
 		}
+		
+		@Override  
+	    public View getView(int position, View convertView, ViewGroup parent) {  
+	         ListItemView listItemView;  
+	         ListTextItemView listTextItemView;  
+	  
+	         if(isPhoto==true){	          
+	           // if (convertView == null) {  
+	                convertView = LayoutInflater.from(MenuPhotoListActivity.this).inflate(  
+	                        R.layout.menu_photo_item_row, null);  
 
+	                listItemView = new ListItemView();  
+	                listItemView.imageView = (ImageView) convertView  
+	                        .findViewById(R.id.menuitem);  
+	                listItemView.textView = (TextView) convertView  
+	                        .findViewById(R.id.itemdesc);  
+	                listItemView.imageButton=(ImageButton)convertView  
+	                        .findViewById(R.id.addbutton); 
+
+	            //   convertView.setTag(listItemView);  
+	           // } else {  
+	            //   listItemView = (ListItemView) convertView.getTag();  
+	           // }
+	            
+	            Drawable img = totalList[m].get(position).getImage();  
+	           // String title = mList.get(position).getTitle();  
+	  
+	            listItemView.imageView.setImageDrawable(img);  
+	            //listItemView.textView.setText(title);  
+
+	            return convertView;  
+	            }
+	         else
+	         {
+		                convertView = LayoutInflater.from(MenuPhotoListActivity.this).inflate(  
+		                        R.layout.menu_text_item_row, null);  
+
+		                listTextItemView = new ListTextItemView();  
+		                listTextItemView.textitemprice = (TextView) convertView  
+		                        .findViewById(R.id.textitemprice);  
+		                listTextItemView.textitemname = (TextView) convertView  
+		                        .findViewById(R.id.textitemname);  
+		                listTextItemView.textitemdesc = (TextView) convertView  
+		                        .findViewById(R.id.textitemdesc);  
+		                listTextItemView.imageButton=(ImageButton)convertView  
+		                        .findViewById(R.id.addbutton); 
+		            String name = totalTextList[m].get(position).getItemName();  
+		            String desc = totalTextList[m].get(position).getItemDesc();  
+		            String price = totalTextList[m].get(position).getItemPrice();  
+
+		            listTextItemView.textitemname.setText(name);  
+		            listTextItemView.textitemdesc.setText(desc);  
+		            listTextItemView.textitemprice.setText(price);  
+		            
+		            return convertView;  
+	         }
+	    }
 	}
 
 	@Override
@@ -154,10 +338,18 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 			@Override
 			public void onClick(View view) {
 				// ...
+				if(isPhoto==true){
+				isPhoto=false;
+				view.setBackgroundResource(R.drawable.photo_icon);	
+				}
+				else{isPhoto=true;
+				view.setBackgroundResource(R.drawable.list_icon);}
+				adapter.notifyDataSetChanged();
+				//add code to change the drawable of the icon
 
-				Intent intent = new Intent(getApplicationContext(),
+				/*Intent intent = new Intent(getApplicationContext(),
 						MenuTextListActivity.class);
-				startActivity(intent);
+				startActivity(intent);*/
 			}
 		});
 		return super.onCreateOptionsMenu(menu);
@@ -166,7 +358,9 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		viewpager.setCurrentItem(tab.getPosition());
+		//viewpager.setCurrentItem(tab.getPosition());
+		m=tab.getPosition();
+		adapter.notifyDataSetChanged();
 
 	}
 
@@ -181,10 +375,73 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 
 	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		loadMenu();
 	}
+	
+    class ListItemView {  
+        ImageView imageView;  
+        TextView textView;  
+        ImageButton imageButton;
+    }  
+    
+    class ListTextItemView {  
+        TextView textitemprice,textitemname,textitemdesc;  
+        ImageButton imageButton;
+    }  
+    
+    class ListItem {  
+        private Drawable image;  
+        private String title;  
+  
+        public Drawable getImage() {  
+            return image;  
+        }  
+  
+        public void setImage(Drawable image) {  
+            this.image = image;  
+        }  
+  
+        public String getTitle() {  
+            return title;  
+        }  
+  
+        public void setTitle(String title) {  
+            this.title = title;  
+        }  
+    }  
+    
+    class ListTextItem {   
+        private String itemnames,itemdesc,itemprice;  
+  
+        public String getItemName() {  
+            return itemnames;  
+        }  
+  
+        public void setItemname(String string) {  
+        	itemnames = string;  
+        }  
+  
+        public String getItemDesc() {  
+            return itemdesc;  
+        }  
+  
+        public void setItemDesc(String string) {  
+        	itemdesc = string;  
+        }  
+        
+        public String getItemPrice() {  
+            return itemprice;  
+        }  
+  
+        public void setItemPrice(String string) {  
+        	itemprice = string;  
+        }  
+        
+    }  
+    
 
 }
