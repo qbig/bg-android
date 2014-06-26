@@ -8,6 +8,9 @@ import sg.com.bigspoon.www.adapters.CustomListAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -41,9 +44,10 @@ public class OutListActivity extends Activity {
 		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
 				null);
 		actionBar.setCustomView(mActionBarView);
-
+		//actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+        
 		title.setText("OutLets");
 
 		ImageButton ibItem1 = (ImageButton) mActionBarView
@@ -51,10 +55,20 @@ public class OutListActivity extends Activity {
 		ImageButton togglebutton = (ImageButton) mActionBarView
 				.findViewById(R.id.toggleButton);
 		togglebutton.setVisibility(View.GONE);
-		ibItem1.setBackgroundResource(R.drawable.logout_button);
-		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 50));
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(0, 50, 50, 0);
+		ibItem1.setImageResource(R.drawable.logout_button);
+		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    params.addRule(RelativeLayout.CENTER_VERTICAL);
+		ibItem1.setLayoutParams(params);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(22, 0, 0, 0);
+		
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] {android.R.attr.state_pressed},
+		    getResources().getDrawable(R.drawable.logout_button_pressed));
+		states.addState(new int[] { },
+		    getResources().getDrawable(R.drawable.logout_button));
+		ibItem1.setImageDrawable(states);
+
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -74,7 +88,7 @@ public class OutListActivity extends Activity {
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						ItemsActivity.class);
+						OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});

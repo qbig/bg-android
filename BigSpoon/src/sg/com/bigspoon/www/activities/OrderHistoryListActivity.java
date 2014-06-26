@@ -9,19 +9,40 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+
+
 public class OrderHistoryListActivity extends Activity {
 	
+	ImageButton tellUsImage;
 	ListView list;
 	String[] titles = { "Testinbg!" ,"Testinbg!" ,"Testinbg!" ,"Testinbg!" ,"Testinbg!" ,"Testinbg!"};
 	String[] dateDesc = { " 2014/05/05(14 days ago)"," 2014/05/05(14 days ago)"," 2014/05/05(14 days ago)", "2014/05/05(14 days ago)"," 2014/05/05(14 days ago)"," 2014/05/05(14 days ago)"};
+	
+	
+	
+	private OnClickListener abc = new OnClickListener() {
+		public void onClick(View view) {
+			Intent intent = new Intent(getApplicationContext(),
+					UserReviewActivity.class);
+			startActivity(intent);
+			
+			
+		}
+	};
+	
+	
+	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -29,6 +50,8 @@ public class OrderHistoryListActivity extends Activity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		// addListenerOnButtonLogout();
 		// displaying custom ActionBar
+		tellUsImage = (ImageButton) findViewById(R.id.imagetellus);
+		tellUsImage.setOnClickListener(abc);
 		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
 				null);
 		actionBar.setCustomView(mActionBarView);

@@ -10,6 +10,7 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -33,6 +34,8 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
+		View v = findViewById(R.id.gv_action_menu);
+		v.getBackground().setAlpha(230);
 		viewpager = (ViewPager) findViewById(R.id.pager);
 		viewpager
 				.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));
@@ -96,7 +99,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 		// getMenuInflater().inflate(R.menu.menu_list, menu);
 		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
 				null);
-
 		actionbar.setCustomView(mActionBarView);
 		actionbar.setIcon(R.drawable.dummy_icon);
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
@@ -108,9 +110,22 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 		togglebutton.setBackgroundResource(R.drawable.list_icon);
 		ImageButton ibItem1 = (ImageButton) mActionBarView
 				.findViewById(R.id.btn_logout);
-		ibItem1.setBackgroundResource(R.drawable.home_with_arrow);
-		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 100));
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setImageResource(R.drawable.home_with_arrow);
+		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    params.addRule(RelativeLayout.CENTER_VERTICAL);
+		ibItem1.setLayoutParams(params);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(-2, 0, 0, 0);
+		
+		
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] {android.R.attr.state_pressed},
+		    getResources().getDrawable(R.drawable.home_with_arrow_pressed));
+		states.addState(new int[] { },
+		    getResources().getDrawable(R.drawable.home_with_arrow));
+		ibItem1.setImageDrawable(states);
+		
+		
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -130,7 +145,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						ItemsActivity.class);
+						OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});

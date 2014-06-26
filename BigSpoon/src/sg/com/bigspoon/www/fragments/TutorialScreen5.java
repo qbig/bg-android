@@ -16,3 +16,4 @@ public class TutorialScreen5 extends Fragment {
 	}
 
 }
+//>>>>>>> 4859fdace2bab3f4ec8132c39dba736dc62363d3:BigSpoon/src/sg/com/bigspoon/www/fragments/TutorialScreen5.java

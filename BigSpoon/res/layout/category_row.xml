@@ -9,6 +9,7 @@
         android:layout_margin="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:paddingBottom="10dp"
         android:src="@drawable/shin_kushiya" />
 
     <TextView

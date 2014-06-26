@@ -64,3 +64,4 @@ public class LaunchActivity extends Activity {
 	}
 
 }
+

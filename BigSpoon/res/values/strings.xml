@@ -27,18 +27,32 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">LoginActivity</string>
-
-      <string name="testingbg">Testingbg!</string>
+    <string name="testingbg">Testingbg!</string>
     <string name="orderDate">2014/05/05 (14 days ago)</string>
-    
-    <color name="white">#FFFFFF</color>
-    <color name="blue">#0000FF</color>
-    <color name="green">#00FF00</color>
+    <string name="Have_a_Suggestion">Have a suggestion? </string>
+    <string name="have_anice_day"> Have a nice day !</string>
+    <string name="enjoy_meal"> Hope you enjoyed your meal.</string>
+    <string name="ratings"> Please rate our dishes</string>
+    <string name="thanksforcoming"> Thanks for coming !</string>
+    <string name="the_waiter"> The waiter will be right with you</string>
+    <string name="request_for"> Request for bill is submitted </string>
 
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#86CBD7</color>
+    <color name="green">#8BCC6F</color>
+    <color name="black">#000000</color>
+    <color name="background">#C4C4B9</color>
+    <color name="backgroundScreen">#E2E2D4</color>
+    <color name="backgroundText">#ABAB9B</color>
+
+    <string name="action_settingssssss">ABCDEF</string>
     <string name="title_activity_order_history">OrderHistoryActivity</string>
     <string name="title_activity_order_history_details">OrderHistoryDetailsActivity</string>
     <string name="title_activity_items">ItemsActivity</string>
     <string name="title_activity_action_bar">ActionBarActivity</string>
     <string name="title_activity_call_water_service">CallWaterServiceActivity</string>
+    <string name="title_activity_user_review">UserReviewActivity</string>
+    <string name="title_activity_modifier">ModifierActivity</string>
+    <string name="title_activity_modifier_adapter">ModifierAdapter</string>
 
 </resources>

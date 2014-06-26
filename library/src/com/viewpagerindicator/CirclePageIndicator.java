@@ -201,7 +201,8 @@ public class CirclePageIndicator extends View implements PageIndicator {
         if (mViewPager == null) {
             return;
         }
-        final int count = mViewPager.getAdapter().getCount();
+        final int count = mViewPager.getAdapter().getCount()-1;    //The number of the indicators is one less than the number of pages
+        
         if (count == 0) {
             return;
         }

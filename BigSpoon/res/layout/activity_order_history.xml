@@ -7,7 +7,8 @@
      android:orientation="vertical"
     android:weightSum="1"
     android:layout_centerHorizontal="true"
-    tools:context=".OrderHistoryListActivity" >
+    tools:context=".OrderHistoryListActivity" 
+    android:background="@color/white">
       
     
        <ListView
@@ -17,6 +18,7 @@
         android:divider="@android:color/transparent"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
+        android:paddingBottom="10dp"
         android:layout_weight="1"
         android:dividerHeight="10.0sp" >         
     
@@ -28,21 +30,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/listoforder"
         android:layout_centerHorizontal="true"
-        android:text="         Have a suggestion?"
+        android:text="Have a suggestion?"
         android:gravity="center_horizontal"
+        android:layout_gravity="center"
         android:textColor="#86CBD7"
         android:textSize="25dp"/>
       
           <ImageButton
           android:id="@+id/imagetellus"
-          android:layout_width="fill_parent"
-          android:layout_height="70dp"
-          android:layout_centerHorizontal="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_below="@+id/suggestionText"
-          android:layout_alignParentBottom="true"
-          android:layout_alignParentLeft="true"
+          android:layout_gravity="center"
           android:background="@null"
-          
           android:src="@drawable/tell_us_bt" />
       
 </LinearLayout>

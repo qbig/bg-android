@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableRow
+  <!--    <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,10 +12,12 @@
 
         <TextView
             android:id="@+id/CallforService"
-            android:text="CallforService"
+            android:text="Call for Service"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </TableRow>
-
+  -->
+  
+  
     <TableRow
         android:id="@+id/tableRow2"
         android:layout_width="match_parent"
@@ -24,13 +26,17 @@
         <TextView
             android:id="@+id/ColdWater"
             android:text="Cold Water"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter
             android:id="@+id/Picker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"  >
         </sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter>
     </TableRow>
 
@@ -42,13 +48,17 @@
         <TextView
             android:id="@+id/ColdWater"
             android:text="Warm Water"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter
             android:id="@+id/Picker1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingTop="5dp" 
+            android:paddingRight="5dp">
         </sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter>
     </TableRow>
 
@@ -67,7 +77,8 @@
                 android:id="@+id/tableRow3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:gravity="center" 
+                android:paddingTop="5dp">
 
                 <Button
                     android:id="@+id/ok"
@@ -76,7 +87,7 @@
 
                 <Button
                     android:id="@+id/cancle"
-                    android:text="Cancle" />
+                    android:text="Cancel" />
                 
             </TableRow>
         </TableLayout>

@@ -18,3 +18,4 @@ public class TutorialScreen6 extends Fragment {
 	}
 
 }
+

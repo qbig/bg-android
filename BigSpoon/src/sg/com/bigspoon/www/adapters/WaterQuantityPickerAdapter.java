@@ -30,7 +30,7 @@ public class WaterQuantityPickerAdapter extends LinearLayout {
 
 	private final long REPEAT_DELAY = 50;
 	
-	private final int ELEMENT_HEIGHT = 120;
+	private final int ELEMENT_HEIGHT = 80;
 	private final int ELEMENT_WIDTH = ELEMENT_HEIGHT; // you're all squares, yo
 	
 	private final int MINIMUM = 0;
@@ -87,7 +87,7 @@ public class WaterQuantityPickerAdapter extends LinearLayout {
 	
 	private void initIncrementButton( Context context){
 		increment = new ImageButton( context );
-		increment.setImageResource(R.drawable.button_add_with_circle);
+		increment.setBackgroundResource(R.drawable.add_btn_with_circle);
 		//increment.setLayoutParams(new LinearLayout.LayoutParams(10, 100));
 	
 		
@@ -162,9 +162,10 @@ public class WaterQuantityPickerAdapter extends LinearLayout {
 		valueText.setText( value.toString() );
 	}
 	
+	
 	private void initDecrementButton( Context context){
 		decrement = new ImageButton( context );
-		decrement.setBackgroundResource(R.drawable.button_minus_with_circle);
+		decrement.setBackgroundResource(R.drawable.btn_minus_with_circle);
 		
 
 		// Decrement once for a click
