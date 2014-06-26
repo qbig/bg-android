@@ -52,9 +52,9 @@ public class EntryActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				// Intent intent = new Intent
-				// (getApplicationContext(), SignUpActivity.class);
-				// startActivity(intent);
+				 Intent intent = new Intent
+				 (getApplicationContext(), SignUpActivity.class);
+				 startActivity(intent);
 			}
 		});
 	}
