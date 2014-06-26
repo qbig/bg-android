@@ -16,12 +16,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener{
 	//ViewPager viewpager;
@@ -156,6 +160,20 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		adapter = new MainListViewAdapter();  
 		listview.setAdapter(adapter);
 		
+		
+        listview.setOnItemClickListener(new OnItemClickListener(){
+		@Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			//if(isPhoto==false){
+				isPhoto=true;
+				getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon);
+			    adapter.notifyDataSetChanged();
+			    listview.setSelection(position);
+			  //  }	-
+			    
+			}
+		 });
+		
        // ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview,false);
        // listview.addFooterView(footer, null, false);		
 		/*viewpager = (ViewPager) findViewById(R.id.pager);
@@ -190,6 +208,87 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 	}
 
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		// getMenuInflater().inflate(R.menu.menu_list, menu);
+		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
+				null);
+		actionbar.setCustomView(mActionBarView);
+		actionbar.setIcon(R.drawable.dummy_icon);
+		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				| ActionBar.DISPLAY_SHOW_HOME);
+		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+		title.setText("Menu List");
+		ImageButton togglebutton = (ImageButton) mActionBarView
+				.findViewById(R.id.toggleButton);
+		togglebutton.setBackgroundResource(R.drawable.list_icon);
+		ImageButton ibItem1 = (ImageButton) mActionBarView
+				.findViewById(R.id.btn_logout);
+		ibItem1.setImageResource(R.drawable.home_with_arrow);
+		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    params.addRule(RelativeLayout.CENTER_VERTICAL);
+		ibItem1.setLayoutParams(params);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(-2, 0, 0, 0);
+		
+		
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] {android.R.attr.state_pressed},
+		    getResources().getDrawable(R.drawable.home_with_arrow_pressed));
+		states.addState(new int[] { },
+		    getResources().getDrawable(R.drawable.home_with_arrow));
+		ibItem1.setImageDrawable(states);
+		
+		
+		ibItem1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				// ...
+
+				Intent intent = new Intent(getApplicationContext(),
+						OutListActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		ImageButton ibItem2 = (ImageButton) mActionBarView
+				.findViewById(R.id.order_history);
+		ibItem2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				// ...
+
+				Intent intent = new Intent(getApplicationContext(),
+						OrderHistoryListActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		togglebutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				// ...
+				if(isPhoto==true){
+				isPhoto=false;
+				view.setBackgroundResource(R.drawable.photo_icon);	
+				}
+				else{isPhoto=true;
+				view.setBackgroundResource(R.drawable.list_icon);}
+				adapter.notifyDataSetChanged();
+				//add code to change the drawable of the icon
+
+				/*Intent intent = new Intent(getApplicationContext(),
+						MenuTextListActivity.class);
+				startActivity(intent);*/
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	
 	class MainListViewAdapter extends BaseAdapter  {
 		/*public GoogleMusicAdapter(FragmentManager fm) {
 			super(fm);
@@ -269,91 +368,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 		            listTextItemView.textitemname.setText(name);  
 		            listTextItemView.textitemdesc.setText(desc);  
-		            listTextItemView.textitemprice.setText(price);  
+		            listTextItemView.textitemprice.setText(price);    
 		            
 		            return convertView;  
 	         }
 	    }
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.menu_list, menu);
-		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
-				null);
-		actionbar.setCustomView(mActionBarView);
-		actionbar.setIcon(R.drawable.dummy_icon);
-		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-				| ActionBar.DISPLAY_SHOW_HOME);
-		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText("Menu List");
-		ImageButton togglebutton = (ImageButton) mActionBarView
-				.findViewById(R.id.toggleButton);
-		togglebutton.setBackgroundResource(R.drawable.list_icon);
-		ImageButton ibItem1 = (ImageButton) mActionBarView
-				.findViewById(R.id.btn_logout);
-		ibItem1.setImageResource(R.drawable.home_with_arrow);
-		RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-	    params.addRule(RelativeLayout.CENTER_VERTICAL);
-		ibItem1.setLayoutParams(params);
-	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(-2, 0, 0, 0);
-		
-		
-		StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] {android.R.attr.state_pressed},
-		    getResources().getDrawable(R.drawable.home_with_arrow_pressed));
-		states.addState(new int[] { },
-		    getResources().getDrawable(R.drawable.home_with_arrow));
-		ibItem1.setImageDrawable(states);
-		
-		
-		ibItem1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				// ...
-
-				Intent intent = new Intent(getApplicationContext(),
-						OutListActivity.class);
-				startActivity(intent);
-			}
-		});
-
-		ImageButton ibItem2 = (ImageButton) mActionBarView
-				.findViewById(R.id.order_history);
-		ibItem2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				// ...
-
-				Intent intent = new Intent(getApplicationContext(),
-						OrderHistoryListActivity.class);
-				startActivity(intent);
-			}
-		});
-
-		togglebutton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				// ...
-				if(isPhoto==true){
-				isPhoto=false;
-				view.setBackgroundResource(R.drawable.photo_icon);	
-				}
-				else{isPhoto=true;
-				view.setBackgroundResource(R.drawable.list_icon);}
-				adapter.notifyDataSetChanged();
-				//add code to change the drawable of the icon
-
-				/*Intent intent = new Intent(getApplicationContext(),
-						MenuTextListActivity.class);
-				startActivity(intent);*/
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
-	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -442,6 +463,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
         }  
         
     }  
+    
+    public View getActionBarView() {
+        Window window = getWindow();
+        View v = window.getDecorView();
+        int resId = getResources().getIdentifier("action_bar_container", "id", "android");
+        return v.findViewById(resId);
+    }
     
 
 }
