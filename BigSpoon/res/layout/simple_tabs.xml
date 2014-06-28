@@ -23,4 +23,19 @@
         >
     </GridView>
 
+    <TextView
+        android:id="@+id/corner"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@id/gv_action_menu"
+        android:layout_alignRight="@id/gv_action_menu" 
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/badge_circle"/>
+
 </RelativeLayout>

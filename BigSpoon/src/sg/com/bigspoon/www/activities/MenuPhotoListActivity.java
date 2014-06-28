@@ -33,6 +33,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	ListView listview;
 	MainListViewAdapter adapter;
 	Boolean isPhoto=true;
+	int totalOrderNumber=0;
 	//private ArrayList<ListItem> mList;  
 	private static final String[] CONTENT = new String[] { "Popular Items",
 			"Brunch", "Dinner", "BreakFast", "Beers", "Roasted" };
@@ -173,9 +174,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 			    
 			}
 		 });
-		
-       // ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview,false);
-       // listview.addFooterView(footer, null, false);		
+			
 		/*viewpager = (ViewPager) findViewById(R.id.pager);
 		viewpager
 				.setAdapter(new GoogleMusicAdapter(getSupportFragmentManager()));*/
@@ -333,7 +332,18 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	                listItemView.textView = (TextView) convertView  
 	                        .findViewById(R.id.itemdesc);  
 	                listItemView.imageButton=(ImageButton)convertView  
-	                        .findViewById(R.id.addbutton); 
+	                        .findViewById(R.id.addbutton);    
+
+	                listItemView.imageButton.setOnClickListener(new View.OnClickListener() {
+	        			@Override
+	        			public void onClick(View view) {
+	        				totalOrderNumber++;
+	        				View parent = (View)view.getParent().getParent().getParent();
+	        				TextView cornertext;
+	        				cornertext=(TextView)parent.findViewById(R.id.corner);
+	        				cornertext.setVisibility(View.VISIBLE);
+	        				cornertext.setText(String.valueOf(totalOrderNumber));	
+	        		}});
 
 	            //   convertView.setTag(listItemView);  
 	           // } else {  
@@ -362,9 +372,22 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		                        .findViewById(R.id.textitemdesc);  
 		                listTextItemView.imageButton=(ImageButton)convertView  
 		                        .findViewById(R.id.addbutton); 
+		                
+		                listTextItemView.imageButton.setOnClickListener(new View.OnClickListener() {
+		        			@Override
+		        			public void onClick(View view) {
+		        				totalOrderNumber++;
+		        				View parent = (View)view.getParent().getParent().getParent();
+		        				TextView cornertext;
+		        				cornertext=(TextView)parent.findViewById(R.id.corner);
+		        				cornertext.setVisibility(View.VISIBLE);
+		        				cornertext.setText(String.valueOf(totalOrderNumber));	
+		        		}});
+		                
 		            String name = totalTextList[m].get(position).getItemName();  
 		            String desc = totalTextList[m].get(position).getItemDesc();  
 		            String price = totalTextList[m].get(position).getItemPrice();  
+		            
 
 		            listTextItemView.textitemname.setText(name);  
 		            listTextItemView.textitemdesc.setText(desc);  
