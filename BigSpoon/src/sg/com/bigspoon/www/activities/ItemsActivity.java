@@ -83,9 +83,9 @@ public class ItemsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.items, menu);
-		  MenuInflater inflater = getMenuInflater();
-		    inflater.inflate(R.menu.items, menu);
+		//getMenuInflater().inflate(R.menu.items, menu);
+		//  MenuInflater inflater = getMenuInflater();
+		 //   inflater.inflate(R.menu.items, menu);
 		   
 		    ActionBar actionBar = getActionBar();
 		    actionBar.setDisplayShowHomeEnabled(false);
@@ -93,10 +93,18 @@ public class ItemsActivity extends Activity {
 		    //displaying custom ActionBar
 		    View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
 		    actionBar.setCustomView(mActionBarView);
-		    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		    
-		    
+		    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);    
 		    ImageButton ibItem1 = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
+		    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+			ibItem1.setPadding(22, 0, 0, 0);
+
+			StateListDrawable states = new StateListDrawable();
+			states.addState(new int[] {android.R.attr.state_pressed},
+			    getResources().getDrawable(R.drawable.menu_pressed));
+			states.addState(new int[] { },
+			    getResources().getDrawable(R.drawable.menu));
+			ibItem1.setImageDrawable(states);
+			
 		    ibItem1.setOnClickListener(new View.OnClickListener() {
 		        @Override
 		        public void onClick(View view) {

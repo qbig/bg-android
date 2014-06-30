@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -351,6 +353,8 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	        				cornertext=(TextView)parent.findViewById(R.id.corner);
 	        				cornertext.setVisibility(View.VISIBLE);
 	        				cornertext.setText(String.valueOf(totalOrderNumber));	
+	        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
+	        				cornertext.startAnimation(a);
 	        		}});
 
 	            //   convertView.setTag(listItemView);  
@@ -390,6 +394,8 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		        				cornertext=(TextView)parent.findViewById(R.id.corner);
 		        				cornertext.setVisibility(View.VISIBLE);
 		        				cornertext.setText(String.valueOf(totalOrderNumber));	
+		        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
+		        				cornertext.startAnimation(a);
 		        		}});
 		                
 		            String name = totalTextList[m].get(position).getItemName();  
