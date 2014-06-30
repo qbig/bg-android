@@ -33,7 +33,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	ListView listview;
 	MainListViewAdapter adapter;
 	Boolean isPhoto=true;
-	int totalOrderNumber=0;
+	static int totalOrderNumber=0;
 	//private ArrayList<ListItem> mList;  
 	private static final String[] CONTENT = new String[] { "Popular Items",
 			"Brunch", "Dinner", "BreakFast", "Beers", "Roasted" };
@@ -118,6 +118,14 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		setContentView(R.layout.simple_tabs);
 		View v = findViewById(R.id.gv_action_menu);
 		v.getBackground().setAlpha(230);
+		
+		TextView cornertext1;
+		cornertext1=(TextView)findViewById(R.id.corner);
+		if(totalOrderNumber!=0){
+		cornertext1.setVisibility(View.VISIBLE);
+		cornertext1.setText(String.valueOf(totalOrderNumber));	
+		}
+		
 		
 	   	for(int k=0;k<totalList.length;k++)
 	   	{
