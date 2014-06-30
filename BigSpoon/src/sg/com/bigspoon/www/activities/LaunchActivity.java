@@ -39,7 +39,7 @@ public class LaunchActivity extends Activity {
             	if(status == false)
             	{
             		loginPrefsEditor = loginPreferences.edit();
-            		loginPrefsEditor.putBoolean("tutorial", false);
+            		loginPrefsEditor.putBoolean("tutorial", true);
             		loginPrefsEditor.commit();
                     Intent i = new Intent(LaunchActivity.this, TutorialActivity.class);
                     startActivity(i);

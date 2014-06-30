@@ -14,7 +14,7 @@
     <string name="emailAddress">Email Address</string>
     <string name="fullName">Name</string>
     <string name="title_activity_xyz">XYZActivity</string>
-    <string name="app_id">1409382219346628</string>
+   <!-- <string name="app_id">1409382219346628</string>-->
     <string name="title_activity_categories_list">CategoriesListActivity</string>
     <string name="title_activity_blank">BlankActivity</string>
     <string name="title_activity_main_list">MainListActivity</string>
@@ -54,5 +54,6 @@
     <string name="title_activity_user_review">UserReviewActivity</string>
     <string name="title_activity_modifier">ModifierActivity</string>
     <string name="title_activity_modifier_adapter">ModifierAdapter</string>
-
+    <string name="error_dialog_button_text">OK</string>
+    <string name="app_id">814284538610510</string> 
 </resources>

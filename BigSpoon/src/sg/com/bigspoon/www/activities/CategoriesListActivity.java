@@ -110,7 +110,7 @@ public class CategoriesListActivity extends Activity implements
 		Intent i = new Intent(getApplicationContext(),
 				MenuPhotoListActivity.class);
 		startActivity(i);
-		finish();
+		//finish();
 	}
 
 }
