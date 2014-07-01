@@ -109,6 +109,7 @@ public class CategoriesListActivity extends Activity implements
 			long id) {
 		Intent i = new Intent(getApplicationContext(),
 				MenuPhotoListActivity.class);
+		i.putExtra("startposition",position);
 		startActivity(i);
 		//finish();
 	}

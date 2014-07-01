@@ -112,7 +112,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	
 	ArrayList<MenuPhotoListActivity.ListTextItem>[] totalTextList= (ArrayList<MenuPhotoListActivity.ListTextItem>[]) new ArrayList[categories.length];
 
-	int m=0;
+	int m=0,startposition=0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		View v = findViewById(R.id.gv_action_menu);
 		v.getBackground().setAlpha(230);
 		
+		Bundle extras = getIntent().getExtras();
+		//Obtain the parameter passed by CatergoriesListActivity.java
+		if (extras != null) {
+		    startposition = extras.getInt("startposition");
+		}
+
 		TextView cornertext1;
 		cornertext1=(TextView)findViewById(R.id.corner);
 		if(totalOrderNumber!=0){
@@ -171,7 +177,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		adapter = new MainListViewAdapter();  
 		listview.setAdapter(adapter);
 		
-		
         listview.setOnItemClickListener(new OnItemClickListener(){
 		@Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -193,6 +198,10 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		for (int i = 0; i < CONTENT.length; i++) {
 			actionbar.addTab(actionbar.newTab().setText(CONTENT[i]).setTabListener(this));
 		}
+		
+		actionbar.setSelectedNavigationItem(startposition); 
+		//set the initial tab position according to the obtained parameter
+		
 		/*viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
@@ -302,7 +311,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		/*public GoogleMusicAdapter(FragmentManager fm) {
 			super(fm);
 		}*/
-
+		
 		@Override
 		public Object getItem(int position) {
 			if(isPhoto==true){return totalList[m].get(position); }
