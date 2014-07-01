@@ -39,7 +39,6 @@ public class UserReviewActivity extends Activity {
 				Intent intent = new Intent(getApplicationContext(),
 						OrderHistoryDetailsActivity.class);
 				startActivity(intent);
-
 			}
 		});
 		

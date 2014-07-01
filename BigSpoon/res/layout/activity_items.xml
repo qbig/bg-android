@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent" 
+    android:background="@color/white">
     
     <RelativeLayout 
     android:layout_width="match_parent"
@@ -34,7 +35,7 @@
         android:layout_alignLeft="@+id/button1"
         android:layout_below="@+id/button1"
         android:layout_marginTop="124dp"
-        android:background="@color/green"
+        android:background="@android:color/holo_green_light"
         android:text="Place Order" />
 
     <CheckedTextView
@@ -214,7 +215,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/listofFinalOrder"
         android:layout_centerHorizontal="true"
-        android:background="@color/blue"
+        android:background="@color/BigSpoonBlue"
         android:text="Add Notes" />
     
     

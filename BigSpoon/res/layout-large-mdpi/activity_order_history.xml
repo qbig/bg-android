@@ -43,6 +43,6 @@
           android:layout_below="@+id/suggestionText"
           android:layout_gravity="center"
           android:background="@null"
-          android:src="@drawable/tell_us_bt" />
+          android:src="@drawable/tell_us_button" />
       
 </LinearLayout>
