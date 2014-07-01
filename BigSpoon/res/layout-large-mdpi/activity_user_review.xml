@@ -16,14 +16,15 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_gravity="center"
-       android:textColor="@color/BigSpoonGreen"
+       android:textColor="#BBF01C"
        android:includeFontPadding="false"
        android:text="@string/thanksforcoming"
+       android:layout_marginBottom="20dp"
        android:textSize="25dp"  />
     
     <TextView
         android:id="@+id/ReviewLine2"
-       android:textColor="@color/BigSpoonGreen"
+       android:textColor="#D2E841"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enjoy_meal"
@@ -32,9 +33,10 @@
     <TextView
         android:id="@+id/ReviewLine3"
         android:layout_width="wrap_content"
-        android:textColor="@color/BigSpoonGreen"
+        android:textColor="#D2E841"
         android:layout_height="wrap_content"
         android:text="@string/ratings"
+        android:layout_marginBottom="15dp"
         android:textSize="15dp" />
     
     <ListView
@@ -50,33 +52,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp" 
         >
                    
     </ListView>
-    
-    
-    
-    
-    <TextView
-        android:id="@+id/ReviewMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/request_for"
-        android:textColor="@color/white"
-        android:background="#00ffffff"
-        android:textSize="18dp"  />
-    
-          
-     <TextView
-        android:id="@+id/ReviewMessage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:background="#00ffffff"
-        android:text="@string/the_waiter"
-        android:textSize="15dp" />
 
      <EditText
          android:id="@+id/editText1"
@@ -97,7 +78,7 @@
          android:gravity="top"
          android:inputType="textMultiLine" 
          >
-         <requestFocus />
+         
      </EditText>
     
      
