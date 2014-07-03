@@ -348,8 +348,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	                listItemView = new ListItemView();  
 	                listItemView.imageView = (ImageView) convertView  
 	                        .findViewById(R.id.menuitem);  
-	                listItemView.textView = (TextView) convertView  
+	                listItemView.textitemdesc = (TextView) convertView  
 	                        .findViewById(R.id.itemdesc);  
+	                listItemView.textitemprice = (TextView) convertView  
+	                        .findViewById(R.id.textitemprice);  
+	                listItemView.textitemname = (TextView) convertView  
+	                        .findViewById(R.id.textitemname);  
 	                listItemView.imageButton=(ImageButton)convertView  
 	                        .findViewById(R.id.addbutton);    
 
@@ -372,10 +376,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	           // }
 	            
 	            Drawable img = totalList[m].get(position).getImage();  
-	           // String title = mList.get(position).getTitle();  
+	            String name = totalTextList[m].get(position).getItemName();  
+	            String desc = totalTextList[m].get(position).getItemDesc();  
+	            String price = totalTextList[m].get(position).getItemPrice();  
+
 	  
 	            listItemView.imageView.setImageDrawable(img);  
-	            //listItemView.textView.setText(title);  
+	            listItemView.textitemname.setText(name);  
+	            listItemView.textitemdesc.setText(desc);  
+	            listItemView.textitemprice.setText(price);     
 
 	            return convertView;  
 	            }
@@ -451,7 +460,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	
     class ListItemView {  
         ImageView imageView;  
-        TextView textView;  
+        TextView textitemprice,textitemname,textitemdesc;    
         ImageButton imageButton;
     }  
     
@@ -462,7 +471,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
     
     class ListItem {  
         private Drawable image;  
-        private String title;  
+        private String itemnames,itemdesc,itemprice;  
   
         public Drawable getImage() {  
             return image;  
@@ -471,14 +480,31 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
         public void setImage(Drawable image) {  
             this.image = image;  
         }  
-  
-        public String getTitle() {  
-            return title;  
+        
+        public String getItemName() {  
+            return itemnames;  
         }  
   
-        public void setTitle(String title) {  
-            this.title = title;  
+        public void setItemname(String string) {  
+        	itemnames = string;  
         }  
+  
+        public String getItemDesc() {  
+            return itemdesc;  
+        }  
+  
+        public void setItemDesc(String string) {  
+        	itemdesc = string;  
+        }  
+        
+        public String getItemPrice() {  
+            return itemprice;  
+        }  
+  
+        public void setItemPrice(String string) {  
+        	itemprice = string;  
+        }  
+        
     }  
     
     class ListTextItem {   
