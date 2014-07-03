@@ -3,17 +3,18 @@ package sg.com.bigspoon.www.activities;
 import com.facebook.Session;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.drawable;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
 import sg.com.bigspoon.www.adapters.CustomListAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +26,7 @@ import android.widget.TextView;
 public class OutListActivity extends Activity {
 
 	ImageButton orderButton;
-
+	private Context context = this;
 	ListView list;
 	String[] web = { "Welcome to Kith ", "Testing !! The Groc.....",
 			"Testing !! Strictly Pancakes" };
@@ -33,6 +34,7 @@ public class OutListActivity extends Activity {
 			"Infinte Studios , #1-06,21...." };
 	Integer[] imageId = { R.drawable.kith, R.drawable.shinkushiya,
 			R.drawable.strictlypancakes };
+	String[] comingsoon={"Coming soon!"," ","Coming soon!"};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,18 +106,40 @@ public class OutListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_out_list);
+
 		list = (ListView) findViewById(R.id.list);
-		CustomListAdapter adapter = new CustomListAdapter(this, web, imageId, webdesc);
+		CustomListAdapter adapter = new CustomListAdapter(this, web, imageId, webdesc,comingsoon);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent intent = new Intent(getApplicationContext(),
+				if(position==1){Intent intent = new Intent(getApplicationContext(),
 						CategoriesListActivity.class);
-				startActivity(intent);
-
+				startActivity(intent);}
+				if(position==0||position==2){
+					AlertDialog alertDialog = new AlertDialog.Builder(OutListActivity.this).create();
+	 
+					// Setting Dialog Title
+	                TextView title =  new TextView(context);
+	                title.setText("The restaurant is coming soon");
+	                title.setGravity(Gravity.CENTER);
+	                title.setHeight(120);
+	                title.setTextSize(17);
+	                title.setTypeface(Typeface.DEFAULT_BOLD);
+	                alertDialog.setCustomTitle(title);
+	                // Setting OK Button
+	                alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int which) {
+	                // Write your code here to execute after dialog closed
+	                }
+	                });
+	 
+	                // Showing Alert Message
+	                alertDialog.show();
+				}
 			}
 		});
 
