@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -33,9 +34,23 @@ public class OrderHistoryListActivity extends Activity {
 	
 	private OnClickListener abc = new OnClickListener() {
 		public void onClick(View view) {
-			Intent intent = new Intent(getApplicationContext(),
+			/*Intent intent = new Intent(getApplicationContext(),
 					UserReviewActivity.class);
-			startActivity(intent);
+			startActivity(intent);*/
+			
+			final Intent i = new Intent(android.content.Intent.ACTION_SEND);
+            
+            i.setType("plain/text");
+
+			i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"jay@bigspoon.sg"});
+			i.putExtra(Intent.EXTRA_CC  , new String[]{"leon@bigspoon.sg"});
+			i.putExtra(Intent.EXTRA_SUBJECT, "Hello BigSpoon!");
+			i.putExtra(Intent.EXTRA_TEXT   , " ");
+			try {
+				OrderHistoryListActivity.this.startActivity(Intent.createChooser(i, "Send mail..."));
+			} catch (android.content.ActivityNotFoundException ex) {
+			    Toast.makeText(OrderHistoryListActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+			}
 			
 			
 		}
