@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -17,7 +18,10 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -121,15 +125,7 @@ public class OutListActivity extends Activity {
 				startActivity(intent);}
 				if(position==0||position==2){
 					AlertDialog alertDialog = new AlertDialog.Builder(OutListActivity.this).create();
-	 
-					// Setting Dialog Title
-	                TextView title =  new TextView(context);
-	                title.setText("The restaurant is coming soon");
-	                title.setGravity(Gravity.CENTER);
-	                title.setHeight(120);
-	                title.setTextSize(17);
-	                title.setTypeface(Typeface.DEFAULT_BOLD);
-	                alertDialog.setCustomTitle(title);
+					alertDialog.setMessage("The restaurant is coming soon.");
 	                // Setting OK Button
 	                alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int which) {
@@ -139,7 +135,17 @@ public class OutListActivity extends Activity {
 	 
 	                // Showing Alert Message
 	                alertDialog.show();
-				}
+	                
+	                //Change the style of the button text and message
+	                TextView messageView = (TextView)alertDialog.findViewById(android.R.id.message);
+	                messageView.setGravity(Gravity.CENTER);
+	                messageView.setHeight(140);
+	                messageView.setTextSize(17);
+	                Button bq = alertDialog.getButton(DialogInterface.BUTTON1);
+	                bq.setTextColor(Color.parseColor("#117AFE"));
+	                bq.setTypeface(null,Typeface.BOLD);
+	                bq.setTextSize(19);
+			   }
 			}
 		});
 
