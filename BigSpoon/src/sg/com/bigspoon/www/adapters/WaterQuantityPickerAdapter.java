@@ -30,13 +30,13 @@ public class WaterQuantityPickerAdapter extends LinearLayout {
 
 	private final long REPEAT_DELAY = 50;
 	
-	private final int ELEMENT_HEIGHT = 80;
-	private final int ELEMENT_WIDTH = ELEMENT_HEIGHT; // you're all squares, yo
+	private final int ELEMENT_HEIGHT = 60;
+	private final int ELEMENT_WIDTH = ELEMENT_HEIGHT; // these two parameters control the size of the two buttons in the layout
 	
 	private final int MINIMUM = 0;
 	private final int MAXIMUM = 999;
 	
-	private final int TEXT_SIZE = 30;
+	private final int TEXT_SIZE = 17;
 	
 	public Integer value;
 	
