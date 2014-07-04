@@ -22,6 +22,7 @@ public class ModifierAdapter extends BaseAdapter {
 	
 	 private static final int TYPE_ITEM = 0;
 	    private static final int TYPE_SEPARATOR = 1;
+	    private static final int TYPE_ITEM_RADIO = 2;
 	 
 	    private ArrayList<String> mData = new ArrayList<String>();
 	    private TreeSet<Integer> sectionHeader = new TreeSet<Integer>();
@@ -43,15 +44,31 @@ public class ModifierAdapter extends BaseAdapter {
 	        sectionHeader.add(mData.size() - 1);
 	        notifyDataSetChanged();
 	    }
-	 
+	    public void addRadiobuttonItem(final String item) {
+	        mData.add(item);
+	        notifyDataSetChanged();
+	    }
 	    @Override
 	    public int getItemViewType(int position) {
-	        return sectionHeader.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
+	    	
+	    	  if (position == 1)
+	    	  {
+	    		  return TYPE_SEPARATOR; 
+	    	  }
+	    	  else if(position == 2)
+	    	  {
+	    		  return TYPE_ITEM_RADIO; 
+	    	  }
+	    	  else
+	    	  {
+	    		  return TYPE_ITEM;
+	    		  
+	    	  }
 	    }
 	 
 	    @Override
 	    public int getViewTypeCount() {
-	        return 2;
+	        return 3;
 	    }
 	 
 	    @Override
@@ -77,12 +94,16 @@ public class ModifierAdapter extends BaseAdapter {
 	            holder = new ViewHolder();
 	            switch (rowType) {
 	            case TYPE_ITEM:
-	                convertView = mInflater.inflate(R.layout.activity_modifier, null);
+	                convertView = mInflater.inflate(R.layout.activity_modifier_counter, null);
 	                holder.textView = (TextView) convertView.findViewById(R.id.text);
 	                break;
 	            case TYPE_SEPARATOR:
-	                convertView = mInflater.inflate(R.layout.activity_water_service, null);
+	                convertView = mInflater.inflate(R.layout.modifier_header, null);
 	                holder.textView = (TextView) convertView.findViewById(R.id.textSeparator);
+	                break;
+	            case TYPE_ITEM_RADIO:
+	                convertView = mInflater.inflate(R.layout.activity_modifier_radiobutton, null);
+	                holder.textView = (TextView) convertView.findViewById(R.id.text);
 	                break;
 	            }
 	            convertView.setTag(holder);
