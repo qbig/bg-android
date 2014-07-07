@@ -35,7 +35,8 @@ public class MenuPhotoListCustomAdapter extends ArrayAdapter<String>{
 		ImageView image= (ImageView) row.findViewById(R.id.menuitem);
 		ImageButton ibutton = (ImageButton) row.findViewById(R.id.addbutton);
 		TextView categoryName=(TextView) row.findViewById(R.id.itemdesc);
-		image.setImageResource(images[position]);
+		image.setImageResource(images[position]);		
+		
 		//categoryName.setText(categories[position]);
 		//categoryName.setText("Testing...!!!");
 		

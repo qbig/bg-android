@@ -65,6 +65,5 @@ public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPag
         if (count > 0 && count <= 6) {
            // int mCount = count;
             notifyDataSetChanged();
-        }
-    }
+        }    }
 }

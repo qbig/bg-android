@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,37 +30,40 @@ public class OrderHistoryListActivity extends Activity {
 		actionBar.setDisplayShowHomeEnabled(false);
 		// addListenerOnButtonLogout();
 		// displaying custom ActionBar
-		View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar,
-				null);
-		actionBar.setCustomView(mActionBarView);
-
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+	    View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+	    actionBar.setCustomView(mActionBarView);
 		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText("Order History");
+	    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);    
+	    ImageButton ibItem1 = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
+	    ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		ibItem1.setPadding(22, 0, 0, 0);
+
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] {android.R.attr.state_pressed},
+		    getResources().getDrawable(R.drawable.menu_pressed));
+		states.addState(new int[] { },
+		    getResources().getDrawable(R.drawable.menu));
+		ibItem1.setImageDrawable(states);
+
 		
-		ImageButton ibItem1 = (ImageButton) mActionBarView
-				.findViewById(R.id.btn_logout);
-		ImageButton togglebutton = (ImageButton) mActionBarView
-				.findViewById(R.id.toggleButton);
-		togglebutton.setVisibility(View.GONE);
-		ibItem1.setBackgroundResource(R.drawable.logout_button);
-		ibItem1.setLayoutParams(new RelativeLayout.LayoutParams(150, 50));
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(0, 50, 50, 0);
 		ibItem1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				// ...
 
 				Intent intent = new Intent(getApplicationContext(),
-						EntryActivity.class);
+						MenuPhotoListActivity.class);
 				startActivity(intent);
 			}
 		});
 
 		ImageButton ibItem2 = (ImageButton) mActionBarView
 				.findViewById(R.id.order_history);
-		ibItem2.setOnClickListener(new View.OnClickListener() {
+		
+		ibItem2.setVisibility(View.INVISIBLE);
+		
+		/*ibItem2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				// ...
@@ -68,7 +72,7 @@ public class OrderHistoryListActivity extends Activity {
 						ItemsActivity.class);
 				startActivity(intent);
 			}
-		});
+		});*/
 		return super.onCreateOptionsMenu(menu);
 		
 	}

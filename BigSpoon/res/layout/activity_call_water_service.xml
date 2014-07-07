@@ -6,7 +6,7 @@
 
     <!-- 2 columns -->
 
-    <TableRow
+   <!--   <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,10 +14,10 @@
 
         <TextView
             android:id="@+id/CallforService"
-            android:text="CallforService"
+            android:text="Call for Service"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </TableRow>
-
+    -->
     <!-- edittext span 2 column -->
 
     <TableRow
@@ -32,21 +32,24 @@
 
         <ImageButton
             android:id="@+id/addbutton"
-            android:layout_width="35dp"
-             android:layout_height="35dp"
-            android:src="@drawable/button_add_with_circle" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null" 
+            android:src="@drawable/add_button_with_circle" />
 
         <TextView
             android:id="@+id/ColdWaterValue"
-                 android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/circle_text" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/circle_text"
+            android:textColor="#FFFFFF" />
 
         <ImageButton
             android:id="@+id/addbutton"
-                android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
             android:src="@drawable/button_minus_with_circle" />
     </TableRow>
 
@@ -64,9 +67,10 @@
 
         <ImageButton
             android:id="@+id/addbutton"
-          android:layout_width="35dp"
-             android:layout_height="35dp"
-            android:src="@drawable/button_add_with_circle" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/add_button_with_circle" />
 
         <TextView
             android:id="@+id/HotWaterValue"
@@ -76,8 +80,9 @@
 
         <ImageButton
             android:id="@+id/addbutton"
-         android:layout_width="35dp"
-             android:layout_height="35dp"
+         android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:background="@null"
             android:src="@drawable/button_minus_with_circle" />
     </TableRow>
 
@@ -93,7 +98,7 @@
             android:text="Column 3" />
 
         <Button
-            android:id="@+id/cancle"
+            android:id="@+id/cancel"
             android:text="Column 3" />
     </TableRow>
 

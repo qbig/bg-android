@@ -7,7 +7,15 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-
+    
+    <supports-screens 
+                  android:smallScreens="true"
+                  android:normalScreens="true"
+                  android:largeScreens="true"
+                  android:xlargeScreens="true"
+                  android:anyDensity="true"
+     /> 
+     
     <application
         android:allowBackup="true"
         android:icon="@drawable/bigspoonmobileappiconwithname"
@@ -39,12 +47,12 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OutListActivity"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ItemsActivity"
             android:label="@string/title_activity_items"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.LoginActivity"
@@ -72,7 +80,7 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.CategoriesListActivity"
             android:label="@string/title_activity_categories_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.BlankActivity"
@@ -85,12 +93,12 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.MenuPhotoListActivity"
             android:label="@string/title_activity_menu_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.MenuTextListActivity"
             android:label="@string/title_activity_menu_list"
-            android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
@@ -98,18 +106,21 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
-            android:label="@string/title_activity_order_history_details" >
+            android:label="@string/title_activity_order_history_details"
+             android:theme="@style/CustomActionBarTheme"  >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
             android:label="@string/title_activity_call_water_service"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
-            android:label="@string/title_activity_call_water_service" >
+            android:label="@string/title_activity_call_water_service"
+            android:theme="@style/CustomActionBarTheme" >
         </activity>
-        
+             
     </application>
+    
 
 </manifest>
