@@ -336,7 +336,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		}
 		
 		@Override  
-	    public View getView(int position, View convertView, ViewGroup parent) {  
+	    public View getView(final int position, View convertView, ViewGroup parent) {  
 	         ListItemView listItemView;  
 	         ListTextItemView listTextItemView;  
 	  
@@ -360,6 +360,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	                listItemView.imageButton.setOnClickListener(new View.OnClickListener() {
 	        			@Override
 	        			public void onClick(View view) {
+	        				if(position==0){
+	        	                Intent intent = new Intent
+	        	                        (getApplicationContext(), ModifierActivity.class);
+	        	                intent.putExtra("Item Name",totalTextList[m].get(position).getItemName());
+	        	                startActivity(intent); 
+	        				}
+	        				else{
 	        				totalOrderNumber++;
 	        				View parent = (View)view.getParent().getParent().getParent();
 	        				TextView cornertext;
@@ -368,6 +375,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	        				cornertext.setText(String.valueOf(totalOrderNumber));	
 	        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 	        				cornertext.startAnimation(a);
+	        				}
 	        		}});
 
 	            //   convertView.setTag(listItemView);  
@@ -406,6 +414,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		                listTextItemView.imageButton.setOnClickListener(new View.OnClickListener() {
 		        			@Override
 		        			public void onClick(View view) {
+		        				if(position==0){
+		        	                Intent intent = new Intent
+		        	                        (getApplicationContext(), ModifierActivity.class);
+		        	                intent.putExtra("Item Name",totalTextList[m].get(position).getItemName());
+		        	                startActivity(intent); 
+		        				}
+		        				else{
 		        				totalOrderNumber++;
 		        				View parent = (View)view.getParent().getParent().getParent();
 		        				TextView cornertext;
@@ -414,6 +429,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		        				cornertext.setText(String.valueOf(totalOrderNumber));	
 		        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 		        				cornertext.startAnimation(a);
+		        				}
 		        		}});
 		                
 		            String name = totalTextList[m].get(position).getItemName();  

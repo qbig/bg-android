@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
     private ImageButton fbLoginButton;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
