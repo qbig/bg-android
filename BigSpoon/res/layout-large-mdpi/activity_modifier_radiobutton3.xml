@@ -25,7 +25,7 @@
             android:background="#434751"
             android:gravity="center_vertical"
             android:padding="5dp"
-            android:text="No"
+            android:text="text1"
             android:textColor="#ffffff"
             android:textSize="@dimen/default_title_indicator_text_size" />
          <TextView
@@ -37,7 +37,19 @@
             android:gravity="center_vertical"
             android:padding="5dp"
             android:layout_marginTop="15dp"
-            android:text="Yes (+$1)"
+            android:text="text2"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/default_title_indicator_text_size" />
+         <TextView
+            android:id="@+id/text3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:background="#434751"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:layout_marginTop="15dp"
+            android:text="text3"
             android:textColor="#ffffff"
             android:textSize="@dimen/default_title_indicator_text_size" />
         </LinearLayout>
@@ -53,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
-                android:layout_marginRight="70dp"
+                android:layout_marginRight="45dp"
                 android:background="@drawable/radiobackground"
                 android:button="@android:color/transparent"
                 android:paddingBottom="5dp"
@@ -67,7 +79,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
-                android:layout_marginRight="70dp"
+                android:layout_marginRight="45dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/radiobackground"
+                android:button="@android:color/transparent"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="25dp"
+                android:paddingTop="5dp" />
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="45dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/radiobackground"
                 android:button="@android:color/transparent"

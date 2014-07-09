@@ -63,7 +63,6 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
 	
 	public WaterQuantityPickerSmallAdapter( Context context, AttributeSet attributeSet ) {
 		super(context, attributeSet);
-		
 		this.setLayoutParams( new LinearLayout.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
 		LayoutParams elementParams = new LinearLayout.LayoutParams( ELEMENT_HEIGHT, ELEMENT_WIDTH );
 		elementParams.setMargins(10, 0, 10, 0);
@@ -102,27 +101,6 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
             	increment();
             }
         });
-		
-		// Auto increment for a long click
-		increment.setOnLongClickListener( 
-				new View.OnLongClickListener(){
-					public boolean onLongClick(View arg0) {
-						autoIncrement = true;
-						repeatUpdateHandler.post( new RepetetiveUpdater() );
-						return false;
-					}
-				}
-		);
-		
-		// When the button is released, if we're auto incrementing, stop
-		increment.setOnTouchListener( new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				if( event.getAction() == MotionEvent.ACTION_UP && autoIncrement ){
-					autoIncrement = false;
-				}
-				return false;
-			}
-		});
 	}
 	
 	private void initValueEditText( Context context){
@@ -130,7 +108,7 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
 		value = new Integer( 0 );
 		valueText = new TextView( context );
 		valueText.setTextSize( TEXT_SIZE );
-		Color.parseColor("#bdbdbd");
+		//Color.parseColor("#bdbdbd");
 		valueText.setTextColor(Color.parseColor("#000000"));
 		valueText.setBackgroundResource(R.drawable.circle_for_text);
 		// Since we're a number that gets affected by the button, we need to be
@@ -178,28 +156,6 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
             	decrement();
             }
         });
-		
-
-		// Auto Decrement for a long click
-		decrement.setOnLongClickListener( 
-				new View.OnLongClickListener(){
-					public boolean onLongClick(View arg0) {
-						autoDecrement = true;
-						repeatUpdateHandler.post( new RepetetiveUpdater() );
-						return false;
-					}
-				}
-		);
-		
-		// When the button is released, if we're auto decrementing, stop
-		decrement.setOnTouchListener( new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				if( event.getAction() == MotionEvent.ACTION_UP && autoDecrement ){
-					autoDecrement = false;
-				}
-				return false;
-			}
-		});
 	}
 	
 	public void increment(){
