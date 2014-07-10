@@ -1,7 +1,7 @@
 package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.MainActivity;
+import sg.com.bigspoon.www.activities.EntryActivity;
 import sg.com.bigspoon.www.fragments.TutorialScreenFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,15 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 		IconPagerAdapter {
 	
 	private Context mContext;
+	private final int tutScreenLayouts[] = { R.layout.activity_tutorial_screen1,
+			R.layout.activity_tutorial_screen2,
+			R.layout.activity_tutorial_screen3,
+			R.layout.activity_tutorial_screen4,
+			R.layout.activity_tutorial_screen5,
+			R.layout.activity_tutorial_screen6,
+			R.layout.activity_tutorial_screenlast };
+	
+	private final int lastScreenIndex = tutScreenLayouts.length - 1;
 	
 	public TutorialFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
@@ -23,23 +32,14 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public Fragment getItem(int position) {
-		final int tutScreenLayouts[] = { R.layout.activity_tutorial_screen1,
-				R.layout.activity_tutorial_screen2,
-				R.layout.activity_tutorial_screen3,
-				R.layout.activity_tutorial_screen4,
-				R.layout.activity_tutorial_screen5,
-				R.layout.activity_tutorial_screen6,
-				R.layout.activity_tutorial_screenlast };
 		
-		final int lastScreenIndex = tutScreenLayouts.length - 1;
-		if (position == lastScreenIndex) {
-			Intent intent = new Intent(mContext, MainActivity.class);
+		if (position == this.lastScreenIndex) {
+			Intent intent = new Intent(mContext, EntryActivity.class);
 			mContext.startActivity(intent);
 		} 
 		
 		TutorialScreenFragment fragment = new TutorialScreenFragment();
 		fragment.setLayout(tutScreenLayouts[position]);
-
 		return fragment;
 	}
 
