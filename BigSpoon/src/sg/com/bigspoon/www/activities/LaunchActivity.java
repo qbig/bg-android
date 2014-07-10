@@ -1,6 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+
 import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.content.Intent;
