@@ -19,7 +19,7 @@ public class TutorialActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_circle);
-		mAdapter = new TutorialFragmentAdapter(getSupportFragmentManager());
+		mAdapter = new TutorialFragmentAdapter(this, getSupportFragmentManager());
 
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(mAdapter);

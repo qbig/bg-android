@@ -1,8 +1,10 @@
 package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.MainActivity;
 import sg.com.bigspoon.www.fragments.TutorialScreenFragment;
-import sg.com.bigspoon.www.fragments.TutorialScreenLast;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,9 +13,12 @@ import com.viewpagerindicator.IconPagerAdapter;
 
 public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 		IconPagerAdapter {
-
-	public TutorialFragmentAdapter(FragmentManager fm) {
+	
+	private Context mContext;
+	
+	public TutorialFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
+		this.mContext = context;
 	}
 
 	@Override
@@ -25,14 +30,14 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 				R.layout.activity_tutorial_screen5,
 				R.layout.activity_tutorial_screen6,
 				R.layout.activity_tutorial_screenlast };
+		
 		final int lastScreenIndex = tutScreenLayouts.length - 1;
-
-		TutorialScreenFragment fragment;
 		if (position == lastScreenIndex) {
-			fragment = new TutorialScreenLast();
-		} else {
-			fragment = new TutorialScreenFragment();
-		}
+			Intent intent = new Intent(mContext, MainActivity.class);
+			mContext.startActivity(intent);
+		} 
+		
+		TutorialScreenFragment fragment = new TutorialScreenFragment();
 		fragment.setLayout(tutScreenLayouts[position]);
 
 		return fragment;
