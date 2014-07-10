@@ -1,32 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Layout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
+    android:layout_height="match_parent"
     android:background="#434751"
-    android:stretchColumns="0,1">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
 
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        >
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="#434751"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="text"
-            android:textColor="#ffffff"
-            android:layout_marginLeft="25dp"
-            android:textSize="@dimen/default_title_indicator_text_size" />
-
+    <!--
         <sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter
             android:id="@+id/Picker1"
             android:layout_width="wrap_content"
@@ -38,7 +19,54 @@
              >
 
         </sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter>
-        
-    </TableRow>
+    -->
 
-</TableLayout>
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp" 
+        android:layout_centerVertical="true">
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|left"
+            android:background="@drawable/btn_minus_with_circle" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|right"
+            android:background="@drawable/add_btn_with_circle" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_for_text"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="19sp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:text="text"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/default_title_indicator_text_size" />
+
+</RelativeLayout>

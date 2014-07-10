@@ -33,6 +33,7 @@ public class ModifierActivity extends Activity {
         listView.addFooterView(footer);
         TestSectionedAdapter sectionedAdapter = new TestSectionedAdapter();
         listView.setAdapter(sectionedAdapter);
+        
 	    }
 	
 	@Override

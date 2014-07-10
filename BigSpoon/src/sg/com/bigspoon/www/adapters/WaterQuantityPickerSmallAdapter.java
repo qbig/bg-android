@@ -91,6 +91,7 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
 	
 	private void initIncrementButton( Context context){
 		increment = new ImageButton( context );
+		increment.setId(R.id.increId);
 		increment.setBackgroundResource(R.drawable.add_btn_with_circle);
 		//increment.setLayoutParams(new LinearLayout.LayoutParams(10, 100));
 	
@@ -108,6 +109,7 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
 		value = new Integer( 0 );
 		valueText = new TextView( context );
 		valueText.setTextSize( TEXT_SIZE );
+		valueText.setId(R.id.textPicker);
 		//Color.parseColor("#bdbdbd");
 		valueText.setTextColor(Color.parseColor("#000000"));
 		valueText.setBackgroundResource(R.drawable.circle_for_text);
@@ -147,6 +149,7 @@ public class WaterQuantityPickerSmallAdapter extends LinearLayout {
 	
 	private void initDecrementButton( Context context){
 		decrement = new ImageButton( context );
+		decrement.setId(R.id.decreId);
 		decrement.setBackgroundResource(R.drawable.btn_minus_with_circle);
 		
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="textPicker" type="id"/>
+    <item name="increId" type="id"/>
+    <item name="decreId" type="id"/>
+
+</resources>
