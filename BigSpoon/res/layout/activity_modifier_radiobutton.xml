@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout android:id="@+id/tableLayout1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#434751"
-    android:stretchColumns="0,1" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp" >
 
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="match_parent"
+
+<TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:orientation="vertical">
-            
-          <TextView
-            android:id="@+id/text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:background="#434751"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="text1"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/default_title_indicator_text_size" />
-        </LinearLayout>
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:text="text"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/default_title_indicator_text_size" />
 
 
-    <FrameLayout >
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp" 
+        android:layout_centerVertical="true">
          <RadioButton
                 android:id="@+id/radioButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|right"
-                android:layout_marginRight="53dp"
+                android:layout_marginRight="45dp"
                 android:background="@drawable/radiobackground"
                 android:button="@android:color/transparent"
                 android:paddingBottom="5dp"
@@ -45,6 +43,5 @@
                 android:paddingRight="25dp"
                 android:paddingTop="5dp" />
     </FrameLayout>
-    </TableRow>
 
-</TableLayout>
+</RelativeLayout>
