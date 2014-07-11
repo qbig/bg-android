@@ -44,8 +44,12 @@ public class SignUpActivity extends Activity {
 		mSignupNameField = (EditText) findViewById(R.id.signupFullName);
 		mSignupEmailField = (EditText) findViewById(R.id.signupEmail);
 		mSignupPasswordField = (EditText) findViewById(R.id.signupPassword);
-		mSignUpConfirmButton = (ImageButton) findViewById(R.id.signupButton);
 		
+		addSignupButtonHandler();
+	}
+
+	private void addSignupButtonHandler() {
+		mSignUpConfirmButton = (ImageButton) findViewById(R.id.signupButton);
 		mSignUpConfirmButton.setOnClickListener( new OnClickListener() {
 
 			@Override
