@@ -9,7 +9,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Austin/bg-android/bg-android/commonJars/libs/android-support-v4.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Austin/bg-android/bg-android/libFacebookSDK/libs/bolts.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
