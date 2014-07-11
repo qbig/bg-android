@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import sg.com.bigspoon.www.R;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 import sg.com.bigspoon.www.adapters.TestSectionedAdapter;
+import sg.com.bigspoon.www.data.GlobalOrderNumber;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -11,6 +12,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +34,21 @@ public class ModifierActivity extends Activity {
 		PinnedHeaderListView listView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
         LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout footer = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
+        Button cancel = (Button)footer.findViewById(R.id.cancle);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	finish();
+            }
+        });
+        
+        Button okay = (Button)footer.findViewById(R.id.ok);
+        okay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setTotalOrder();
+                finish();
+            }
+        });
+        
         listView.addFooterView(footer);
         TestSectionedAdapter sectionedAdapter = new TestSectionedAdapter();
         listView.setAdapter(sectionedAdapter);
@@ -54,5 +73,14 @@ public class ModifierActivity extends Activity {
 		    return super.onCreateOptionsMenu(menu);
 	}
 	
+    public void setTotalOrder(){
+		TextView cornertext;
+		GlobalOrderNumber.totalOrderNumber++;
+		cornertext=GlobalOrderNumber.corner;
+		cornertext.setVisibility(View.VISIBLE);
+		cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
+		Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
+		cornertext.startAnimation(a);
+    }
 
 }

@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import java.util.ArrayList;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.GlobalOrderNumber;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -35,7 +36,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	ListView listview;
 	MainListViewAdapter adapter;
 	Boolean isPhoto=true;
-	static int totalOrderNumber=0;
 	//private ArrayList<ListItem> mList;  
 	private static final String[] CONTENT = new String[] { "Popular Items",
 			"Brunch", "Dinner", "BreakFast", "Beers", "Roasted" };
@@ -129,9 +129,10 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 		TextView cornertext1;
 		cornertext1=(TextView)findViewById(R.id.corner);
-		if(totalOrderNumber!=0){
+		GlobalOrderNumber.corner=cornertext1;
+		if(GlobalOrderNumber.totalOrderNumber!=0){
 		cornertext1.setVisibility(View.VISIBLE);
-		cornertext1.setText(String.valueOf(totalOrderNumber));	
+		cornertext1.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
 		}
 		
 		
@@ -367,12 +368,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	        	                startActivity(intent); 
 	        				}
 	        				else{
-	        				totalOrderNumber++;
+	        				GlobalOrderNumber.totalOrderNumber++;
 	        				View parent = (View)view.getParent().getParent().getParent();
 	        				TextView cornertext;
 	        				cornertext=(TextView)parent.findViewById(R.id.corner);
 	        				cornertext.setVisibility(View.VISIBLE);
-	        				cornertext.setText(String.valueOf(totalOrderNumber));	
+	        				cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
 	        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 	        				cornertext.startAnimation(a);
 	        				}
@@ -421,12 +422,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		        	                startActivity(intent); 
 		        				}
 		        				else{
-		        				totalOrderNumber++;
+		        			    GlobalOrderNumber.totalOrderNumber++;
 		        				View parent = (View)view.getParent().getParent().getParent();
 		        				TextView cornertext;
 		        				cornertext=(TextView)parent.findViewById(R.id.corner);
 		        				cornertext.setVisibility(View.VISIBLE);
-		        				cornertext.setText(String.valueOf(totalOrderNumber));	
+		        				cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
 		        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 		        				cornertext.startAnimation(a);
 		        				}
@@ -558,6 +559,5 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
         int resId = getResources().getIdentifier("action_bar_container", "id", "android");
         return v.findViewById(resId);
     }
-    
 
 }
