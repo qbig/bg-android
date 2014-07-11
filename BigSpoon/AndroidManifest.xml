@@ -56,7 +56,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.activities.OutListActivity"
+            android:name="sg.com.bigspoon.www.activities.OutletListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme" >
         </activity>
@@ -67,7 +67,7 @@
             android:theme="@style/CustomActionBarTheme" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.activities.LoginActivity"
+            android:name="sg.com.bigspoon.www.activities.EmailLoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >

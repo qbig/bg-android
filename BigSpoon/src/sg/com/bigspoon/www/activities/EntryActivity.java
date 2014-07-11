@@ -29,7 +29,7 @@ import com.koushikdutta.ion.Ion;
 
 public class EntryActivity extends Activity {
 	
-	private static String ION_LOGGING = "ion-login";
+	private static String ION_LOGGING_FB_LOGIN = "ion-fb-login";
 	
 	private ImageButton loginImageButton;
 	private ImageButton signUpImageButton;
@@ -49,7 +49,7 @@ public class EntryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Ion.getDefault(this).configure().setLogging(ION_LOGGING, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME,0);
 		loginPrefsEditor = loginPreferences.edit();
 		
@@ -84,7 +84,7 @@ public class EntryActivity extends Activity {
 		Session session = Session.getActiveSession();
 		if (session.isOpened()) {
 
-			JsonObject json = new JsonObject();
+			final JsonObject json = new JsonObject();
 			json.addProperty("access_token", session.getAccessToken());
 			Ion.with(this)
 			.load(USER_LOGIN_WITH_FB)
@@ -109,15 +109,21 @@ public class EntryActivity extends Activity {
 	                loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
 	                loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
 	                loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+	                loginPrefsEditor.commit();
 	                
-		            Intent intent = new Intent(EntryActivity.this, OutListActivity.class);
+		            Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
 		   			EntryActivity.this.startActivity(intent);
 	            }
 	        });
 			
 			
 		} else {
-			//TODO cleanup session related user credentials
+			 loginPrefsEditor.remove(LOGIN_INFO_EMAIL);
+             loginPrefsEditor.remove(LOGIN_INFO_LAST_NAME);
+             loginPrefsEditor.remove(LOGIN_INFO_FIRST_NAME);
+             loginPrefsEditor.remove(LOGIN_INFO_AUTHTOKEN);
+             loginPrefsEditor.remove(LOGIN_INFO_AVATAR_URL);
+             loginPrefsEditor.commit();
 		}
 	}
 
@@ -128,7 +134,7 @@ public class EntryActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				final Intent intent = new Intent(getApplicationContext(),
-						LoginActivity.class);
+						EmailLoginActivity.class);
 				startActivity(intent);
 			}
 		});

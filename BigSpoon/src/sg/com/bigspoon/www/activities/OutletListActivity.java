@@ -27,7 +27,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class OutListActivity extends Activity {
+public class OutletListActivity extends Activity {
 
 	ImageButton orderButton;
 	private Context context = this;
@@ -124,7 +124,7 @@ public class OutListActivity extends Activity {
 						CategoriesListActivity.class);
 				startActivity(intent);}
 				if(position==0||position==2){
-					AlertDialog alertDialog = new AlertDialog.Builder(OutListActivity.this).create();
+					AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
 					alertDialog.setMessage("The restaurant is coming soon.");
 	                // Setting OK Button
 	                alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {

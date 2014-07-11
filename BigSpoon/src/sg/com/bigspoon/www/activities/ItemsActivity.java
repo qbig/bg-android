@@ -73,7 +73,7 @@ public class ItemsActivity extends Activity {
 		            public void onClick(View arg0) {
 
 		                Intent intent = new Intent
-		                        (getApplicationContext(), LoginActivity.class);
+		                        (getApplicationContext(), EmailLoginActivity.class);
 		                    startActivity(intent); 
 		            }
 		        });
