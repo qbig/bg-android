@@ -36,6 +36,8 @@
     <string name="thanksforcoming"> Thanks for coming !</string>
     <string name="the_waiter"> The waiter will be right with you</string>
     <string name="request_for"> Request for bill is submitted </string>
+    
+    <string name="outlet_title">Outlet</string>
 
     <color name="white">#FFFFFF</color>
     <color name="blue">#86CBD7</color>
