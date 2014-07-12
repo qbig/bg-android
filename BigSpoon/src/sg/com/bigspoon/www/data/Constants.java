@@ -40,4 +40,7 @@ public class Constants {
 	    public static final String LOGIN_INFO_FIRST_NAME = "first_name";
 	    public static final String LOGIN_INFO_AUTHTOKEN = "auth_token";
 	    public static final String LOGIN_INFO_AVATAR_URL = "avatar_url";
+	    
+	    //KEY 
+	    public static final String OUTLET_ID = "outletID";
 }

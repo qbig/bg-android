@@ -1,39 +1,48 @@
 package sg.com.bigspoon.www.activities;
 
-import com.facebook.Session;
-import com.facebook.SessionState;
+import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+
+import java.util.List;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.CustomListAdapter;
-import static sg.com.bigspoon.www.data.Constants.*;
+import sg.com.bigspoon.www.adapters.OutletListAdapter;
+import sg.com.bigspoon.www.data.OutletModel;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 public class OutletListActivity extends Activity {
-
+	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
+	private SharedPreferences loginPreferences;
+	private List<OutletModel> outlets;
 	ImageButton orderButton;
-	private Context context = this;
+	
 	ListView list;
 	String[] web = { "Welcome to Kith ", "Testing !! The Groc.....", "Testing !! Strictly Pancakes" };
 	String[] webdesc = { "5 Simon Road Singapore ", "81 Upper East Coast Rd ", "Infinte Studios , #1-06,21...." };
@@ -131,46 +140,68 @@ public class OutletListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_out_list);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
 		
-		list = (ListView) findViewById(R.id.outlist);
-		CustomListAdapter adapter = new CustomListAdapter(this, web, imageId, webdesc, comingsoon);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		loginPreferences = getSharedPreferences(PREFS_NAME,0);
+		Ion.with(this)
+		.load(LIST_OUTLETS)
+		.setHeader("Content-Type", "application/json; charset=utf-8")
+		.as(new TypeToken<List<OutletModel>>() {
+        })
+		.setCallback(new FutureCallback<List<OutletModel>>() {
+	            @Override
+	            public void onCompleted(Exception e, List<OutletModel> result) {
+	                if (e != null) {
+	                    Toast.makeText(OutletListActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
+	                    return;
+	                }
+	                
+	                outlets = result;
+	        		list = (ListView) findViewById(R.id.outlist);
+	        		list.setAdapter(new OutletListAdapter(OutletListActivity.this, result));
+	        		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	        			
+	        			@Override
+	        			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	        				final OutletModel outletSelected = outlets.get(position);
+	        				if (outletSelected.isActive) {
+	        					Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
+	        					intent.putExtra(OUTLET_ID, outletSelected.outletID);
+	        					startActivity(intent);
+	        				} else {
+	        					showComingSoonDialog();
+	        				}
+	        			}
 
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position == 1) {
-					Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
-					startActivity(intent);
-				}
-				if (position == 0 || position == 2) {
-					AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
-					alertDialog.setMessage("The restaurant is coming soon.");
-					// Setting OK Button
-					alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							// Write your code here to execute after
-							// dialog closed
+						@SuppressWarnings("deprecation")
+						private void showComingSoonDialog() {
+							AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
+							alertDialog.setMessage("The restaurant is coming soon.");
+							
+							alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+
+								}
+							});
+
+							alertDialog.show();
+
+							// Change the style of the button text and message
+							TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
+							messageView.setGravity(Gravity.CENTER);
+							messageView.setHeight(140);
+							messageView.setTextSize(17);
+							Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
+							okButton.setTextColor(Color.parseColor("#117AFE"));
+							okButton.setTypeface(null, Typeface.BOLD);
+							okButton.setTextSize(19);
 						}
-					});
-
-					// Showing Alert Message
-					alertDialog.show();
-
-					// Change the style of the button text and message
-					TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
-					messageView.setGravity(Gravity.CENTER);
-					messageView.setHeight(140);
-					messageView.setTextSize(17);
-					Button bq = alertDialog.getButton(DialogInterface.BUTTON1);
-					bq.setTextColor(Color.parseColor("#117AFE"));
-					bq.setTypeface(null, Typeface.BOLD);
-					bq.setTextSize(19);
-				}
-			}
-		});
+	        		});
+	            }
+	        });
+		
+		
 		
 	}
 }

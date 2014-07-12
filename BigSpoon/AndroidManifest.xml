@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.adapters.CustomListAdapter"
+            android:name="sg.com.bigspoon.www.adapters.OutletListAdapter"
             android:label="@string/title_activity_custom_list"
             android:screenOrientation="portrait" >
         </activity>
