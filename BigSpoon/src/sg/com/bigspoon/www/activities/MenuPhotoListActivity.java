@@ -3,7 +3,9 @@ package sg.com.bigspoon.www.activities;
 import java.util.ArrayList;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.GlobalOrderNumber;
+import sg.com.bigspoon.www.data.ThreadSafeSingleton;
+import sg.com.bigspoon.www.data.MenuListItem;
+import sg.com.bigspoon.www.data.MenuListTextItem;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -28,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener{
 	//ViewPager viewpager;
@@ -53,12 +54,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	};
 	
     String[][] itemnames = new String[][]{
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"},
-    		{ "Bratwruts Ball", "Mushroom Melt", "Breakfast Butter", "Avacado Eggs","Bread", "Roasted Chicken"}
+    		{ "Bratwruts Ball1", "Mushroom Melt1", "Breakfast Butter1", "Avacado Eggs1","Bread1", "Roasted Chicken1"},
+    		{ "Bratwruts Ball2", "Mushroom Melt2", "Breakfast Butter2", "Avacado Eggs2","Bread2", "Roasted Chicken2"},
+    		{ "Bratwruts Ball3", "Mushroom Melt3", "Breakfast Butter3", "Avacado Eggs3","Bread3", "Roasted Chicken3"},
+    		{ "Bratwruts Ball4", "Mushroom Melt4", "Breakfast Butter4", "Avacado Eggs4","Bread4", "Roasted Chicken4"},
+    		{ "Bratwruts Ball5", "Mushroom Melt5", "Breakfast Butter5", "Avacado Eggs5","Bread5", "Roasted Chicken5"},
+    		{ "Bratwruts Ball6", "Mushroom Melt6", "Breakfast Butter6", "Avacado Eggs6","Bread6", "Roasted Chicken6"}
     };
     
     String[][] itemdesc =new String[][]{ { "**1**refined beet sugar,resin ,rice, syrup ,rosin ,rutin ,Sucralose ,saccharin ,soda, ash ", 
@@ -108,10 +109,10 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
     		{ "8.0", "8.0", "8.0", "8.0","8.0", "8.0"}
     };
 	
-	ArrayList<MenuPhotoListActivity.ListItem>[] totalList= (ArrayList<MenuPhotoListActivity.ListItem>[]) new ArrayList[categories.length];
+	public ArrayList<MenuListItem>[] totalList= (ArrayList<MenuListItem>[]) new ArrayList[categories.length];
 	
-	ArrayList<MenuPhotoListActivity.ListTextItem>[] totalTextList= (ArrayList<MenuPhotoListActivity.ListTextItem>[]) new ArrayList[categories.length];
-
+	public ArrayList<MenuListTextItem>[] totalTextList= (ArrayList<MenuListTextItem>[]) new ArrayList[categories.length];
+    //m indicates the current selected tab
 	int m=0,startposition=0;
 
 	@Override
@@ -129,21 +130,21 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 		TextView cornertext1;
 		cornertext1=(TextView)findViewById(R.id.corner);
-		GlobalOrderNumber.corner=cornertext1;
-		if(GlobalOrderNumber.totalOrderNumber!=0){
+		ThreadSafeSingleton.getInstance().corner=cornertext1;
+		if(ThreadSafeSingleton.getInstance().totalOrderNumber!=0){
 		cornertext1.setVisibility(View.VISIBLE);
-		cornertext1.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
+		cornertext1.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
 		}
 		
 		
 	   	for(int k=0;k<totalList.length;k++)
 	   	{
-	   		totalList[k] = new ArrayList<MenuPhotoListActivity.ListItem>();  
+	   		totalList[k] = new ArrayList<MenuListItem>();  
 	   	}
 	   	
 	   	for(int k=0;k<totalTextList.length;k++)
 	   	{
-	   		totalTextList[k] = new ArrayList<MenuPhotoListActivity.ListTextItem>();  
+	   		totalTextList[k] = new ArrayList<MenuListTextItem>();  
 	   	}
 	   	
 		listview = (ListView)findViewById(R.id.list); 
@@ -152,8 +153,9 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		
 		for(int i=0;i<6;i++){
 		  for(int j=0;j<6;j++){
-		   ListItem item = new ListItem();  
+			  MenuListItem item = new MenuListItem();  
            item.setImage(res.getDrawable(images[i][j]));  
+           //item.setNumber(0);
            totalList[i].add(item);  
 		  }
 		}
@@ -161,10 +163,11 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		
 		for(int i=0;i<6;i++){
 			  for(int j=0;j<6;j++){
-			   ListTextItem item = new ListTextItem();  
+				  MenuListTextItem item = new MenuListTextItem();  
 	           item.setItemname(itemnames[i][j]);  
 	           item.setItemDesc(itemdesc[i][j]); 
 	           item.setItemPrice(itemprice[i][j]); 
+	           //item.setNumber(0);
 	           totalTextList[i].add(item);  
 			  }
 			}
@@ -224,7 +227,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 			}
 		});*/
-
+		loadMenu();
 	}
 
 	
@@ -365,15 +368,28 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	        	                Intent intent = new Intent
 	        	                        (getApplicationContext(), ModifierActivity.class);
 	        	                intent.putExtra("Item Name",totalTextList[m].get(position).getItemName());
+	        	                intent.putExtra("Position",position);
 	        	                startActivity(intent); 
 	        				}
 	        				else{
-	        				GlobalOrderNumber.totalOrderNumber++;
+	        					ThreadSafeSingleton.getInstance().totalOrderNumber++;
+	        				if(!ThreadSafeSingleton.getInstance().itemname.contains(totalTextList[m].get(position).getItemName()))        					
+	        				{//if the instance has not been created before
+	        					
+	        					ThreadSafeSingleton.getInstance().itemname.add(totalTextList[m].get(position).getItemName());
+	        					ThreadSafeSingleton.getInstance().price.add(totalTextList[m].get(position).getItemPrice());
+	        				    totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);
+	        				    ThreadSafeSingleton.getInstance().number.add(Integer.toString(totalTextList[m].get(position).getNumber()));
+	        				    
+	        				}else{//if the instance has already been created before
+	        					totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);	
+	        					ThreadSafeSingleton.getInstance().number.set(ThreadSafeSingleton.getInstance().itemname.indexOf(totalTextList[m].get(position).getItemName()),Integer.toString(totalTextList[m].get(position).getNumber()));
+	        				}
 	        				View parent = (View)view.getParent().getParent().getParent();
 	        				TextView cornertext;
 	        				cornertext=(TextView)parent.findViewById(R.id.corner);
 	        				cornertext.setVisibility(View.VISIBLE);
-	        				cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
+	        				cornertext.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
 	        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 	        				cornertext.startAnimation(a);
 	        				}
@@ -422,12 +438,24 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		        	                startActivity(intent); 
 		        				}
 		        				else{
-		        			    GlobalOrderNumber.totalOrderNumber++;
+		        					ThreadSafeSingleton.getInstance().totalOrderNumber++;
+		        			    if(!ThreadSafeSingleton.getInstance().itemname.contains(totalTextList[m].get(position).getItemName()))        					
+		        				{//if the instance has not been created before
+		        					
+		        			    	ThreadSafeSingleton.getInstance().itemname.add(totalTextList[m].get(position).getItemName());
+		        			    	ThreadSafeSingleton.getInstance().price.add(totalTextList[m].get(position).getItemPrice());
+		        				    totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);
+		        				    ThreadSafeSingleton.getInstance().number.add(Integer.toString(totalTextList[m].get(position).getNumber()));
+		        				    
+		        				}else{//if the instance has already been created before
+		        					totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);	
+		        					ThreadSafeSingleton.getInstance().number.set(ThreadSafeSingleton.getInstance().itemname.indexOf(totalTextList[m].get(position).getItemName()),Integer.toString(totalTextList[m].get(position).getNumber()));
+		        				}
 		        				View parent = (View)view.getParent().getParent().getParent();
 		        				TextView cornertext;
 		        				cornertext=(TextView)parent.findViewById(R.id.corner);
 		        				cornertext.setVisibility(View.VISIBLE);
-		        				cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
+		        				cornertext.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
 		        				Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 		        				cornertext.startAnimation(a);
 		        				}
@@ -472,7 +500,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loadMenu();
 	}
 	
     class ListItemView {  
@@ -484,74 +511,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
     class ListTextItemView {  
         TextView textitemprice,textitemname,textitemdesc;  
         ImageButton imageButton;
-    }  
-    
-    class ListItem {  
-        private Drawable image;  
-        private String itemnames,itemdesc,itemprice;  
-  
-        public Drawable getImage() {  
-            return image;  
-        }  
-  
-        public void setImage(Drawable image) {  
-            this.image = image;  
-        }  
-        
-        public String getItemName() {  
-            return itemnames;  
-        }  
-  
-        public void setItemname(String string) {  
-        	itemnames = string;  
-        }  
-  
-        public String getItemDesc() {  
-            return itemdesc;  
-        }  
-  
-        public void setItemDesc(String string) {  
-        	itemdesc = string;  
-        }  
-        
-        public String getItemPrice() {  
-            return itemprice;  
-        }  
-  
-        public void setItemPrice(String string) {  
-        	itemprice = string;  
-        }  
-        
-    }  
-    
-    class ListTextItem {   
-        private String itemnames,itemdesc,itemprice;  
-  
-        public String getItemName() {  
-            return itemnames;  
-        }  
-  
-        public void setItemname(String string) {  
-        	itemnames = string;  
-        }  
-  
-        public String getItemDesc() {  
-            return itemdesc;  
-        }  
-  
-        public void setItemDesc(String string) {  
-        	itemdesc = string;  
-        }  
-        
-        public String getItemPrice() {  
-            return itemprice;  
-        }  
-  
-        public void setItemPrice(String string) {  
-        	itemprice = string;  
-        }  
-        
-    }  
+    }     
     
     public View getActionBarView() {
         Window window = getWindow();

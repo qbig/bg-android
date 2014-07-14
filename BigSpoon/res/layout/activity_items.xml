@@ -1,7 +1,12 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
+    android:layout_height="fill_parent"
+    >
+
+<ScrollView 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/white">
     
     <RelativeLayout 
@@ -13,52 +18,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ItemsActivity" >
 
+      <CheckedTextView
+          android:id="@+id/neworder"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:text="New Order:"
+          android:textSize="18sp" />
         
-         <ListView
-       android:id="@+id/listofFinalOrder"
+      <ExpandableListView 
+       android:id="@android:id/list"
        	android:layout_width="match_parent"
-        android:layout_height="275sp"
+        android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
+        android:fadingEdge="none"
+        android:groupIndicator="@android:color/transparent"
         android:layout_below="@+id/neworder"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:layout_weight="1"
-        
         android:dividerHeight="10.0sp" 
         android:layout_marginTop="15dp" >         
-        </ListView>
+        </ExpandableListView >
         
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="124dp"
-        android:background="@android:color/holo_green_light"
-        android:text="Place Order" />
-
-    <CheckedTextView
-        android:id="@+id/ordereditems"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:text="Ordered Items: " 
-        android:textSize="sp"/>
+      <Button
+          android:id="@+id/button1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@android:id/list"
+          android:layout_centerHorizontal="true"
+          android:layout_gravity="center"
+          android:layout_marginTop="15dp"
+          android:background="@color/BigSpoonBlue"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          android:text="Add Notes"
+          android:textColor="@color/white"
+          android:textSize="16sp"
+          android:textStyle="bold" />
 
         <TableLayout
         android:id="@+id/tableLayout2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" >
+        android:layout_marginTop="15dp" 
+        android:stretchColumns="0,1">
 
         
         <TableRow
         android:id="@+id/tableRow1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button1"
         android:layout_centerHorizontal="true" >
@@ -68,16 +77,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Subtotal :"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="          $0.00"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="$0.00"
+            android:textSize="15sp"
+            android:textStyle="bold" 
+            android:gravity="right"/>
 
     </TableRow>
         
@@ -90,14 +100,15 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Service Charge(1%)" 
+                android:text="Service Charge(0%)" 
                 android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:gravity="right"
+                android:text="$0.00" />
         </TableRow>
 
         <TableRow
@@ -110,13 +121,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GST (0%) :"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:gravity="right"
+                android:text="$0.00" />
         </TableRow>
 
         <TableRow
@@ -135,104 +147,64 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00"
+                android:text="$0.00"
+                android:gravity="right"
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>
-
-    <CheckedTextView
-        android:id="@+id/neworder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/button1"
-        android:layout_centerHorizontal="true"
-        android:text="New Order "
-        android:layout_marginTop="12dp" 
-        android:textSize="24dp"
-        android:textStyle="bold"  />
     
-    
-     <TableLayout 
-         android:id="@+id/tableLayoutmain"
-    	 android:layout_width="match_parent"
-    	android:layout_height="match_parent" 
-     	android:layout_below="@+id/neworder">  
-     <TableRow>
-        
-     
-         
-         
-         <ListView android:id="@+id/ilistViewForItesmActivity"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="left"
-    android:layout_weight="1"
-/>
-         
-         
-         
-          <ImageView
-            android:id="@+id/img_minu"
-            android:layout_width="150dp"
-            android:layout_height="100dp"/>
-           <TextView
-            android:id="@+id/txt_numberOfQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-        <ImageView
-            android:id="@+id/img_add"
-            android:layout_width="150dp"
-            android:layout_height="100dp"/>
-               
-         <TextView
-        android:id="@+id/item_desc"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@android:color/black"
-        android:textSize="13dip" />
-        <TextView
-        android:id="@+id/item_price"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@android:color/black"
-        android:textSize="13dip" />
-                 
-        </TableRow>
-</TableLayout>
-    
-     
-
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listofFinalOrder"
+        android:layout_below="@+id/tableLayout2"
         android:layout_centerHorizontal="true"
-        android:background="@color/BigSpoonBlue"
-        android:text="Add Notes" />
-    
+        android:layout_marginTop="15dp"
+        android:background="@color/BigSpoonGreen"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:text="Place Order"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+     
+   <CheckedTextView
+        android:id="@+id/ordereditems"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" 
+        android:text="Ordered Items:" 
+        android:textSize="18sp"/>
+
+    <ListView
+       android:id="@+id/listofFinalOrderPlaced"
+       	android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:layout_below="@+id/ordereditems"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+
+        android:dividerHeight="10.0sp" 
+        android:layout_marginTop="15dp" >         
+        </ListView>
     
      <TableLayout
         android:id="@+id/tableLayout3"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button2"
+        android:layout_below="@+id/listofFinalOrderPlaced"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" >
+        android:layout_marginTop="15dp" 
+        android:stretchColumns="0,1">
 
         
-         <TableRow
+        <TableRow
         android:id="@+id/tableRow5"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true" >
 
         <TextView
@@ -240,16 +212,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Subtotal :"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="          $0.00"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="$0.00"
+            android:textSize="15sp"
+            android:textStyle="bold" 
+            android:gravity="right"/>
 
     </TableRow>
         
@@ -262,14 +235,15 @@
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Service Charge(1%)" 
+                android:text="Service Charge(0%)" 
                 android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:gravity="right"
+                android:text="$0.00" />
         </TableRow>
 
         <TableRow
@@ -282,13 +256,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GST (0%) :"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00" />
+                android:gravity="right"
+                android:text="$0.00" />
         </TableRow>
 
         <TableRow
@@ -307,10 +282,59 @@
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="          $0.00"
+                android:text="$0.00"
+                android:gravity="right"
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>
     
+     <TextView
+         android:id="@+id/textView17"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/tableLayout3"
+         android:layout_marginTop="10dp"
+         android:text="Note that there may be discrepancies between BigSpoon and the actual bill."
+         android:textSize="11sp" />
+     
+       
+    <TextView
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
+    android:gravity="center_horizontal"
+    android:layout_below="@+id/textView17"
+    android:background="#ffffff" />
+    
   </RelativeLayout>
   </ScrollView>
+  
+<GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_buttons"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:stretchMode="columnWidth" 
+        >
+    </GridView>
+    
+<TextView
+        android:id="@+id/corner"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@id/gv_action_menu"
+        android:layout_alignRight="@id/gv_action_menu" 
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/badge_circle"/>
+    
+</RelativeLayout>
+    

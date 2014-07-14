@@ -62,9 +62,12 @@
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ItemsActivity"
+            
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_items"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme" >
+            android:theme="@style/CustomActionBarTheme" 
+            >
         </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.LoginActivity"
@@ -158,6 +161,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="sg.com.bigspoon.www.activities.ExpandableViewUtil"
+            android:windowSoftInputMode="adjustPan"/>
+            
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

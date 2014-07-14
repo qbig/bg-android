@@ -3,7 +3,7 @@ package sg.com.bigspoon.www.activities;
 import sg.com.bigspoon.www.R;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 import sg.com.bigspoon.www.adapters.TestSectionedAdapter;
-import sg.com.bigspoon.www.data.GlobalOrderNumber;
+import sg.com.bigspoon.www.data.ThreadSafeSingleton;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -18,9 +18,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ModifierActivity extends Activity {
+public class ModifierActivity extends Activity{
 	//private ModifierAdapter mAdapter;
     private String itemname;
+    private int position;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class ModifierActivity extends Activity {
 		//Obtain the parameter passed by MenuPhotoListActivity.java
 		if (extras != null) {
 			itemname = extras.getString("Item Name");
+			position = extras.getInt("Position");
 		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modifier);
@@ -75,10 +77,10 @@ public class ModifierActivity extends Activity {
 	
     public void setTotalOrder(){
 		TextView cornertext;
-		GlobalOrderNumber.totalOrderNumber++;
-		cornertext=GlobalOrderNumber.corner;
+		ThreadSafeSingleton.getInstance().totalOrderNumber++;
+		cornertext=ThreadSafeSingleton.getInstance().corner;
 		cornertext.setVisibility(View.VISIBLE);
-		cornertext.setText(String.valueOf(GlobalOrderNumber.totalOrderNumber));	
+		cornertext.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
 		Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 		cornertext.startAnimation(a);
     }
