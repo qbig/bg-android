@@ -43,6 +43,7 @@
             android:name="sg.com.bigspoon.www.activities.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

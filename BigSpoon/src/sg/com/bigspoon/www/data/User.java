@@ -5,12 +5,13 @@ import android.content.Context;
 public class User {
     private static User sInstance;
     private final Context mContext;
-
+    public OutletDetailsModel currentOutlet;
+    
     private User(Context context) {
         mContext = context.getApplicationContext();
     }
 
-    public User getInstance(Context context) {
+    static public User getInstance(Context context) {
         synchronized (User.class) {
             if (sInstance == null) {
                 sInstance = new User(context);

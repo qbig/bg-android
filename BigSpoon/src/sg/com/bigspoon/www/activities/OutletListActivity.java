@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -44,10 +46,7 @@ public class OutletListActivity extends Activity {
 	ImageButton orderButton;
 	
 	ListView list;
-	String[] web = { "Welcome to Kith ", "Testing !! The Groc.....", "Testing !! Strictly Pancakes" };
-	String[] webdesc = { "5 Simon Road Singapore ", "81 Upper East Coast Rd ", "Infinte Studios , #1-06,21...." };
-	Integer[] imageId = { R.drawable.kith, R.drawable.shinkushiya, R.drawable.strictlypancakes };
-	String[] comingsoon = { "Coming soon!", " ", "Coming soon!" };
+
 	private View mActionBarView;
 	private ActionBar actionBar;
 	private ImageButton orderHistoryButton;
@@ -80,7 +79,7 @@ public class OutletListActivity extends Activity {
 		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
 				RelativeLayout.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_VERTICAL);
-		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_logout);
+		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
 		logoutButton.setImageResource(R.drawable.logout_button);
 		logoutButton.setLayoutParams(params);
 		logoutButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
@@ -98,8 +97,13 @@ public class OutletListActivity extends Activity {
 				if (session != null && !session.isClosed()) {
 					session.closeAndClearTokenInformation();
 				}
-				Intent intent = new Intent(OutletListActivity.this, EntryActivity.class);
-				startActivity(intent);
+				if (OutletListActivity.this.isTaskRoot()){
+					Intent intent = new Intent(OutletListActivity.this, EntryActivity.class);
+					startActivity(intent);
+				} else {
+					finish();
+				}
+				
 			}
 		});
 	}
@@ -166,9 +170,15 @@ public class OutletListActivity extends Activity {
 	        			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	        				final OutletModel outletSelected = outlets.get(position);
 	        				if (outletSelected.isActive) {
-	        					Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
+	        					Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
 	        					intent.putExtra(OUTLET_ID, outletSelected.outletID);
-	        					startActivity(intent);
+	        					
+	        					final Editor loginPrefEditor = loginPreferences.edit();
+	        					loginPrefEditor.putInt(OUTLET_ID, outletSelected.outletID);
+	        					loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
+	        					loginPrefEditor.commit();
+	        					
+	        					OutletListActivity.this.startActivity(intent);
 	        				} else {
 	        					showComingSoonDialog();
 	        				}
@@ -200,8 +210,6 @@ public class OutletListActivity extends Activity {
 	        		});
 	            }
 	        });
-		
-		
-		
+
 	}
 }

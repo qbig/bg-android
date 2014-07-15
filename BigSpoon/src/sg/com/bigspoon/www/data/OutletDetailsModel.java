@@ -1,19 +1,21 @@
 package sg.com.bigspoon.www.data;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-public class OutletModel {
+import sg.com.bigspoon.www.data.CategoryModel;
+import sg.com.bigspoon.www.data.CategoryOrder;
+import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.TableModel;
 
-	public static class Restaurant {
-		public Icon icon;
-		public String name;
-		public int id;
-	}
-
-	public static class Icon {
-		public String thumbnail;
-	}
-	public Restaurant restaurant;
+public class OutletDetailsModel {
+	public DishModel[] dishes;
+	public CategoryModel[] categoriesDetails;
+	public CategoryOrder[] categoriesOrder;
+	public TableModel[] tables;
+	
+	public int restaurant;
 	public String imgURL;
 	public String name;
 	public String address;
@@ -63,9 +65,15 @@ public class OutletModel {
 	@SerializedName("ask_for_bill_enabled")
 	public boolean isBillEnabled;
 	
-	public int[] categories;
-	
-	public double distanceFrom() {
-		return 0;
+	public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json){
+		 final Gson gson = new Gson();
+         final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);
+         outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
+         outletDetails.tables = gson.fromJson(json.get("tables"), TableModel[].class);
+         outletDetails.categoriesDetails = gson.fromJson(json.get("categories"), CategoryModel[].class);
+         outletDetails.categoriesOrder = gson.fromJson(json.get("categories_order"), CategoryOrder[].class);
+         
+         return outletDetails;
 	}
+	
 }

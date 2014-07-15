@@ -17,19 +17,14 @@
          android:textSize="@dimen/default_title_indicator_text_size"
          android:textStyle="bold" />
 
-    <ImageButton 
-        android:id="@+id/btn_logout"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/btn_back"
         android:layout_width="wrap_content"
-        android:background="@null"
-        android:scaleType="centerInside"
-        android:onClick="toggleMenu"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        />
-    
-   <!-- android:paddingTop="8dp"
-        android:paddingLeft="10dp" 
-        android:src="@drawable/logout_button_test"-->
+        android:background="@null"
+        android:onClick="toggleMenu"
+        android:scaleType="centerInside" />
 
      <ImageButton 
         android:id="@+id/order_history"
