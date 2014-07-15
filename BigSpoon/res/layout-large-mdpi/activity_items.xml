@@ -1,7 +1,12 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
+    android:layout_height="fill_parent"
+    >
+
+<ScrollView 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/white">
     
     <RelativeLayout 
@@ -174,23 +179,21 @@
         android:textSize="18sp"/>
 
     <ListView
-       android:id="@+id/listofFinalOrderPlaced"
-       	android:layout_width="match_parent"
+        android:id="@+id/listOfOrderPlaced"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
         android:layout_below="@+id/ordereditems"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-
-        android:dividerHeight="10.0sp" 
-        android:layout_marginTop="15dp" >         
+        android:layout_marginTop="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+         
         </ListView>
     
      <TableLayout
         android:id="@+id/tableLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listofFinalOrderPlaced"
+        android:layout_below="@+id/listOfOrderPlaced"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" 
         android:stretchColumns="0,1">
@@ -291,6 +294,45 @@
          android:layout_marginTop="10dp"
          android:text="Note that there may be discrepancies between BigSpoon and the actual bill."
          android:textSize="11sp" />
+     
+       
+    <TextView
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
+    android:gravity="center_horizontal"
+    android:layout_below="@+id/textView17"
+    android:background="#ffffff" />
     
   </RelativeLayout>
   </ScrollView>
+  
+<GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_buttons"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:stretchMode="columnWidth" 
+        >
+    </GridView>
+    
+<TextView
+        android:id="@+id/corner"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@id/gv_action_menu"
+        android:layout_alignRight="@id/gv_action_menu" 
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/badge_circle"/>
+    
+</RelativeLayout>
+    

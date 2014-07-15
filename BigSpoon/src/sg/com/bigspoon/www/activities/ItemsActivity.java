@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.activities;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
+import sg.com.bigspoon.www.adapters.CustomItemsList;
 import sg.com.bigspoon.www.adapters.ExpandableAdapter;
 import sg.com.bigspoon.www.data.ThreadSafeSingleton;
 import android.os.Bundle;
@@ -26,8 +27,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
@@ -70,8 +75,6 @@ public class ItemsActivity extends ExpandableListActivity{
 		cornertext1.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
 		}
 		
-		
-		
 			
         final ExpandableListView expandableList = getExpandableListView(); 
         expandableList.setDividerHeight(2);
@@ -96,8 +99,8 @@ public class ItemsActivity extends ExpandableListActivity{
         expandableList.setDivider(getResources().getDrawable(R.color.white));
         expandableList.setDividerHeight(2);
         
-        Button addnote = (Button)findViewById(R.id.button1);
-        addnote.setOnClickListener(new View.OnClickListener() {
+        Button addNote = (Button)findViewById(R.id.button1);
+        addNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if(!isExpanded){
@@ -112,7 +115,8 @@ public class ItemsActivity extends ExpandableListActivity{
                 	}
              }
 		}});
-		
+        
+
 		new ListViewUtil().setListViewHeightBasedOnChildren(expandableList,0);  
 		
 		expandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
@@ -131,24 +135,158 @@ public class ItemsActivity extends ExpandableListActivity{
 							expandableList, groupPosition);
 			}
 		});
-		      loadMenu();
-		}
-	
-	
-	public void addListenerOnImagePlus() {
-		  imageplus = (ImageButton) findViewById(R.id.imgPlus);
-		  imageplus.setOnClickListener(new OnClickListener() {
+		      
+		loadMenu();    
+		      
+	    Button placeOrder = (Button)findViewById(R.id.button2);
+		        placeOrder.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
 
-		            @Override
-		            public void onClick(View arg0) {
+						placeOrderAlertDialog();
 
-		                Intent intent = new Intent
-		                        (getApplicationContext(), LoginActivity.class);
-		                    startActivity(intent); 
-		            }
-		        });
-		    }
+				}
 
+					@SuppressWarnings("deprecation")
+					private void placeOrderAlertDialog() {
+						
+						if(ThreadSafeSingleton.getInstance().itemname.isEmpty()){
+							AlertDialog alertNoOrder = new AlertDialog.Builder(ItemsActivity.this).create();	
+							alertNoOrder.setTitle("Place Order");
+							alertNoOrder.setMessage("You haven't selected anything.");
+							alertNoOrder.setView(null);
+						 	alertNoOrder.setButton("Okay",new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,int whichButton) {
+		                           //
+								}
+							});
+							alertNoOrder.show(); 
+							int divierId = alertNoOrder.getContext().getResources()
+					                .getIdentifier("android:id/titleDivider", null, null);
+					        View divider = alertNoOrder.findViewById(divierId);
+					        divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+					        final int alertTitle =alertNoOrder.getContext().getResources().getIdentifier( "alertTitle", "id", "android" );
+					        TextView titleView = (TextView) alertNoOrder.findViewById(alertTitle);
+					        titleView.setGravity(Gravity.CENTER);
+					        titleView.setTypeface(null,Typeface.BOLD);
+					        titleView.setTextSize(19);
+					        titleView.setTextColor( getResources().getColor(android.R.color.black));
+					        
+							TextView messageView = (TextView)alertNoOrder.findViewById(android.R.id.message);
+			                messageView.setGravity(Gravity.CENTER);
+			                //messageView.setHeight(140);
+			                messageView.setTextSize(17);
+						    
+			                Button bq3 = alertNoOrder.getButton(DialogInterface.BUTTON1);
+			                bq3.setTextColor(Color.parseColor("#117AFE"));
+			                bq3.setTypeface(null,Typeface.BOLD);
+			                bq3.setTextSize(19);
+							
+						}else{
+							
+					    LayoutInflater inflater = getLayoutInflater();
+					    
+					    AlertDialog.Builder alertbuilder = new AlertDialog.Builder(ItemsActivity.this);
+					    
+						View dialoglayout = inflater.inflate(R.layout.dialog_layout, null);
+						
+						LinearLayout layoutholder = (LinearLayout)dialoglayout.findViewById(R.id.dialog_layout_root);
+						
+						TextView textTitle = new TextView(getBaseContext());
+			        	LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			        	params.gravity=Gravity.CENTER;
+			        	final float scale = getBaseContext().getResources().getDisplayMetrics().density;
+			        	int padding_10dp = (int) (10 * scale + 0.5f);
+			        	int padding_25dp = (int) (25 * scale + 0.5f);
+			        	
+			        	params.setMargins(0,0,0,padding_10dp);
+			        	textTitle.setLayoutParams(params);
+			        	textTitle.setText("New Order");
+			        	textTitle.setTextSize(19);
+			        	textTitle.setTextColor(getResources().getColor(android.R.color.black));
+			        	textTitle.setTypeface(null, Typeface.BOLD);
+			        	layoutholder.addView(textTitle);
+			        	
+			        	
+			        	for(int i = 0;i<ThreadSafeSingleton.getInstance().number.size();i++)
+						{
+			        		FrameLayout childLayout = new FrameLayout(getBaseContext());
+			        	    TextView textNumber = new TextView(getBaseContext());
+			        	    //textNumber.setId(R.id.textNumber);
+			        	    FrameLayout.LayoutParams params2 =new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			        	    params2.setMargins(padding_10dp,0,0,0);
+			        	    textNumber.setLayoutParams(params2);
+			        	    textNumber.setText(ThreadSafeSingleton.getInstance().number.get(i));
+			        	    textNumber.setTextColor(getResources().getColor(android.R.color.black));
+			        	    childLayout.addView(textNumber);
+			        	    
+			        	    
+			        	    TextView xMark = new TextView(getBaseContext());
+			        	    //textNumber.setId(R.id.textNumber);
+			        	    FrameLayout.LayoutParams params3 =new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			        	    params3.setMargins(padding_25dp,0,0,0);
+			        	    xMark.setLayoutParams(params3);
+			        	    xMark.setText("x");
+			        	    xMark.setTextColor(getResources().getColor(android.R.color.black));
+			        	    childLayout.addView(xMark);
+			        	    
+			        	    
+			        	    TextView itemName = new TextView(getBaseContext());
+			        	    //textNumber.setId(R.id.textNumber);
+			        	    FrameLayout.LayoutParams params4 =new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			        	    params4.setMargins(0,0,padding_25dp,0);
+			        	    params4.gravity=Gravity.RIGHT;
+			        	    itemName.setLayoutParams(params4);
+			        	    itemName.setText(ThreadSafeSingleton.getInstance().itemname.get(i));
+			        	    itemName.setTextColor(getResources().getColor(android.R.color.black));
+			        	    childLayout.addView(itemName);
+			        	    
+			        	    LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT); 
+			        	    layoutholder.addView(childLayout,parentParams);
+						}
+			        	
+			        	alertbuilder.setView(layoutholder);
+
+			        	alertbuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,int whichButton) {
+		                      //
+							}
+						});
+			        	alertbuilder.setPositiveButton("Okay",new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,int whichButton) {
+								ThreadSafeSingleton.getInstance().itemnameOld=ThreadSafeSingleton.getInstance().itemname;
+								ThreadSafeSingleton.getInstance().numberOld=ThreadSafeSingleton.getInstance().number;
+								ThreadSafeSingleton.getInstance().priceOld=ThreadSafeSingleton.getInstance().price;
+								ThreadSafeSingleton.getInstance().initialize();
+								Intent i = new Intent(getBaseContext(), ItemsActivity.class);
+								startActivity(i);
+								finish();
+							}
+						});
+						
+			        	 AlertDialog alertDialog = alertbuilder.create();
+			        	 alertDialog.show();
+					    
+		                Button okButtom = alertDialog.getButton(DialogInterface.BUTTON1);
+		                okButtom.setTextColor(Color.parseColor("#117AFE"));
+		                okButtom.setTextSize(16);
+		                okButtom.setTypeface(null, Typeface.BOLD);
+		                Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON2);
+		                cancelButton.setTextColor(Color.parseColor("#117AFE"));
+		                cancelButton.setTextSize(16);
+		                cancelButton.setTypeface(null, Typeface.BOLD);
+						}
+					}
+					
+		        });     
+ 
+		        
+		ListView listOfOrderPlaced = (ListView) findViewById(R.id.listOfOrderPlaced);
+		CustomItemsList adapterForPlaced = new CustomItemsList(this);
+		listOfOrderPlaced.setAdapter(adapterForPlaced);   
+		new ListViewUtil().setListViewHeightBasedOnChildren(listOfOrderPlaced,0);
+		      
+ }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,9 +322,7 @@ public class ItemsActivity extends ExpandableListActivity{
 		        	finish();
 		        }
 		    });
-		  
-		    
-		    
+		      
 		    
 		    ImageButton ibItem2 = (ImageButton) mActionBarView.findViewById(R.id.order_history);
 		    ibItem2.setOnClickListener(new View.OnClickListener() {
@@ -224,8 +360,7 @@ public class ItemsActivity extends ExpandableListActivity{
 		        listView.setLayoutParams(params);  
 		    }  
 		}
-	
-	
+
 	
 	protected void loadMenu() {
 
@@ -294,7 +429,7 @@ public class ItemsActivity extends ExpandableListActivity{
 					// i = new Intent(ctx, CartActivity.class);
 					alert2.setMessage("Would you like your bill?");
 					alert2.setView(null);
-					// Set an EditText view to get user input
+					
 
 		            alert2.setButton2("Cancel",new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int whichButton) {
