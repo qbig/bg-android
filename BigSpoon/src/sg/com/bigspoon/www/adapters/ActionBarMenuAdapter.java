@@ -19,7 +19,6 @@ public class ActionBarMenuAdapter extends ArrayAdapter<String> {
 
 	public ActionBarMenuAdapter(Context context, int count) {
 		super(context, 0);
-		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.count = count;
 	}

@@ -25,39 +25,63 @@ import com.koushikdutta.ion.Ion;
 
 public class MenuListViewAdapter extends BaseAdapter {
 
-	private Context context;
+	private Context mContext;
 	private OutletDetailsModel outletInfo;
 	public int currentSelectedCategoryTabIndex;
 	private static final String ION_LOGGING_MENU_LIST = "ion-menu-list";
+
+	private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
+	private static final int TYPE_PHOTO_ITEM = 0;
+	private static final int TYPE_TEXT_ITEM = 1;
+	private View.OnClickListener addDishButtonOnClickListener;
+
 	public MenuListViewAdapter(Context context, OutletDetailsModel outletInfo) {
 		super();
 		this.outletInfo = outletInfo;
-		this.context = context;
+		this.mContext = context;
 		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
+		initAddDishButtonListener();
+	}
+
+	private void initAddDishButtonListener() {
+		addDishButtonOnClickListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final Integer itemPosition = (Integer) view.getTag();
+				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
+				if (currentDish.customizable) {
+					Intent intent = new Intent(mContext, ModifierActivity.class);
+					intent.putExtra("Item Name", currentDish.name);
+					mContext.startActivity(intent);
+				} else {
+					MenuPhotoListActivity.totalOrderNumber++;
+					View parent = (View) view.getParent().getParent().getParent();
+					TextView cornertext;
+					cornertext = (TextView) parent.findViewById(R.id.corner);
+					cornertext.setVisibility(View.VISIBLE);
+					cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
+					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+					cornertext.startAnimation(a);
+				}
+			}
+		};
 	}
 
 	@Override
 	public DishModel getItem(int position) {
 		int count = 0;
-		
-		for (int i = 0, len = outletInfo.dishes.length; i < len; i++){
-			int categoryIndex = 0;
-			for(int j = 0 ; j < outletInfo.categoriesOrder.length; j++){
-				if(outletInfo.categoriesOrder[j].categoryId == outletInfo.dishes[i].categories[0].id){
-					categoryIndex = outletInfo.categoriesOrder[j].position;
-					break;
-				}
-			}
-			if (categoryIndex == currentSelectedCategoryTabIndex){
-				if (count == position){
-					return outletInfo.dishes[i]; 
+
+		for (int i = 0, len = outletInfo.dishes.length; i < len; i++) {
+			if (outletInfo.dishes[i].categories[0].id == outletInfo.categoriesDetails[currentSelectedCategoryTabIndex].id) {
+				if (count == position) {
+					return outletInfo.dishes[i];
 				} else {
 					count++;
 				}
 			}
 		}
-		
-		return null; //shit breaks
+
+		return null; // shit breaks
 	}
 
 	@Override
@@ -68,110 +92,86 @@ public class MenuListViewAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		int count = 0;
-		for (int i = 0, len = outletInfo.dishes.length; i < len; i++){
-			int categoryIndex = 0;
-			for(int j = 0 ; j < outletInfo.categoriesOrder.length; j++){
-				if(outletInfo.categoriesOrder[j].categoryId == outletInfo.dishes[i].categories[0].id){
-					categoryIndex = outletInfo.categoriesOrder[j].position;
-					break;
-				}
-			}
-			if (categoryIndex == currentSelectedCategoryTabIndex){
+		for (int i = 0, len = outletInfo.dishes.length; i < len; i++) {
+			if (outletInfo.dishes[i].categories[0].id == outletInfo.categoriesDetails[currentSelectedCategoryTabIndex].id) {
 				count++;
 			}
 		}
-		
+
 		return count;
 	}
 
 	@Override
+	public int getViewTypeCount() {
+		return MENU_LIST_VIEW_TYPE_COUNT_IS_2;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return MenuPhotoListActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
+	}
+
+	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ListItemView listItemView;
-		ListTextItemView listTextItemView;
 		final DishModel currentDish = getItem(position);
-		if (MenuPhotoListActivity.isPhotoMode == true) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.menu_photo_item_row, null);
+		
+		if ( MenuPhotoListActivity.isPhotoMode ) {
+			final ListPhotoItemViewHolder photoViewHolder;
+			if (convertView == null){
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_photo_item_row, null);
 
-			listItemView = new ListItemView();
-			listItemView.imageView = (ImageView) convertView.findViewById(R.id.menuitem);
-			listItemView.textItemDesc = (TextView) convertView.findViewById(R.id.itemdesc);
-			listItemView.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
-			listItemView.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
-			listItemView.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
-
-			listItemView.imageButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (position == 0) {
-						Intent intent = new Intent(context, ModifierActivity.class);
-						intent.putExtra("Item Name", currentDish.name);
-						context.startActivity(intent);
-					} else {
-						MenuPhotoListActivity.totalOrderNumber++;
-						View parent = (View) view.getParent().getParent().getParent();
-						TextView cornertext;
-						cornertext = (TextView) parent.findViewById(R.id.corner);
-						cornertext.setVisibility(View.VISIBLE);
-						cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
-						Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_up);
-						cornertext.startAnimation(a);
-					}
-				}
-			});
-
-			Ion.with(context)
-			.load(BASE_URL + currentDish.photo.thumbnail)
-			.intoImageView(listItemView.imageView);
+				photoViewHolder = new ListPhotoItemViewHolder();
+				photoViewHolder.imageView = (ImageView) convertView.findViewById(R.id.menuitem);
+				photoViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.itemdesc);
+				photoViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
+				photoViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
+				photoViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				convertView.setTag(photoViewHolder);
+				photoViewHolder.imageButton.setOnClickListener(addDishButtonOnClickListener);
+			} else {
+				photoViewHolder = (ListPhotoItemViewHolder) convertView.getTag();
+			}
 			
-			listItemView.textItemName.setText(currentDish.name);
-			listItemView.textItemDesc.setText(currentDish.description);
-			listItemView.textItemPrice.setText(currentDish.price + "");
-
+			Ion.with(mContext)
+			.load(BASE_URL + currentDish.photo.thumbnail)
+			.intoImageView(photoViewHolder.imageView);
+			
+			photoViewHolder.textItemName.setText(currentDish.name);
+			photoViewHolder.textItemDesc.setText(currentDish.description);
+			photoViewHolder.textItemPrice.setText(currentDish.price + "");
+			photoViewHolder.imageButton.setTag(position);
 			return convertView;
 		} else {
-			convertView = LayoutInflater.from(context).inflate(R.layout.menu_text_item_row, null);
+			final ListTextItemViewHolder textViewHolder;
+			if (convertView == null){
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_text_item_row, null);
 
-			listTextItemView = new ListTextItemView();
-			listTextItemView.textitemprice = (TextView) convertView.findViewById(R.id.textitemprice);
-			listTextItemView.textitemname = (TextView) convertView.findViewById(R.id.textitemname);
-			listTextItemView.textitemdesc = (TextView) convertView.findViewById(R.id.textitemdesc);
-			listTextItemView.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
-
-			listTextItemView.imageButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (position == 0) {
-						Intent intent = new Intent(context, ModifierActivity.class);
-						intent.putExtra("Item Name", currentDish.name);
-						context.startActivity(intent);
-					} else {
-						MenuPhotoListActivity.totalOrderNumber++;
-						View parent = (View) view.getParent().getParent().getParent();
-						TextView cornertext;
-						cornertext = (TextView) parent.findViewById(R.id.corner);
-						cornertext.setVisibility(View.VISIBLE);
-						cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
-						Animation a = AnimationUtils.loadAnimation(context, R.anim.scale_up);
-						cornertext.startAnimation(a);
-					}
-				}
-			});
-
-			listTextItemView.textitemname.setText(currentDish.name);
-			listTextItemView.textitemdesc.setText(currentDish.description);
-			listTextItemView.textitemprice.setText(currentDish.price + "");
-
+				textViewHolder = new ListTextItemViewHolder();
+				textViewHolder.textitemprice = (TextView) convertView.findViewById(R.id.textitemprice);
+				textViewHolder.textitemname = (TextView) convertView.findViewById(R.id.textitemname);
+				textViewHolder.textitemdesc = (TextView) convertView.findViewById(R.id.textitemdesc);
+				textViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				convertView.setTag(textViewHolder);
+				textViewHolder.imageButton.setOnClickListener(addDishButtonOnClickListener);
+			} else {
+				textViewHolder = (ListTextItemViewHolder) convertView.getTag();
+			}
+	
+			textViewHolder.textitemname.setText(currentDish.name);
+			textViewHolder.textitemdesc.setText(currentDish.description);
+			textViewHolder.textitemprice.setText(currentDish.price + "");
+			textViewHolder.imageButton.setTag(position);
 			return convertView;
 		}
 	}
 
-	class ListItemView {
+	class ListPhotoItemViewHolder {
 		ImageView imageView;
 		TextView textItemPrice, textItemName, textItemDesc;
 		ImageButton imageButton;
 	}
 
-	class ListTextItemView {
+	class ListTextItemViewHolder {
 		TextView textitemprice, textitemname, textitemdesc;
 		ImageButton imageButton;
 	}
