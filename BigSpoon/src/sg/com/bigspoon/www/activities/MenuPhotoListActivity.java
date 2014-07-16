@@ -55,7 +55,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		setupOrderedDishCounter();
 		setupListView();
 		setupCategoryTabs();
-		adapter.notifyDataSetChanged();
 	}
 
 	private void setupListView() {
@@ -186,7 +185,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		adapter.currentSelectedCategoryTabIndex = tab.getPosition();
+		adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
 		adapter.notifyDataSetChanged();
 	}
 	
@@ -200,72 +199,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	protected void onResume() {
 		super.onResume();
 		loadMenu();
-	}
-
-	public class ListItem {
-		private Drawable image;
-		private String itemnames, itemdesc, itemprice;
-
-		public Drawable getImage() {
-			return image;
-		}
-
-		public void setImage(Drawable image) {
-			this.image = image;
-		}
-
-		public String getItemName() {
-			return itemnames;
-		}
-
-		public void setItemname(String string) {
-			itemnames = string;
-		}
-
-		public String getItemDesc() {
-			return itemdesc;
-		}
-
-		public void setItemDesc(String string) {
-			itemdesc = string;
-		}
-
-		public String getItemPrice() {
-			return itemprice;
-		}
-
-		public void setItemPrice(String string) {
-			itemprice = string;
-		}
-	}
-
-	public class ListTextItem {
-		private String itemnames, itemdesc, itemprice;
-
-		public String getItemName() {
-			return itemnames;
-		}
-
-		public void setItemname(String string) {
-			itemnames = string;
-		}
-
-		public String getItemDesc() {
-			return itemdesc;
-		}
-
-		public void setItemDesc(String string) {
-			itemdesc = string;
-		}
-
-		public String getItemPrice() {
-			return itemprice;
-		}
-
-		public void setItemPrice(String string) {
-			itemprice = string;
-		}
-
 	}
 
 	public View getActionBarView() {
