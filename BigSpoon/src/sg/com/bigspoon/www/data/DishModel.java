@@ -47,6 +47,8 @@ public class DishModel {
 	@SerializedName("is_active")
 	public boolean isActive;
 	
+	public Modifer modifier;
+	
 	public boolean isDummyDish(){
 		return price < 0.01;
 	}

@@ -4,11 +4,13 @@ import android.content.Context;
 
 public class User {
     private static User sInstance;
-    private final Context mContext;
+    private Context mContext;
     public OutletDetailsModel currentOutlet;
+    public DiningSession currentSession;
     
     private User(Context context) {
-        mContext = context.getApplicationContext();
+        setContext(context.getApplicationContext());
+        currentSession = new DiningSession();
     }
 
     static public User getInstance(Context context) {
@@ -16,7 +18,16 @@ public class User {
             if (sInstance == null) {
                 sInstance = new User(context);
             }
+            sInstance.setContext(context); 
             return sInstance;
         }
     }
+
+	public Context getContext() {
+		return mContext;
+	}
+
+	public void setContext(Context mContext) {
+		this.mContext = mContext;
+	}
 }

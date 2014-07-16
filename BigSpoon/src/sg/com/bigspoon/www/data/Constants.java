@@ -41,8 +41,13 @@ public class Constants {
 	    public static final String LOGIN_INFO_AUTHTOKEN = "auth_token";
 	    public static final String LOGIN_INFO_AVATAR_URL = "avatar_url";
 	    
+	    //TYPE
+	    public static final String MODIFIER_SECTION_TYPE_RADIO = "modifierRadio";
+	    public static final String MODIFIER_SECTION_TYPE_COUNTER = "modiferCounter";
+	    
 	    //KEY 
 	    public static final String OUTLET_ID = "outletID";
 	    public static final String OUTLET_ICON = "outletICon";
 	    public static final String POS_FOR_CLICKED_CATEGORY = "startposition";
+	    
 }

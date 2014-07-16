@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
 import sg.com.bigspoon.www.data.CategoryModel;
@@ -68,10 +69,17 @@ public class OutletDetailsModel {
 	public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json){
 		 final Gson gson = new Gson();
          final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);
-         outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
          outletDetails.tables = gson.fromJson(json.get("tables"), TableModel[].class);
          outletDetails.categoriesDetails = gson.fromJson(json.get("categories"), CategoryModel[].class);
          outletDetails.categoriesOrder = gson.fromJson(json.get("categories_order"), CategoryOrder[].class);
+         outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
+         final JsonParser parser = new JsonParser();
+         for(int i = 0, len = outletDetails.dishes.length; i < len; i++){
+        	 if (outletDetails.dishes[i].customizable){
+        		 JsonObject modifierJson = (JsonObject) parser.parse(outletDetails.dishes[i].modifierJsonString);
+        		 outletDetails.dishes[i].modifier = gson.fromJson(modifierJson, Modifer.class); 
+        	 }
+         }
          
          return outletDetails;
 	}
