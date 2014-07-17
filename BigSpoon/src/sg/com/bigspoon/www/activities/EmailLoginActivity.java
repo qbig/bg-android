@@ -37,8 +37,7 @@ public class EmailLoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		Ion.getDefault(this).configure()
-				.setLogging(ION_LOGGING_LOGIN, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_LOGIN, Log.DEBUG);
 		loginPrefsEditor = getSharedPreferences(PREFS_NAME, 0).edit();
 
 		mLoginEmailField = (EditText) findViewById(R.id.loginEmail);
@@ -57,38 +56,44 @@ public class EmailLoginActivity extends Activity {
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
 					json.addProperty("password", mLoginPasswordField.getText().toString());
-					
-					Ion.with(EmailLoginActivity.this)
-					.load(USER_LOGIN)
-					.setHeader("Content-Type", "application/json; charset=utf-8")
-					.setJsonObjectBody(json)
-					.asJsonObject()
-					.setCallback(new FutureCallback<JsonObject>() {
-			            @Override
-			            public void onCompleted(Exception e, JsonObject result) {
-			                if (e != null) {
-			                    Toast.makeText(EmailLoginActivity.this, "Error during login", Toast.LENGTH_LONG).show();
-			                    return;
-			                }
-			                final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
-			                final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
-			                final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
-			                final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
-			                final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString(); 
-				            
-			                loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
-			                loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
-			                loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
-			                loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
-			                loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
-			                loginPrefsEditor.commit();
-			                
-				            Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
-				            EmailLoginActivity.this.startActivity(intent);
-			            }
-			        });
+
+					Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
+							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
+							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+								@Override
+								public void onCompleted(Exception e, JsonObject result) {
+									if (e != null) {
+										Toast.makeText(EmailLoginActivity.this, "Error during login", Toast.LENGTH_LONG)
+												.show();
+										return;
+									}
+									try {
+										final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
+										final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
+										final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+										final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+										final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+
+										loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
+										loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+										loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+										loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+										loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+										loginPrefsEditor.commit();
+
+										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
+										EmailLoginActivity.this.startActivity(intent);
+									} catch (NullPointerException nullException) {
+										Toast.makeText(EmailLoginActivity.this,
+												"User not found, please check your email address.", Toast.LENGTH_LONG)
+												.show();
+									}
+
+								}
+							});
 				} else {
-					Toast.makeText(EmailLoginActivity.this, "Sorry, you need to fill up the forms", Toast.LENGTH_LONG).show();
+					Toast.makeText(EmailLoginActivity.this, "Sorry, you need to fill up the forms", Toast.LENGTH_LONG)
+							.show();
 				}
 			}
 		});
@@ -96,8 +101,7 @@ public class EmailLoginActivity extends Activity {
 	}
 
 	private boolean isLoginFieldsValid() {
-		return !mLoginEmailField.getText().toString().isEmpty()
-				&& !mLoginPasswordField.getText().toString().isEmpty();
+		return !mLoginEmailField.getText().toString().isEmpty() && !mLoginPasswordField.getText().toString().isEmpty();
 	}
 
 	@Override
