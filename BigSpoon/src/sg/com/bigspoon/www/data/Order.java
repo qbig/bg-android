@@ -28,7 +28,7 @@ public class Order {
 			}
 			mItems.add(newItem);
 		} else {
-			incrementDishAtIndex(dish.id);
+			incrementDishWithId(dish.id);
 		}
 	}
 	
