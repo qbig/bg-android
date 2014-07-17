@@ -147,7 +147,6 @@ public class ItemsActivity extends ExpandableListActivity{
 						placeOrderAlertDialog();
 
 				}
-
 					@SuppressWarnings("deprecation")
 					private void placeOrderAlertDialog() {
 						

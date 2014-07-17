@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".data.BigSpoon"
         android:allowBackup="true"
         android:icon="@drawable/bigspoonmobileappiconwithname"
         android:label="@string/app_name"
@@ -43,6 +44,7 @@
             android:name="sg.com.bigspoon.www.activities.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,12 +53,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.adapters.CustomListAdapter"
+            android:name="sg.com.bigspoon.www.adapters.OutletListAdapter"
             android:label="@string/title_activity_custom_list"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.activities.OutListActivity"
+            android:name="sg.com.bigspoon.www.activities.OutletListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme" >
         </activity>
@@ -70,7 +72,7 @@
             >
         </activity>
         <activity
-            android:name="sg.com.bigspoon.www.activities.LoginActivity"
+            android:name="sg.com.bigspoon.www.activities.EmailLoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -166,9 +168,6 @@
             android:windowSoftInputMode="adjustPan"/>
             
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
     </application>
 
 </manifest>

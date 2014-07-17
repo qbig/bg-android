@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www.activities;
 
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import sg.com.bigspoon.www.R;
 import android.app.Activity;
@@ -35,12 +36,22 @@ public class LaunchActivity extends Activity {
             		setTutorialFlagTrue();
                     startTutorialActivity();
             	} else {
-            		startEntryActivity();
+            		if (loginPreferences.contains(LOGIN_INFO_AUTHTOKEN)){
+            			startOutletActivity();
+            		} else {
+            			startEntryActivity();
+            		}
+            		
             	}
             	
             	finish();
             }
-
+            
+            private void startOutletActivity() {
+				Intent i = new Intent(LaunchActivity.this, OutletListActivity.class);
+				startActivity(i);
+			}
+            
 			private void startEntryActivity() {
 				Intent i = new Intent(LaunchActivity.this, EntryActivity.class);
 				startActivity(i);
