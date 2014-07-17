@@ -7,9 +7,13 @@ import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ExpandableAdapter extends BaseExpandableListAdapter 
 {
@@ -51,7 +55,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     // method getGroupView is called automatically for each parent item
     // Implement this method as per your requirement
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) 
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) 
     {
 
         if (convertView == null) {
@@ -59,14 +63,36 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
         }
 
     	TextView numberView = (TextView) convertView.findViewById(R.id.quantitytxt);
-
     	TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
     	TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
     	
-    	numberView.setText(number.get(groupPosition));
-    	
+    	numberView.setText(number.get(groupPosition));   	
     	itemdescView.setText(name.get(groupPosition));
     	priceView.setText(price.get(groupPosition));
+    	
+    	ImageButton minusButton = (ImageButton) convertView.findViewById(R.id.imgMinus);
+    	ImageButton plusButton = (ImageButton) convertView.findViewById(R.id.imgPlus);
+    	minusButton.setOnClickListener(new OnClickListener(){
+    		@Override
+            public void onClick(View view) {
+    			String temp;
+    			
+				if(Integer.parseInt(number.get(groupPosition))-1<0) temp = "0";
+				else temp = Integer.toString(Integer.parseInt(number.get(groupPosition))-1);
+				
+    			number.set(groupPosition, temp);
+    			notifyDataSetChanged();
+    			}
+    		 });
+    	
+    	plusButton.setOnClickListener(new OnClickListener(){
+    		@Override
+            public void onClick(View view) {
+    			String temp = Integer.toString(Integer.parseInt(number.get(groupPosition))+1);
+    			number.set(groupPosition, temp);
+    			notifyDataSetChanged();
+    			}
+    		 });
 
         return convertView;
     }

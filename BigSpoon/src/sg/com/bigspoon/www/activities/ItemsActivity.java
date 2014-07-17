@@ -39,6 +39,7 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ItemsActivity extends ExpandableListActivity{
 
@@ -177,10 +178,10 @@ public class ItemsActivity extends ExpandableListActivity{
 			                //messageView.setHeight(140);
 			                messageView.setTextSize(17);
 						    
-			                Button bq3 = alertNoOrder.getButton(DialogInterface.BUTTON1);
-			                bq3.setTextColor(Color.parseColor("#117AFE"));
-			                bq3.setTypeface(null,Typeface.BOLD);
-			                bq3.setTextSize(19);
+			                Button okButton = alertNoOrder.getButton(DialogInterface.BUTTON1);
+			                okButton.setTextColor(Color.parseColor("#117AFE"));
+			                okButton.setTypeface(null,Typeface.BOLD);
+			                okButton.setTextSize(19);
 							
 						}else{
 							
@@ -254,14 +255,16 @@ public class ItemsActivity extends ExpandableListActivity{
 						});
 			        	alertbuilder.setPositiveButton("Okay",new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,int whichButton) {
-								ThreadSafeSingleton.getInstance().itemnameOld=ThreadSafeSingleton.getInstance().itemname;
-								ThreadSafeSingleton.getInstance().numberOld=ThreadSafeSingleton.getInstance().number;
-								ThreadSafeSingleton.getInstance().priceOld=ThreadSafeSingleton.getInstance().price;
+								ThreadSafeSingleton.getInstance().itemnameOld.addAll(ThreadSafeSingleton.getInstance().itemname);
+								ThreadSafeSingleton.getInstance().numberOld.addAll(ThreadSafeSingleton.getInstance().number);
+								ThreadSafeSingleton.getInstance().priceOld.addAll(ThreadSafeSingleton.getInstance().price);
 								ThreadSafeSingleton.getInstance().initialize();
+								Toast.makeText(getApplicationContext(), "Your order has been sent. Our food is prepared with love, thank you for being patient.",
+										   Toast.LENGTH_LONG).show();
 								Intent i = new Intent(getBaseContext(), ItemsActivity.class);
 								startActivity(i);
-								finish();
-							}
+								finish();								
+								}
 						});
 						
 			        	 AlertDialog alertDialog = alertbuilder.create();

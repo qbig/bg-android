@@ -28,6 +28,11 @@ public class CustomItemsList extends ArrayAdapter<String>{
 
 
 	@Override
+	public int getCount(){
+		return ThreadSafeSingleton.getInstance().numberOld.size();
+		
+	}
+	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 
 	LayoutInflater inflater = context.getLayoutInflater();

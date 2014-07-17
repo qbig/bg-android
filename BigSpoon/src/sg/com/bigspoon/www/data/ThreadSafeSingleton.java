@@ -2,6 +2,8 @@ package sg.com.bigspoon.www.data;
 
 import java.util.ArrayList;
 
+import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
+
 import android.widget.TextView;
 
 public class ThreadSafeSingleton {
@@ -11,7 +13,7 @@ public class ThreadSafeSingleton {
     private static ThreadSafeSingleton instance;
 	public int totalOrderNumber=0;
 	public TextView corner;
-	
+
 	//The three parameters below are for Global New Items
 	public ArrayList<String> number = new ArrayList<String>();
 	public ArrayList<String> itemname = new ArrayList<String>();
@@ -37,6 +39,7 @@ public class ThreadSafeSingleton {
 		number = new ArrayList<String>();
 		itemname = new ArrayList<String>();
 		price = new ArrayList<String>();	
+		totalOrderNumber = 0;
 	}
      
 }

@@ -380,7 +380,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	        					ThreadSafeSingleton.getInstance().price.add(totalTextList[m].get(position).getItemPrice());
 	        				    totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);
 	        				    ThreadSafeSingleton.getInstance().number.add(Integer.toString(totalTextList[m].get(position).getNumber()));
-	        				    
+	        				  
 	        				}else{//if the instance has already been created before
 	        					totalTextList[m].get(position).setNumber(totalTextList[m].get(position).getNumber()+1);	
 	        					ThreadSafeSingleton.getInstance().number.set(ThreadSafeSingleton.getInstance().itemname.indexOf(totalTextList[m].get(position).getItemName()),Integer.toString(totalTextList[m].get(position).getNumber()));

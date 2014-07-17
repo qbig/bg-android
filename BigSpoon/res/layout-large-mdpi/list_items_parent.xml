@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
     
         
-        <ImageView
+        <ImageButton
             android:id="@+id/imgMinus"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -24,7 +24,7 @@
             android:layout_gravity="center_vertical"
             />
         
-       <ImageView
+       <ImageButton
             android:id="@+id/imgPlus"
             android:layout_width="30dp"
             android:layout_height="30dp"
