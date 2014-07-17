@@ -10,7 +10,7 @@ public class Modifer {
 	 * 
 	 * Modifier
 	 * -- ModifierSection
-	 * -- -- ModifierItem
+	 * -- -- ModifierItem (Map)
 	 */
 	public String itemTextColor;
 	public String itemTitleColor;

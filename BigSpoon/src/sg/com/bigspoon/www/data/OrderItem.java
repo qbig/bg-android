@@ -10,6 +10,6 @@ public class OrderItem {
 	public DishModel dish;
 	public int quantity;
 	public String note;
-	public HashMap<String, String> modifierAnswer; 
+	public HashMap<String, Integer> modifierAnswer; 
 			
 }
