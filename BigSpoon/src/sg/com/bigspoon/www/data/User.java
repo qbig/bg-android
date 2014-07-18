@@ -1,5 +1,7 @@
 package sg.com.bigspoon.www.data;
 
+import java.util.List;
+
 import android.content.Context;
 
 public class User {
@@ -7,6 +9,7 @@ public class User {
     private Context mContext;
     public OutletDetailsModel currentOutlet;
     public DiningSession currentSession;
+    public List<OrderHistoryItem> diningHistory;
     
     private User(Context context) {
         setContext(context.getApplicationContext());

@@ -49,6 +49,7 @@ public class Constants {
 	    public static final String OUTLET_ID = "outletID";
 	    public static final String OUTLET_ICON = "outletICon";
 	    public static final String POS_FOR_CLICKED_CATEGORY = "startposition";
+	    public static final String SELECTED_HISTORY_ITEM_POSITION = "selectedHisotryItemPosition";
 	    
 	    //VALUE 
 	    public static final int DESSERT_CATEGORY_ID = 4;

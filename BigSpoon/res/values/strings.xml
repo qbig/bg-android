@@ -40,6 +40,7 @@
     <string name="outlet_title">Outlets</string>
     <string name="category_title">Categories</string>
     <string name="menu_title">Menu List</string>
+    <string name="order_history">Order History</string>
 	<string name="coming_soon">Coming Soon!</string>
     <color name="white">#FFFFFF</color>
     <color name="blue">#86CBD7</color>
