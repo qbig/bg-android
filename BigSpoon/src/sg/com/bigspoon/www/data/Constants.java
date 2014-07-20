@@ -51,6 +51,7 @@ public class Constants {
 	    public static final String POS_FOR_CLICKED_CATEGORY = "startposition";
 	    public static final String SELECTED_HISTORY_ITEM_POSITION = "selectedHisotryItemPosition";
 	    public static final String SOCKET_IO_TOKEN_BILL_CLOSED = "bill has been closed";
+	    public static final String TUTORIAL_SET = "Tutorial Set";
 	    
 	    //VALUE 
 	    public static final int DESSERT_CATEGORY_ID = 4;
@@ -63,5 +64,7 @@ public class Constants {
 	    public static final String NOTIF_SHOULD_ASK_LOCATION_PERMIT_NOT = "ShouldAskLocationPermitNow";
 	    public static final String SHOW_NOTE = "showNote";
 	    public static final String HIDE_NOTE = "hideNote";
+	    public static final String NOTIF_LOCATION_UPDATED = "location-broadcast";
+	    public static final String NOTIF_LOCATION_KEY = "location-extra";
 	    
 }

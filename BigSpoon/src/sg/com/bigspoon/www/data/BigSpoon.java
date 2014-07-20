@@ -1,160 +1,99 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import static sg.com.bigspoon.www.data.Constants.PORT;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.SOCKET_IO_TOKEN_BILL_CLOSED;
-import static sg.com.bigspoon.www.data.Constants.SOCKET_URL;
-
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.socketio.Acknowledge;
-import com.koushikdutta.async.http.socketio.ConnectCallback;
-import com.koushikdutta.async.http.socketio.DisconnectCallback;
-import com.koushikdutta.async.http.socketio.ErrorCallback;
-import com.koushikdutta.async.http.socketio.ExceptionCallback;
-import com.koushikdutta.async.http.socketio.JSONCallback;
-import com.koushikdutta.async.http.socketio.ReconnectCallback;
-import com.koushikdutta.async.http.socketio.SocketIOClient;
-import com.koushikdutta.ion.Ion;
-
 public class BigSpoon extends Application implements Foreground.Listener {
-	private SharedPreferences loginPrefs;
-	private ConnectCallback socketIOCallback;
-	private static final String ION_LOGGING_APP = "ion-bigspoon-application";
+	
+	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			final Location location = intent.getParcelableExtra(NOTIF_LOCATION_KEY);
+			User.getInstance(getApplicationContext()).currentLocation = location;
+		}
+	};
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
-		Ion.getDefault(this).configure().setLogging(ION_LOGGING_APP, Log.DEBUG);
 		Foreground.get(this).addListener(this);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
+				new IntentFilter(NOTIF_LOCATION_UPDATED));
 	}
-	
+
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
 		Foreground.get(this).removeListener(this);
-	}
-
-	private void setupSocketIOConnection() {
-		socketIOCallback = new ConnectCallback() {
-
-			@Override
-			public void onConnectCompleted(Exception ex, final SocketIOClient client) {
-				if (ex != null) {
-					ex.printStackTrace();
-					return;
-				}
-				subscribe(client);
-
-				client.setJSONCallback(new JSONCallback() {
-
-					@Override
-					public void onJSON(JSONObject json, Acknowledge acknowledge) {
-						System.out.println("socketIO: onJSON" + json.toString());
-						try {
-							final JSONObject content = (JSONObject) json.get("message");
-							final String type = content.getString("tyep");
-							if (type.equals("message")) {
-								final String message = content.getString("data");
-								final int indexForDishNameToken = message.indexOf("[");
-
-								if (indexForDishNameToken != -1) {
-									User.getInstance(getApplicationContext()).updateOrder();
-									Intent intent = new Intent(NOTIF_ORDER_UPDATE);
-									LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-								} else if (message.indexOf(SOCKET_IO_TOKEN_BILL_CLOSED) != -1) {
-									User.getInstance(getApplicationContext()).currentSession.closeCurrentSession();
-								}
-								Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-							}
-						} catch (JSONException e) {
-
-						}
-					}
-				});
-
-				client.setDisconnectCallback(new DisconnectCallback() {
-
-					@Override
-					public void onDisconnect(Exception arg0) {
-						connectToSocketIO(socketIOCallback);
-					}
-				});
-
-				client.setReconnectCallback(new ReconnectCallback() {
-
-					@Override
-					public void onReconnect() {
-						subscribe(client);
-					}
-				});
-
-				client.setErrorCallback(new ErrorCallback() {
-
-					@Override
-					public void onError(String arg0) {
-						connectToSocketIO(socketIOCallback);
-					}
-				});
-
-				client.setExceptionCallback(new ExceptionCallback() {
-
-					@Override
-					public void onException(Exception arg0) {
-						connectToSocketIO(socketIOCallback);
-					}
-				});
-			}
-
-			private void subscribe(SocketIOClient client) {
-				final String authToken = loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, null);
-				if (authToken == null) {
-					return;
-				}
-				client.emit(String.format("subscribe:u_%s", authToken));
-			}
-		};
-
-		connectToSocketIO(socketIOCallback);
-	}
-
-	private void connectToSocketIO(final ConnectCallback callback) {
-		SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), "http://" + SOCKET_URL + ":" + PORT, callback);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationUpdateReceiver);
 	}
 
 	// Foreground Callback
 	@Override
 	public void onBecameForeground() {
-		Toast.makeText(getApplicationContext(), "Active!!!", Toast.LENGTH_LONG).show();
 		User.getInstance(getApplicationContext()).updateOrder();
-		setupSocketIOConnection();
+		SocketIOManager.getInstance(this).setupSocketIOConnection();
+		this.startService(new Intent(this, BGLocationService.class));
+		checkLocationEnabledIfTutorialHasShown();
 	}
 
 	// Foreground Callback
 	@Override
 	public void onBecameBackground() {
-		Toast.makeText(getApplicationContext(), "IINNNNActive!!!", Toast.LENGTH_LONG).show();
+		this.stopService(new Intent(this, BGLocationService.class));
+	}
+	
+	public void checkLocationEnabledByForce() {
+		checkLocationEnabled(true);
+	}
+
+	public void checkLocationEnabledIfTutorialHasShown() {
+		checkLocationEnabled(false);
+	}
+	
+	private void checkLocationEnabled(boolean force) {
+		final SharedPreferences loginPreferences = getSharedPreferences(PREFS_NAME, 0);
+		final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+
+		final boolean hasShownTutorial = loginPreferences.getBoolean(TUTORIAL_SET, false);
+		if (hasShownTutorial || force) {
+			final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+			Criteria locationCritera = new Criteria();
+			locationCritera.setAccuracy(Criteria.ACCURACY_COARSE);
+			locationCritera.setAltitudeRequired(false);
+			locationCritera.setBearingRequired(false);
+			locationCritera.setCostAllowed(true);
+			locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
+
+			final String providerName = locationManager.getBestProvider(locationCritera, true);
+
+			if (providerName == null || providerName.equals(LocationManager.PASSIVE_PROVIDER)
+					|| !locationManager.isProviderEnabled(providerName)) {
+				Toast.makeText(this, R.string.please_turn_on_gps, Toast.LENGTH_LONG).show();
+				Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+				myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(myIntent);
+			}
+			
+			loginEditor.putBoolean(TUTORIAL_SET, true);
+			loginEditor.commit();
+		}
 	}
 }

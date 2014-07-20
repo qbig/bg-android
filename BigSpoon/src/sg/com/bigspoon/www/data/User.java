@@ -7,15 +7,16 @@ import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 import java.util.List;
 
-import com.google.gson.reflect.TypeToken;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
+
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 public class User {
     private static User sInstance;
@@ -24,6 +25,7 @@ public class User {
     public DiningSession currentSession;
     public List<RetrievedOrder> diningHistory;
     private SharedPreferences loginPrefs;
+    public Location currentLocation;
     
     private User(Context context) {
         setContext(context.getApplicationContext());

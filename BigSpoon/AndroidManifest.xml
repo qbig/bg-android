@@ -167,6 +167,12 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.ExpandableViewUtil"
             android:windowSoftInputMode="adjustPan" />
+
+        <service
+            android:name="sg.com.bigspoon.www.data.BGLocationService"
+            android:icon="@drawable/icon"
+            android:label="@string/service_name" >
+        </service>
     </application>
 
 </manifest>
