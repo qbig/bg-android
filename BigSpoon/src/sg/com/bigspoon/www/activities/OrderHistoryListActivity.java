@@ -9,7 +9,7 @@ import java.util.List;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryListAdapter;
-import sg.com.bigspoon.www.data.OrderHistoryItem;
+import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -118,11 +118,11 @@ public class OrderHistoryListActivity extends Activity {
 		.load(ORDER_HISTORY_URL)
 		.setHeader("Content-Type", "application/json; charset=utf-8")
 		.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
-		.as(new TypeToken<List<OrderHistoryItem>>() {
+		.as(new TypeToken<List<RetrievedOrder>>() {
         })
-		.setCallback(new FutureCallback<List<OrderHistoryItem>>() {
+		.setCallback(new FutureCallback<List<RetrievedOrder>>() {
             @Override
-            public void onCompleted(Exception e, List<OrderHistoryItem> result) {
+            public void onCompleted(Exception e, List<RetrievedOrder> result) {
                 if (e != null) {
                     Toast.makeText(OrderHistoryListActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
                     return;

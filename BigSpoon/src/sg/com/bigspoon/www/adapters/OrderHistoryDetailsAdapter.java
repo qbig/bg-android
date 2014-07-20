@@ -1,11 +1,8 @@
 package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
-import sg.com.bigspoon.www.data.OrderHistoryItem;
-import sg.com.bigspoon.www.data.OrderHistoryItem.HistoryDish;
-import sg.com.bigspoon.www.data.OrderHistoryItem.HistoryOrder;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.RetrievedOrder;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class OrderHistoryDetailsAdapter extends ArrayAdapter<HistoryOrder> {
+public class OrderHistoryDetailsAdapter extends ArrayAdapter<OrderItem> {
 
 	private final Activity context;
 	private LayoutInflater inflater;
 
-	public OrderHistoryDetailsAdapter(Activity context, OrderHistoryItem selectedItem) {
+	public OrderHistoryDetailsAdapter(Activity context, RetrievedOrder selectedItem) {
 		super(context, R.layout.list_order_history, selectedItem.orders);
 		this.context = context;
 		inflater = context.getLayoutInflater();
@@ -26,7 +23,7 @@ public class OrderHistoryDetailsAdapter extends ArrayAdapter<HistoryOrder> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final HistoryOrder order = getItem(position);
+		final OrderItem order = getItem(position);
 		final OrderHistoryDetailsItemViewHolder viewHolder;
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.list_views_order_history_details, null, true);

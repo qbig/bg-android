@@ -5,7 +5,7 @@ import java.util.List;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.R.id;
 import sg.com.bigspoon.www.R.layout;
-import sg.com.bigspoon.www.data.OrderHistoryItem;
+import sg.com.bigspoon.www.data.RetrievedOrder;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class OrderHistoryListAdapter extends ArrayAdapter<OrderHistoryItem> {
+public class OrderHistoryListAdapter extends ArrayAdapter<RetrievedOrder> {
 
 	private final Activity context;
 	private LayoutInflater inflater;
 
-	public OrderHistoryListAdapter(Activity context, List<OrderHistoryItem> result) {
+	public OrderHistoryListAdapter(Activity context, List<RetrievedOrder> result) {
 		super(context, R.layout.list_order_history, result);
 		this.context = context;
 		this.inflater = context.getLayoutInflater();
@@ -26,7 +26,7 @@ public class OrderHistoryListAdapter extends ArrayAdapter<OrderHistoryItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final OrderHistoryItem item = getItem(position);
+		final RetrievedOrder item = getItem(position);
 		final HistoryListViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new HistoryListViewHolder();

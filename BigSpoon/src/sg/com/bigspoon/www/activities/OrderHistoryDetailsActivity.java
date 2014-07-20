@@ -3,9 +3,9 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
-import sg.com.bigspoon.www.data.DiningSession;
-import sg.com.bigspoon.www.data.OrderHistoryItem;
-import sg.com.bigspoon.www.data.OrderHistoryItem.HistoryOrder;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,6 +14,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,7 +26,7 @@ public class OrderHistoryDetailsActivity extends Activity {
 	private View mActionBarView;
 	private ImageButton backButton;
 	
-	private ImageButton addToItemsButton;
+	private Button addToItemsButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,23 +38,22 @@ public class OrderHistoryDetailsActivity extends Activity {
 			finish();
 		}
 
-		final OrderHistoryItem selectedItem = User.getInstance(this).diningHistory.get(selectedPosition);
+		final RetrievedOrder selectedItem = User.getInstance(this).diningHistory.get(selectedPosition);
 		list = (ListView) findViewById(R.id.listoforderDetails);
 		list.setAdapter(new OrderHistoryDetailsAdapter(this, selectedItem));
 		
-		addToItemsButton = (ImageButton) findViewById(R.id.buttonAddToItems);
+		addToItemsButton = (Button) findViewById(R.id.buttonAddToItems);
 		addToItemsButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				final User user = User.getInstance(OrderHistoryDetailsActivity.this);
 				if (user.currentOutlet.outletID == selectedItem.outlet.id) {
-					for (int i = 0, len = selectedItem.orders.length; i < len ; i ++){
-						HistoryOrder order = selectedItem.orders[i];
-						user.currentSession.currentOrder.getItemWithDishId(order.dish.id).quantity += order.quantity;
-					}
+					user.currentSession.currentOrder.mergeWithAnotherOrder(selectedItem.toOrder());
 				}
-				finish();
+				final Intent intent = new Intent(OrderHistoryDetailsActivity.this, ItemsActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
 			}
 		});
 	}

@@ -14,4 +14,9 @@ public class DiningSession {
 		pastOrder = new Order();
 		sittingAtTable = new TableModel();
 	}
+	
+	public void closeCurrentSession() {
+		currentOrder = new Order();
+		sittingAtTable = new TableModel();
+	}
 }

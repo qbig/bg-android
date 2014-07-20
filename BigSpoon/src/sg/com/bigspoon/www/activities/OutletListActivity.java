@@ -1,6 +1,11 @@
 package sg.com.bigspoon.www.activities;
 
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
@@ -93,6 +98,10 @@ public class OutletListActivity extends Activity {
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
+				loginPrefsEditor.clear();
+				loginPrefsEditor.commit();
+				
 				Session session = Session.getActiveSession();
 				if (session != null && !session.isClosed()) {
 					session.closeAndClearTokenInformation();
@@ -157,7 +166,7 @@ public class OutletListActivity extends Activity {
 	            @Override
 	            public void onCompleted(Exception e, List<OutletModel> result) {
 	                if (e != null) {
-	                    Toast.makeText(OutletListActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
+	                    Toast.makeText(OutletListActivity.this, "Error loading history", Toast.LENGTH_LONG).show();
 	                    return;
 	                }
 	                

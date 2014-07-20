@@ -1,41 +1,31 @@
 package sg.com.bigspoon.www.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.gson.annotations.SerializedName;
 
-public class OrderHistoryItem {
-	public static class HistoryOutlet {
+public class RetrievedOrder {
+	public static class RetrievedOutlet {
 		public int id;
 		public String name;
 	}
 	
-	public static class HistoryDish {
-		public String price;
-		public String pos;
-		public int id;
-		public String name;
-	}
-	
-	public static class HistoryOrder { 
-		public int quantity;
-		public HistoryDish dish;
-		public int id;
-		
-		@SerializedName("is_finished")
-		public boolean isFinished;
-		public String note;
-		
-		@SerializedName("modifier_json")
-		public String modifierJsonString;
-	}
-	
-	public HistoryOutlet outlet;
+	public RetrievedOutlet outlet;
 	
 	@SerializedName("order_time")
 	public String orderTime;
 	
 	public String note;
 	
-	public HistoryOrder[] orders;
+	public OrderItem[] orders;
+	
+	public Order toOrder() {
+		final Order result = new Order();
+		result.mGeneralNote = note;
+		result.mItems = new ArrayList<OrderItem>(Arrays.asList(orders));
+		return result;
+	}
 }
 //{
 //    "outlet": {
