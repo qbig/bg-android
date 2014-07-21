@@ -1,4 +1,4 @@
-package sg.com.bigspoon.www.data;
+/*package sg.com.bigspoon.www.data;
 
 import java.util.ArrayList;
 
@@ -42,4 +42,4 @@ public class ThreadSafeSingleton {
 		totalOrderNumber = 0;
 	}
      
-}
+}*/

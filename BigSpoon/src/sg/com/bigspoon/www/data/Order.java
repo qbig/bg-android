@@ -28,7 +28,7 @@ public class Order {
 			}
 			mItems.add(newItem);
 		} else {
-			incrementDishAtIndex(dish.id);
+			incrementDishWithId(dish.id);
 		}
 	}
 	
@@ -76,6 +76,10 @@ public class Order {
 		}
 		return 0;
 	}
+	
+	public int getQuantityOfDishByIndex(int dishIndex){
+		return mItems.get(dishIndex).quantity;
+	}
 
 	public int getTotalQuantity() {
 		int result = 0;
@@ -92,6 +96,8 @@ public class Order {
 		}
 		return result;
 	}
+
+	
 	
 	public void mergeWithAnotherOrder(Order newOrder){
 		for(OrderItem itemToMerge : newOrder.mItems) {
@@ -118,7 +124,8 @@ public class Order {
 	}
 	
 	public void decrementDishAtIndex(int dishIndex){
-		mItems.get(dishIndex).quantity--;
+		if(mItems.get(dishIndex).quantity<=0) mItems.get(dishIndex).quantity=0;
+		else mItems.get(dishIndex).quantity--;
 	}
 	
 	public void removeDishAtIndex (int dishIndex) {

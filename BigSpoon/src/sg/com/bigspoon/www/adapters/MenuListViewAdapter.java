@@ -11,6 +11,7 @@ import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
+import sg.com.bigspoon.www.data.User;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -88,6 +89,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 					intent.putExtra("Item Name", currentDish.name);
 					mContext.startActivity(intent);
 				} else {
+					User.getInstance(mContext).currentSession.currentOrder.addDish(currentDish);					
 					MenuPhotoListActivity.totalOrderNumber++;
 					final View parent = (View) view.getParent().getParent().getParent();
 					TextView cornertext;
@@ -160,6 +162,9 @@ public class MenuListViewAdapter extends BaseAdapter {
 			if (currentDish.isDummyDish()){
 				photoViewHolder.imageButton.setVisibility(View.GONE);
 				photoViewHolder.textItemPrice.setVisibility(View.GONE);
+			}else{
+				photoViewHolder.imageButton.setVisibility(View.VISIBLE);
+				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 			
 			return convertView;
@@ -188,6 +193,9 @@ public class MenuListViewAdapter extends BaseAdapter {
 			if (currentDish.isDummyDish()){
 				textViewHolder.imageButton.setVisibility(View.GONE);
 				textViewHolder.textItemPrice.setVisibility(View.GONE);
+			}else{
+				textViewHolder.imageButton.setVisibility(View.VISIBLE);
+				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 			
 			return convertView;

@@ -40,9 +40,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/textitemprice"
         android:text="TextView"
-        android:textStyle="bold"
-         />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textitemdesc"

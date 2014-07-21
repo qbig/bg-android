@@ -4,8 +4,8 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CustomItemsList;
 import sg.com.bigspoon.www.adapters.ExpandableAdapter;
-import sg.com.bigspoon.www.data.ThreadSafeSingleton;
-import android.os.Bundle;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ExpandableListActivity;
@@ -16,29 +16,27 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageButton;
-import android.view.LayoutInflater;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.FrameLayout;
-import android.widget.GridView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ItemsActivity extends ExpandableListActivity{
@@ -47,22 +45,7 @@ public class ItemsActivity extends ExpandableListActivity{
         ImageButton imageplus,imageminus;	
         Boolean isExpanded = false;
         private GridView gridView;
-        
-	/*Integer[] minusImage = { R.drawable.button_minus_no_circle, R.drawable.button_minus_no_circle,
-			R.drawable.button_minus_no_circle ,R.drawable.button_minus_no_circle,R.drawable.button_minus_no_circle, R.drawable.button_minus_no_circle,
-			R.drawable.button_minus_no_circle ,R.drawable.button_minus_no_circle};
-	String[] number= {"1","1","1","1","1","1","1","1"};
-	Integer[] addImage = { R.drawable.button_add_no_circle, R.drawable.button_add_no_circle,
-			R.drawable.button_add_no_circle ,R.drawable.button_add_no_circle,R.drawable.button_add_no_circle, R.drawable.button_add_no_circle,
-			R.drawable.button_add_no_circle ,R.drawable.button_add_no_circle };
-	String[] itemdesc = { "Welcome to Kith ", "Testing !! The Groc.....",
-			"Testing !! Strictly Pancakes" ,"Testing !! Strictly Pancakes","Welcome to Kith ", "Testing !! The Groc.....",
-			"Testing !! Strictly Pancakes" ,"Testing !! Strictly Pancakes"};
-  String[] price= {"$5","$25","$15","$12","$5","$25","$15","$12"};*/
-	
-		
-  
-  
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);      
@@ -70,12 +53,11 @@ public class ItemsActivity extends ExpandableListActivity{
 		
 		TextView cornertext1;
 		cornertext1=(TextView)findViewById(R.id.corner);
-		ThreadSafeSingleton.getInstance().corner=cornertext1;
-		if(ThreadSafeSingleton.getInstance().totalOrderNumber!=0){
+		//ThreadSafeSingleton.getInstance().corner=cornertext1;
+		if(MenuPhotoListActivity.totalOrderNumber!=0){
 		cornertext1.setVisibility(View.VISIBLE);
-		cornertext1.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
+		cornertext1.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));	
 		}
-		
 			
         final ExpandableListView expandableList = getExpandableListView(); 
         expandableList.setDividerHeight(2);
@@ -90,7 +72,7 @@ public class ItemsActivity extends ExpandableListActivity{
             }
         });
         
-        final ExpandableAdapter adapter = new ExpandableAdapter(ThreadSafeSingleton.getInstance().number,ThreadSafeSingleton.getInstance().itemname,ThreadSafeSingleton.getInstance().price);
+        final ExpandableAdapter adapter = new ExpandableAdapter(this);
 
         adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
         
@@ -105,12 +87,12 @@ public class ItemsActivity extends ExpandableListActivity{
 			@Override
 			public void onClick(View view) {
 				if(!isExpanded){
-                    for (int i = 0; i<ThreadSafeSingleton.getInstance().itemname.size(); i++) {
+                    for (int i = 0; i<User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
                 	expandableList.expandGroup(i,true);
                 	isExpanded=true;
                 	}
 				}else{
-                	for (int i = 0; i<ThreadSafeSingleton.getInstance().itemname.size(); i++) {
+                	for (int i = 0; i<User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
                     	expandableList.collapseGroup(i);
                     	isExpanded=false;          	
                 	}
@@ -150,7 +132,7 @@ public class ItemsActivity extends ExpandableListActivity{
 					@SuppressWarnings("deprecation")
 					private void placeOrderAlertDialog() {
 						
-						if(ThreadSafeSingleton.getInstance().itemname.isEmpty()){
+						if(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()){
 							AlertDialog alertNoOrder = new AlertDialog.Builder(ItemsActivity.this).create();	
 							alertNoOrder.setTitle("Place Order");
 							alertNoOrder.setMessage("You haven't selected anything.");
@@ -208,7 +190,7 @@ public class ItemsActivity extends ExpandableListActivity{
 			        	layoutholder.addView(textTitle);
 			        	
 			        	
-			        	for(int i = 0;i<ThreadSafeSingleton.getInstance().number.size();i++)
+			        	for(int i = 0;i<User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size();i++)
 						{
 			        		FrameLayout childLayout = new FrameLayout(getBaseContext());
 			        	    TextView textNumber = new TextView(getBaseContext());
@@ -216,7 +198,7 @@ public class ItemsActivity extends ExpandableListActivity{
 			        	    FrameLayout.LayoutParams params2 =new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 			        	    params2.setMargins(padding_10dp,0,0,0);
 			        	    textNumber.setLayoutParams(params2);
-			        	    textNumber.setText(ThreadSafeSingleton.getInstance().number.get(i));
+			        	    textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.currentOrder.getQuantityOfDishByIndex(i)));
 			        	    textNumber.setTextColor(getResources().getColor(android.R.color.black));
 			        	    childLayout.addView(textNumber);
 			        	    
@@ -237,7 +219,7 @@ public class ItemsActivity extends ExpandableListActivity{
 			        	    params4.setMargins(0,0,padding_25dp,0);
 			        	    params4.gravity=Gravity.RIGHT;
 			        	    itemName.setLayoutParams(params4);
-			        	    itemName.setText(ThreadSafeSingleton.getInstance().itemname.get(i));
+			        	    itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
 			        	    itemName.setTextColor(getResources().getColor(android.R.color.black));
 			        	    childLayout.addView(itemName);
 			        	    
@@ -254,10 +236,12 @@ public class ItemsActivity extends ExpandableListActivity{
 						});
 			        	alertbuilder.setPositiveButton("Okay",new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,int whichButton) {
-								ThreadSafeSingleton.getInstance().itemnameOld.addAll(ThreadSafeSingleton.getInstance().itemname);
+								/*ThreadSafeSingleton.getInstance().itemnameOld.addAll(ThreadSafeSingleton.getInstance().itemname);
 								ThreadSafeSingleton.getInstance().numberOld.addAll(ThreadSafeSingleton.getInstance().number);
 								ThreadSafeSingleton.getInstance().priceOld.addAll(ThreadSafeSingleton.getInstance().price);
-								ThreadSafeSingleton.getInstance().initialize();
+								ThreadSafeSingleton.getInstance().initialize();*/
+								User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User.getInstance(ItemsActivity.this).currentSession.currentOrder);
+								User.getInstance(ItemsActivity.this).currentSession.currentOrder=new Order();
 								Toast.makeText(getApplicationContext(), "Your order has been sent. Our food is prepared with love, thank you for being patient.",
 										   Toast.LENGTH_LONG).show();
 								Intent i = new Intent(getBaseContext(), ItemsActivity.class);

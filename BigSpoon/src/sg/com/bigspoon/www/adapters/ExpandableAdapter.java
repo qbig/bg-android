@@ -1,36 +1,32 @@
 package sg.com.bigspoon.www.adapters;
 
-import java.util.ArrayList;
-
 import sg.com.bigspoon.www.R;
-
+import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
+import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class ExpandableAdapter extends BaseExpandableListAdapter 
 {
 
     private Activity activity;
     private LayoutInflater inflater;
-    private final ArrayList<String> number;
-	private final ArrayList<String> name;
-	private final ArrayList<String> price;
+    private Context mContext;
 	
 
     // constructor
-    public ExpandableAdapter(ArrayList<String> number,ArrayList<String> name,ArrayList<String> price)
+    public ExpandableAdapter(Context context)
     {
-    	this.number = number;
-		this.name = name;
-		this.price = price;
+    	this.mContext = context;
     }
 
     public void setInflater(LayoutInflater inflater, Activity activity) 
@@ -66,31 +62,57 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     	TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
     	TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
     	
-    	numberView.setText(number.get(groupPosition));   	
-    	itemdescView.setText(name.get(groupPosition));
-    	priceView.setText(price.get(groupPosition));
+    	numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition)));   	
+    	itemdescView.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.name);
+    	priceView.setText(Double.toString(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.price));
     	
     	ImageButton minusButton = (ImageButton) convertView.findViewById(R.id.imgMinus);
     	ImageButton plusButton = (ImageButton) convertView.findViewById(R.id.imgPlus);
     	minusButton.setOnClickListener(new OnClickListener(){
     		@Override
             public void onClick(View view) {
-    			String temp;
-    			
-				if(Integer.parseInt(number.get(groupPosition))-1<0) temp = "0";
-				else temp = Integer.toString(Integer.parseInt(number.get(groupPosition))-1);
-				
-    			number.set(groupPosition, temp);
-    			notifyDataSetChanged();
+    			if(User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition)>0){
+    			final View parent = (View) view.getParent().getParent().getParent().getParent().getParent();
+				TextView cornertext;
+				cornertext = (TextView) parent.findViewById(R.id.corner);
+    			if(MenuPhotoListActivity.totalOrderNumber-1==0){
+    				MenuPhotoListActivity.totalOrderNumber--;			
+				    cornertext.setVisibility(View.VISIBLE);
+				    cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
+			        Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+				    cornertext.startAnimation(a);
+    				cornertext.setVisibility(View.GONE);
+    			}
+    			if(MenuPhotoListActivity.totalOrderNumber-1<0)  MenuPhotoListActivity.totalOrderNumber=0;
+    			else{MenuPhotoListActivity.totalOrderNumber--;			
+				     cornertext.setVisibility(View.VISIBLE);
+				     cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
+			         Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+				     cornertext.startAnimation(a);
+				}
+    			}
+    			User.getInstance(mContext).currentSession.currentOrder.decrementDishAtIndex(groupPosition);
+    			notifyDataSetChanged();   		
+    			if(User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition)==0){
+    				User.getInstance(mContext).currentSession.currentOrder.removeDishAtIndex(groupPosition);
+    				notifyDataSetChanged();  
+    			}
     			}
     		 });
     	
     	plusButton.setOnClickListener(new OnClickListener(){
     		@Override
             public void onClick(View view) {
-    			String temp = Integer.toString(Integer.parseInt(number.get(groupPosition))+1);
-    			number.set(groupPosition, temp);
+    			User.getInstance(mContext).currentSession.currentOrder.incrementDishAtIndex(groupPosition);
     			notifyDataSetChanged();
+    			MenuPhotoListActivity.totalOrderNumber++;
+				final View parent = (View) view.getParent().getParent().getParent().getParent().getParent();
+				TextView cornertext;
+				cornertext = (TextView) parent.findViewById(R.id.corner);
+				cornertext.setVisibility(View.VISIBLE);
+				cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
+				Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+				cornertext.startAnimation(a);
     			}
     		 });
 
@@ -124,7 +146,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     @Override
     public int getGroupCount() 
     {
-        return name.size();
+        return User.getInstance(mContext).currentSession.currentOrder.mItems.size();
     }
 
     @Override
