@@ -64,4 +64,8 @@
     <string name="error_dialog_button_text">OK</string>
     <string name="app_id">617139018336855</string> 
     <string name="add_note">Add notes (e.g. no peanuts)...</string> 
+    
+    <item type="id" name="POSITION"/>
+    <item type="id" name="SECTION"/>
+    <item type="id" name="ITEM_NAME"/>
 </resources>

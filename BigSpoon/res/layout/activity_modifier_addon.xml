@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/Layout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,30 +6,14 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
 
-    <!--
-        <sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter
-            android:id="@+id/Picker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingRight="15dp"
-             >
-
-        </sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter>
-    -->
-
     <FrameLayout
         android:id="@+id/frameLayout1"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:paddingRight="15dp" 
-        android:layout_centerVertical="true">
-
-
+        android:paddingRight="15dp" >
     </FrameLayout>
 
     <TextView

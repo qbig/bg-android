@@ -1,7 +1,8 @@
 package sg.com.bigspoon.www.adapters;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -85,17 +86,16 @@ public class MenuListViewAdapter extends BaseAdapter {
 				final Integer itemPosition = (Integer) view.getTag();
 				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
 				if (currentDish.customizable) {
-					final Intent intent = new Intent(mContext, ModifierActivity.class);
-					intent.putExtra("Item Name", currentDish.name);
-					mContext.startActivity(intent);
+					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
+					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
+					((MenuPhotoListActivity) mContext).startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
 				} else {
 					User.getInstance(mContext).currentSession.currentOrder.addDish(currentDish);					
-					MenuPhotoListActivity.totalOrderNumber++;
 					final View parent = (View) view.getParent().getParent().getParent();
 					TextView cornertext;
 					cornertext = (TextView) parent.findViewById(R.id.corner);
 					cornertext.setVisibility(View.VISIBLE);
-					cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));
+					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
 				}
