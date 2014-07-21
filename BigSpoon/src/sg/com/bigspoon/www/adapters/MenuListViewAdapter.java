@@ -162,7 +162,6 @@ public class MenuListViewAdapter extends BaseAdapter {
 			if (currentDish.isDummyDish()){
 				photoViewHolder.imageButton.setVisibility(View.GONE);
 				photoViewHolder.textItemPrice.setVisibility(View.GONE);
-			}else{
 				photoViewHolder.imageButton.setVisibility(View.VISIBLE);
 				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
@@ -193,7 +192,6 @@ public class MenuListViewAdapter extends BaseAdapter {
 			if (currentDish.isDummyDish()){
 				textViewHolder.imageButton.setVisibility(View.GONE);
 				textViewHolder.textItemPrice.setVisibility(View.GONE);
-			}else{
 				textViewHolder.imageButton.setVisibility(View.VISIBLE);
 				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}

@@ -180,7 +180,7 @@ public class Order {
 		return result;
 	}
 	
-	private OrderItem getItemWithDishId(int dishID) {
+	public OrderItem getItemWithDishId(int dishID) {
 		for(OrderItem item : mItems) {
 			if (item.dish.id == dishID){
 				return item;
