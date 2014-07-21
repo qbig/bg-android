@@ -98,10 +98,7 @@ public class ItemsActivity extends ExpandableListActivity{
                 	}
              }
 		}});
-        
-
-		new ListViewUtil().setListViewHeightBasedOnChildren(expandableList,0);  
-		
+        		
 		expandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
 			@Override
 			public void onGroupExpand(int groupPosition) {
@@ -117,8 +114,10 @@ public class ItemsActivity extends ExpandableListActivity{
 					ExpandableViewUtil.setCollapseListViewHeightBasedOnChildren(
 							expandableList, groupPosition);
 			}
-		});
-		      
+		});	      
+
+		new ListViewUtil().setListViewHeightBasedOnChildren(expandableList,0);  
+		
 		loadMenu();    
 		      
 	    Button placeOrder = (Button)findViewById(R.id.button2);
@@ -179,7 +178,9 @@ public class ItemsActivity extends ExpandableListActivity{
 			        	params.gravity=Gravity.CENTER;
 			        	final float scale = getBaseContext().getResources().getDisplayMetrics().density;
 			        	int padding_10dp = (int) (10 * scale + 0.5f);
+			        	int padding_15dp = (int) (15 * scale + 0.5f);
 			        	int padding_25dp = (int) (25 * scale + 0.5f);
+			        	int padding_35dp = (int) (35 * scale + 0.5f);
 			        	
 			        	params.setMargins(0,0,0,padding_10dp);
 			        	textTitle.setLayoutParams(params);
@@ -216,11 +217,12 @@ public class ItemsActivity extends ExpandableListActivity{
 			        	    TextView itemName = new TextView(getBaseContext());
 			        	    //textNumber.setId(R.id.textNumber);
 			        	    FrameLayout.LayoutParams params4 =new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-			        	    params4.setMargins(0,0,padding_25dp,0);
+			        	    params4.setMargins(padding_35dp,0,padding_15dp,0);
 			        	    params4.gravity=Gravity.RIGHT;
 			        	    itemName.setLayoutParams(params4);
 			        	    itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
 			        	    itemName.setTextColor(getResources().getColor(android.R.color.black));
+			        	    itemName.setTextSize(12);
 			        	    childLayout.addView(itemName);
 			        	    
 			        	    LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT); 

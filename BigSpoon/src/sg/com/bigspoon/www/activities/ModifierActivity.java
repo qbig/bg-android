@@ -2,15 +2,19 @@ package sg.com.bigspoon.www.activities;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.TestSectionedAdapter;
+import sg.com.bigspoon.www.data.User;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +47,8 @@ public class ModifierActivity extends Activity{
         Button okay = (Button)footer.findViewById(R.id.ok);
         okay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //setTotalOrder();
+                setTotalOrder();
+                
                 finish();
             }
         });
@@ -72,14 +77,14 @@ public class ModifierActivity extends Activity{
 		    return super.onCreateOptionsMenu(menu);
 	}
 	
-    /*public void setTotalOrder(){
+    public void setTotalOrder(){
 		TextView cornertext;
 		MenuPhotoListActivity.totalOrderNumber++;
-		cornertext=ThreadSafeSingleton.getInstance().corner;
+		cornertext=User.getInstance(this).cornerViewHolder;
 		cornertext.setVisibility(View.VISIBLE);
-		cornertext.setText(String.valueOf(ThreadSafeSingleton.getInstance().totalOrderNumber));	
+		cornertext.setText(String.valueOf(MenuPhotoListActivity.totalOrderNumber));	
 		Animation a = AnimationUtils.loadAnimation(getBaseContext(), R.anim.scale_up);
 		cornertext.startAnimation(a);
-    }*/
+    }
 
 }

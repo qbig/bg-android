@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +27,7 @@ public class User {
     public List<RetrievedOrder> diningHistory;
     private SharedPreferences loginPrefs;
     public Location currentLocation;
+    public TextView cornerViewHolder;
     
     private User(Context context) {
         setContext(context.getApplicationContext());

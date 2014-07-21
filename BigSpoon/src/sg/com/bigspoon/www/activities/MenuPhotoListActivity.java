@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener {
 
 	ActionBar actionbar;
@@ -43,7 +44,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
 		setupBottomActionBar();
-		setupOrderedDishCounter();
 		setupListView();
 		setupCategoryTabs();
 	}
@@ -74,6 +74,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 	private void setupOrderedDishCounter() {
 		final TextView orderedDishCounterText = (TextView) findViewById(R.id.corner);
+		User.getInstance(this).cornerViewHolder=orderedDishCounterText;
 		if (totalOrderNumber != 0) {
 			orderedDishCounterText.setVisibility(View.VISIBLE);
 			orderedDishCounterText.setText(String.valueOf(totalOrderNumber));
@@ -166,13 +167,9 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		backToOutletList.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (MenuPhotoListActivity.this.isTaskRoot()){
-					final Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(intent);
-				} else {
-					finish();
-				}
+				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
 			}
 		});
 	}
@@ -194,6 +191,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	protected void onResume() {
 		super.onResume();
 		loadMenu();
+		setupOrderedDishCounter();
 	}
 
 	public View getActionBarView() {

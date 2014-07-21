@@ -85,7 +85,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 				final Integer itemPosition = (Integer) view.getTag();
 				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
 				if (currentDish.customizable) {
-					final Intent intent = new Intent(mContext, ModifierActivity.class);
+					Intent intent = new Intent(mContext, ModifierActivity.class);
 					intent.putExtra("Item Name", currentDish.name);
 					mContext.startActivity(intent);
 				} else {
@@ -102,7 +102,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 			}
 		};
 	}
-
+	
 	@Override
 	public DishModel getItem(int position) {
 		return mFilteredDishes.get(position);
@@ -159,11 +159,12 @@ public class MenuListViewAdapter extends BaseAdapter {
 			photoViewHolder.textItemDesc.setText(currentDish.description);
 			photoViewHolder.textItemPrice.setText(currentDish.price + "");
 			photoViewHolder.imageButton.setTag(position);
+			photoViewHolder.imageButton.setVisibility(View.VISIBLE);
+			photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
+			
 			if (currentDish.isDummyDish()){
 				photoViewHolder.imageButton.setVisibility(View.GONE);
 				photoViewHolder.textItemPrice.setVisibility(View.GONE);
-				photoViewHolder.imageButton.setVisibility(View.VISIBLE);
-				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 			
 			return convertView;
@@ -189,11 +190,11 @@ public class MenuListViewAdapter extends BaseAdapter {
 			textViewHolder.textItemDesc.setText(currentDish.description);
 			textViewHolder.textItemPrice.setText(currentDish.price + "");
 			textViewHolder.imageButton.setTag(position);
+			textViewHolder.imageButton.setVisibility(View.VISIBLE);
+			textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			if (currentDish.isDummyDish()){
 				textViewHolder.imageButton.setVisibility(View.GONE);
 				textViewHolder.textItemPrice.setVisibility(View.GONE);
-				textViewHolder.imageButton.setVisibility(View.VISIBLE);
-				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 			
 			return convertView;

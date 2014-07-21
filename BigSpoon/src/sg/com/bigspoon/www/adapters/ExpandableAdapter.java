@@ -65,6 +65,14 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     	numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition)));   	
     	itemdescView.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.name);
     	priceView.setText(Double.toString(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.price));
+    	TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
+    	modifierSubTitle.setVisibility(View.GONE);
+    	
+    	if(groupPosition==1)
+    	{
+    		modifierSubTitle.setVisibility(View.VISIBLE);
+    		modifierSubTitle.setText("Garlic + Herbs x 1"+"\n"+"Salted x 1"+"\n"+"Maple syrup x 1"+"\n"+"Chocolate Pancakes: Yes (+$1)"+"\n"+"Corn Beef Hash (+$2.5) x 5");
+    	}	
     	
     	ImageButton minusButton = (ImageButton) convertView.findViewById(R.id.imgMinus);
     	ImageButton plusButton = (ImageButton) convertView.findViewById(R.id.imgPlus);

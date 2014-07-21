@@ -7,25 +7,45 @@
     android:orientation="horizontal"
     android:paddingBottom="10dp"
     android:paddingTop="10dp" 
-    android:layout_weight="5">
+    >
 
          <TextView
              android:id="@+id/quantityText"
-             android:layout_width="wrap_content"
+             android:layout_width="0dp"
              android:layout_height="wrap_content"
-             android:gravity="left"
-             android:layout_weight="1" />
-
+             android:layout_weight="0.7"
+             android:gravity="center_horizontal"
+             android:text="1" />
+         <LinearLayout
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="3"
+             android:orientation="vertical">
          <TextView
              android:id="@+id/nameText"
-             android:layout_width="wrap_content"
+             android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal|left"
              android:gravity="left"
-             android:layout_weight="3" />
-
+             android:minLines="2"
+             android:paddingLeft="0dp"
+             android:text="testName"
+             android:textSize="12sp" />
+         
+         <TextView
+             android:id="@+id/subTitle"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="bottom"
+             android:gravity="center|left"
+             android:text="subtitle"
+             android:textSize="10sp"
+             android:visibility="gone"
+              />
+         </LinearLayout>
          <TextView
              android:id="@+id/priceText"
-             android:layout_width="wrap_content"
+             android:layout_width="0dp"
              android:layout_height="wrap_content"
              android:gravity="right"
              android:layout_weight="1" 
