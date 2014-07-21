@@ -53,7 +53,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) 
     {
-
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_items_parent, null);
         }
@@ -68,10 +67,10 @@ public class ExpandableAdapter extends BaseExpandableListAdapter
     	TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
     	modifierSubTitle.setVisibility(View.GONE);
     	
-    	if(groupPosition==1)
+    	if(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.customizable)
     	{
     		modifierSubTitle.setVisibility(View.VISIBLE);
-    		modifierSubTitle.setText("Garlic + Herbs x 1"+"\n"+"Salted x 1"+"\n"+"Maple syrup x 1"+"\n"+"Chocolate Pancakes: Yes (+$1)"+"\n"+"Corn Beef Hash (+$2.5) x 5");
+    		modifierSubTitle.setText(User.getInstance(mContext).currentSession.currentOrder.getModifierDetailsTextAtIndex(groupPosition));
     	}	
     	
     	ImageButton minusButton = (ImageButton) convertView.findViewById(R.id.imgMinus);

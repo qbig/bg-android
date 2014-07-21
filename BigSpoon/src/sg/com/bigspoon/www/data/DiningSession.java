@@ -19,4 +19,5 @@ public class DiningSession {
 		currentOrder = new Order();
 		sittingAtTable = new TableModel();
 	}
+	
 }

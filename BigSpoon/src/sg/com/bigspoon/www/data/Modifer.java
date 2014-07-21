@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.data;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Modifer {
 	/*
@@ -21,7 +22,7 @@ public class Modifer {
 		final HashMap<String, Integer> result = new HashMap<String, Integer>();
 		for( int i = 0, len = sections.length; i < len; i++){
 			for (String itemNameKey : sections[i].items.keySet()) {
-			    final Integer answer = sections[i].answers.get(itemNameKey);
+			    final Integer answer = sections[i].answers.containsKey(itemNameKey) ? sections[i].answers.get(itemNameKey) : 0;
 			    if (answer.intValue() > 0){
 			    	result.put(String.format("%s-%s", sections[i].itemTitle, itemNameKey), answer); 
 			    }
@@ -56,7 +57,7 @@ public class Modifer {
 			for (String itemNameKey : sections[i].items.keySet()) {
 				
 			    final Integer answer = sections[i].answers.get(itemNameKey);
-			    if (answer.intValue() > 0){
+			    if (answer != null && answer.intValue() > 0){
 			    	if (sections[i].type.equals(MODIFIER_SECTION_TYPE_RADIO)){
 			    		result.append(String.format("%s: %d\n", itemNameKey, answer.intValue()));
 			    	} else {
@@ -70,7 +71,7 @@ public class Modifer {
 	
 	private void cleanUp() {
 		for (int i = 0, len = sections.length; i < len; i++) {
-			sections[i].answers = new HashMap<String, Integer>();
+			sections[i].answers = new LinkedHashMap<String, Integer>();
 		}
 	}
 //	"custom_order_json": "{

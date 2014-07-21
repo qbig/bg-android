@@ -1,6 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
 import sg.com.bigspoon.www.data.User;
@@ -38,12 +39,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	private ImageButton backToOutletList;
 	private ImageButton historyButton;
 	private View bottomActionBar;
+	private TextView mOrderedDishCounterText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
-		setupBottomActionBar();
+		setupBottomActionBar();		
 		setupListView();
 		setupCategoryTabs();
 	}
@@ -70,14 +72,16 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	private void setupBottomActionBar() {
 		bottomActionBar = findViewById(R.id.gv_action_menu);
 		bottomActionBar.getBackground().setAlpha(230);
+		mOrderedDishCounterText = (TextView) findViewById(R.id.corner);
 	}
 
-	private void setupOrderedDishCounter() {
-		final TextView orderedDishCounterText = (TextView) findViewById(R.id.corner);
-		User.getInstance(this).cornerViewHolder=orderedDishCounterText;
-		if (totalOrderNumber != 0) {
-			orderedDishCounterText.setVisibility(View.VISIBLE);
-			orderedDishCounterText.setText(String.valueOf(totalOrderNumber));
+	private void updateOrderedDishCounter() {
+		final int orderCount = User.getInstance(this).currentSession.currentOrder.getTotalQuantity();
+		if (orderCount != 0) {
+			mOrderedDishCounterText.setVisibility(View.VISIBLE);
+			mOrderedDishCounterText.setText(String.valueOf(orderCount));
+		} else {
+			mOrderedDishCounterText.setVisibility(View.GONE);
 		}
 	}
 
@@ -191,7 +195,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	protected void onResume() {
 		super.onResume();
 		loadMenu();
-		setupOrderedDishCounter();
+		updateOrderedDishCounter();
 	}
 
 	public View getActionBarView() {
@@ -200,4 +204,13 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		final int resId = getResources().getIdentifier("action_bar_container", "id", "android");
 		return v.findViewById(resId);
 	}
+	
+	  protected void onActivityResult(int requestCode, int resultCode,
+	             Intent data) {
+	         if (requestCode == MODIFIER_POPUP_REQUEST) {
+	             if (resultCode == RESULT_OK) {
+	            	 updateOrderedDishCounter();
+	             } 
+	         }
+	     }
 }

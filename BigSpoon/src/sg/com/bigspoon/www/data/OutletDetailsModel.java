@@ -84,4 +84,13 @@ public class OutletDetailsModel {
          return outletDetails;
 	}
 	
+	public DishModel getDishWithId(int dishId) {
+		for (int i = 0, len = dishes.length; i < len; i++ ){
+			if (dishes[i].id == dishId) {
+				return dishes[i];
+			}
+		}
+		
+		return null;
+	}
 }

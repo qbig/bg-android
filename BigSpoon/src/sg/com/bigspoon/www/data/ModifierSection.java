@@ -1,7 +1,9 @@
 package sg.com.bigspoon.www.data;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_COUNTER;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 import com.google.gson.internal.LinkedTreeMap;
 
 public class ModifierSection {
@@ -16,11 +18,11 @@ public class ModifierSection {
 	public String itemTitle;
 	public String type;
 	public String itemTitleDescription;
-	public Map<String, Double>  items;
-	public Map<String, Integer> answers;
+	public LinkedHashMap<String, Double>  items;
+	public LinkedHashMap<String, Integer> answers;
 	
 	public ModifierSection() {
-		answers = new LinkedTreeMap<String, Integer>();
+		answers = new LinkedHashMap<String, Integer>();
 	}
 	
 	public double getSum() {
@@ -37,6 +39,20 @@ public class ModifierSection {
 			return result > 0 ? result : 0;
 		}
 		
+	}
+	
+	public void toggle(String toggledItemName) {
+		if (type.equals(MODIFIER_SECTION_TYPE_RADIO)){
+			final int currentAnswerForItem = answers.containsKey(toggledItemName) ? answers.get(toggledItemName).intValue() : 0;
+			final int toggledAnswer = currentAnswerForItem == 0 ? 1 : 0;
+			for (String itemNameKey: items.keySet()){
+				if (itemNameKey.equals(toggledItemName)){
+					answers.put(itemNameKey, toggledAnswer);
+				} else {
+					answers.put(itemNameKey, currentAnswerForItem);
+				}
+			}
+		}
 	}
 	
 //	{

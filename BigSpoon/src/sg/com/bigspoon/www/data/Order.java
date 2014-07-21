@@ -104,7 +104,7 @@ public class Order {
 			if (itemToMerge.dish.customizable){
 				this.mItems.add(itemToMerge);
 			} else if (this.containDishWithId(itemToMerge.dish.id)) {
-				getItemWithDishId(itemToMerge.dish.id).quantity += itemToMerge.dish.quantity;
+				getItemWithDishId(itemToMerge.dish.id).quantity += itemToMerge.quantity;
 			} else {
 				mItems.add(itemToMerge);
 			}
