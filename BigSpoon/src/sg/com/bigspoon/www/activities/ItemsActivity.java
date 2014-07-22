@@ -1,5 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
+import com.facebook.model.PropertyName;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.ExpandableAdapter;
@@ -41,7 +43,7 @@ import android.widget.Toast;
 public class ItemsActivity extends ExpandableListActivity {
 
 	Boolean isExpanded = false;
-	private GridView gridView;
+	private GridView mBottomGridView;
 	private TextView orderCounterText;
 	private Button mAddNote;
 	private ExpandableListView mExpandableList;
@@ -51,6 +53,8 @@ public class ItemsActivity extends ExpandableListActivity {
 	private ImageButton mBackButton;
 	private ImageButton historyButton;
 	private ListView mListOfPlacedOrder;
+	private ExpandableAdapter mCurrentOrderAdapter;
+	private PastOrdersAdapter mPastOrderAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +72,20 @@ public class ItemsActivity extends ExpandableListActivity {
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mListOfPlacedOrder, 0);
 
 	}
-
+	
+	protected void updateDisplay() {
+		updateOrderedDishCounter();
+		mCurrentOrderAdapter.notifyDataSetChanged();
+		mPastOrderAdapter.notifyDataSetChanged();
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mListOfPlacedOrder, 0);
+	}
+	
 	private void setupPlacedOrderListView() {
 		mListOfPlacedOrder = (ListView) findViewById(R.id.listOfOrderPlaced);
-		final PastOrdersAdapter adapterForPlaced = new PastOrdersAdapter(this,
+		mPastOrderAdapter = new PastOrdersAdapter(this,
 				User.getInstance(this).currentSession.pastOrder.mItems);
-		mListOfPlacedOrder.setAdapter(adapterForPlaced);
+		mListOfPlacedOrder.setAdapter(mPastOrderAdapter);
 	}
 
 	private void setupPlaceOrderButton() {
@@ -171,9 +183,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						getApplicationContext(),
 						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
 						Toast.LENGTH_LONG).show();
-				Intent i = new Intent(getBaseContext(), ItemsActivity.class);
-				startActivity(i);
-				finish();
+				updateDisplay();
 			}
 		});
 
@@ -235,11 +245,11 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 
-		final ExpandableAdapter adapter = new ExpandableAdapter(this);
+		mCurrentOrderAdapter = new ExpandableAdapter(this);
 
-		adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
+		mCurrentOrderAdapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
 
-		mExpandableList.setAdapter(adapter);
+		mExpandableList.setAdapter(mCurrentOrderAdapter);
 		mExpandableList.setOnChildClickListener(this);
 		mExpandableList.setChildDivider(getResources().getDrawable(R.color.white));
 		mExpandableList.setDivider(getResources().getDrawable(R.color.white));
@@ -351,13 +361,13 @@ public class ItemsActivity extends ExpandableListActivity {
 		final Context ctx = getApplicationContext();
 		final EditText input = new EditText(this);
 
-		final AlertDialog alert = new AlertDialog.Builder(this).create();
-		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
-		gridView = (GridView) findViewById(R.id.gv_action_menu);
+		final AlertDialog tableCodePopup = new AlertDialog.Builder(this).create();
+		final AlertDialog askForBillPopup = new AlertDialog.Builder(this).create();
+		mBottomGridView = (GridView) findViewById(R.id.gv_action_menu);
 
 		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 4);
-		gridView.setAdapter(actionBarMenuAdapter);
-		gridView.setOnItemClickListener(new OnItemClickListener() {
+		mBottomGridView.setAdapter(actionBarMenuAdapter);
+		mBottomGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@SuppressWarnings("deprecation")
 			@Override
@@ -370,55 +380,55 @@ public class ItemsActivity extends ExpandableListActivity {
 					startActivity(i);
 					break;
 				case 1:
-					alert.setMessage("Please enter your table ID located on the BigSpoon table stand");
-					alert.setView(input, 10, 0, 10, 0);
-					alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
+					tableCodePopup.setMessage("Please enter your table ID located on the BigSpoon table stand");
+					tableCodePopup.setView(input, 10, 0, 10, 0);
+					tableCodePopup.setButton2("Cancel", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							//
 						}
 					});
-					alert.setButton("Okay", new DialogInterface.OnClickListener() {
+					tableCodePopup.setButton("Okay", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							//
 						}
 					});
-					alert.show();
-					TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+					tableCodePopup.show();
+					TextView messageView = (TextView) tableCodePopup.findViewById(android.R.id.message);
 					messageView.setGravity(Gravity.CENTER);
 					messageView.setTextSize(17);
 
-					Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+					Button bq1 = tableCodePopup.getButton(DialogInterface.BUTTON1);
 					bq1.setTextColor(Color.parseColor("#117AFE"));
 					bq1.setTypeface(null, Typeface.BOLD);
 					bq1.setTextSize(19);
-					Button bq2 = alert.getButton(DialogInterface.BUTTON2);
+					Button bq2 = tableCodePopup.getButton(DialogInterface.BUTTON2);
 					bq2.setTextColor(Color.parseColor("#117AFE"));
 					bq2.setTextSize(19);
 					break;
 				case 2:
-					alert2.setMessage("Would you like your bill?");
-					alert2.setView(null);
+					askForBillPopup.setMessage("Would you like your bill?");
+					askForBillPopup.setView(null);
 
-					alert2.setButton2("Cancel", new DialogInterface.OnClickListener() {
+					askForBillPopup.setButton2("Cancel", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							//
+
 						}
 					});
-					alert2.setButton("Yes", new DialogInterface.OnClickListener() {
+					askForBillPopup.setButton("Yes", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							//
+
 						}
 					});
-					alert2.show();
-					TextView messageView2 = (TextView) alert2.findViewById(android.R.id.message);
+					askForBillPopup.show();
+					TextView messageView2 = (TextView) askForBillPopup.findViewById(android.R.id.message);
 					messageView2.setGravity(Gravity.CENTER);
 					messageView2.setTextSize(17);
 
-					Button bq3 = alert2.getButton(DialogInterface.BUTTON1);
+					Button bq3 = askForBillPopup.getButton(DialogInterface.BUTTON1);
 					bq3.setTextColor(Color.parseColor("#117AFE"));
 					bq3.setTypeface(null, Typeface.BOLD);
 					bq3.setTextSize(19);
-					Button bq4 = alert2.getButton(DialogInterface.BUTTON2);
+					Button bq4 = askForBillPopup.getButton(DialogInterface.BUTTON2);
 					bq4.setTextColor(Color.parseColor("#117AFE"));
 					bq4.setTextSize(19);
 					break;
