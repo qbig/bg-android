@@ -1,42 +1,46 @@
 package sg.com.bigspoon.www.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.Modifer;
 import sg.com.bigspoon.www.data.ModifierSection;
+import za.co.immedia.pinnedheaderlistview.SectionedBaseAdapter;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-import za.co.immedia.pinnedheaderlistview.SectionedBaseAdapter;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_COUNTER;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
-
-;
 
 public class ModifierListViewAdapter extends SectionedBaseAdapter {
+	private static final int ITEM_VIEW_TYPE_RADIO = 0;
+	private static final int ITEM_VIEW_TYPE_COUNT = 1;
+
 	Modifer mModifierModel;
 	Context mContext;
-
+	private LayoutInflater inflator;
+	private final float mScale;
+	private final int PADDING_30DP;
+	private final int PADDING_35DP;
+	private final int PADDING_5DP;
+	private final int PADDING_25DP;
+	private final int PADDING_37DP;
 	public ModifierListViewAdapter(Context context, Modifer model) {
 		super();
 		mContext = context;
 		mModifierModel = model;
+		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mScale = context.getResources().getDisplayMetrics().density;
+		PADDING_30DP = (int) (30 * mScale + 0.5f);
+		PADDING_35DP = (int) (35 * mScale + 0.5f);
+		PADDING_5DP = (int) (5 * mScale + 0.5f);
+		PADDING_25DP = (int) (25 * mScale + 0.5f);
+		PADDING_37DP = (int) (37 * mScale + 0.5f);
 	}
 
 	@Override
@@ -50,158 +54,181 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	}
 
 	static class CounterItemViewHolder {
-		protected TextView text;
-		public ImageButton incre;
-		public ImageButton decre;
+		protected TextView itemNameView;
+		public ImageButton increButton;
+		public ImageButton decreButton;
 		public TextView counterTextView;
 	}
 
+	static class RadioItemViewHolder {
+		protected TextView itemNameView;
+		public RadioButton radioButton;
+	}
+
+	@Override
+	public int getItemViewType(int section, int position) {
+		return mModifierModel.sections[section].type.equals(MODIFIER_SECTION_TYPE_RADIO) ? ITEM_VIEW_TYPE_RADIO
+				: ITEM_VIEW_TYPE_COUNT;
+	}
+	
+	@Override
+	public int getItemViewTypeCount() {
+        return 2;
+    }
+	
 	@Override
 	public View getItemView(int section, int position, View convertView, final ViewGroup parent) {
 		final ModifierSection currentSectionModel = mModifierModel.sections[section];
 		CounterItemViewHolder counterViewHolder = null;
+		RadioItemViewHolder radioViewHolder = null;
 
-		if (null == convertView) {
-			LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
-
-		} else {
-			LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
-			counterViewHolder = (CounterItemViewHolder) convertView.getTag();
-		}
-		
-	
 		if (mModifierModel.sections[section].type.equals(MODIFIER_SECTION_TYPE_RADIO)) {
+			if (null == convertView) {
+				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
+				radioViewHolder = new RadioItemViewHolder();
+				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
+				final RadioButton radioButton = new RadioButton(parent.getContext());
+				setupRadioButton(radioButton);
+				layoutholder.addView(radioButton);
+				
+				radioViewHolder.radioButton = radioButton;
+				radioViewHolder.itemNameView = (TextView) convertView.findViewById(R.id.text);
+				convertView.setTag(R.id.HOLDER, radioViewHolder);
+			} else {
+				radioViewHolder = (RadioItemViewHolder) convertView.getTag(R.id.HOLDER);
+			}
 
-			final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
-			final RadioButton radioButton = new RadioButton(parent.getContext());
-			final float scale = parent.getContext().getResources().getDisplayMetrics().density;
-			int padding_5dp = (int) (5 * scale + 0.5f);
-			int padding_25dp = (int) (25 * scale + 0.5f);
-			int padding_37dp = (int) (37 * scale + 0.5f);
-			int padding_35dp = (int) (35 * scale + 0.5f);
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(padding_35dp, padding_35dp);
-			params.gravity = Gravity.RIGHT;
-			params.setMargins(0, 0, padding_37dp, 0);
-			radioButton.setLayoutParams(params);
-			radioButton.setPadding(padding_5dp, padding_5dp, padding_25dp, padding_5dp);
-			radioButton.setBackgroundResource(R.drawable.radiobackground);
-			radioButton.setButtonDrawable(android.R.color.transparent);
-			layoutholder.addView(radioButton);
-
-			// TODO refactoring
 			final String itemName = mModifierModel.sections[section].items.keySet().toArray()[position].toString();
-			((TextView) convertView.findViewById(R.id.text)).setText(itemName);
+			radioViewHolder.itemNameView.setText(itemName);
 			final int answer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers.get(
 					itemName).intValue() : 0;
-			radioButton.setChecked(answer == 1);
-			radioButton.setTag(R.id.ITEM_NAME, itemName);
-			radioButton.setTag(R.id.POSITION, position);
-			radioButton.setTag(R.id.SECTION, section);
-			radioButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					final String selectedItemName = (String) view.getTag(R.id.ITEM_NAME);
-					final int section = ((Integer) view.getTag(R.id.SECTION)).intValue();
-					mModifierModel.sections[section].toggle(selectedItemName);
-					((RadioButton) view).setChecked(mModifierModel.sections[section].answers.get(selectedItemName).intValue() == 1 );
-					notifyDataSetChanged();
-				}
-			});
+			radioViewHolder.radioButton.setChecked(answer == 1);
+			radioViewHolder.radioButton.setTag(R.id.ITEM_NAME, itemName);
+			radioViewHolder.radioButton.setTag(R.id.POSITION, position);
+			radioViewHolder.radioButton.setTag(R.id.SECTION, section);
 
 			return convertView;
 		} else {
-
-			final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
-			final ImageButton minusButton = new ImageButton(parent.getContext());
-			final float scale = parent.getContext().getResources().getDisplayMetrics().density;
-			final int padding_30dp = (int) (30 * scale + 0.5f);
-			final int padding_35dp = (int) (35 * scale + 0.5f);
-			final int width = padding_30dp;
-			final int height = padding_30dp;
-			final FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(width, height, Gravity.CENTER
-					| Gravity.LEFT);
-			minusButton.setLayoutParams(params1);
-			minusButton.setBackgroundResource(R.drawable.btn_minus_with_circle);
-			layoutholder.addView(minusButton);
-
-			final ImageButton plusButton = new ImageButton(parent.getContext());
-			final FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(width, height, Gravity.CENTER
-					| Gravity.RIGHT);
-			plusButton.setLayoutParams(params2);
-			plusButton.setBackgroundResource(R.drawable.add_btn_with_circle);
-			layoutholder.addView(plusButton);
-
-			final TextView itemCounterText = new TextView(parent.getContext());
-			final int width3 = padding_35dp;
-			final int height3 = padding_35dp;
-			final FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(width3, height3);
-			params3.gravity = Gravity.CENTER;
-			itemCounterText.setLayoutParams(params3);
-			itemCounterText.setBackgroundResource(R.drawable.circle_for_text);
-			itemCounterText.setText("0");
-			itemCounterText.setTextColor(parent.getContext().getResources().getColor(R.color.black));
-			itemCounterText.setTextSize(19);
-			itemCounterText.setGravity(Gravity.CENTER);
-			itemCounterText.setId(R.id.textPicker);
-			layoutholder.addView(itemCounterText);
-
-			counterViewHolder = new CounterItemViewHolder();
-			counterViewHolder.text = ((TextView) convertView.findViewById(R.id.text));
-			counterViewHolder.decre = minusButton;
-			counterViewHolder.incre = plusButton;
-			counterViewHolder.counterTextView = itemCounterText;
-			final TextView temp = counterViewHolder.counterTextView;
+			if (null == convertView) {
+				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
+				counterViewHolder = new CounterItemViewHolder();
+				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
+				
+				final ImageButton minusButton = new ImageButton(parent.getContext());
+				setupMinusButton(minusButton);
+				layoutholder.addView(minusButton);
+				
+				final ImageButton plusButton = new ImageButton(parent.getContext());
+				setupPlusButton(plusButton);
+				layoutholder.addView(plusButton);
+				
+				final TextView itemCounterText = new TextView(parent.getContext());
+				setupCounterText(itemCounterText);
+				layoutholder.addView(itemCounterText);
+				
+				counterViewHolder.itemNameView = ((TextView) convertView.findViewById(R.id.text));
+				counterViewHolder.increButton = plusButton;
+				counterViewHolder.decreButton = minusButton;
+				counterViewHolder.counterTextView = itemCounterText;
+				convertView.setTag(R.id.HOLDER, counterViewHolder);
+			} else {
+				counterViewHolder = (CounterItemViewHolder) convertView.getTag(R.id.HOLDER);
+			}
+			
 			final String itemName = mModifierModel.sections[section].items.keySet().toArray()[position].toString();
-			counterViewHolder.decre.setTag(R.id.ITEM_NAME, itemName);
-			counterViewHolder.decre.setTag(R.id.POSITION, position);
-			counterViewHolder.decre.setTag(R.id.SECTION, section);
-			// add listener for the text change in the textview
-			counterViewHolder.decre.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					final String itemName = (String) v.getTag(R.id.ITEM_NAME);
-					int value = Integer.parseInt(temp.getText().toString()) - 1;
-					if (value < 0) {
-						value = 0;
-					}
-					final int section = ((Integer) v.getTag(R.id.SECTION)).intValue();
-					mModifierModel.sections[section].answers.put(itemName, value);
-					temp.setText(String.valueOf(value));
-				}
-			});
-			counterViewHolder.incre.setTag(R.id.ITEM_NAME, itemName);
-			counterViewHolder.incre.setTag(R.id.POSITION, position);
-			counterViewHolder.incre.setTag(R.id.SECTION, section);
-			counterViewHolder.incre.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					final String itemName = (String) v.getTag(R.id.ITEM_NAME);
-					final int value = Integer.parseInt(temp.getText().toString()) + 1;
-					final int section = ((Integer) v.getTag(R.id.SECTION)).intValue();
-					mModifierModel.sections[section].answers.put(itemName, value);
-					temp.setText(String.valueOf(value));
-				}
-			});
+			final int counterAnswer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers
+					.get(itemName) : 0;
+			counterViewHolder.decreButton.setTag(R.id.ITEM_NAME, itemName);
+			counterViewHolder.decreButton.setTag(R.id.POSITION, position);
+			counterViewHolder.decreButton.setTag(R.id.SECTION, section);
+			counterViewHolder.decreButton.setTag(R.id.COUNTER_DISPLAY, counterViewHolder.counterTextView);
 
-			convertView.setTag(counterViewHolder);
-			convertView.setTag(R.id.textPicker, counterViewHolder.counterTextView);
-
-			counterViewHolder.text.setText(itemName);
-			final int counterAnswer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers.get(itemName) : 0;
+			counterViewHolder.increButton.setTag(R.id.ITEM_NAME, itemName);
+			counterViewHolder.increButton.setTag(R.id.POSITION, position);
+			counterViewHolder.increButton.setTag(R.id.SECTION, section);
+			counterViewHolder.increButton.setTag(R.id.COUNTER_DISPLAY, counterViewHolder.counterTextView);
+			
+			counterViewHolder.itemNameView.setText(itemName);
 			counterViewHolder.counterTextView.setText(counterAnswer + "");
 
 			return convertView;
 		}
 	}
 
+	private void setupCounterText(final TextView itemCounterText) {
+		final FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(PADDING_35DP, PADDING_35DP);
+		params3.gravity = Gravity.CENTER;
+		itemCounterText.setLayoutParams(params3);
+		itemCounterText.setBackgroundResource(R.drawable.circle_for_text);
+		itemCounterText.setText("0");
+		itemCounterText.setTextColor(Color.BLACK);
+		itemCounterText.setTextSize(19);
+		itemCounterText.setGravity(Gravity.CENTER);
+		itemCounterText.setId(R.id.textPicker);
+	}
+
+	private void setupPlusButton(final ImageButton plusButton) {
+		final FrameLayout.LayoutParams paramsForPlusButton = new FrameLayout.LayoutParams(PADDING_30DP, PADDING_30DP,
+				Gravity.CENTER | Gravity.RIGHT);
+		plusButton.setLayoutParams(paramsForPlusButton);
+		plusButton.setBackgroundResource(R.drawable.add_btn_with_circle);
+		plusButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				final String itemName = (String) v.getTag(R.id.ITEM_NAME);
+				final TextView counterView = (TextView) v.getTag(R.id.COUNTER_DISPLAY);
+				final int value = Integer.parseInt(counterView.getText().toString()) + 1;
+				final int section = ((Integer) v.getTag(R.id.SECTION)).intValue();
+				mModifierModel.sections[section].answers.put(itemName, value);
+				counterView.setText(String.valueOf(value));
+			}
+		});
+	}
+
+	private void setupMinusButton(final ImageButton minusButton) {
+		final FrameLayout.LayoutParams paramsForMinusButton = new FrameLayout.LayoutParams(PADDING_30DP, PADDING_30DP,
+				Gravity.CENTER | Gravity.LEFT);
+		minusButton.setLayoutParams(paramsForMinusButton);
+		minusButton.setBackgroundResource(R.drawable.btn_minus_with_circle);
+		minusButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				final String itemName = (String) v.getTag(R.id.ITEM_NAME);
+				final TextView counterView = (TextView) v.getTag(R.id.COUNTER_DISPLAY);
+				int value = Integer.parseInt(counterView.getText().toString()) - 1;
+				if (value < 0) {
+					value = 0;
+				}
+				final int section = ((Integer) v.getTag(R.id.SECTION)).intValue();
+				mModifierModel.sections[section].answers.put(itemName, value);
+				counterView.setText(String.valueOf(value));
+			}
+		});
+	}
+
+	private void setupRadioButton(final RadioButton radioButton) {
+		final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(PADDING_35DP, PADDING_35DP);
+		params.gravity = Gravity.END;
+		params.setMargins(0, 0, PADDING_37DP, 0);
+		radioButton.setLayoutParams(params);
+		radioButton.setPadding(PADDING_5DP, PADDING_5DP, PADDING_25DP, PADDING_5DP);
+		radioButton.setBackgroundResource(R.drawable.radiobackground);
+		radioButton.setButtonDrawable(android.R.color.transparent);
+		radioButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final String selectedItemName = (String) view.getTag(R.id.ITEM_NAME);
+				final int section = ((Integer) view.getTag(R.id.SECTION)).intValue();
+				mModifierModel.sections[section].toggle(selectedItemName);
+				((RadioButton) view).setChecked(mModifierModel.sections[section].answers.get(selectedItemName)
+						.intValue() == 1);
+				notifyDataSetChanged();
+			}
+		});
+	}
+
 	@Override
 	public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
 		LinearLayout layout = null;
 		if (convertView == null) {
-			LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
 			layout = (LinearLayout) inflator.inflate(R.layout.header_item, null);
 		} else {
 			layout = (LinearLayout) convertView;
@@ -217,13 +244,11 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 
 	@Override
 	public Object getItem(int section, int position) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public long getItemId(int section, int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

@@ -25,14 +25,19 @@ public class ModifierActivity extends Activity {
 	private Button mOkayButton;
 	private Button mCancelButton;
 	private DishModel mSelectedDish;
+	private PinnedHeaderListView mModifierListView;
+	private LinearLayout mFooter;
+	private ModifierListViewAdapter mModifierListViewAdapter;
+	private ActionBar mActionBar;
+	private View mActionBarView;
+	private TextView mTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		final Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			dishId = extras.getInt(MODIFIER_POPUP_DISH_ID);
-			mSelectedDish = User.getInstance(getApplicationContext()).currentOutlet
-					.getDishWithId(dishId);
+			mSelectedDish = User.getInstance(getApplicationContext()).currentOutlet.getDishWithId(dishId);
 			if (mSelectedDish == null || !mSelectedDish.customizable) {
 				finish();
 			}
@@ -40,55 +45,71 @@ public class ModifierActivity extends Activity {
 			finish();
 		}
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_modifier);
-		final PinnedHeaderListView modifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
-		final LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final LinearLayout footer = (LinearLayout) inflator.inflate(
-				R.layout.modifier_footer, null);
-		modifierListView.addFooterView(footer);
 
-		modifierListView.getRootView().setBackgroundColor(
-				Color.parseColor("#" + mSelectedDish.modifier.backgroundColor));
-		mCancelButton = (Button) footer.findViewById(R.id.cancle);
+		uiSetup();
+		setupCancelButtonHandler();
+		setupOkButtonHandler();
+		setupModifierListViewAdapter();
+
+	}
+
+	private void setupModifierListViewAdapter() {
+		mModifierListViewAdapter = new ModifierListViewAdapter(this, mSelectedDish.modifier);
+		mModifierListView.setAdapter(mModifierListViewAdapter);
+	}
+
+	private void setupOkButtonHandler() {
+		mOkayButton = (Button) mFooter.findViewById(R.id.ok);
+		mOkayButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				setResult(RESULT_OK);
+				User.getInstance(ModifierActivity.this).currentSession.currentOrder.addDish(mSelectedDish);
+				finish();
+			}
+		});
+	}
+
+	private void setupCancelButtonHandler() {
+		mCancelButton = (Button) mFooter.findViewById(R.id.cancle);
 		mCancelButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
 			}
 		});
+	}
 
-		mOkayButton = (Button) footer.findViewById(R.id.ok);
-		mOkayButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				setResult(RESULT_OK);
-				User.getInstance(ModifierActivity.this).currentSession.currentOrder
-						.addDish(mSelectedDish);
-				finish();
-			}
-		});
+	private void uiSetup() {
+		setContentView(R.layout.activity_modifier);
+		mModifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
+		final LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mFooter = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
+		mModifierListView.addFooterView(mFooter);
 
-		ModifierListViewAdapter modifierListViewAdapter = new ModifierListViewAdapter(
-				this, mSelectedDish.modifier);
-		modifierListView.setAdapter(modifierListViewAdapter);
-
+		mModifierListView.getRootView().setBackgroundColor(
+				Color.parseColor("#" + mSelectedDish.modifier.backgroundColor));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		final ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowHomeEnabled(false);
-		final View mActionBarView = getLayoutInflater().inflate(
-				R.layout.action_bar_modifier, null);
-		final LayoutParams layout = new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT);
-		actionBar.setCustomView(mActionBarView, layout);
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		final TextView title = (TextView) mActionBarView
-				.findViewById(R.id.title);
-		title.setText(mSelectedDish.name);
-		title.setTextColor(Color.parseColor("#"
-				+ mSelectedDish.modifier.itemTextColor));
+		setupTopActionBar();
+		setTitleColor();
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void setTitleColor() {
+		mTitle = (TextView) mActionBarView.findViewById(R.id.title);
+		mTitle.setText(mSelectedDish.name);
+		mTitle.setTextColor(Color.parseColor("#" + mSelectedDish.modifier.itemTextColor));
+	}
+
+	private void setupTopActionBar() {
+		mActionBar = getActionBar();
+		mActionBar.setDisplayShowHomeEnabled(false);
+		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_modifier, null);
+		final LayoutParams layout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		mActionBar.setCustomView(mActionBarView, layout);
+		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 	}
 }
