@@ -38,31 +38,42 @@ public class OrderHistoryListActivity extends Activity {
 	private ActionBar mTopActionBar;
 	private static final String ION_LOGGING_HISTORY_LIST = "ion-hisotry-list";
 	private SharedPreferences loginPreferences;
-	
+
 	private OnClickListener sendEmailButtonListener = new OnClickListener() {
 		public void onClick(View view) {
 
-			final Intent intentToSendEmail = new Intent(android.content.Intent.ACTION_SEND);
+			final Intent intentToSendEmail = new Intent(
+					android.content.Intent.ACTION_SEND);
 
 			intentToSendEmail.setType("plain/text");
-			intentToSendEmail.putExtra(Intent.EXTRA_EMAIL, new String[] { "jay@bigspoon.sg" });
-			intentToSendEmail.putExtra(Intent.EXTRA_CC, new String[] { "leon@bigspoon.sg" });
+			intentToSendEmail.putExtra(Intent.EXTRA_EMAIL,
+					new String[] { "jay@bigspoon.sg" });
+			intentToSendEmail.putExtra(Intent.EXTRA_CC,
+					new String[] { "leon@bigspoon.sg" });
 			intentToSendEmail.putExtra(Intent.EXTRA_SUBJECT, "Hello BigSpoon!");
 			intentToSendEmail.putExtra(Intent.EXTRA_TEXT, " ");
 			try {
-				OrderHistoryListActivity.this.startActivity(Intent.createChooser(intentToSendEmail, "Send mail..."));
+				OrderHistoryListActivity.this.startActivity(Intent
+						.createChooser(intentToSendEmail, "Send mail..."));
 			} catch (android.content.ActivityNotFoundException ex) {
-				Toast.makeText(OrderHistoryListActivity.this, "There are no email clients installed.",
+				Toast.makeText(OrderHistoryListActivity.this,
+						"There are no email clients installed.",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
 	};
 	private View mActionBarView;
 	private ImageButton mBackButton;
-	
+	private String callingActivityName;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Bundle extras = getIntent().getExtras();
+		// Obtain the parameter passed by calling activities
+		if (extras != null) {
+			callingActivityName = extras.getString("callingActivityName");
+		}
+
 		initTopActionBar();
 		setupBackButton();
 		hideTopRightButton();
@@ -73,14 +84,15 @@ public class OrderHistoryListActivity extends Activity {
 	private void initTopActionBar() {
 		mTopActionBar = getActionBar();
 		mTopActionBar.setDisplayShowHomeEnabled(false);
-		
+
 		mTellUsImageButton = (ImageButton) findViewById(R.id.imagetellus);
 		mTellUsImageButton.setOnClickListener(sendEmailButtonListener);
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+		mActionBarView = getLayoutInflater().inflate(
+				R.layout.action_bar_items_activity, null);
 		mTopActionBar.setCustomView(mActionBarView);
 
 		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText("Order History");
+		title.setText("Settings");
 		mTopActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 	}
 
@@ -88,10 +100,37 @@ public class OrderHistoryListActivity extends Activity {
 		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
 		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
 		mBackButton.setPadding(22, 0, 0, 0);
-
 		StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
+
+		switch (callingActivityName) {
+		case "CategoriesListActivity":
+			states.addState(new int[] { android.R.attr.state_pressed },
+					getResources().getDrawable(R.drawable.back_button_pressed));
+			states.addState(new int[] {},
+					getResources().getDrawable(R.drawable.back_button));
+			break;
+		case "ItemsActivity":
+			states.addState(new int[] { android.R.attr.state_pressed },
+					getResources().getDrawable(R.drawable.back_button_pressed));
+			states.addState(new int[] {},
+					getResources().getDrawable(R.drawable.back_button));
+			break;
+		case "MenuPhotoListActivity":
+			states.addState(new int[] { android.R.attr.state_pressed },
+					getResources().getDrawable(R.drawable.menu_pressed));
+			states.addState(new int[] {},
+					getResources().getDrawable(R.drawable.menu));
+			break;
+		case "OutletListActivity":
+			states.addState(
+					new int[] { android.R.attr.state_pressed },
+					getResources().getDrawable(
+							R.drawable.home_with_arrow_pressed));
+			states.addState(new int[] {},
+					getResources().getDrawable(R.drawable.home_with_arrow));
+			break;
+		}
+
 		mBackButton.setImageDrawable(states);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -102,7 +141,8 @@ public class OrderHistoryListActivity extends Activity {
 	}
 
 	private void hideTopRightButton() {
-		ImageButton mRightCornerButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+		ImageButton mRightCornerButton = (ImageButton) mActionBarView
+				.findViewById(R.id.order_history);
 		mRightCornerButton.setVisibility(View.INVISIBLE);
 	}
 
@@ -110,38 +150,50 @@ public class OrderHistoryListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_history);
-		Ion.getDefault(this).configure().setLogging(ION_LOGGING_HISTORY_LIST, Log.DEBUG);
+		Ion.getDefault(this).configure()
+				.setLogging(ION_LOGGING_HISTORY_LIST, Log.DEBUG);
 		mList = (ListView) findViewById(R.id.listoforder);
-		loginPreferences = getSharedPreferences(PREFS_NAME,0);
-		
-		Ion.with(this)
-		.load(ORDER_HISTORY_URL)
-		.setHeader("Content-Type", "application/json; charset=utf-8")
-		.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
-		.as(new TypeToken<List<RetrievedOrder>>() {
-        })
-		.setCallback(new FutureCallback<List<RetrievedOrder>>() {
-            @Override
-            public void onCompleted(Exception e, List<RetrievedOrder> result) {
-                if (e != null) {
-                    Toast.makeText(OrderHistoryListActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                
-                User.getInstance(OrderHistoryListActivity.this).diningHistory = result;
-                OrderHistoryListAdapter adapter = new OrderHistoryListAdapter(OrderHistoryListActivity.this, result);
-        		mList.setAdapter(adapter);
-        		mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 
-        			@Override
-        			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        				Intent intent = new Intent(getApplicationContext(), OrderHistoryDetailsActivity.class);
-        				intent.putExtra(SELECTED_HISTORY_ITEM_POSITION, position); 
-        				startActivity(intent);
-        			}
-        		});
-            }
-        });
-		
+		Ion.with(this)
+				.load(ORDER_HISTORY_URL)
+				.setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader(
+						"Authorization",
+						"Token "
+								+ loginPreferences.getString(
+										LOGIN_INFO_AUTHTOKEN, ""))
+				.as(new TypeToken<List<RetrievedOrder>>() {
+				}).setCallback(new FutureCallback<List<RetrievedOrder>>() {
+					@Override
+					public void onCompleted(Exception e,
+							List<RetrievedOrder> result) {
+						if (e != null) {
+							Toast.makeText(OrderHistoryListActivity.this,
+									"Error login with FB", Toast.LENGTH_LONG)
+									.show();
+							return;
+						}
+
+						User.getInstance(OrderHistoryListActivity.this).diningHistory = result;
+						OrderHistoryListAdapter adapter = new OrderHistoryListAdapter(
+								OrderHistoryListActivity.this, result);
+						mList.setAdapter(adapter);
+						mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id) {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										OrderHistoryDetailsActivity.class);
+								intent.putExtra(SELECTED_HISTORY_ITEM_POSITION,
+										position);
+								startActivity(intent);
+							}
+						});
+					}
+				});
+
 	}
 }

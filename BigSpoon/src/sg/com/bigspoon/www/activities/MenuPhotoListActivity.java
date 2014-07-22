@@ -128,6 +128,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+				intent.putExtra("callingActivityName", "MenuPhotoListActivity");
 				startActivity(intent);
 			}
 		});

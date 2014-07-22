@@ -42,6 +42,7 @@ public class OutletModel {
 	public double lat;
 
 	public double lng;
+	
 	@SerializedName("gst")
 	public double gstRate;
 	
