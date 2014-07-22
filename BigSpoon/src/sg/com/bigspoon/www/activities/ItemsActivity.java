@@ -12,7 +12,6 @@ import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -41,356 +40,284 @@ import android.widget.Toast;
 
 public class ItemsActivity extends ExpandableListActivity {
 
-	ListView list;
-	ImageButton imageplus, imageminus;
 	Boolean isExpanded = false;
 	private GridView gridView;
+	private TextView orderCounterText;
+	private Button mAddNote;
+	private ExpandableListView mExpandableList;
+	private Button mPlaceOrder;
+	private ActionBar mActionBar;
+	private View mActionBarView;
+	private ImageButton mBackButton;
+	private ImageButton historyButton;
+	private ListView mListOfPlacedOrder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_items);
+		orderCounterText = (TextView) findViewById(R.id.corner);
+		updateOrderedDishCounter();
+		setupExpandableCurrentOrdersListView();
+		setupAddNoteButton();
+		loadMenu();
+		setupPlaceOrderButton();
+		setupPlacedOrderListView();
+		
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mListOfPlacedOrder, 0);
 
-		TextView cornertext1;
-		cornertext1 = (TextView) findViewById(R.id.corner);
-		// ThreadSafeSingleton.getInstance().corner=cornertext1;
-		if (MenuPhotoListActivity.totalOrderNumber != 0) {
-			cornertext1.setVisibility(View.VISIBLE);
-			cornertext1.setText(String
-					.valueOf(MenuPhotoListActivity.totalOrderNumber));
+	}
+
+	private void setupPlacedOrderListView() {
+		mListOfPlacedOrder = (ListView) findViewById(R.id.listOfOrderPlaced);
+		final PastOrdersAdapter adapterForPlaced = new PastOrdersAdapter(this,
+				User.getInstance(this).currentSession.pastOrder.mItems);
+		mListOfPlacedOrder.setAdapter(adapterForPlaced);
+	}
+
+	private void setupPlaceOrderButton() {
+		mPlaceOrder = (Button) findViewById(R.id.button2);
+		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
+					showNoOrderPopup();
+				} else {
+					showOrderDetailsPopup();
+				}
+			}
+		});
+	}
+	
+	private void showOrderDetailsPopup() {
+		LayoutInflater inflater = getLayoutInflater();
+
+		AlertDialog.Builder alertbuilder = new AlertDialog.Builder(ItemsActivity.this);
+
+		View dialoglayout = inflater.inflate(R.layout.dialog_layout, null);
+
+		LinearLayout layoutholder = (LinearLayout) dialoglayout.findViewById(R.id.dialog_layout_root);
+
+		TextView textTitle = new TextView(getBaseContext());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		params.gravity = Gravity.CENTER;
+		final float scale = getBaseContext().getResources().getDisplayMetrics().density;
+		int padding_10dp = (int) (10 * scale + 0.5f);
+		int padding_15dp = (int) (15 * scale + 0.5f);
+		int padding_25dp = (int) (25 * scale + 0.5f);
+		int padding_35dp = (int) (35 * scale + 0.5f);
+
+		params.setMargins(0, 0, 0, padding_10dp);
+		textTitle.setLayoutParams(params);
+		textTitle.setText("New Order");
+		textTitle.setTextSize(19);
+		textTitle.setTextColor(getResources().getColor(android.R.color.black));
+		textTitle.setTypeface(null, Typeface.BOLD);
+		layoutholder.addView(textTitle);
+
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			final FrameLayout childLayout = new FrameLayout(getBaseContext());
+			final TextView textNumber = new TextView(getBaseContext());
+			final FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
+					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			params2.setMargins(padding_10dp, 0, 0, 0);
+			textNumber.setLayoutParams(params2);
+			textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.currentOrder
+					.getQuantityOfDishByIndex(i)));
+			textNumber.setTextColor(getResources().getColor(android.R.color.black));
+			childLayout.addView(textNumber);
+
+			TextView xMark = new TextView(getBaseContext());
+			FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(
+					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			params3.setMargins(padding_25dp, 0, 0, 0);
+			xMark.setLayoutParams(params3);
+			xMark.setText("x");
+			xMark.setTextColor(getResources().getColor(android.R.color.black));
+			childLayout.addView(xMark);
+
+			TextView itemName = new TextView(getBaseContext());
+			FrameLayout.LayoutParams params4 = new FrameLayout.LayoutParams(
+					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+			params4.setMargins(padding_35dp, 0, padding_15dp, 0);
+			params4.gravity = Gravity.RIGHT;
+			itemName.setLayoutParams(params4);
+			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
+			itemName.setTextColor(getResources().getColor(android.R.color.black));
+			itemName.setTextSize(12);
+			childLayout.addView(itemName);
+
+			LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			layoutholder.addView(childLayout, parentParams);
 		}
 
-		final ExpandableListView expandableList = getExpandableListView();
-		expandableList.setDividerHeight(2);
-		expandableList.setGroupIndicator(null);
-		expandableList.setClickable(true);
+		alertbuilder.setView(layoutholder);
 
-		// This is to unable the function of expanding when clicking the gourp
-		// item
-		expandableList.setOnGroupClickListener(new OnGroupClickListener() {
+		alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+
+			}
+		});
+		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+
+				User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
+						.getInstance(ItemsActivity.this).currentSession.currentOrder);
+				User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
+				Toast.makeText(
+						getApplicationContext(),
+						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
+						Toast.LENGTH_LONG).show();
+				Intent i = new Intent(getBaseContext(), ItemsActivity.class);
+				startActivity(i);
+				finish();
+			}
+		});
+
+		AlertDialog alertDialog = alertbuilder.create();
+		alertDialog.show();
+
+		Button okButtom = alertDialog.getButton(DialogInterface.BUTTON1);
+		okButtom.setTextColor(Color.parseColor("#117AFE"));
+		okButtom.setTextSize(16);
+		okButtom.setTypeface(null, Typeface.BOLD);
+		Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON2);
+		cancelButton.setTextColor(Color.parseColor("#117AFE"));
+		cancelButton.setTextSize(16);
+		cancelButton.setTypeface(null, Typeface.BOLD);
+	}
+
+	private void showNoOrderPopup() {
+		final AlertDialog alertNoOrder = new AlertDialog.Builder(ItemsActivity.this).create();
+		alertNoOrder.setTitle("Place Order");
+		alertNoOrder.setMessage("You haven't selected anything.");
+		alertNoOrder.setView(null);
+		alertNoOrder.setButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int whichButton) {
+				//
+			}
+		});
+		alertNoOrder.show();
+		int dividerId = alertNoOrder.getContext().getResources()
+				.getIdentifier("android:id/titleDivider", null, null);
+		View divider = alertNoOrder.findViewById(dividerId);
+		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		final int alertTitle = alertNoOrder.getContext().getResources()
+				.getIdentifier("alertTitle", "id", "android");
+		TextView titleView = (TextView) alertNoOrder.findViewById(alertTitle);
+		titleView.setGravity(Gravity.CENTER);
+		titleView.setTypeface(null, Typeface.BOLD);
+		titleView.setTextSize(19);
+		titleView.setTextColor(getResources().getColor(android.R.color.black));
+
+		TextView messageView = (TextView) alertNoOrder.findViewById(android.R.id.message);
+		messageView.setGravity(Gravity.CENTER);
+		messageView.setTextSize(17);
+
+		Button okButton = alertNoOrder.getButton(DialogInterface.BUTTON1);
+		okButton.setTextColor(Color.parseColor("#117AFE"));
+		okButton.setTypeface(null, Typeface.BOLD);
+		okButton.setTextSize(19);
+	}
+
+	private void setupExpandableCurrentOrdersListView() {
+		mExpandableList = getExpandableListView();
+		mExpandableList.setDividerHeight(2);
+		mExpandableList.setGroupIndicator(null);
+		mExpandableList.setClickable(true);
+		mExpandableList.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
-			public boolean onGroupClick(ExpandableListView parent, View v,
-					int groupPosition, long id) {
+			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 				return true;
 			}
 		});
 
 		final ExpandableAdapter adapter = new ExpandableAdapter(this);
 
-		adapter.setInflater(
-				(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE),
-				this);
+		adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
 
-		expandableList.setAdapter(adapter);
-		expandableList.setOnChildClickListener(this);
-		expandableList.setChildDivider(getResources()
-				.getDrawable(R.color.white));
-		expandableList.setDivider(getResources().getDrawable(R.color.white));
-		expandableList.setDividerHeight(2);
+		mExpandableList.setAdapter(adapter);
+		mExpandableList.setOnChildClickListener(this);
+		mExpandableList.setChildDivider(getResources().getDrawable(R.color.white));
+		mExpandableList.setDivider(getResources().getDrawable(R.color.white));
+		mExpandableList.setDividerHeight(2);
 
-		Button addNote = (Button) findViewById(R.id.button1);
-		addNote.setOnClickListener(new View.OnClickListener() {
+		
+
+		mExpandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(mExpandableList, groupPosition);
+			}
+		});
+		mExpandableList.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+			@Override
+			public void onGroupCollapse(int groupPosition) {
+				ExpandableViewUtil.setCollapseListViewHeightBasedOnChildren(mExpandableList, groupPosition);
+			}
+		});
+	}
+
+	private void setupAddNoteButton() {
+		mAddNote = (Button) findViewById(R.id.button1);
+		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (!isExpanded) {
-					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-							.size(); i++) {
-						expandableList.expandGroup(i, true);
+					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+						mExpandableList.expandGroup(i, true);
 						isExpanded = true;
 					}
 				} else {
-					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-							.size(); i++) {
-						expandableList.collapseGroup(i);
+					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+						mExpandableList.collapseGroup(i);
 						isExpanded = false;
 					}
 				}
 			}
 		});
+	}
 
-		expandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
-			@Override
-			public void onGroupExpand(int groupPosition) {
-				// TODO Auto-generated method stub
-				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(
-						expandableList, groupPosition);
-			}
-		});
-		expandableList
-				.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-					@Override
-					public void onGroupCollapse(int groupPosition) {
-						// TODO Auto-generated method stub
-						ExpandableViewUtil
-								.setCollapseListViewHeightBasedOnChildren(
-										expandableList, groupPosition);
-					}
-				});
-
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				expandableList, 0);
-
-		loadMenu();
-
-		Button placeOrder = (Button) findViewById(R.id.button2);
-		placeOrder.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-				placeOrderAlertDialog();
-
-			}
-
-			@SuppressWarnings("deprecation")
-			private void placeOrderAlertDialog() {
-
-				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-						.isEmpty()) {
-					AlertDialog alertNoOrder = new AlertDialog.Builder(
-							ItemsActivity.this).create();
-					alertNoOrder.setTitle("Place Order");
-					alertNoOrder.setMessage("You haven't selected anything.");
-					alertNoOrder.setView(null);
-					alertNoOrder.setButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
-					alertNoOrder.show();
-					int divierId = alertNoOrder
-							.getContext()
-							.getResources()
-							.getIdentifier("android:id/titleDivider", null,
-									null);
-					View divider = alertNoOrder.findViewById(divierId);
-					divider.setBackgroundColor(getResources().getColor(
-							android.R.color.transparent));
-					final int alertTitle = alertNoOrder.getContext()
-							.getResources()
-							.getIdentifier("alertTitle", "id", "android");
-					TextView titleView = (TextView) alertNoOrder
-							.findViewById(alertTitle);
-					titleView.setGravity(Gravity.CENTER);
-					titleView.setTypeface(null, Typeface.BOLD);
-					titleView.setTextSize(19);
-					titleView.setTextColor(getResources().getColor(
-							android.R.color.black));
-
-					TextView messageView = (TextView) alertNoOrder
-							.findViewById(android.R.id.message);
-					messageView.setGravity(Gravity.CENTER);
-					// messageView.setHeight(140);
-					messageView.setTextSize(17);
-
-					Button okButton = alertNoOrder
-							.getButton(DialogInterface.BUTTON1);
-					okButton.setTextColor(Color.parseColor("#117AFE"));
-					okButton.setTypeface(null, Typeface.BOLD);
-					okButton.setTextSize(19);
-
-				} else {
-
-					LayoutInflater inflater = getLayoutInflater();
-
-					AlertDialog.Builder alertbuilder = new AlertDialog.Builder(
-							ItemsActivity.this);
-
-					View dialoglayout = inflater.inflate(
-							R.layout.dialog_layout, null);
-
-					LinearLayout layoutholder = (LinearLayout) dialoglayout
-							.findViewById(R.id.dialog_layout_root);
-
-					TextView textTitle = new TextView(getBaseContext());
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							LinearLayout.LayoutParams.WRAP_CONTENT,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					params.gravity = Gravity.CENTER;
-					final float scale = getBaseContext().getResources()
-							.getDisplayMetrics().density;
-					int padding_10dp = (int) (10 * scale + 0.5f);
-					int padding_15dp = (int) (15 * scale + 0.5f);
-					int padding_25dp = (int) (25 * scale + 0.5f);
-					int padding_35dp = (int) (35 * scale + 0.5f);
-
-					params.setMargins(0, 0, 0, padding_10dp);
-					textTitle.setLayoutParams(params);
-					textTitle.setText("New Order");
-					textTitle.setTextSize(19);
-					textTitle.setTextColor(getResources().getColor(
-							android.R.color.black));
-					textTitle.setTypeface(null, Typeface.BOLD);
-					layoutholder.addView(textTitle);
-
-					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-							.size(); i++) {
-						FrameLayout childLayout = new FrameLayout(
-								getBaseContext());
-						TextView textNumber = new TextView(getBaseContext());
-						// textNumber.setId(R.id.textNumber);
-						FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
-								FrameLayout.LayoutParams.WRAP_CONTENT,
-								FrameLayout.LayoutParams.WRAP_CONTENT);
-						params2.setMargins(padding_10dp, 0, 0, 0);
-						textNumber.setLayoutParams(params2);
-						textNumber.setText(Integer.toString(User
-								.getInstance(ItemsActivity.this).currentSession.currentOrder
-								.getQuantityOfDishByIndex(i)));
-						textNumber.setTextColor(getResources().getColor(
-								android.R.color.black));
-						childLayout.addView(textNumber);
-
-						TextView xMark = new TextView(getBaseContext());
-						// textNumber.setId(R.id.textNumber);
-						FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(
-								FrameLayout.LayoutParams.WRAP_CONTENT,
-								FrameLayout.LayoutParams.WRAP_CONTENT);
-						params3.setMargins(padding_25dp, 0, 0, 0);
-						xMark.setLayoutParams(params3);
-						xMark.setText("x");
-						xMark.setTextColor(getResources().getColor(
-								android.R.color.black));
-						childLayout.addView(xMark);
-
-						TextView itemName = new TextView(getBaseContext());
-						// textNumber.setId(R.id.textNumber);
-						FrameLayout.LayoutParams params4 = new FrameLayout.LayoutParams(
-								FrameLayout.LayoutParams.WRAP_CONTENT,
-								FrameLayout.LayoutParams.WRAP_CONTENT);
-						params4.setMargins(padding_35dp, 0, padding_15dp, 0);
-						params4.gravity = Gravity.RIGHT;
-						itemName.setLayoutParams(params4);
-						itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-								.get(i).dish.name);
-						itemName.setTextColor(getResources().getColor(
-								android.R.color.black));
-						itemName.setTextSize(12);
-						childLayout.addView(itemName);
-
-						LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(
-								LinearLayout.LayoutParams.MATCH_PARENT,
-								LinearLayout.LayoutParams.MATCH_PARENT);
-						layoutholder.addView(childLayout, parentParams);
-					}
-
-					alertbuilder.setView(layoutholder);
-
-					alertbuilder.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
-					alertbuilder.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									/*
-									 * ThreadSafeSingleton.getInstance().itemnameOld
-									 * .
-									 * addAll(ThreadSafeSingleton.getInstance().
-									 * itemname);
-									 * ThreadSafeSingleton.getInstance
-									 * ().numberOld
-									 * .addAll(ThreadSafeSingleton.getInstance
-									 * ().number);
-									 * ThreadSafeSingleton.getInstance
-									 * ().priceOld
-									 * .addAll(ThreadSafeSingleton.getInstance
-									 * ().price);
-									 * ThreadSafeSingleton.getInstance
-									 * ().initialize();
-									 */
-									User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
-											.getInstance(ItemsActivity.this).currentSession.currentOrder);
-									User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
-									Toast.makeText(
-											getApplicationContext(),
-											"Your order has been sent. Our food is prepared with love, thank you for being patient.",
-											Toast.LENGTH_LONG).show();
-									Intent i = new Intent(getBaseContext(),
-											ItemsActivity.class);
-									startActivity(i);
-									finish();
-								}
-							});
-
-					AlertDialog alertDialog = alertbuilder.create();
-					alertDialog.show();
-
-					Button okButtom = alertDialog
-							.getButton(DialogInterface.BUTTON1);
-					okButtom.setTextColor(Color.parseColor("#117AFE"));
-					okButtom.setTextSize(16);
-					okButtom.setTypeface(null, Typeface.BOLD);
-					Button cancelButton = alertDialog
-							.getButton(DialogInterface.BUTTON2);
-					cancelButton.setTextColor(Color.parseColor("#117AFE"));
-					cancelButton.setTextSize(16);
-					cancelButton.setTypeface(null, Typeface.BOLD);
-				}
-			}
-
-		});
-
-		ListView listOfOrderPlaced = (ListView) findViewById(R.id.listOfOrderPlaced);
-		PastOrdersAdapter adapterForPlaced = new PastOrdersAdapter(this,
-				User.getInstance(this).currentSession.pastOrder.mItems);
-		listOfOrderPlaced.setAdapter(adapterForPlaced);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				listOfOrderPlaced, 0);
-
+	private void updateOrderedDishCounter() {
+		if (User.getInstance(this).currentSession.currentOrder.getTotalQuantity() != 0) {
+			orderCounterText.setVisibility(View.VISIBLE);
+			orderCounterText.setText(User.getInstance(this).currentSession.currentOrder.getTotalQuantity() + "");
+		} else {
+			orderCounterText.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.items, menu);
-		// MenuInflater inflater = getMenuInflater();
-		// inflater.inflate(R.menu.items, menu);
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowHomeEnabled(false);
-		// addListenerOnButtonLogout();
-		// displaying custom ActionBar
-		View mActionBarView = getLayoutInflater().inflate(
-				R.layout.action_bar_items_activity, null);
-		actionBar.setCustomView(mActionBarView);
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		ImageButton ibItem1 = (ImageButton) mActionBarView
-				.findViewById(R.id.btn_menu);
-		ibItem1.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		ibItem1.setPadding(22, 0, 0, 0);
-
-		StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.menu_pressed));
-		states.addState(new int[] {},
-				getResources().getDrawable(R.drawable.menu));
-		ibItem1.setImageDrawable(states);
-
-		ibItem1.setOnClickListener(new View.OnClickListener() {
+		mActionBar = getActionBar();
+		mActionBar.setDisplayShowHomeEnabled(false);
+		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+		mActionBar.setCustomView(mActionBarView);
+		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		
+		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
+		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+		mBackButton.setPadding(22, 0, 0, 0);
+		final StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
+		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
+		mBackButton.setImageDrawable(states);
+		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				// Intent intent = new Intent(getApplicationContext(),
-				// MenuPhotoListActivity.class);
-				// startActivity(intent);
 				finish();
 			}
 		});
 
-		ImageButton ibItem2 = (ImageButton) mActionBarView
-				.findViewById(R.id.order_history);
-		ibItem2.setOnClickListener(new View.OnClickListener() {
+		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+		historyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				// ...
-
-				Intent intent = new Intent(getApplicationContext(),
-						OrderHistoryListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -400,11 +327,9 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	public class ListViewHeightUtil {
 
-		public void setListViewHeightBasedOnChildren(ListView listView,
-				int attHeight) {
+		public void setListViewHeightBasedOnChildren(ListView listView, int attHeight) {
 			ListAdapter listAdapter = listView.getAdapter();
 			if (listAdapter == null) {
-				// pre-condition
 				return;
 			}
 
@@ -416,9 +341,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 
 			ViewGroup.LayoutParams params = listView.getLayoutParams();
-			params.height = totalHeight
-					+ (listView.getDividerHeight() * (listAdapter.getCount() - 1))
-					+ attHeight;
+			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + attHeight;
 			listView.setLayoutParams(params);
 		}
 	}
@@ -426,27 +349,19 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void loadMenu() {
 
 		final Context ctx = getApplicationContext();
-		Resources res = ctx.getResources();
 		final EditText input = new EditText(this);
-		// String[] gv_options = {"Water","Waiter","Bill","Orders"};
-		// int[] gv_icons =
-		// {R.drawable.fb_1,R.drawable.fb_2,R.drawable.fb_3,R.drawable.fb_4};
+
 		final AlertDialog alert = new AlertDialog.Builder(this).create();
 		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		gridView = (GridView) findViewById(R.id.gv_action_menu);
-		// Create the Custom Adapter Object
-		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(
-				this, 4);
-		// Set the Adapter to GridView
-		gridView.setAdapter(actionBarMenuAdapter);
 
-		// Handling touch/click Event on GridView Item
+		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 4);
+		gridView.setAdapter(actionBarMenuAdapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 				Intent i = null;
 				switch (position) {
 				case 0:
@@ -456,30 +371,20 @@ public class ItemsActivity extends ExpandableListActivity {
 					break;
 				case 1:
 					alert.setMessage("Please enter your table ID located on the BigSpoon table stand");
-					// i = new Intent(ctx, StoreListActivity.class);
-					// Set an EditText view to get user input
-
 					alert.setView(input, 10, 0, 10, 0);
-
-					alert.setButton2("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
-					alert.setButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
+					alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							//
+						}
+					});
+					alert.setButton("Okay", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							//
+						}
+					});
 					alert.show();
-					TextView messageView = (TextView) alert
-							.findViewById(android.R.id.message);
+					TextView messageView = (TextView) alert.findViewById(android.R.id.message);
 					messageView.setGravity(Gravity.CENTER);
-					// messageView.setHeight(140);
 					messageView.setTextSize(17);
 
 					Button bq1 = alert.getButton(DialogInterface.BUTTON1);
@@ -488,33 +393,25 @@ public class ItemsActivity extends ExpandableListActivity {
 					bq1.setTextSize(19);
 					Button bq2 = alert.getButton(DialogInterface.BUTTON2);
 					bq2.setTextColor(Color.parseColor("#117AFE"));
-					// bq2.setTypeface(null,Typeface.BOLD);
 					bq2.setTextSize(19);
 					break;
 				case 2:
-					// i = new Intent(ctx, CartActivity.class);
 					alert2.setMessage("Would you like your bill?");
 					alert2.setView(null);
 
-					alert2.setButton2("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
-					alert2.setButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									//
-								}
-							});
+					alert2.setButton2("Cancel", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							//
+						}
+					});
+					alert2.setButton("Yes", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							//
+						}
+					});
 					alert2.show();
-					TextView messageView2 = (TextView) alert2
-							.findViewById(android.R.id.message);
+					TextView messageView2 = (TextView) alert2.findViewById(android.R.id.message);
 					messageView2.setGravity(Gravity.CENTER);
-					// messageView.setHeight(140);
 					messageView2.setTextSize(17);
 
 					Button bq3 = alert2.getButton(DialogInterface.BUTTON1);
@@ -523,18 +420,12 @@ public class ItemsActivity extends ExpandableListActivity {
 					bq3.setTextSize(19);
 					Button bq4 = alert2.getButton(DialogInterface.BUTTON2);
 					bq4.setTextColor(Color.parseColor("#117AFE"));
-					// bq4.setTypeface(null,Typeface.BOLD);
 					bq4.setTextSize(19);
 					break;
 				case 3:
-					// i = new Intent(ctx, ItemsActivity.class);
-					// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					// startActivity(i);
 					break;
 				}
-
 			}
 		});
-
 	}
 }
