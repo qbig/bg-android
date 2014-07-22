@@ -30,6 +30,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	private final int PADDING_5DP;
 	private final int PADDING_25DP;
 	private final int PADDING_37DP;
+
 	public ModifierListViewAdapter(Context context, Modifer model) {
 		super();
 		mContext = context;
@@ -70,12 +71,12 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		return mModifierModel.sections[section].type.equals(MODIFIER_SECTION_TYPE_RADIO) ? ITEM_VIEW_TYPE_RADIO
 				: ITEM_VIEW_TYPE_COUNT;
 	}
-	
+
 	@Override
 	public int getItemViewTypeCount() {
-        return 2;
-    }
-	
+		return 2;
+	}
+
 	@Override
 	public View getItemView(int section, int position, View convertView, final ViewGroup parent) {
 		final ModifierSection currentSectionModel = mModifierModel.sections[section];
@@ -90,7 +91,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 				final RadioButton radioButton = new RadioButton(parent.getContext());
 				setupRadioButton(radioButton);
 				layoutholder.addView(radioButton);
-				
+
 				radioViewHolder.radioButton = radioButton;
 				radioViewHolder.itemNameView = (TextView) convertView.findViewById(R.id.text);
 				convertView.setTag(R.id.HOLDER, radioViewHolder);
@@ -113,19 +114,19 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
 				counterViewHolder = new CounterItemViewHolder();
 				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
-				
+
 				final ImageButton minusButton = new ImageButton(parent.getContext());
 				setupMinusButton(minusButton);
 				layoutholder.addView(minusButton);
-				
+
 				final ImageButton plusButton = new ImageButton(parent.getContext());
 				setupPlusButton(plusButton);
 				layoutholder.addView(plusButton);
-				
+
 				final TextView itemCounterText = new TextView(parent.getContext());
 				setupCounterText(itemCounterText);
 				layoutholder.addView(itemCounterText);
-				
+
 				counterViewHolder.itemNameView = ((TextView) convertView.findViewById(R.id.text));
 				counterViewHolder.increButton = plusButton;
 				counterViewHolder.decreButton = minusButton;
@@ -134,7 +135,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			} else {
 				counterViewHolder = (CounterItemViewHolder) convertView.getTag(R.id.HOLDER);
 			}
-			
+
 			final String itemName = mModifierModel.sections[section].items.keySet().toArray()[position].toString();
 			final int counterAnswer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers
 					.get(itemName) : 0;
@@ -147,7 +148,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			counterViewHolder.increButton.setTag(R.id.POSITION, position);
 			counterViewHolder.increButton.setTag(R.id.SECTION, section);
 			counterViewHolder.increButton.setTag(R.id.COUNTER_DISPLAY, counterViewHolder.counterTextView);
-			
+
 			counterViewHolder.itemNameView.setText(itemName);
 			counterViewHolder.counterTextView.setText(counterAnswer + "");
 
@@ -234,11 +235,9 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			layout = (LinearLayout) convertView;
 		}
 		((TextView) layout.findViewById(R.id.maintitle)).setText(mModifierModel.sections[section].itemTitle);
-		((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor("#"
-				+ mModifierModel.itemTitleColor));
+		((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor(mModifierModel.itemTitleColor));
 		((TextView) layout.findViewById(R.id.subtitle)).setText(mModifierModel.sections[section].itemTitleDescription);
-		((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor("#"
-				+ mModifierModel.itemTextColor));
+		((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor(mModifierModel.itemTextColor));
 		return layout;
 	}
 

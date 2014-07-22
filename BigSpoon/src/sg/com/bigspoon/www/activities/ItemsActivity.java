@@ -1,7 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import com.facebook.model.PropertyName;
-
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.ExpandableAdapter;
@@ -14,10 +12,12 @@ import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,8 +40,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+
 public class ItemsActivity extends ExpandableListActivity {
 
+	private static final String ION_LOGGING_ITEM_ACTIVITY = "ion-item-activity";
+		
 	Boolean isExpanded = false;
 	private GridView mBottomGridView;
 	private TextView orderCounterText;
@@ -55,10 +65,14 @@ public class ItemsActivity extends ExpandableListActivity {
 	private ListView mListOfPlacedOrder;
 	private ExpandableAdapter mCurrentOrderAdapter;
 	private PastOrdersAdapter mPastOrderAdapter;
-
+	private SharedPreferences loginPreferences;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
+		loginPreferences = getSharedPreferences(PREFS_NAME,0);
+		
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
 		updateOrderedDishCounter();
@@ -98,6 +112,60 @@ public class ItemsActivity extends ExpandableListActivity {
 				} else {
 					showOrderDetailsPopup();
 				}
+			}
+		});
+	}
+	
+	private void performSendOrderRequest() {
+
+		//NSMutableArray *dishesArray = [[NSMutableArray alloc] init];
+	    // For every dish that is currently in the order, we add it to the dishes dictionary:
+		//======= 1 ==========
+//	    for (int i = 0; i < [self.userInfo.currentOrder.dishes count]; i++) {
+//	        Dish *dish = [self.userInfo.currentOrder.dishes objectAtIndex:i];
+//	        NSNumber * quantity = [NSNumber numberWithInt:[self.userInfo.currentOrder getQuantityOfDishByDish: dish]];
+//	        NSString * ID = [NSString stringWithFormat:@"%d", dish.ID];
+//	        
+//	        NSDictionary *newPair = [NSDictionary dictionaryWithObject:quantity forKey:ID];
+//	        [dishesArray addObject:newPair];
+//	    }
+//	    
+//	    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+//	    [parameters setObject:[NSArray arrayWithArray: dishesArray] forKey:@"dishes"];
+		
+
+		//======= 2 ==========
+//	    [parameters setObject:[NSNumber numberWithInt: [User sharedInstance].tableID] forKey:@"table"];
+//	    if (generalNote != nil && ![generalNote isEqualToString:@""] ) {
+//	        [parameters setObject:generalNote forKey:@"note"];
+//	    }
+//	    
+		//======= 3 ==========
+//	    if ((self.userInfo.currentOrder.notes != nil && [self.userInfo.currentOrder.notes count] > 0) || [self.userInfo.currentOrder.modifierAnswers count] > 0) {
+//	        [parameters setObject:[self.userInfo.currentOrder getMergedTextForNotesAndModifier] forKey:@"notes"];
+//	    }
+//	    
+		//======= 4 ==========
+//	    if (self.userInfo.currentOrder.modifierAnswers != nil && [self.userInfo.currentOrder.modifierAnswers count] != 0){
+//	        [parameters setObject:self.userInfo.currentOrder.modifierAnswers forKey:@"modifiers"];
+//	    }
+		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;  
+		
+		Ion.with(this)
+		.load(ORDER_URL)
+		.setHeader("Content-Type", "application/json; charset=utf-8")
+		.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
+		.setJsonObjectBody(currentOrder.getJsonOrders())
+		.asJsonObject()
+		.setCallback(new FutureCallback<JsonObject>() {
+			
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+                    Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
+                    return;
+                }
+				Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -175,7 +243,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-
+				performSendOrderRequest();
 				User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
 						.getInstance(ItemsActivity.this).currentSession.currentOrder);
 				User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
