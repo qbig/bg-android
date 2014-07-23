@@ -5,6 +5,7 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
+import java.util.HashMap;
 import java.util.List;
 
 import sg.com.bigspoon.www.activities.OutletListActivity;
@@ -17,6 +18,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -29,7 +32,7 @@ public class User {
 	public List<RetrievedOrder> diningHistory;
 	private SharedPreferences loginPrefs;
 	public Location currentLocation;
-	public boolean isfindTableCode=false;
+	public int tableId = -1;
 	
 	private User(Context context) {
 		setContext(context.getApplicationContext());
@@ -119,6 +122,13 @@ public class User {
 						}
 					}
 				});
+	}
+	
+	public JsonObject getTableId() {		
+		final Gson gson = new Gson();
+		HashMap<String, Integer> pair = new HashMap<String, Integer>();	
+		pair.put("table", tableId);
+		return  gson.toJsonTree(pair).getAsJsonObject();
 	}
 
 }

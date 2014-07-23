@@ -1,16 +1,19 @@
 package sg.com.bigspoon.www.activities;
 
+import static sg.com.bigspoon.www.data.Constants.BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.TableModel;
 import sg.com.bigspoon.www.data.User;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,12 +30,17 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 public class ActionBarActivity extends FragmentActivity {
 	ActionBar actionBar;
 	private GridView gridView;
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
 	public static final int BILL = 3;
+	private SharedPreferences loginPreferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,7 @@ public class ActionBarActivity extends FragmentActivity {
 		setContentView(R.layout.activity_action_bar);
 		actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
+		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 	}
 
 	protected void loadMenu() {
@@ -62,8 +71,9 @@ public class ActionBarActivity extends FragmentActivity {
 				Intent i = null;
 				switch (position) {
 				case 0:
-					if (User.getInstance(ActionBarActivity.this).checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).isfindTableCode == false) {
+					if (User.getInstance(ActionBarActivity.this)
+							.checkLocation()) {
+						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
 							int requestCode = WATER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -72,13 +82,14 @@ public class ActionBarActivity extends FragmentActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ActionBarActivity.this).isfindTableCode = false;
+						User.getInstance(ActionBarActivity.this).tableId = -1;
 					}
 					break;
 
 				case 1:
-					if (User.getInstance(ActionBarActivity.this).checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).isfindTableCode == false) {
+					if (User.getInstance(ActionBarActivity.this)
+							.checkLocation()) {
+						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
 							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -87,12 +98,13 @@ public class ActionBarActivity extends FragmentActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ActionBarActivity.this).isfindTableCode = false;
+						User.getInstance(ActionBarActivity.this).tableId = -1;
 					}
 					break;
 				case 2:
-					if (User.getInstance(ActionBarActivity.this).checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).isfindTableCode == false) {
+					if (User.getInstance(ActionBarActivity.this)
+							.checkLocation()) {
+						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
 							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
@@ -101,7 +113,7 @@ public class ActionBarActivity extends FragmentActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ActionBarActivity.this).isfindTableCode = false;
+						User.getInstance(ActionBarActivity.this).tableId = -1;
 					}
 					break;
 				case 3:
@@ -149,7 +161,10 @@ public class ActionBarActivity extends FragmentActivity {
 		});
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				//
+				performBillRequest();
+				Intent i = new Intent(ActionBarActivity.this,
+						UserReviewActivity.class);
+				startActivity(i);
 			}
 		});
 		alert2.show();
@@ -231,15 +246,15 @@ public class ActionBarActivity extends FragmentActivity {
 		});
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ActionBarActivity.this).isfindTableCode = false;
 				String tableCode = input.getText().toString();
 				for (int k = 0; k < User.getInstance(ActionBarActivity.this).currentOutlet.tables.length; k++) {
 					if (User.getInstance(ActionBarActivity.this).currentOutlet.tables[k].code
 							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ActionBarActivity.this).isfindTableCode = true;
+						User.getInstance(ActionBarActivity.this).tableId = User
+								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
 					}
 				}
-				if (!User.getInstance(ActionBarActivity.this).isfindTableCode) {
+				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
@@ -281,15 +296,15 @@ public class ActionBarActivity extends FragmentActivity {
 				});
 		alertIncorrect.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ActionBarActivity.this).isfindTableCode = false;
 				String tableCode = inputIncorrect.getText().toString();
 				for (int k = 0; k < User.getInstance(ActionBarActivity.this).currentOutlet.tables.length; k++) {
 					if (User.getInstance(ActionBarActivity.this).currentOutlet.tables[k].code
 							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ActionBarActivity.this).isfindTableCode = true;
+						User.getInstance(ActionBarActivity.this).tableId = User
+								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
 					}
 				}
-				if (!User.getInstance(ActionBarActivity.this).isfindTableCode) {
+				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
@@ -363,21 +378,48 @@ public class ActionBarActivity extends FragmentActivity {
 				.setCancelable(false)
 				.setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
-							public void onClick(
-									@SuppressWarnings("unused") final DialogInterface dialog,
-									@SuppressWarnings("unused") final int id) {
+							public void onClick(final DialogInterface dialog,
+									final int id) {
 								startActivity(new Intent(
 										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 							}
 						})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog,
-							@SuppressWarnings("unused") final int id) {
+							final int id) {
 						dialog.cancel();
 					}
 				});
 		final AlertDialog alert = builder.create();
 		alert.show();
+	}
+
+	private void performBillRequest() {
+
+		Ion.with(this)
+				.load(BILL_URL)
+				.setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader(
+						"Authorization",
+						"Token "
+								+ loginPreferences.getString(
+										LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(
+						User.getInstance(ActionBarActivity.this).getTableId())
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if (e != null) {
+							Toast.makeText(ActionBarActivity.this,
+									"Error requesting bills", Toast.LENGTH_LONG)
+									.show();
+							return;
+						}
+						Toast.makeText(ActionBarActivity.this, "Success",
+								Toast.LENGTH_LONG).show();
+					}
+				});
 	}
 
 }

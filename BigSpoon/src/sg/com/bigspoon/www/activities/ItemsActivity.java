@@ -46,6 +46,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
@@ -440,7 +441,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				switch (position) {
 				case 0:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+						if (User.getInstance(ItemsActivity.this).tableId == -1) {
 							int requestCode = WATER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -449,12 +450,12 @@ public class ItemsActivity extends ExpandableListActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ItemsActivity.this).isfindTableCode = false;
+						User.getInstance(ItemsActivity.this).tableId = -1;
 					}
 					break;
 				case 1:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+						if (User.getInstance(ItemsActivity.this).tableId == -1) {
 							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -463,12 +464,12 @@ public class ItemsActivity extends ExpandableListActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ItemsActivity.this).isfindTableCode = false;
+						User.getInstance(ItemsActivity.this).tableId = -1;
 					}
 					break;
 				case 2:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+						if (User.getInstance(ItemsActivity.this).tableId == -1) {
 							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
@@ -477,7 +478,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						}
 					} else {
 						setUpLocationFailPopup();
-						User.getInstance(ItemsActivity.this).isfindTableCode = false;
+						User.getInstance(ItemsActivity.this).tableId = -1;
 					}
 					break;
 				case 3:
@@ -522,7 +523,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				//
+				performBillRequest();
+				Intent i = new Intent(ItemsActivity.this,
+						UserReviewActivity.class);
+				startActivity(i);
 			}
 		});
 		alert2.show();
@@ -604,15 +608,15 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ItemsActivity.this).isfindTableCode = false;
 				String tableCode = input.getText().toString();
 				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
 					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
 							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).isfindTableCode = true;
+						User.getInstance(ItemsActivity.this).tableId = User
+								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
 					}
 				}
-				if (!User.getInstance(ItemsActivity.this).isfindTableCode) {
+				if (User.getInstance(ItemsActivity.this).tableId == -1) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
@@ -654,15 +658,15 @@ public class ItemsActivity extends ExpandableListActivity {
 				});
 		alertIncorrect.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ItemsActivity.this).isfindTableCode = false;
 				String tableCode = inputIncorrect.getText().toString();
 				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
 					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
 							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).isfindTableCode = true;
+						User.getInstance(ItemsActivity.this).tableId = User
+								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
 					}
 				}
-				if (!User.getInstance(ItemsActivity.this).isfindTableCode) {
+				if (User.getInstance(ItemsActivity.this).tableId == -1) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
@@ -736,20 +740,47 @@ public class ItemsActivity extends ExpandableListActivity {
 				.setCancelable(false)
 				.setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
-							public void onClick(
-									@SuppressWarnings("unused") final DialogInterface dialog,
-									@SuppressWarnings("unused") final int id) {
+							public void onClick(final DialogInterface dialog,
+									final int id) {
 								startActivity(new Intent(
 										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 							}
 						})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog,
-							@SuppressWarnings("unused") final int id) {
+							final int id) {
 						dialog.cancel();
 					}
 				});
 		final AlertDialog alert = builder.create();
 		alert.show();
+	}
+
+	private void performBillRequest() {
+
+		Ion.with(this)
+				.load(BILL_URL)
+				.setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader(
+						"Authorization",
+						"Token "
+								+ loginPreferences.getString(
+										LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(
+						User.getInstance(ItemsActivity.this).getTableId())
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if (e != null) {
+							Toast.makeText(ItemsActivity.this,
+									"Error requesting bills", Toast.LENGTH_LONG)
+									.show();
+							return;
+						}
+						Toast.makeText(ItemsActivity.this, "Success",
+								Toast.LENGTH_LONG).show();
+					}
+				});
 	}
 }
