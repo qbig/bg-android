@@ -1,40 +1,55 @@
 package sg.com.bigspoon.www.adapters;
 
+import java.util.ArrayList;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.R.id;
 import sg.com.bigspoon.www.R.layout;
+import sg.com.bigspoon.www.activities.UserReviewActivity;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.User;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-public class CustomListOfUserReview extends ArrayAdapter<String>{
-	
-	
-	private final Activity context;
-	private final String[] number;
+public class CustomListOfUserReview extends ArrayAdapter<OrderItem> {
 
-	
-	public CustomListOfUserReview(Activity context,String[] number) {	
-		super(context, R.layout.list_user_review, number );
-		this.context = context;
-		this.number=number;
-	
-		}
+	private final Activity mContext;
 
-	
+	public CustomListOfUserReview(Activity context, ArrayList<OrderItem> mItems) {
+		super(context, R.layout.list_user_review, mItems);
+		this.mContext = context;
+
+	}
+
 	@Override
-	public View getView(int position, View view, ViewGroup parent) {
-	
-	LayoutInflater inflater = context.getLayoutInflater();
-	View rowView= inflater.inflate(R.layout.list_user_review, null, true);
-	TextView txtNumber = (TextView) rowView.findViewById(R.id.list_review_text);
+	public int getCount() {
+		return User.getInstance(mContext).currentSession.pastOrder.mItems
+				.size();
 
-	txtNumber.setText(number[position]);
-	
-	return rowView;
+	}
+
+	@Override
+	public View getView(final int position, View view, ViewGroup parent) {
+
+		LayoutInflater inflater = mContext.getLayoutInflater();
+		View rowView = inflater.inflate(R.layout.list_user_review, null, true);
+		TextView itemName = (TextView) rowView
+				.findViewById(R.id.list_review_text);
+
+		itemName.setText(User.getInstance(mContext).currentSession.pastOrder.mItems
+				.get(position).dish.name);
+		final RatingBar ratingBar = (RatingBar) rowView.findViewById(R.id.ratingBar);
+		ratingBar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	UserReviewActivity.ratingsArray.set(position,ratingBar.getRating());
+            }
+        });
+		return rowView;
 	}
 }
