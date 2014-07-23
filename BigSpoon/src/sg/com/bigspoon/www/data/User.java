@@ -38,6 +38,9 @@ public class User {
 	}
 
 	public Boolean checkLocation() {
+		if (currentLocation == null) {
+			return false;
+		}
 		Boolean checkLocationPass = false;
 		double accuracy = 0;
 		Location locationOfCurrentOutlet = new Location("Current Outlet");
