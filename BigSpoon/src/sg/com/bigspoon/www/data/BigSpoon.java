@@ -15,11 +15,13 @@ import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 public class BigSpoon extends Application implements Foreground.Listener {
+	final Handler mHandler = new Handler();
 	
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override

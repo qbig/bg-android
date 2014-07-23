@@ -66,7 +66,7 @@ public class SocketIOManager {
 							System.out.println("socketIO: onJSON" + json.toString());
 							try {
 								final JSONObject content = (JSONObject) json.get("message");
-								final String type = content.getString("tyep");
+								final String type = content.getString("type");
 								if (type.equals("message")) {
 									final String message = content.getString("data");
 									final int indexForDishNameToken = message.indexOf("[");
@@ -78,7 +78,17 @@ public class SocketIOManager {
 									} else if (message.indexOf(SOCKET_IO_TOKEN_BILL_CLOSED) != -1) {
 										User.getInstance(mContext).currentSession.closeCurrentSession();
 									}
-									Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+									
+									new Thread() {
+									    public void run() {
+									    	((BigSpoon) mContext).mHandler.post(new Runnable() {
+									    	    public void run() {
+									    	    	Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+									    	    }});
+									    }
+									}.start();
+									//Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+									System.out.println(message);
 								}
 							} catch (JSONException e) {
 
