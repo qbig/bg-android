@@ -115,6 +115,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				if (isExpanded) {
+					toggleAddNoteState();
+				}
+				
 				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
 					showNoOrderPopup();
 				} else {
@@ -125,9 +129,6 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 	
 	private void performSendOrderRequest() {
-		if (isExpanded) {
-			toggleAddNoteState();
-		}
 		
 		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;  
 		Ion.with(this)
