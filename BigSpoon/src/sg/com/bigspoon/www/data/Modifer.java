@@ -59,7 +59,7 @@ public class Modifer {
 			    final Integer answer = sections[i].answers.get(itemNameKey);
 			    if (answer != null && answer.intValue() > 0){
 			    	if (sections[i].type.equals(MODIFIER_SECTION_TYPE_RADIO)){
-			    		result.append(String.format("%s: %d\n", itemNameKey, answer.intValue()));
+			    		result.append(String.format("%s: %s\n", sections[i].itemTitle, itemNameKey));
 			    	} else {
 			    		result.append(String.format("%s x %d\n", itemNameKey, answer.intValue()));
 			    	} 

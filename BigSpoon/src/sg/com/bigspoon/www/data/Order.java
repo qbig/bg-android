@@ -2,6 +2,10 @@ package sg.com.bigspoon.www.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 
 public class Order {
@@ -58,6 +62,17 @@ public class Order {
 	
 	public HashMap<String, Integer> getModifierAnswerAtIndex (int dishIntex){
 		return mItems.get(dishIntex).modifierAnswer;
+	}
+	
+	public HashMap<String,HashMap<String, Integer>> getAllModifierAnswers() {
+		HashMap<String,HashMap<String, Integer>> result = new HashMap<String,HashMap<String, Integer>>();
+		for (int i = 0, len = mItems.size(); i < len; i++){
+			final OrderItem item = mItems.get(i);
+			if( item.dish.customizable){
+				result.put(i + "", getModifierAnswerAtIndex(i));
+			}
+		}
+		return result;
 	}
 	
 	public void setModifierAnswer(HashMap<String, Integer> answer, int dishIndex) {
@@ -187,6 +202,32 @@ public class Order {
 			}
 		}
 		return null;
+	}
+	
+	public JsonObject getJsonOrders() {
+		// TODO add table ID properly
+		final JsonObject jsonOrders = new JsonObject();
+		final Gson gson = new Gson();
+		ArrayList<HashMap<String, Integer>> pairs = new ArrayList<HashMap<String, Integer>>();
+		for (OrderItem item : mItems) {
+			HashMap<String, Integer> pair = new HashMap<String, Integer>();
+			pair.put(item.dish.id + "", item.quantity);
+			pairs.add(pair);
+		}
+		jsonOrders.add("dishes", gson.toJsonTree(pairs));
+		jsonOrders.addProperty("table", Integer.valueOf(1));
+		
+		final HashMap<String,String> notes = getMergedTextForNotesAndModifier(); 
+		if (! notes.isEmpty()){
+			jsonOrders.add("notes", gson.toJsonTree(notes));
+		}
+		
+		final HashMap<String,HashMap<String, Integer>> modifierAnswers = getAllModifierAnswers();
+		if (! modifierAnswers.isEmpty()){
+			jsonOrders.add("modifiers", gson.toJsonTree(modifierAnswers));
+		}
+		
+		return jsonOrders;
 	}
 
 }

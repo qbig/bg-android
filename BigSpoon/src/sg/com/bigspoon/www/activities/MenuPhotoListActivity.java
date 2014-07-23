@@ -32,7 +32,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 	MenuListViewAdapter adapter;
 	public static boolean isPhotoMode = true;
-	public static int totalOrderNumber = 0;
 
 	private View mActionBarView;
 	private ImageButton togglebutton;
@@ -173,7 +172,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
 		});
