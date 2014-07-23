@@ -4,23 +4,28 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
-public class ExpandableAdapter extends BaseExpandableListAdapter {
+public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater inflater;
 	private Context mContext;
-
 	// constructor
-	public ExpandableAdapter(Context context) {
+	public CurrentOrderExpandableAdapter(Context context) {
 		this.mContext = context;
 	}
 
@@ -37,6 +42,21 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.list_items_child, null);
 		}
+		final EditText addNoteField = (EditText) convertView.findViewById(R.id.editText1);
+		addNoteField.setTag(groupPosition);
+
+		addNoteField.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).note);
+		addNoteField.setOnFocusChangeListener(new OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					final int itemIndex = ((Integer) v.getTag()).intValue();
+					if (User.getInstance(mContext).currentSession.currentOrder.mItems.size() - 1 >= itemIndex) {
+						User.getInstance(mContext).currentSession.currentOrder.mItems.get(itemIndex).note = ((EditText) v)
+								.getText().toString();
+					}
+				} 
+			}
+		});
 
 		return convertView;
 	}
@@ -87,7 +107,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 						cornertext.setVisibility(View.GONE);
 					} else {
 						cornertext.setVisibility(View.VISIBLE);
-						cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity() + "");
+						cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity()
+								+ "");
 						Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 						cornertext.startAnimation(a);
 					}
@@ -118,7 +139,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
 		return convertView;
 	}
-
+	
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		return null;

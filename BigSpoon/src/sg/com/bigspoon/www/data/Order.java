@@ -205,6 +205,7 @@ public class Order {
 	}
 	
 	public JsonObject getJsonOrders() {
+		// TODO add table ID properly
 		final JsonObject jsonOrders = new JsonObject();
 		final Gson gson = new Gson();
 		ArrayList<HashMap<String, Integer>> pairs = new ArrayList<HashMap<String, Integer>>();

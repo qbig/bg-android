@@ -2,7 +2,7 @@ package sg.com.bigspoon.www.activities;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
-import sg.com.bigspoon.www.adapters.ExpandableAdapter;
+import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.User;
@@ -57,13 +57,13 @@ public class ItemsActivity extends ExpandableListActivity {
 	private TextView orderCounterText;
 	private Button mAddNote;
 	private ExpandableListView mExpandableList;
+	private CurrentOrderExpandableAdapter mCurrentOrderAdapter;
 	private Button mPlaceOrder;
 	private ActionBar mActionBar;
 	private View mActionBarView;
 	private ImageButton mBackButton;
 	private ImageButton historyButton;
-	private ListView mListOfPlacedOrder;
-	private ExpandableAdapter mCurrentOrderAdapter;
+	private ListView mPastOrderList;
 	private PastOrdersAdapter mPastOrderAdapter;
 	private SharedPreferences loginPreferences;
 	
@@ -83,23 +83,31 @@ public class ItemsActivity extends ExpandableListActivity {
 		setupPlacedOrderListView();
 		
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mListOfPlacedOrder, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
 
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (isExpanded) {
+			toggleAddNoteState();
+		}
+	};
 	
 	protected void updateDisplay() {
 		updateOrderedDishCounter();
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mListOfPlacedOrder, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
 	}
 	
 	private void setupPlacedOrderListView() {
-		mListOfPlacedOrder = (ListView) findViewById(R.id.listOfOrderPlaced);
+		mPastOrderList = (ListView) findViewById(R.id.listOfOrderPlaced);
 		mPastOrderAdapter = new PastOrdersAdapter(this,
 				User.getInstance(this).currentSession.pastOrder.mItems);
-		mListOfPlacedOrder.setAdapter(mPastOrderAdapter);
+		mPastOrderList.setAdapter(mPastOrderAdapter);
 	}
 
 	private void setupPlaceOrderButton() {
@@ -117,40 +125,11 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 	
 	private void performSendOrderRequest() {
-
-		//NSMutableArray *dishesArray = [[NSMutableArray alloc] init];
-	    // For every dish that is currently in the order, we add it to the dishes dictionary:
-		//======= 1 ==========
-//	    for (int i = 0; i < [self.userInfo.currentOrder.dishes count]; i++) {
-//	        Dish *dish = [self.userInfo.currentOrder.dishes objectAtIndex:i];
-//	        NSNumber * quantity = [NSNumber numberWithInt:[self.userInfo.currentOrder getQuantityOfDishByDish: dish]];
-//	        NSString * ID = [NSString stringWithFormat:@"%d", dish.ID];
-//	        
-//	        NSDictionary *newPair = [NSDictionary dictionaryWithObject:quantity forKey:ID];
-//	        [dishesArray addObject:newPair];
-//	    }
-//	    
-//	    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-//	    [parameters setObject:[NSArray arrayWithArray: dishesArray] forKey:@"dishes"];
+		if (isExpanded) {
+			toggleAddNoteState();
+		}
 		
-
-		//======= 2 ==========
-//	    [parameters setObject:[NSNumber numberWithInt: [User sharedInstance].tableID] forKey:@"table"];
-//	    if (generalNote != nil && ![generalNote isEqualToString:@""] ) {
-//	        [parameters setObject:generalNote forKey:@"note"];
-//	    }
-//	    
-		//======= 3 ==========
-//	    if ((self.userInfo.currentOrder.notes != nil && [self.userInfo.currentOrder.notes count] > 0) || [self.userInfo.currentOrder.modifierAnswers count] > 0) {
-//	        [parameters setObject:[self.userInfo.currentOrder getMergedTextForNotesAndModifier] forKey:@"notes"];
-//	    }
-//	    
-		//======= 4 ==========
-//	    if (self.userInfo.currentOrder.modifierAnswers != nil && [self.userInfo.currentOrder.modifierAnswers count] != 0){
-//	        [parameters setObject:self.userInfo.currentOrder.modifierAnswers forKey:@"modifiers"];
-//	    }
 		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;  
-		
 		Ion.with(this)
 		.load(ORDER_URL)
 		.setHeader("Content-Type", "application/json; charset=utf-8")
@@ -313,7 +292,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 
-		mCurrentOrderAdapter = new ExpandableAdapter(this);
+		mCurrentOrderAdapter = new CurrentOrderExpandableAdapter(this);
 
 		mCurrentOrderAdapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
 
@@ -339,22 +318,26 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 	}
 
+	private void toggleAddNoteState() {
+		if (!isExpanded) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+				mExpandableList.expandGroup(i, true);
+				isExpanded = true;
+			}
+		} else {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+				mExpandableList.collapseGroup(i);
+				isExpanded = false;
+			}
+		}
+	}
+	
 	private void setupAddNoteButton() {
 		mAddNote = (Button) findViewById(R.id.button1);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (!isExpanded) {
-					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
-						mExpandableList.expandGroup(i, true);
-						isExpanded = true;
-					}
-				} else {
-					for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
-						mExpandableList.collapseGroup(i);
-						isExpanded = false;
-					}
-				}
+				toggleAddNoteState();
 			}
 		});
 	}
