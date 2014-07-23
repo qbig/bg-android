@@ -24,6 +24,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 	private LayoutInflater inflater;
 	private Context mContext;
+
 	// constructor
 	public CurrentOrderExpandableAdapter(Context context) {
 		this.mContext = context;
@@ -54,7 +55,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 						User.getInstance(mContext).currentSession.currentOrder.mItems.get(itemIndex).note = ((EditText) v)
 								.getText().toString();
 					}
-				} 
+				}
 			}
 		});
 
@@ -139,7 +140,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 		return convertView;
 	}
-	
+
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		return null;
