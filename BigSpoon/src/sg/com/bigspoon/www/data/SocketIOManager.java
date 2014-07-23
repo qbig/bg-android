@@ -87,7 +87,6 @@ public class SocketIOManager {
 									    	    }});
 									    }
 									}.start();
-									//Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
 									System.out.println(message);
 								}
 							} catch (JSONException e) {
