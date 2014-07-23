@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.R.layout;
 import sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter;
+import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
@@ -31,7 +32,10 @@ public class WaterServiceActivity extends Activity {
         
         btn1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	//
+            	WaterQuantityPickerAdapter warmWaterPicker = (WaterQuantityPickerAdapter) findViewById(R.id.Picker2);
+            	WaterQuantityPickerAdapter coldWaterPicker = (WaterQuantityPickerAdapter) findViewById(R.id.Picker1);
+            	User.getInstance(WaterServiceActivity.this).requestForWater(String.format("Cold Water: %d cups. Warm Water: %d cups", coldWaterPicker.value, warmWaterPicker.value));
+            	WaterServiceActivity.this.finish();
             }
         });
 

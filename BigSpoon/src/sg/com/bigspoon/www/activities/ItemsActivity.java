@@ -559,6 +559,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
+				User.getInstance(ItemsActivity.this).requestForWater(inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();
