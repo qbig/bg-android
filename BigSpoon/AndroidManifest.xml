@@ -167,6 +167,7 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.ExpandableViewUtil"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name="sg.com.bigspoon.www.activities.TableCodePopup" />
 
         <service
             android:name="sg.com.bigspoon.www.data.BGLocationService"

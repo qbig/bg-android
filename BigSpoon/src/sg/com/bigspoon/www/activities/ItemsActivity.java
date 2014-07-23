@@ -48,6 +48,9 @@ public class ItemsActivity extends ExpandableListActivity {
 	private GridView gridView;
 	private TextView mOrderedDishCounterText;
 	private View bottomActionBar;
+	public static final int WATER = 1;
+	public static final int WAITER = 2;
+	public static final int BILL = 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -448,11 +451,6 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		final Context ctx = getApplicationContext();
 		Resources res = ctx.getResources();
-		final EditText input = new EditText(this);
-		final EditText inputWaitor = new EditText(this);
-		final AlertDialog alert = new AlertDialog.Builder(this).create();
-		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
-		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		gridView = (GridView) findViewById(R.id.gv_action_menu);
 		// Create the Custom Adapter Object
 		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(
@@ -466,40 +464,55 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long arg3) {
-				// Intent i = null;
+				Intent i = null;
 				switch (position) {
 				case 0:
-					if (User.getInstance(ItemsActivity.this)
-							.checkLocation(
-									User.getInstance(ItemsActivity.this).currentLocation)) {
-						setUpTableCodePopupWater(ctx, input, alert);
+					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+							int requestCode = WATER;
+							setUpTablePopup(requestCode);
+						} else {
+							int requestCode = WATER;
+							onTablePopupResult(requestCode);
+						}
 					} else {
 						setUpLocationFailPopup();
+						User.getInstance(ItemsActivity.this).isfindTableCode = false;
 					}
 					break;
 
 				case 1:
-					if (User.getInstance(ItemsActivity.this)
-							.checkLocation(
-									User.getInstance(ItemsActivity.this).currentLocation)) {
-						setUpTableCodePopupWaitor(input,inputWaitor, alert,alertWaitor);
+					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+							int requestCode = WAITER;
+							setUpTablePopup(requestCode);
+						} else {
+							int requestCode = WAITER;
+							onTablePopupResult(requestCode);
+						}
 					} else {
 						setUpLocationFailPopup();
+						User.getInstance(ItemsActivity.this).isfindTableCode = false;
 					}
 					break;
 				case 2:
-					if (User.getInstance(ItemsActivity.this)
-							.checkLocation(
-									User.getInstance(ItemsActivity.this).currentLocation)) {
-						setUpTableCodePopupBill(input, alert, alert2);
+					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+						if (User.getInstance(ItemsActivity.this).isfindTableCode == false) {
+							int requestCode = BILL;
+							setUpTablePopup(requestCode);
+						} else {
+							int requestCode = BILL;
+							onTablePopupResult(requestCode);
+						}
 					} else {
 						setUpLocationFailPopup();
+						User.getInstance(ItemsActivity.this).isfindTableCode = false;
 					}
 					break;
 				case 3:
-					// i = new Intent(ctx, ItemsActivity.class);
-					// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					// startActivity(i);
+					i = new Intent(ctx, ItemsActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(i);
 					break;
 				}
 
@@ -508,8 +521,27 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	}
 
+	protected void onTablePopupResult(int requestCode) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case WATER:
+			Intent j = new Intent(ItemsActivity.this,
+					WaterServiceActivity.class);
+			j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(j);
+			break;
+		case WAITER:
+			waitorPopup();
+			break;
+		case BILL:
+			billPopup();
+			break;
+		}
+	}
+
 	@SuppressWarnings("deprecation")
-	private void billPopup(final AlertDialog alert2) {
+	private void billPopup() {
+		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		alert2.setMessage("Would you like your bill?");
 		alert2.setView(null);
 		// Set an EditText view to get user input
@@ -542,8 +574,57 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void setUpTableCodePopupWater(final Context ctx,
-			final EditText input, final AlertDialog alert) {
+	protected void waitorPopup() {
+		// TODO Auto-generated method stub
+		final EditText inputWaitor = new EditText(this);
+		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
+		alertWaitor.setTitle("Call For Service");
+		alertWaitor.setMessage("Require assistance from the waiter?");
+		inputWaitor.setHint("How could we help?");
+		alertWaitor.setView(inputWaitor, 10, 0, 10, 0);
+		alertWaitor.setButton2("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//
+			}
+		});
+		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//
+			}
+		});
+		alertWaitor.show();
+		final int alertTitle = alertWaitor.getContext().getResources()
+				.getIdentifier("alertTitle", "id", "android");
+		TextView titleView = (TextView) alertWaitor.findViewById(alertTitle);
+		titleView.setGravity(Gravity.CENTER);
+		titleView.setTypeface(null, Typeface.BOLD);
+		titleView.setTextSize(19);
+		titleView.setTextColor(getResources().getColor(android.R.color.black));
+		int divierId = alertWaitor.getContext().getResources()
+				.getIdentifier("android:id/titleDivider", null, null);
+		View divider = alertWaitor.findViewById(divierId);
+		divider.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		TextView messageViewBill = (TextView) alertWaitor
+				.findViewById(android.R.id.message);
+		messageViewBill.setGravity(Gravity.CENTER);
+		// messageView.setHeight(140);
+		messageViewBill.setTextSize(17);
+
+		Button bq1Waitor = alertWaitor.getButton(DialogInterface.BUTTON1);
+		bq1Waitor.setTextColor(Color.parseColor("#117AFE"));
+		bq1Waitor.setTypeface(null, Typeface.BOLD);
+		bq1Waitor.setTextSize(19);
+		Button bq2Waitor = alertWaitor.getButton(DialogInterface.BUTTON2);
+		bq2Waitor.setTextColor(Color.parseColor("#117AFE"));
+		// bq2.setTypeface(null,Typeface.BOLD);
+		bq2Waitor.setTextSize(19);
+	}
+
+	@SuppressWarnings("deprecation")
+	public void setUpTablePopup(final int requestCode) {
+		final EditText input = new EditText(this);
+		final AlertDialog alert = new AlertDialog.Builder(this).create();
 		alert.setMessage("Please enter your table ID located on the BigSpoon table stand");
 		alert.setView(input, 10, 0, 10, 0);
 
@@ -554,9 +635,19 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				Intent j = new Intent(ctx, WaterServiceActivity.class);
-				j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(j);
+				User.getInstance(ItemsActivity.this).isfindTableCode = false;
+				String tableCode = input.getText().toString();
+				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
+					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
+							.toLowerCase().equals(tableCode.toLowerCase())) {
+						User.getInstance(ItemsActivity.this).isfindTableCode = true;
+					}
+				}
+				if (!User.getInstance(ItemsActivity.this).isfindTableCode) {
+					incorrectTableCodePopup(requestCode);
+				} else {
+					onTablePopupResult(requestCode);
+				}
 			}
 		});
 		alert.show();
@@ -577,119 +668,54 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void setUpTableCodePopupWaitor(final EditText input,
-			final EditText inputWaitor, final AlertDialog alert,
-			final AlertDialog alertWaitor) {
-		alert.setMessage("Please enter your table ID located on the BigSpoon table stand");
-		alert.setView(input, 10, 0, 10, 0);
-
-		alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				//
-			}
-		});
-		alert.setButton("Okay", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				waitorPopup(inputWaitor, alertWaitor);
-			}
-		});
-		alert.show();
-		TextView messageViewWaitor = (TextView) alert
-				.findViewById(android.R.id.message);
-		messageViewWaitor.setGravity(Gravity.CENTER);
-		// messageView.setHeight(140);
-		messageViewWaitor.setTextSize(17);
-
-		Button bq1Waitor = alert.getButton(DialogInterface.BUTTON1);
-		bq1Waitor.setTextColor(Color.parseColor("#117AFE"));
-		bq1Waitor.setTypeface(null, Typeface.BOLD);
-		bq1Waitor.setTextSize(19);
-		Button bq2Waitor = alert.getButton(DialogInterface.BUTTON2);
-		bq2Waitor.setTextColor(Color.parseColor("#117AFE"));
-		// bq2.setTypeface(null,Typeface.BOLD);
-		bq2Waitor.setTextSize(19);
-	}
-
-	@SuppressWarnings("deprecation")
-	protected void waitorPopup(final EditText input, final AlertDialog alert) {
+	protected void incorrectTableCodePopup(final int requestCode) {
 		// TODO Auto-generated method stub
-		alert.setTitle("Call For Service");
-		alert.setMessage("Require assistance from the waiter?");
-		input.setHint("How could we help?");
-		alert.setView(input, 10, 0, 10, 0);
-		alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
+		final EditText inputIncorrect = new EditText(this);
+		final AlertDialog alertIncorrect = new AlertDialog.Builder(this)
+				.create();
+		alertIncorrect
+				.setMessage("Table ID incorrect. Please enter your table ID or ask your friendly waiter for assistance");
+		alertIncorrect.setView(inputIncorrect, 10, 0, 10, 0);
+
+		alertIncorrect.setButton2("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						//
+					}
+				});
+		alertIncorrect.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				//
+				User.getInstance(ItemsActivity.this).isfindTableCode = false;
+				String tableCode = inputIncorrect.getText().toString();
+				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
+					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
+							.toLowerCase().equals(tableCode.toLowerCase())) {
+						User.getInstance(ItemsActivity.this).isfindTableCode = true;
+					}
+				}
+				if (!User.getInstance(ItemsActivity.this).isfindTableCode) {
+					incorrectTableCodePopup(requestCode);
+				} else {
+					onTablePopupResult(requestCode);
+				}
 			}
 		});
-		alert.setButton("Yes", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				//
-			}
-		});
-		alert.show();
-		final int alertTitle = alert.getContext()
-				.getResources()
-				.getIdentifier("alertTitle", "id", "android");
-		TextView titleView = (TextView) alert
-				.findViewById(alertTitle);
-		titleView.setGravity(Gravity.CENTER);
-		titleView.setTypeface(null, Typeface.BOLD);
-		titleView.setTextSize(19);
-		titleView.setTextColor(getResources().getColor(
-				android.R.color.black));
-		int divierId = alert.getContext().getResources()
-				.getIdentifier("android:id/titleDivider", null, null);
-		View divider = alert.findViewById(divierId);
-		divider.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		TextView messageViewBill = (TextView) alert
+		alertIncorrect.show();
+		TextView messageView = (TextView) alertIncorrect
 				.findViewById(android.R.id.message);
-		messageViewBill.setGravity(Gravity.CENTER);
+		messageView.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
-		messageViewBill.setTextSize(17);
+		messageView.setTextSize(17);
 
-		Button bq1Waitor = alert.getButton(DialogInterface.BUTTON1);
-		bq1Waitor.setTextColor(Color.parseColor("#117AFE"));
-		bq1Waitor.setTypeface(null, Typeface.BOLD);
-		bq1Waitor.setTextSize(19);
-		Button bq2Waitor = alert.getButton(DialogInterface.BUTTON2);
-		bq2Waitor.setTextColor(Color.parseColor("#117AFE"));
+		Button bq1 = alertIncorrect.getButton(DialogInterface.BUTTON1);
+		bq1.setTextColor(Color.parseColor("#117AFE"));
+		bq1.setTypeface(null, Typeface.BOLD);
+		bq1.setTextSize(19);
+		Button bq2 = alertIncorrect.getButton(DialogInterface.BUTTON2);
+		bq2.setTextColor(Color.parseColor("#117AFE"));
 		// bq2.setTypeface(null,Typeface.BOLD);
-		bq2Waitor.setTextSize(19);
-	}
+		bq2.setTextSize(19);
 
-	@SuppressWarnings("deprecation")
-	private void setUpTableCodePopupBill(final EditText input,
-			final AlertDialog alert, final AlertDialog alert2) {
-		alert.setMessage("Please enter your table ID located on the BigSpoon table stand");
-		alert.setView(input, 10, 0, 10, 0);
-
-		alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				//
-			}
-		});
-		alert.setButton("Okay", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				billPopup(alert2);
-			}
-		});
-		alert.show();
-		TextView messageViewBill = (TextView) alert
-				.findViewById(android.R.id.message);
-		messageViewBill.setGravity(Gravity.CENTER);
-		// messageView.setHeight(140);
-		messageViewBill.setTextSize(17);
-
-		Button bq1Bill = alert.getButton(DialogInterface.BUTTON1);
-		bq1Bill.setTextColor(Color.parseColor("#117AFE"));
-		bq1Bill.setTypeface(null, Typeface.BOLD);
-		bq1Bill.setTextSize(19);
-		Button bq2Bill = alert.getButton(DialogInterface.BUTTON2);
-		bq2Bill.setTextColor(Color.parseColor("#117AFE"));
-		// bq2.setTypeface(null,Typeface.BOLD);
-		bq2Bill.setTextSize(19);
 	}
 
 	@SuppressWarnings("deprecation")

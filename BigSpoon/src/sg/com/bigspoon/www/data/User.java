@@ -29,14 +29,15 @@ public class User {
 	public List<RetrievedOrder> diningHistory;
 	private SharedPreferences loginPrefs;
 	public Location currentLocation;
-
+	public boolean isfindTableCode=false;
+	
 	private User(Context context) {
 		setContext(context.getApplicationContext());
 		currentSession = new DiningSession();
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
 	}
 
-	public Boolean checkLocation(Location currentLocation) {
+	public Boolean checkLocation() {
 		Boolean checkLocationPass = false;
 		double accuracy = 0;
 		Location locationOfCurrentOutlet = new Location("Current Outlet");
