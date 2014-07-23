@@ -3,12 +3,14 @@ package sg.com.bigspoon.www.data;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import sg.com.bigspoon.www.activities.ItemsActivity;
 import sg.com.bigspoon.www.activities.OutletListActivity;
 
 import android.content.Context;
@@ -33,7 +35,11 @@ public class User {
 	public List<RetrievedOrder> diningHistory;
 	private SharedPreferences loginPrefs;
 	public Location currentLocation;
+	public boolean isfindTableCode=false;
+	private static int FOR_WATER = 0;
+	private static int FOR_WAITER = 1;
 	public int tableId = -1;
+
 	
 	private User(Context context) {
 		setContext(context.getApplicationContext());
@@ -42,9 +48,13 @@ public class User {
 	}
 
 	public Boolean checkLocation() {
+
+		if (currentLocation == null) {
+			return false;
+		}
 		Boolean checkLocationPass = false;
 		double accuracy = 0;
-		Location locationOfCurrentOutlet = new Location("Current Outlet");
+		final Location locationOfCurrentOutlet = new Location("Current Outlet");
 		locationOfCurrentOutlet.setLatitude(currentOutlet.lat);
 		locationOfCurrentOutlet.setLongitude(currentOutlet.lng);
 		double distance = currentLocation.distanceTo(locationOfCurrentOutlet);
@@ -130,6 +140,42 @@ public class User {
 		HashMap<String, Integer> pair = new HashMap<String, Integer>();	
 		pair.put("table", tableId);
 		return  gson.toJsonTree(pair).getAsJsonObject();
+	}
+	
+	private void requestWithType(int typeCode, String note) {
+		if (tableId == -1) {
+			return;
+		}
+		final JsonObject json = new JsonObject();
+		json.addProperty("table", tableId);
+		json.addProperty("request_type", typeCode);
+		json.addProperty("note", note);
+		
+		Ion.with(mContext)
+		.load(REQUEST_URL)
+		.setHeader("Content-Type", "application/json; charset=utf-8")
+		.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
+		.setJsonObjectBody(json)
+		.asJsonObject()
+		.setCallback(new FutureCallback<JsonObject>() {
+			
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+                    Toast.makeText(mContext, "Error sending request", Toast.LENGTH_LONG).show();
+                    return;
+                }
+				Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+	
+	public void requestForWater(String waterInfo){
+		requestWithType(FOR_WATER, waterInfo);
+	}
+	
+	public void requestForWaiter(String waiterServiceInfo){
+		requestWithType(FOR_WAITER, waiterServiceInfo);
 	}
 
 }

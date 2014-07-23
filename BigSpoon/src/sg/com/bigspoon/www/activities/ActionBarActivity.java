@@ -201,6 +201,7 @@ public class ActionBarActivity extends FragmentActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
+				User.getInstance(ActionBarActivity.this).requestForWater(inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();

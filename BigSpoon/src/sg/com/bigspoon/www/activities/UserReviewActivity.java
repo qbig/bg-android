@@ -42,8 +42,8 @@ public class UserReviewActivity extends Activity {
 		
 		submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	performRatingSubmission();
-            	performFeedbackSubmission();
+            	//performRatingSubmission();
+            	//performFeedbackSubmission();
             }
         });
 		
