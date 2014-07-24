@@ -387,6 +387,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+				intent.putExtra("callingActivityName", "OutletListActivity");
 				startActivity(intent);
 			}
 		});
@@ -482,9 +483,9 @@ public class ItemsActivity extends ExpandableListActivity {
 					}
 					break;
 				case 3:
-					i = new Intent(ctx, ItemsActivity.class);
-					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(i);
+					//i = new Intent(ctx, ItemsActivity.class);
+					//i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					//startActivity(i);
 					break;
 				}
 			}

@@ -95,10 +95,12 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			@Override
 			public void onClick(View view) {
 				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) > 0) {
+					User.getInstance(mContext).currentSession.currentOrder.decrementDishAtIndex(groupPosition);
+					notifyDataSetChanged();
 					final View parent = (View) view.getParent().getParent().getParent().getParent().getParent();
 					TextView cornertext;
 					cornertext = (TextView) parent.findViewById(R.id.corner);
-					if (User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity() - 1 <= 0) {
+					if (User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity() <= 0) {
 
 						cornertext.setVisibility(View.VISIBLE);
 						cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity()
@@ -114,8 +116,6 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 						cornertext.startAnimation(a);
 					}
 				}
-				User.getInstance(mContext).currentSession.currentOrder.decrementDishAtIndex(groupPosition);
-				notifyDataSetChanged();
 				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) == 0) {
 					User.getInstance(mContext).currentSession.currentOrder.removeDishAtIndex(groupPosition);
 					notifyDataSetChanged();

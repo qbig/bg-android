@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/category_list_restaurant_icon"
         android:layout_width="match_parent"
-        android:layout_height="188dp"
+        android:layout_height="190dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:src="@drawable/shin_kushiya" />
