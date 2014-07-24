@@ -58,6 +58,7 @@ public class UserReviewActivity extends Activity {
 				performFeedbackSubmission();
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
+				finish();
 			}
 		});
 

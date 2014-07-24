@@ -399,7 +399,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-				intent.putExtra("callingActivityName", "OutletListActivity");
+				intent.putExtra("callingActivityName", "ItemsActivity");
 				startActivity(intent);
 			}
 		});
