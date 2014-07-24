@@ -69,6 +69,9 @@ public class Constants {
 	    public static final String NOTIF_LOCATION_KEY = "location-extra";
 	    
 	    // REQUEST CODE
-	    public static int MODIFIER_POPUP_REQUEST = 999;
+	    public static final int MODIFIER_POPUP_REQUEST = 999;
+	    
+	    //TOKEN 
+	    public static final String MIXPANEL_TOKEN = "2e7017c4be6254ba2e5fae51651f476d";
 	    
 }

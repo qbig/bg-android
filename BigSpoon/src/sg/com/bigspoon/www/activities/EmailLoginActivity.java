@@ -5,8 +5,16 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +31,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class EmailLoginActivity extends Activity {
 	private static String ION_LOGGING_LOGIN = "ion-email-login";
@@ -80,7 +89,17 @@ public class EmailLoginActivity extends Activity {
 										loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
 										loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
 										loginPrefsEditor.commit();
-
+										
+										MixpanelAPI mixpanel =
+											    MixpanelAPI.getInstance(EmailLoginActivity.this, MIXPANEL_TOKEN);
+										JSONObject firstTime = new JSONObject();
+										try {
+											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+											mixpanel.registerSuperPropertiesOnce(firstTime);
+										} catch (JSONException e1) {
+											e1.printStackTrace();
+										}
+										
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										EmailLoginActivity.this.startActivity(intent);
 									} catch (NullPointerException nullException) {

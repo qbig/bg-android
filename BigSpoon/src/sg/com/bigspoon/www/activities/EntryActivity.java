@@ -8,6 +8,14 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.BigSpoon;
 import android.app.Activity;
@@ -26,6 +34,7 @@ import com.facebook.SessionState;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class EntryActivity extends Activity {
 
@@ -116,7 +125,8 @@ public class EntryActivity extends Activity {
 									LOGIN_INFO_AUTHTOKEN).getAsString();
 							final String avatarUrl = result.get(
 									LOGIN_INFO_AVATAR_URL).getAsString();
-
+							
+							
 							loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
 							loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME,
 									lastName);
@@ -127,7 +137,17 @@ public class EntryActivity extends Activity {
 							loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL,
 									avatarUrl);
 							loginPrefsEditor.commit();
-
+							
+							MixpanelAPI mixpanel =
+								    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+							JSONObject firstTime = new JSONObject();
+							try {
+								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+								mixpanel.registerSuperPropertiesOnce(firstTime);
+							} catch (JSONException e1) {
+								e1.printStackTrace();
+							}
+							
 							Intent intent = new Intent(EntryActivity.this,
 									OutletListActivity.class);
 							EntryActivity.this.startActivity(intent);

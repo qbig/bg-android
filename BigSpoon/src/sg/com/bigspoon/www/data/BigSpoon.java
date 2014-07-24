@@ -4,8 +4,15 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.google.gson.JsonObject;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
@@ -19,13 +26,14 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.preference.Preference;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 public class BigSpoon extends Application implements Foreground.Listener {
 	final Handler mHandler = new Handler();
-	
+	private MixpanelAPI mMixpanel;
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -41,6 +49,23 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
 				new IntentFilter(NOTIF_LOCATION_UPDATED));
 		BugSenseHandler.initAndStartSession(this, "625f7944");
+		mMixpanel =
+			    MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+		final SharedPreferences pref = getSharedPreferences(PREFS_NAME, 0);
+		if (pref.contains(LOGIN_INFO_EMAIL)) {
+			final String email = pref.getString(LOGIN_INFO_EMAIL, null);
+			if (email != null) {
+				JSONObject props = new JSONObject();
+				try {
+					props.put("user", email);
+					mMixpanel.track("Usage starts", props);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
 	}
 
 	@Override
@@ -49,6 +74,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		Foreground.get(this).removeListener(this);
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationUpdateReceiver);
 		BugSenseHandler.closeSession(this);
+		mMixpanel.flush();
 	}
 
 	// Foreground Callback
