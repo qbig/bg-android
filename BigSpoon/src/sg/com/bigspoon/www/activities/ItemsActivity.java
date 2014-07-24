@@ -71,6 +71,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
 	public static final int BILL = 3;
+	public static final int PLACE_ORDER = 4;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,18 @@ public class ItemsActivity extends ExpandableListActivity {
 				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
 					showNoOrderPopup();
 				} else {
-					showOrderDetailsPopup();
+					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+						if (User.getInstance(ItemsActivity.this).tableId == -1) {
+							int requestCode = PLACE_ORDER;
+							setUpTablePopup(requestCode);
+						} else {
+							int requestCode = PLACE_ORDER;
+							onTablePopupResult(requestCode);
+						}
+					} else {
+						setUpLocationFailPopup();
+						User.getInstance(ItemsActivity.this).tableId = -1;
+					}
 				}
 			}
 		});
@@ -400,6 +412,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onResume();
 		loadMenu();
 		updateOrderedDishCounter();
+		mPastOrderAdapter.notifyDataSetChanged();
 	}
 
 
@@ -506,6 +519,9 @@ public class ItemsActivity extends ExpandableListActivity {
 			break;
 		case BILL:
 			billPopup();
+			break;
+		case PLACE_ORDER:
+			showOrderDetailsPopup();
 			break;
 		}
 	}
