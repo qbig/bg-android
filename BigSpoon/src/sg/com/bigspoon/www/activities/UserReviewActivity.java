@@ -47,6 +47,7 @@ public class UserReviewActivity extends Activity {
 		cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
+				User.getInstance(UserReviewActivity.this).tableId = -1;
 				finish();
 			}
 		});
@@ -56,6 +57,7 @@ public class UserReviewActivity extends Activity {
 				performRatingSubmission();
 				performFeedbackSubmission();
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
+				User.getInstance(UserReviewActivity.this).tableId = -1;
 			}
 		});
 
@@ -90,20 +92,18 @@ public class UserReviewActivity extends Activity {
 				pair.put(submittingOrder.mItems.get(i).dish.id + "", UserReviewActivity.ratingsArray[i] + "");
 				ratings.add(pair);
 			}
-			
+
 			final Gson gson = new Gson();
 			JsonObject json = new JsonObject();
 			json.add("dishes", gson.toJsonTree(ratings));
 			Ion.with(this).load(RATING_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 					.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
-					.setJsonObjectBody(json).asJsonObject()
-					.setCallback(new FutureCallback<JsonObject>() {
+					.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
 						@Override
 						public void onCompleted(Exception e, JsonObject result) {
 							if (e != null) {
-								Toast.makeText(getApplicationContext(), "Error sending ratings", Toast.LENGTH_LONG)
-										.show();
+								//Toast.makeText(getApplicationContext(), "Error sending ratings", Toast.LENGTH_LONG).show();
 								return;
 							}
 							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();

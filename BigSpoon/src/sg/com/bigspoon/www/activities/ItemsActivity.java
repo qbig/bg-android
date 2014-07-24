@@ -411,6 +411,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onResume();
 		loadMenu();
 		updateOrderedDishCounter();
+		mPastOrderAdapter.notifyDataSetChanged();
 	}
 
 
