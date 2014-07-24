@@ -3,113 +3,118 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
-    android:orientation="vertical"
     android:background="#FF3D444D"
+    android:gravity="center"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="0sp"
-    android:weightSum="1"
-    android:gravity="center"
+    android:weightSum="10"
     tools:context=".UserReviewActivity" >
 
-    <TextView
-       android:id="@+id/reviewTitle"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_gravity="center"
-       android:textColor="#BBF01C"
-       android:includeFontPadding="false"
-       android:text="@string/thanksforcoming"
-       android:layout_marginBottom="20dp"
-       android:textSize="25dp"  />
-    
-    <TextView
-        android:id="@+id/ReviewLine2"
-       android:textColor="#D2E841"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enjoy_meal"
-        android:textSize="15dp"  />
-    
-    <TextView
-        android:id="@+id/ReviewLine3"
-        android:layout_width="wrap_content"
-        android:textColor="#D2E841"
-        android:layout_height="wrap_content"
-        android:text="@string/ratings"
-        android:layout_marginBottom="15dp"
-        android:textSize="15dp" />
-    
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1.2"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/reviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:includeFontPadding="false"
+            android:text="@string/thanksforcoming"
+            android:textColor="#BBF01C"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ReviewLine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/enjoy_meal"
+            android:textColor="#D2E841"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/ReviewLine3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:text="@string/ratings"
+            android:textColor="#D2E841"
+            android:textSize="15dp" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/ratingList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:background="#FF4E5660"
-        android:dividerHeight="1.0sp"
-        android:transcriptMode="alwaysScroll"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="6.6"
+        android:background="#FF4E5660"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1.0sp"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp" 
-        >
-                   
+        android:paddingRight="5dp"
+        android:transcriptMode="alwaysScroll" >
     </ListView>
 
-     <EditText
-         android:id="@+id/editText1"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_weight="0.13"
-         android:ems="8"
-         android:hint="Your feedback here..."
-         android:textSize="15sp"
-         android:paddingLeft="5dp"
-         android:paddingRight="5dp"
-         android:layout_marginLeft="5dp"
-         android:layout_marginRight="5dp"
-         android:paddingTop="5dp"
-         android:background="@drawable/feedback"
-         android:maxLines="2"
-         android:lines="4"
-         android:gravity="top"
-         android:inputType="textMultiLine" 
-         >
-         
-     </EditText>
-    
-     
-     
-     <RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"             
-    android:orientation="horizontal" 
-    android:layout_marginTop="35dp">
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1.2"
+        android:background="@drawable/feedback"
+        android:ems="8"
+        android:gravity="top"
+        android:hint="Your feedback here..."
+        android:inputType="textMultiLine"
+        android:lines="4"
+        android:maxLines="2"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:textSize="15sp" >
+    </EditText>
 
-<Button
-    android:id="@+id/button1"
-    android:layout_width="120sp"
-    android:layout_height="45dp"
-    android:layout_marginLeft="45dp"                    
-    android:text="Cancel" 
-    android:background="@color/black"
-    android:textColor="@color/white"
-    android:layout_alignParentLeft="true"
-    android:layout_gravity="left" 
-    />
-<Button
-    android:id="@+id/button2"
-    android:layout_width="120sp"
-    android:background="@color/BigSpoonGreen"
-    android:textColor="@color/white"
-    android:layout_height="45dp"              
-    android:text="Submit" 
-    android:layout_gravity="right" 
-    android:layout_marginRight="45dp"
-    android:layout_alignParentRight="true"
-   />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
 
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="120sp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="left"
+            android:layout_marginLeft="50dp"
+            android:background="@color/black"
+            android:text="Cancel"
+            android:textColor="@color/white" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="120sp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="50dp"
+            android:background="@color/BigSpoonGreen"
+            android:text="Submit"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
 </LinearLayout>

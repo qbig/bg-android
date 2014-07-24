@@ -18,11 +18,12 @@
         android:textSize="12sp" />   
        
       <RatingBar
-      android:id="@+id/ratingBar"
-      android:scaleX="0.5"
-      android:gravity="center_vertical|left"
-      style="@style/RatingBarStar"
-      android:scaleY="0.5" />
+          android:id="@+id/ratingBar"
+          style="@style/RatingBarStar"
+          android:gravity="center_vertical|left"
+          android:rating="5"
+          android:scaleX="0.5"
+          android:scaleY="0.5" />
      
 </TableRow>
 </TableLayout>

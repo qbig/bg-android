@@ -5,8 +5,6 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.TableModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -201,7 +199,8 @@ public class ActionBarActivity extends FragmentActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
-				User.getInstance(ActionBarActivity.this).requestForWater(inputWaitor.getText().toString());
+				User.getInstance(ActionBarActivity.this).requestForWater(
+						inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();
@@ -253,6 +252,9 @@ public class ActionBarActivity extends FragmentActivity {
 							.toLowerCase().equals(tableCode.toLowerCase())) {
 						User.getInstance(ActionBarActivity.this).tableId = User
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ActionBarActivity.this).isForTakeAway = User
+								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
+
 					}
 				}
 				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
@@ -303,6 +305,8 @@ public class ActionBarActivity extends FragmentActivity {
 							.toLowerCase().equals(tableCode.toLowerCase())) {
 						User.getInstance(ActionBarActivity.this).tableId = User
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ActionBarActivity.this).isForTakeAway = User
+								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
 					}
 				}
 				if (User.getInstance(ActionBarActivity.this).tableId == -1) {

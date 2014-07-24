@@ -39,7 +39,8 @@ public class User {
 	private static int FOR_WATER = 0;
 	private static int FOR_WAITER = 1;
 	public int tableId = -1;
-
+	public Boolean isContainDessert = false;
+	public Boolean isForTakeAway = false;
 	
 	private User(Context context) {
 		setContext(context.getApplicationContext());

@@ -15,7 +15,7 @@ public class Order {
 	 * several {@link OrderItem}
 	 */
 
-	public String mGeneralNote;
+	public String mGeneralNote = null;
 	public ArrayList<OrderItem> mItems;
 
 	public Order() {
@@ -228,6 +228,10 @@ public class Order {
 		final HashMap<String, HashMap<String, Integer>> modifierAnswers = getAllModifierAnswers();
 		if (!modifierAnswers.isEmpty()) {
 			jsonOrders.add("modifiers", gson.toJsonTree(modifierAnswers));
+		}
+
+		if (mGeneralNote != null && !mGeneralNote.equals("")) {	
+			jsonOrders.addProperty("note", mGeneralNote);
 		}
 
 		return jsonOrders;

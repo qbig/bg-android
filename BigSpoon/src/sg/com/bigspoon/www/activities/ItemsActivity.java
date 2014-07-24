@@ -1,5 +1,16 @@
 package sg.com.bigspoon.www.activities;
 
+import static sg.com.bigspoon.www.data.Constants.BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
@@ -8,7 +19,9 @@ import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ExpandableListActivity;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +31,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.app.DialogFragment;
+import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,21 +55,17 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.BILL_URL;
-import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-
 public class ItemsActivity extends ExpandableListActivity {
 
 	private static final String ION_LOGGING_ITEM_ACTIVITY = "ion-item-activity";
-		
+
 	Boolean isExpanded = false;
 	private GridView mBottomGridView;
 	private TextView orderCounterText;
@@ -72,13 +84,16 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int WAITER = 2;
 	public static final int BILL = 3;
 	public static final int PLACE_ORDER = 4;
-	
+	public static final int TAKE_AWAY = 5;
+	static EditText textTime;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Ion.getDefault(this).configure().setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
-		loginPreferences = getSharedPreferences(PREFS_NAME,0);
-		
+		Ion.getDefault(this).configure()
+				.setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
+		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
+
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
 		updateOrderedDishCounter();
@@ -87,12 +102,14 @@ public class ItemsActivity extends ExpandableListActivity {
 		loadMenu();
 		setupPlaceOrderButton();
 		setupPlacedOrderListView();
-		
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
+
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
+				mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
+				mPastOrderList, 0);
 
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -100,15 +117,17 @@ public class ItemsActivity extends ExpandableListActivity {
 			toggleAddNoteState();
 		}
 	};
-	
+
 	protected void updateDisplay() {
 		updateOrderedDishCounter();
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
+				mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
+				mPastOrderList, 0);
 	}
-	
+
 	private void setupPlacedOrderListView() {
 		mPastOrderList = (ListView) findViewById(R.id.listOfOrderPlaced);
 		mPastOrderAdapter = new PastOrdersAdapter(this,
@@ -124,17 +143,24 @@ public class ItemsActivity extends ExpandableListActivity {
 				if (isExpanded) {
 					toggleAddNoteState();
 				}
-				
-				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
+
+				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+						.isEmpty()) {
 					showNoOrderPopup();
 				} else {
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+						checkIfContainDessert();
 						if (User.getInstance(ItemsActivity.this).tableId == -1) {
 							int requestCode = PLACE_ORDER;
 							setUpTablePopup(requestCode);
 						} else {
-							int requestCode = PLACE_ORDER;
-							onTablePopupResult(requestCode);
+							if (User.getInstance(ItemsActivity.this).isForTakeAway) {
+								int requestCode = TAKE_AWAY;
+								onTablePopupResult(requestCode);
+							} else {
+								int requestCode = PLACE_ORDER;
+								onTablePopupResult(requestCode);
+							}
 						}
 					} else {
 						setUpLocationFailPopup();
@@ -144,41 +170,61 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 	}
-	
-	private void performSendOrderRequest() {
-		
-		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;  
-		Ion.with(this)
-		.load(ORDER_URL)
-		.setHeader("Content-Type", "application/json; charset=utf-8")
-		.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
-		.setJsonObjectBody(currentOrder.getJsonOrders())
-		.asJsonObject()
-		.setCallback(new FutureCallback<JsonObject>() {
-			
-			@Override
-			public void onCompleted(Exception e, JsonObject result) {
-				if (e != null) {
-                    Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
-                    return;
-                }
-				Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
+
+	protected void checkIfContainDessert() {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+				.size(); i++) {
+			if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+					.get(i).dish.categories[0].id == DESSERT_CATEGORY_ID) {
+				User.getInstance(ItemsActivity.this).isContainDessert = true;
 			}
-		});
+		}
+
 	}
-	
+
+	private void performSendOrderRequest() {
+
+		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;
+		Ion.with(this)
+				.load(ORDER_URL)
+				.setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader(
+						"Authorization",
+						"Token "
+								+ loginPreferences.getString(
+										LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(currentOrder.getJsonOrders()).asJsonObject()
+				.setCallback(new FutureCallback<JsonObject>() {
+
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if (e != null) {
+							Toast.makeText(ItemsActivity.this,
+									"Error sending orders", Toast.LENGTH_LONG)
+									.show();
+							return;
+						}
+						Toast.makeText(ItemsActivity.this, "Success",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+	}
+
 	private void showOrderDetailsPopup() {
 		LayoutInflater inflater = getLayoutInflater();
 
-		AlertDialog.Builder alertbuilder = new AlertDialog.Builder(ItemsActivity.this);
+		AlertDialog.Builder alertbuilder = new AlertDialog.Builder(
+				ItemsActivity.this);
 
 		View dialoglayout = inflater.inflate(R.layout.dialog_layout, null);
 
-		LinearLayout layoutholder = (LinearLayout) dialoglayout.findViewById(R.id.dialog_layout_root);
+		LinearLayout layoutholder = (LinearLayout) dialoglayout
+				.findViewById(R.id.dialog_layout_root);
 
 		TextView textTitle = new TextView(getBaseContext());
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 		params.gravity = Gravity.CENTER;
 		final float scale = getBaseContext().getResources().getDisplayMetrics().density;
 		int padding_10dp = (int) (10 * scale + 0.5f);
@@ -194,21 +240,27 @@ public class ItemsActivity extends ExpandableListActivity {
 		textTitle.setTypeface(null, Typeface.BOLD);
 		layoutholder.addView(textTitle);
 
-		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+				.size(); i++) {
 			final FrameLayout childLayout = new FrameLayout(getBaseContext());
 			final TextView textNumber = new TextView(getBaseContext());
 			final FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+					FrameLayout.LayoutParams.WRAP_CONTENT,
+					FrameLayout.LayoutParams.WRAP_CONTENT);
 			params2.setMargins(padding_10dp, 0, 0, 0);
 			textNumber.setLayoutParams(params2);
-			textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.currentOrder
-					.getQuantityOfDishByIndex(i)));
-			textNumber.setTextColor(getResources().getColor(android.R.color.black));
+			textNumber
+					.setText(Integer.toString(User
+							.getInstance(ItemsActivity.this).currentSession.currentOrder
+							.getQuantityOfDishByIndex(i)));
+			textNumber.setTextColor(getResources().getColor(
+					android.R.color.black));
 			childLayout.addView(textNumber);
 
 			TextView xMark = new TextView(getBaseContext());
 			FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+					FrameLayout.LayoutParams.WRAP_CONTENT,
+					FrameLayout.LayoutParams.WRAP_CONTENT);
 			params3.setMargins(padding_25dp, 0, 0, 0);
 			xMark.setLayoutParams(params3);
 			xMark.setText("x");
@@ -217,40 +269,47 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			TextView itemName = new TextView(getBaseContext());
 			FrameLayout.LayoutParams params4 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+					FrameLayout.LayoutParams.WRAP_CONTENT,
+					FrameLayout.LayoutParams.WRAP_CONTENT);
 			params4.setMargins(padding_35dp, 0, padding_15dp, 0);
 			params4.gravity = Gravity.RIGHT;
 			itemName.setLayoutParams(params4);
-			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
-			itemName.setTextColor(getResources().getColor(android.R.color.black));
+			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+					.get(i).dish.name);
+			itemName.setTextColor(getResources()
+					.getColor(android.R.color.black));
 			itemName.setTextSize(12);
 			childLayout.addView(itemName);
 
 			LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT);
 			layoutholder.addView(childLayout, parentParams);
 		}
 
 		alertbuilder.setView(layoutholder);
 
-		alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
+		alertbuilder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
 
-			}
-		});
-		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				performSendOrderRequest();
-				User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
-						.getInstance(ItemsActivity.this).currentSession.currentOrder);
-				User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
-				Toast.makeText(
-						getApplicationContext(),
-						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
-						Toast.LENGTH_LONG).show();
-				updateDisplay();
-			}
-		});
+					}
+				});
+		alertbuilder.setPositiveButton("Okay",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						performSendOrderRequest();
+						User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
+								.getInstance(ItemsActivity.this).currentSession.currentOrder);
+						User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
+						User.getInstance(ItemsActivity.this).isContainDessert = false;
+						Toast.makeText(
+								getApplicationContext(),
+								"Your order has been sent. Our food is prepared with love, thank you for being patient.",
+								Toast.LENGTH_LONG).show();
+						updateDisplay();
+					}
+				});
 
 		AlertDialog alertDialog = alertbuilder.create();
 		alertDialog.show();
@@ -267,12 +326,14 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	private void showNoOrderPopup() {
-		final AlertDialog alertNoOrder = new AlertDialog.Builder(ItemsActivity.this).create();
+		final AlertDialog alertNoOrder = new AlertDialog.Builder(
+				ItemsActivity.this).create();
 		alertNoOrder.setTitle("Place Order");
 		alertNoOrder.setMessage("You haven't selected anything.");
 		alertNoOrder.setView(null);
 		alertNoOrder.setButton("Okay", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int whichButton) {
+			public void onClick(final DialogInterface dialog,
+					final int whichButton) {
 				//
 			}
 		});
@@ -280,7 +341,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		int dividerId = alertNoOrder.getContext().getResources()
 				.getIdentifier("android:id/titleDivider", null, null);
 		View divider = alertNoOrder.findViewById(dividerId);
-		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		divider.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
 		final int alertTitle = alertNoOrder.getContext().getResources()
 				.getIdentifier("alertTitle", "id", "android");
 		TextView titleView = (TextView) alertNoOrder.findViewById(alertTitle);
@@ -289,7 +351,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		titleView.setTextSize(19);
 		titleView.setTextColor(getResources().getColor(android.R.color.black));
 
-		TextView messageView = (TextView) alertNoOrder.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alertNoOrder
+				.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		messageView.setTextSize(17);
 
@@ -306,51 +369,60 @@ public class ItemsActivity extends ExpandableListActivity {
 		mExpandableList.setClickable(true);
 		mExpandableList.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
-			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+			public boolean onGroupClick(ExpandableListView parent, View v,
+					int groupPosition, long id) {
 				return true;
 			}
 		});
 
 		mCurrentOrderAdapter = new CurrentOrderExpandableAdapter(this);
 
-		mCurrentOrderAdapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
+		mCurrentOrderAdapter
+				.setInflater(
+						(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE),
+						this);
 
 		mExpandableList.setAdapter(mCurrentOrderAdapter);
 		mExpandableList.setOnChildClickListener(this);
-		mExpandableList.setChildDivider(getResources().getDrawable(R.color.white));
+		mExpandableList.setChildDivider(getResources().getDrawable(
+				R.color.white));
 		mExpandableList.setDivider(getResources().getDrawable(R.color.white));
 		mExpandableList.setDividerHeight(2);
-
-		
 
 		mExpandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
 			@Override
 			public void onGroupExpand(int groupPosition) {
-				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(mExpandableList, groupPosition);
+				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(
+						mExpandableList, groupPosition);
 			}
 		});
-		mExpandableList.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-			@Override
-			public void onGroupCollapse(int groupPosition) {
-				ExpandableViewUtil.setCollapseListViewHeightBasedOnChildren(mExpandableList, groupPosition);
-			}
-		});
+		mExpandableList
+				.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+					@Override
+					public void onGroupCollapse(int groupPosition) {
+						ExpandableViewUtil
+								.setCollapseListViewHeightBasedOnChildren(
+										mExpandableList, groupPosition);
+					}
+				});
 	}
 
 	private void toggleAddNoteState() {
 		if (!isExpanded) {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+					.size(); i++) {
 				mExpandableList.expandGroup(i, true);
 				isExpanded = true;
 			}
 		} else {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
+					.size(); i++) {
 				mExpandableList.collapseGroup(i);
 				isExpanded = false;
 			}
 		}
 	}
-	
+
 	private void setupAddNoteButton() {
 		mAddNote = (Button) findViewById(R.id.button1);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
@@ -362,30 +434,35 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void updateOrderedDishCounter() {
-		if (User.getInstance(this).currentSession.currentOrder.getTotalQuantity() != 0) {
+		if (User.getInstance(this).currentSession.currentOrder
+				.getTotalQuantity() != 0) {
 			orderCounterText.setVisibility(View.VISIBLE);
-			orderCounterText.setText(User.getInstance(this).currentSession.currentOrder.getTotalQuantity() + "");
+			orderCounterText
+					.setText(User.getInstance(this).currentSession.currentOrder
+							.getTotalQuantity() + "");
 		} else {
 			orderCounterText.setVisibility(View.GONE);
 		}
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		mActionBar = getActionBar();
 		mActionBar.setDisplayShowHomeEnabled(false);
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+		mActionBarView = getLayoutInflater().inflate(
+				R.layout.action_bar_items_activity, null);
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		
+
 		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
 		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
 		mBackButton.setPadding(22, 0, 0, 0);
 		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
+		states.addState(new int[] { android.R.attr.state_pressed },
+				getResources().getDrawable(R.drawable.menu_pressed));
+		states.addState(new int[] {},
+				getResources().getDrawable(R.drawable.menu));
 		mBackButton.setImageDrawable(states);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -394,11 +471,13 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 
-		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+		historyButton = (ImageButton) mActionBarView
+				.findViewById(R.id.order_history);
 		historyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+				Intent intent = new Intent(getApplicationContext(),
+						OrderHistoryListActivity.class);
 				intent.putExtra("callingActivityName", "ItemsActivity");
 				startActivity(intent);
 			}
@@ -415,10 +494,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		mPastOrderAdapter.notifyDataSetChanged();
 	}
 
-
 	public class ListViewHeightUtil {
 
-		public void setListViewHeightBasedOnChildren(ListView listView, int attHeight) {
+		public void setListViewHeightBasedOnChildren(ListView listView,
+				int attHeight) {
 			ListAdapter listAdapter = listView.getAdapter();
 			if (listAdapter == null) {
 				return;
@@ -432,7 +511,9 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 
 			ViewGroup.LayoutParams params = listView.getLayoutParams();
-			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + attHeight;
+			params.height = totalHeight
+					+ (listView.getDividerHeight() * (listAdapter.getCount() - 1))
+					+ attHeight;
 			listView.setLayoutParams(params);
 		}
 	}
@@ -445,12 +526,14 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		mBottomGridView = (GridView) findViewById(R.id.gv_action_menu);
 
-		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 4);
+		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(
+				this, 4);
 		mBottomGridView.setAdapter(actionBarMenuAdapter);
 		mBottomGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long arg3) {
 				Intent i = null;
 				switch (position) {
 				case 0:
@@ -496,9 +579,9 @@ public class ItemsActivity extends ExpandableListActivity {
 					}
 					break;
 				case 3:
-					//i = new Intent(ctx, ItemsActivity.class);
-					//i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					//startActivity(i);
+					// i = new Intent(ctx, ItemsActivity.class);
+					// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					// startActivity(i);
 					break;
 				}
 			}
@@ -521,9 +604,160 @@ public class ItemsActivity extends ExpandableListActivity {
 			billPopup();
 			break;
 		case PLACE_ORDER:
-			showOrderDetailsPopup();
+			if (User.getInstance(ItemsActivity.this).isContainDessert) {
+				showServeDessertPopup();
+			} else
+				showOrderDetailsPopup();
+			break;
+		case TAKE_AWAY:
+			takeAwayPopup();
 			break;
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void takeAwayPopup() {
+		final AlertDialog alertTakeAway = new AlertDialog.Builder(this)
+				.create();
+		alertTakeAway.setTitle("Pick a time :)");
+		alertTakeAway.setMessage("and leave your phone number");
+		LinearLayout textInputLayoutHolder = new LinearLayout(this);
+		textInputLayoutHolder.setOrientation(LinearLayout.VERTICAL);
+		textInputLayoutHolder.setPadding(30, 0, 30, 30);
+		textTime = new EditText(this);
+		textTime.setHint("Time to pick up");
+		textInputLayoutHolder.addView(textTime);
+		textTime.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				showTimePickerDialog();
+			}
+		});
+
+		final EditText textPhoneNumber = new EditText(this);
+		textPhoneNumber.setHint("Your phone number");
+		textPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+		textInputLayoutHolder.addView(textPhoneNumber);
+		alertTakeAway.setView(textInputLayoutHolder);
+
+		alertTakeAway.setButton2("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						//
+					}
+				});
+		alertTakeAway.setButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Takeaway: "
+						+ textTime.getText()
+						+ ", "
+						+ "phone: "
+						+ textPhoneNumber.getText();
+				if (textTime.getText().toString() == null
+						|| textTime.getText().toString().equals("")
+						|| textPhoneNumber.getText().toString().equals("")
+						|| textPhoneNumber.getText().toString() == null
+						|| textPhoneNumber.getText().toString().length() != 8) {
+					takeAwayPopup();
+				} else {
+					showOrderDetailsPopup();
+				}
+			}
+		});
+		alertTakeAway.show();
+		final int alertTitle = alertTakeAway.getContext().getResources()
+				.getIdentifier("alertTitle", "id", "android");
+		TextView titleView = (TextView) alertTakeAway.findViewById(alertTitle);
+		titleView.setGravity(Gravity.CENTER);
+		titleView.setTypeface(null, Typeface.BOLD);
+		titleView.setTextSize(19);
+		titleView.setTextColor(getResources().getColor(android.R.color.black));
+		int divierId = alertTakeAway.getContext().getResources()
+				.getIdentifier("android:id/titleDivider", null, null);
+		View divider = alertTakeAway.findViewById(divierId);
+		divider.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+		TextView messageViewBill = (TextView) alertTakeAway
+				.findViewById(android.R.id.message);
+		messageViewBill.setGravity(Gravity.CENTER);
+		// messageView.setHeight(140);
+		messageViewBill.setTextSize(17);
+
+		Button bq1 = alertTakeAway.getButton(DialogInterface.BUTTON1);
+		bq1.setTextColor(Color.parseColor("#117AFE"));
+		bq1.setTypeface(null, Typeface.BOLD);
+		bq1.setTextSize(19);
+		Button bq2 = alertTakeAway.getButton(DialogInterface.BUTTON2);
+		bq2.setTextColor(Color.parseColor("#117AFE"));
+		// bq2.setTypeface(null,Typeface.BOLD);
+		bq2.setTextSize(19);
+
+	}
+
+	protected void showTimePickerDialog() {
+		DialogFragment newFragment = new TimePickerFragment();
+		newFragment.show(getFragmentManager(), "timePicker");
+	}
+
+	public static class TimePickerFragment extends DialogFragment implements
+			TimePickerDialog.OnTimeSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			final Calendar c = Calendar.getInstance();
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			int minute = c.get(Calendar.MINUTE);
+			return new TimePickerDialog(getActivity(), this, hour, minute,
+					DateFormat.is24HourFormat(getActivity()));
+		}
+
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			String currentDate = new SimpleDateFormat("MM/dd/yyyy")
+					.format(new Date());
+			String minuteDisplay;
+			if (minute < 10)
+				minuteDisplay = "0" + Integer.toString(minute);
+			else
+				minuteDisplay = Integer.toString(minute);
+			textTime.setText(currentDate + " " + hourOfDay + ":"
+					+ minuteDisplay);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void showServeDessertPopup() {
+		final AlertDialog alert = new AlertDialog.Builder(this).create();
+		alert.setMessage("Would you like your dessert to be served now?");
+		alert.setView(null);
+
+		alert.setButton2("Now", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Serve dessert now";
+				showOrderDetailsPopup();
+			}
+		});
+		alert.setButton("Serve later", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Serve dessert later";
+				showOrderDetailsPopup();
+			}
+		});
+		alert.show();
+		TextView messageView = (TextView) alert
+				.findViewById(android.R.id.message);
+		messageView.setGravity(Gravity.CENTER);
+		// messageView.setHeight(140);
+		messageView.setTextSize(17);
+
+		Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+		bq1.setTextColor(Color.parseColor("#117AFE"));
+		bq1.setTypeface(null, Typeface.BOLD);
+		bq1.setTextSize(19);
+		Button bq2 = alert.getButton(DialogInterface.BUTTON2);
+		bq2.setTextColor(Color.parseColor("#117AFE"));
+		// bq2.setTypeface(null, Typeface.BOLD);
+		bq2.setTextSize(19);
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -580,7 +814,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
-				User.getInstance(ItemsActivity.this).requestForWater(inputWaitor.getText().toString());
+				User.getInstance(ItemsActivity.this).requestForWater(
+						inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();
@@ -632,12 +867,18 @@ public class ItemsActivity extends ExpandableListActivity {
 							.toLowerCase().equals(tableCode.toLowerCase())) {
 						User.getInstance(ItemsActivity.this).tableId = User
 								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ItemsActivity.this).isForTakeAway = User
+								.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {
 					incorrectTableCodePopup(requestCode);
 				} else {
-					onTablePopupResult(requestCode);
+					if (User.getInstance(ItemsActivity.this).isForTakeAway) {
+						int requestCodeTake = TAKE_AWAY;
+						onTablePopupResult(requestCodeTake);
+					} else
+						onTablePopupResult(requestCode);
 				}
 			}
 		});
@@ -682,6 +923,8 @@ public class ItemsActivity extends ExpandableListActivity {
 							.toLowerCase().equals(tableCode.toLowerCase())) {
 						User.getInstance(ItemsActivity.this).tableId = User
 								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ItemsActivity.this).isForTakeAway = User
+								.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {
