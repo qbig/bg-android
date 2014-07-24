@@ -46,7 +46,8 @@ public class EntryActivity extends Activity {
 
 	private SharedPreferences loginPreferences;
 	private SharedPreferences.Editor loginPrefsEditor;
-
+	private MixpanelAPI mMixpanel;
+	
 	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
 		public void call(Session session, SessionState state,
 				Exception exception) {
@@ -62,7 +63,8 @@ public class EntryActivity extends Activity {
 				.setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPreferences.edit();
-
+		mMixpanel =
+			    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 		initFBSession(savedInstanceState);
 
 		addListenerOnButtonLogin();
@@ -138,12 +140,13 @@ public class EntryActivity extends Activity {
 									avatarUrl);
 							loginPrefsEditor.commit();
 							
-							MixpanelAPI mixpanel =
+							mMixpanel =
 								    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 							JSONObject firstTime = new JSONObject();
 							try {
 								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-								mixpanel.registerSuperPropertiesOnce(firstTime);
+								mMixpanel.registerSuperPropertiesOnce(firstTime);
+								mMixpanel.track("fbLogin Success", firstTime);
 							} catch (JSONException e1) {
 								e1.printStackTrace();
 							}
@@ -195,6 +198,20 @@ public class EntryActivity extends Activity {
 		fbLoginButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
+				if (loginPreferences.contains(LOGIN_INFO_EMAIL)) {
+					final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
+					if (email != null) {
+						JSONObject json = new JSONObject();
+						try {
+							json.put("email", email);
+							mMixpanel.track("fbLogin", json);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					
+				}
+				
 				Session session = Session.getActiveSession();
 				if (!session.isOpened() && !session.isClosed()) {
 					session.openForRead(new Session.OpenRequest(
