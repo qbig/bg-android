@@ -5,10 +5,12 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
 import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -47,8 +50,9 @@ public class EntryActivity extends Activity {
 	private SharedPreferences loginPreferences;
 	private SharedPreferences.Editor loginPrefsEditor;
 	private MixpanelAPI mMixpanel;
+	private boolean firstTimeStartingApp;
 	
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 		public void call(Session session, SessionState state,
 				Exception exception) {
 			updateAccordingToFBSessionChange();
@@ -63,19 +67,22 @@ public class EntryActivity extends Activity {
 				.setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPreferences.edit();
+		
 		mMixpanel =
 			    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 		initFBSession(savedInstanceState);
-
 		addListenerOnButtonLogin();
 		addListenerOnButtonSignUp();
 		addListenerOnButtonFBSignUp();
 		updateAccordingToFBSessionChange();
-
+		
+		firstTimeStartingApp = true;
 		final boolean hasShownTutorial = loginPreferences.getBoolean(
 				TUTORIAL_SET, false);
 		if (!hasShownTutorial) {
 			((BigSpoon) getApplication()).checkLocationEnabledByForce();
+		} else {
+			firstTimeStartingApp = false;
 		}
 	}
 
@@ -83,7 +90,7 @@ public class EntryActivity extends Activity {
 		Session session = Session.getActiveSession();
 		if (session == null) {
 			if (savedInstanceState != null) {
-				session = Session.restoreSession(this, null, statusCallback,
+				session = Session.restoreSession(this, null, fbStatusCallback,
 						savedInstanceState);
 			}
 			if (session == null) {
@@ -92,7 +99,7 @@ public class EntryActivity extends Activity {
 			Session.setActiveSession(session);
 			if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
 				session.openForRead(new Session.OpenRequest(this)
-						.setCallback(statusCallback));
+						.setCallback(fbStatusCallback));
 			}
 		}
 	}
@@ -215,10 +222,10 @@ public class EntryActivity extends Activity {
 				Session session = Session.getActiveSession();
 				if (!session.isOpened() && !session.isClosed()) {
 					session.openForRead(new Session.OpenRequest(
-							EntryActivity.this).setCallback(statusCallback));
+							EntryActivity.this).setCallback(fbStatusCallback));
 				} else {
 					Session.openActiveSession(EntryActivity.this, true,
-							statusCallback);
+							fbStatusCallback);
 				}
 			}
 		});
@@ -227,13 +234,13 @@ public class EntryActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		Session.getActiveSession().addCallback(statusCallback);
+		Session.getActiveSession().addCallback(fbStatusCallback);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		Session.getActiveSession().removeCallback(statusCallback);
+		Session.getActiveSession().removeCallback(fbStatusCallback);
 	}
 
 	@Override
@@ -254,6 +261,15 @@ public class EntryActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (firstTimeStartingApp) {
+			Intent intent = new Intent(NOTIF_TO_START_LOCATION_SERVICE);
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		}
 	}
 
 	public void onBackPressed() {

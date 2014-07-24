@@ -68,6 +68,8 @@ public class Constants {
 	    public static final String NOTIF_LOCATION_UPDATED = "location-broadcast";
 	    public static final String NOTIF_LOCATION_KEY = "location-extra";
 	    
+	    public static final String NOTIF_TO_START_LOCATION_SERVICE = "start-location";
+	    
 	    // REQUEST CODE
 	    public static final int MODIFIER_POPUP_REQUEST = 999;
 	    
