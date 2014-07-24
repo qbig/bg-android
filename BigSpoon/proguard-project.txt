@@ -35,3 +35,6 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
+
+-keep class com.bugsense.** { *; }
+-libraryjars libs/bugsense-3.6.jar
