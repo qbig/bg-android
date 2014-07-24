@@ -4,6 +4,9 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+
+import com.bugsense.trace.BugSenseHandler;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
 import android.app.Application;
@@ -37,6 +40,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		Foreground.get(this).addListener(this);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
 				new IntentFilter(NOTIF_LOCATION_UPDATED));
+		BugSenseHandler.initAndStartSession(this, "625f7944");
 	}
 
 	@Override
@@ -44,6 +48,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		super.onTerminate();
 		Foreground.get(this).removeListener(this);
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationUpdateReceiver);
+		BugSenseHandler.closeSession(this);
 	}
 
 	// Foreground Callback
