@@ -31,10 +31,12 @@ public class SocketIOManager {
 	private SharedPreferences loginPrefs;
 	private ConnectCallback socketIOCallback;
 	private Context mContext;
-
+	private int failCount;
+	
 	private SocketIOManager(Context context) {
 		mContext = context;
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
+		failCount = 0;
 	}
 
 	static public SocketIOManager getInstance(Context context) {
@@ -99,7 +101,10 @@ public class SocketIOManager {
 
 						@Override
 						public void onDisconnect(Exception arg0) {
-							connectToSocketIO(socketIOCallback);
+							if (failCount <= 10) {
+								connectToSocketIO(socketIOCallback);
+								failCount++;
+							}
 						}
 					});
 
@@ -115,7 +120,10 @@ public class SocketIOManager {
 
 						@Override
 						public void onError(String arg0) {
-							connectToSocketIO(socketIOCallback);
+							if (failCount <= 10) {
+								connectToSocketIO(socketIOCallback);
+								failCount++;
+							}
 						}
 					});
 
@@ -123,7 +131,10 @@ public class SocketIOManager {
 
 						@Override
 						public void onException(Exception arg0) {
-							connectToSocketIO(socketIOCallback);
+							if (failCount <= 10) {
+								connectToSocketIO(socketIOCallback);
+								failCount++;
+							}
 						}
 					});
 				}

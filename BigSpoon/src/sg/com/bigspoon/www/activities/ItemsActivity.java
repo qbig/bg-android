@@ -3,10 +3,10 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,18 +20,22 @@ import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ExpandableListActivity;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.ClipData.Item;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -87,6 +91,14 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int TAKE_AWAY = 5;
 	static EditText textTime;
 
+	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+		  @Override
+		  public void onReceive(Context context, Intent intent) {
+		    Log.d("receiver", "Got broadcast " + NOTIF_ORDER_UPDATE);
+		    ItemsActivity.this.updateDisplay();
+		  }
+		};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,7 +114,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		loadMenu();
 		setupPlaceOrderButton();
 		setupPlacedOrderListView();
-
+		
+		LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+			      new IntentFilter(NOTIF_ORDER_UPDATE));
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
 				mExpandableList, 0);
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
@@ -117,6 +131,12 @@ public class ItemsActivity extends ExpandableListActivity {
 			toggleAddNoteState();
 		}
 	};
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+	}
 
 	protected void updateDisplay() {
 		updateOrderedDishCounter();
