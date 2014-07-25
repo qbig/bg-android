@@ -74,6 +74,15 @@ public class EmailLoginActivity extends Activity {
 									if (e != null) {
 										Toast.makeText(EmailLoginActivity.this, "Error during login", Toast.LENGTH_LONG)
 												.show();
+										MixpanelAPI mixpanel =
+											    MixpanelAPI.getInstance(EmailLoginActivity.this, MIXPANEL_TOKEN);
+										final JSONObject errorJson = new JSONObject();
+										try {
+											errorJson.put(mLoginEmailField.getText().toString(), e.toString());
+											mixpanel.registerSuperPropertiesOnce(errorJson);
+										} catch (JSONException e1) {
+											e1.printStackTrace();
+										}
 										return;
 									}
 									try {

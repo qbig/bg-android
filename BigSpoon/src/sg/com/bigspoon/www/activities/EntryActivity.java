@@ -122,6 +122,17 @@ public class EntryActivity extends Activity {
 								Toast.makeText(EntryActivity.this,
 										"Error login with FB",
 										Toast.LENGTH_LONG).show();
+								
+								MixpanelAPI mixpanel =
+									    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+								final JSONObject errorJson = new JSONObject();
+								try {
+									final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
+									errorJson.put(email, e.toString());
+									mixpanel.registerSuperPropertiesOnce(errorJson);
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
 								return;
 							}
 							final String email = result.get(LOGIN_INFO_EMAIL)

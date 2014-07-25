@@ -31,6 +31,8 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 	private boolean currentlyProcessingLocation = false;
 	private LocationRequest locationRequest;
 	private LocationClient locationClient;
+	
+	private AndroidLocationService mNoGooglePlayAlternativeLocationService;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -55,6 +57,8 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 		} else {
 			Log.e(TAG, "unable to connect to google play services.");
 			Toast.makeText(this, "Google Play Service not available.", Toast.LENGTH_LONG).show();
+			mNoGooglePlayAlternativeLocationService = new AndroidLocationService(this);
+			mNoGooglePlayAlternativeLocationService.startUpdate();
 		}
 	}
 	
