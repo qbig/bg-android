@@ -23,7 +23,7 @@ public class AndroidLocationService {
 	
 	private static final long ONE_MIN = 1000 * 60;
 	private static final float MIN_LAST_READ_ACCURACY = 500.0f;
-	private static final long MEASURE_TIME = 1000 * 30;
+	private static final long MEASURE_TIME = 1000 * 60;
 	private static final long POLLING_FREQ = 1000 * 10;
 	private static final float MIN_ACCURACY = 25.0f;
 	private static final long TWO_MIN = ONE_MIN * 2;
@@ -143,5 +143,12 @@ public class AndroidLocationService {
 		} else {
 			broadcastUpdatedLocation(mBestReading);
 		}
+	}
+	
+	public void stopUpdate() {
+		if (null == mLocationManager || null == mLocationListener) {
+			return;
+		}
+		mLocationManager.removeUpdates(mLocationListener);
 	}
 }

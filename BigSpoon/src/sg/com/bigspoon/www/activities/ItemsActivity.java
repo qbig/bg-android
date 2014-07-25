@@ -213,7 +213,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						"Token "
 								+ loginPreferences.getString(
 										LOGIN_INFO_AUTHTOKEN, ""))
-				.setJsonObjectBody(currentOrder.getJsonOrders()).asJsonObject()
+				.setJsonObjectBody(currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId)).asJsonObject()
 				.setCallback(new FutureCallback<JsonObject>() {
 
 					@Override

@@ -1,12 +1,13 @@
 package sg.com.bigspoon.www.data;
 
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,15 +22,12 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-
 public class BGLocationService extends Service implements GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
 	private final static float TEN_METERS = 10.0f;
 	private static final long POLLING_FREQ = 5000;
-	private static final long RESTART_TIME = 60000;
+	private static final long RESTART_TIME = 120 * 1000;
 	private static final String TAG = "BGLocationService";
 
 	private boolean currentlyProcessingLocation = false;
@@ -110,6 +108,10 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 		if (locationClient != null && locationClient.isConnected()) {
 			locationClient.removeLocationUpdates(this);
 			locationClient.disconnect();
+		}
+		
+		if (mNoGooglePlayAlternativeLocationService != null){
+			mNoGooglePlayAlternativeLocationService.stopUpdate();
 		}
 	}
 

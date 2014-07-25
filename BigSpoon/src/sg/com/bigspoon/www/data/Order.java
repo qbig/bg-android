@@ -207,7 +207,7 @@ public class Order {
 		return null;
 	}
 
-	public JsonObject getJsonOrders() {
+	public JsonObject getJsonOrders(int tableID) {
 		// TODO add table ID properly
 		final JsonObject jsonOrders = new JsonObject();
 		final Gson gson = new Gson();
@@ -218,7 +218,7 @@ public class Order {
 			pairs.add(pair);
 		}
 		jsonOrders.add("dishes", gson.toJsonTree(pairs));
-		jsonOrders.addProperty("table", Integer.valueOf(1));
+		jsonOrders.addProperty("table", Integer.valueOf(tableID));
 
 		final HashMap<String, String> notes = getMergedTextForNotesAndModifier();
 		if (!notes.isEmpty()) {
