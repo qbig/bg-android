@@ -127,7 +127,6 @@ public class ActionBarActivity extends FragmentActivity {
 	}
 
 	protected void onTablePopupResult(int requestCode) {
-		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case WATER:
 			Intent j = new Intent(ActionBarActivity.this,
@@ -184,7 +183,6 @@ public class ActionBarActivity extends FragmentActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void waitorPopup() {
-		// TODO Auto-generated method stub
 		final EditText inputWaitor = new EditText(this);
 		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
 		alertWaitor.setTitle("Call For Service");
@@ -283,7 +281,6 @@ public class ActionBarActivity extends FragmentActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void incorrectTableCodePopup(final int requestCode) {
-		// TODO Auto-generated method stub
 		final EditText inputIncorrect = new EditText(this);
 		final AlertDialog alertIncorrect = new AlertDialog.Builder(this)
 				.create();
