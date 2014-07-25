@@ -47,7 +47,6 @@ public class AndroidLocationService {
 			return;
 		}
 		mLocationListener = getLocationListenerForBestReading();
-		mBestReading = bestLastKnownLocation(MIN_LAST_READ_ACCURACY, FIVE_MIN);
 	}
 	
 	private LocationListener getLocationListenerForBestReading() {
@@ -118,6 +117,7 @@ public class AndroidLocationService {
 			return;
 		}
 		
+		mBestReading = bestLastKnownLocation(MIN_LAST_READ_ACCURACY, FIVE_MIN);
 		if (mBestReading == null || mBestReading.getAccuracy() > MIN_LAST_READ_ACCURACY
 				|| mBestReading.getTime() < System.currentTimeMillis()
 						- TWO_MIN) {

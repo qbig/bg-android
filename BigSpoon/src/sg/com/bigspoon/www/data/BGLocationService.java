@@ -1,5 +1,8 @@
 package sg.com.bigspoon.www.data;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +29,7 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 
 	private final static float TEN_METERS = 10.0f;
 	private static final long POLLING_FREQ = 5000;
+	private static final long RESTART_TIME = 60000;
 	private static final String TAG = "BGLocationService";
 
 	private boolean currentlyProcessingLocation = false;
@@ -82,6 +86,13 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 			broadcastUpdatedLocation(location);
 			if (location.getAccuracy() < TEN_METERS) {
 				stopLocationUpdates();
+				Executors.newScheduledThreadPool(1).schedule(new Runnable() {
+					@Override
+					public void run() {
+						Log.i(TAG, "location updates cancelled");
+						BGLocationService.this.startTracking();
+					}
+				}, RESTART_TIME, TimeUnit.MILLISECONDS);
 			}
 		}
 	}
