@@ -28,6 +28,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -61,8 +62,7 @@ public class OutletListActivity extends Activity {
 	private ImageButton toggleButton;
 	private ImageButton logoutButton;
 	OutletModel outletSelected;
-
-	// public Boolean isLocationChecked;
+	private boolean doubleBackToExitPressedOnce;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,4 +260,25 @@ public class OutletListActivity extends Activity {
 					}
 				});
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (doubleBackToExitPressedOnce || !this.isTaskRoot()) {
+			super.onBackPressed();
+			return;
+		}
+
+		this.doubleBackToExitPressedOnce = true;
+		Toast.makeText(this, "Please click BACK again to exit",
+				Toast.LENGTH_SHORT).show();
+
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				doubleBackToExitPressedOnce = false;
+			}
+		}, 2000);
+	}
+
 }

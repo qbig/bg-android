@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -53,7 +54,7 @@ public class EntryActivity extends Activity {
 	private MixpanelAPI mMixpanel;
 	private boolean firstTimeStartingApp;
 	ProgressBar progressBar;
-	
+	private boolean doubleBackToExitPressedOnce;
 	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 		public void call(Session session, SessionState state,
 				Exception exception) {
@@ -125,6 +126,17 @@ public class EntryActivity extends Activity {
 								Toast.makeText(EntryActivity.this,
 										"Error login with FB",
 										Toast.LENGTH_LONG).show();
+								
+								MixpanelAPI mixpanel =
+									    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+								final JSONObject errorJson = new JSONObject();
+								try {
+									final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
+									errorJson.put(email, e.toString());
+									mixpanel.registerSuperPropertiesOnce(errorJson);
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
 								return;
 							}
 							final String email = result.get(LOGIN_INFO_EMAIL)
@@ -274,11 +286,27 @@ public class EntryActivity extends Activity {
 			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		}
 	}
-
+	
+	@Override
 	public void onBackPressed() {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-	}
+	    if (doubleBackToExitPressedOnce) {
+	    	Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+	        super.onBackPressed();
+	        return;
+	    }
+
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce=false;                       
+	        }
+	    }, 2000);
+	} 
 }

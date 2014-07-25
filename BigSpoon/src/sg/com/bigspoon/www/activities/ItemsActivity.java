@@ -101,8 +101,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Ion.getDefault(this).configure()
-				.setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 
 		setContentView(R.layout.activity_items);
@@ -114,12 +113,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		setupPlaceOrderButton();
 		setupPlacedOrderListView();
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				mPastOrderList, 0);
+		LocalBroadcastManager.getInstance(this)
+				.registerReceiver(mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
 
 	}
 
@@ -142,16 +139,13 @@ public class ItemsActivity extends ExpandableListActivity {
 		updateOrderedDishCounter();
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
-				mPastOrderList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
 	}
 
 	private void setupPlacedOrderListView() {
 		mPastOrderList = (ListView) findViewById(R.id.listOfOrderPlaced);
-		mPastOrderAdapter = new PastOrdersAdapter(this,
-				User.getInstance(this).currentSession.pastOrder.mItems);
+		mPastOrderAdapter = new PastOrdersAdapter(this, User.getInstance(this).currentSession.pastOrder.mItems);
 		mPastOrderList.setAdapter(mPastOrderAdapter);
 	}
 
@@ -164,8 +158,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					toggleAddNoteState();
 				}
 
-				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-						.isEmpty()) {
+				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
 					showNoOrderPopup();
 				} else {
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
@@ -192,10 +185,8 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	protected void checkIfContainDessert() {
-		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-				.size(); i++) {
-			if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-					.get(i).dish.categories[0].id == DESSERT_CATEGORY_ID) {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.categories[0].id == DESSERT_CATEGORY_ID) {
 				User.getInstance(ItemsActivity.this).isContainDessert = true;
 			}
 		}
@@ -205,27 +196,18 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void performSendOrderRequest() {
 
 		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;
-		Ion.with(this)
-				.load(ORDER_URL)
-				.setHeader("Content-Type", "application/json; charset=utf-8")
-				.setHeader(
-						"Authorization",
-						"Token "
-								+ loginPreferences.getString(
-										LOGIN_INFO_AUTHTOKEN, ""))
-				.setJsonObjectBody(currentOrder.getJsonOrders()).asJsonObject()
-				.setCallback(new FutureCallback<JsonObject>() {
+		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId))
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(ItemsActivity.this,
-									"Error sending orders", Toast.LENGTH_LONG)
-									.show();
+							Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
 							return;
 						}
-						Toast.makeText(ItemsActivity.this, "Success",
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
 					}
 				});
 	}
@@ -233,17 +215,14 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void showOrderDetailsPopup() {
 		LayoutInflater inflater = getLayoutInflater();
 
-		AlertDialog.Builder alertbuilder = new AlertDialog.Builder(
-				ItemsActivity.this);
+		AlertDialog.Builder alertbuilder = new AlertDialog.Builder(ItemsActivity.this);
 
 		View dialoglayout = inflater.inflate(R.layout.dialog_layout, null);
 
-		LinearLayout layoutholder = (LinearLayout) dialoglayout
-				.findViewById(R.id.dialog_layout_root);
+		LinearLayout layoutholder = (LinearLayout) dialoglayout.findViewById(R.id.dialog_layout_root);
 
 		TextView textTitle = new TextView(getBaseContext());
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT);
 		params.gravity = Gravity.CENTER;
 		final float scale = getBaseContext().getResources().getDisplayMetrics().density;
@@ -260,26 +239,20 @@ public class ItemsActivity extends ExpandableListActivity {
 		textTitle.setTypeface(null, Typeface.BOLD);
 		layoutholder.addView(textTitle);
 
-		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-				.size(); i++) {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
 			final FrameLayout childLayout = new FrameLayout(getBaseContext());
 			final TextView textNumber = new TextView(getBaseContext());
 			final FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT,
-					FrameLayout.LayoutParams.WRAP_CONTENT);
+					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 			params2.setMargins(padding_10dp, 0, 0, 0);
 			textNumber.setLayoutParams(params2);
-			textNumber
-					.setText(Integer.toString(User
-							.getInstance(ItemsActivity.this).currentSession.currentOrder
-							.getQuantityOfDishByIndex(i)));
-			textNumber.setTextColor(getResources().getColor(
-					android.R.color.black));
+			textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.currentOrder
+					.getQuantityOfDishByIndex(i)));
+			textNumber.setTextColor(getResources().getColor(android.R.color.black));
 			childLayout.addView(textNumber);
 
 			TextView xMark = new TextView(getBaseContext());
-			FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT,
+			FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
 					FrameLayout.LayoutParams.WRAP_CONTENT);
 			params3.setMargins(padding_25dp, 0, 0, 0);
 			xMark.setLayoutParams(params3);
@@ -288,48 +261,41 @@ public class ItemsActivity extends ExpandableListActivity {
 			childLayout.addView(xMark);
 
 			TextView itemName = new TextView(getBaseContext());
-			FrameLayout.LayoutParams params4 = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.WRAP_CONTENT,
+			FrameLayout.LayoutParams params4 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
 					FrameLayout.LayoutParams.WRAP_CONTENT);
 			params4.setMargins(padding_35dp, 0, padding_15dp, 0);
 			params4.gravity = Gravity.RIGHT;
 			itemName.setLayoutParams(params4);
-			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-					.get(i).dish.name);
-			itemName.setTextColor(getResources()
-					.getColor(android.R.color.black));
+			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
+			itemName.setTextColor(getResources().getColor(android.R.color.black));
 			itemName.setTextSize(12);
 			childLayout.addView(itemName);
 
 			LinearLayout.LayoutParams parentParams = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT,
-					LinearLayout.LayoutParams.MATCH_PARENT);
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 			layoutholder.addView(childLayout, parentParams);
 		}
 
 		alertbuilder.setView(layoutholder);
 
-		alertbuilder.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
+		alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
 
-					}
-				});
-		alertbuilder.setPositiveButton("Okay",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						performSendOrderRequest();
-						User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
-								.getInstance(ItemsActivity.this).currentSession.currentOrder);
-						User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
-						User.getInstance(ItemsActivity.this).isContainDessert = false;
-						Toast.makeText(
-								getApplicationContext(),
-								"Your order has been sent. Our food is prepared with love, thank you for being patient.",
-								Toast.LENGTH_LONG).show();
-						updateDisplay();
-					}
-				});
+			}
+		});
+		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				performSendOrderRequest();
+				User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
+						.getInstance(ItemsActivity.this).currentSession.currentOrder);
+				User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
+				User.getInstance(ItemsActivity.this).isContainDessert = false;
+				Toast.makeText(getApplicationContext(),
+						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
+						Toast.LENGTH_LONG).show();
+				updateDisplay();
+			}
+		});
 
 		AlertDialog alertDialog = alertbuilder.create();
 		alertDialog.show();
@@ -346,33 +312,27 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	private void showNoOrderPopup() {
-		final AlertDialog alertNoOrder = new AlertDialog.Builder(
-				ItemsActivity.this).create();
+		final AlertDialog alertNoOrder = new AlertDialog.Builder(ItemsActivity.this).create();
 		alertNoOrder.setTitle("Place Order");
 		alertNoOrder.setMessage("You haven't selected anything.");
 		alertNoOrder.setView(null);
 		alertNoOrder.setButton("Okay", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int whichButton) {
+			public void onClick(final DialogInterface dialog, final int whichButton) {
 				//
 			}
 		});
 		alertNoOrder.show();
-		int dividerId = alertNoOrder.getContext().getResources()
-				.getIdentifier("android:id/titleDivider", null, null);
+		int dividerId = alertNoOrder.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
 		View divider = alertNoOrder.findViewById(dividerId);
-		divider.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		final int alertTitle = alertNoOrder.getContext().getResources()
-				.getIdentifier("alertTitle", "id", "android");
+		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		final int alertTitle = alertNoOrder.getContext().getResources().getIdentifier("alertTitle", "id", "android");
 		TextView titleView = (TextView) alertNoOrder.findViewById(alertTitle);
 		titleView.setGravity(Gravity.CENTER);
 		titleView.setTypeface(null, Typeface.BOLD);
 		titleView.setTextSize(19);
 		titleView.setTextColor(getResources().getColor(android.R.color.black));
 
-		TextView messageView = (TextView) alertNoOrder
-				.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alertNoOrder.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		messageView.setTextSize(17);
 
@@ -389,54 +349,43 @@ public class ItemsActivity extends ExpandableListActivity {
 		mExpandableList.setClickable(true);
 		mExpandableList.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
-			public boolean onGroupClick(ExpandableListView parent, View v,
-					int groupPosition, long id) {
+			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 				return true;
 			}
 		});
 
 		mCurrentOrderAdapter = new CurrentOrderExpandableAdapter(this);
 
-		mCurrentOrderAdapter
-				.setInflater(
-						(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE),
-						this);
+		mCurrentOrderAdapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
 
 		mExpandableList.setAdapter(mCurrentOrderAdapter);
 		mExpandableList.setOnChildClickListener(this);
-		mExpandableList.setChildDivider(getResources().getDrawable(
-				R.color.white));
+		mExpandableList.setChildDivider(getResources().getDrawable(R.color.white));
 		mExpandableList.setDivider(getResources().getDrawable(R.color.white));
 		mExpandableList.setDividerHeight(2);
 
 		mExpandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
 			@Override
 			public void onGroupExpand(int groupPosition) {
-				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(
-						mExpandableList, groupPosition);
+				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(mExpandableList, groupPosition);
 			}
 		});
-		mExpandableList
-				.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-					@Override
-					public void onGroupCollapse(int groupPosition) {
-						ExpandableViewUtil
-								.setCollapseListViewHeightBasedOnChildren(
-										mExpandableList, groupPosition);
-					}
-				});
+		mExpandableList.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+			@Override
+			public void onGroupCollapse(int groupPosition) {
+				ExpandableViewUtil.setCollapseListViewHeightBasedOnChildren(mExpandableList, groupPosition);
+			}
+		});
 	}
 
 	private void toggleAddNoteState() {
 		if (!isExpanded) {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-					.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
 				mExpandableList.expandGroup(i, true);
 				isExpanded = true;
 			}
 		} else {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems
-					.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
 				mExpandableList.collapseGroup(i);
 				isExpanded = false;
 			}
@@ -454,12 +403,9 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void updateOrderedDishCounter() {
-		if (User.getInstance(this).currentSession.currentOrder
-				.getTotalQuantity() != 0) {
+		if (User.getInstance(this).currentSession.currentOrder.getTotalQuantity() != 0) {
 			orderCounterText.setVisibility(View.VISIBLE);
-			orderCounterText
-					.setText(User.getInstance(this).currentSession.currentOrder
-							.getTotalQuantity() + "");
+			orderCounterText.setText(User.getInstance(this).currentSession.currentOrder.getTotalQuantity() + "");
 		} else {
 			orderCounterText.setVisibility(View.GONE);
 		}
@@ -470,8 +416,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		mActionBar = getActionBar();
 		mActionBar.setDisplayShowHomeEnabled(false);
-		mActionBarView = getLayoutInflater().inflate(
-				R.layout.action_bar_items_activity, null);
+		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
@@ -479,10 +424,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
 		mBackButton.setPadding(22, 0, 0, 0);
 		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.menu_pressed));
-		states.addState(new int[] {},
-				getResources().getDrawable(R.drawable.menu));
+		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
+		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
 		mBackButton.setImageDrawable(states);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -491,13 +434,11 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 
-		historyButton = (ImageButton) mActionBarView
-				.findViewById(R.id.order_history);
+		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
 		historyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(),
-						OrderHistoryListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
 				intent.putExtra("callingActivityName", "ItemsActivity");
 				startActivity(intent);
 			}
@@ -516,8 +457,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	public class ListViewHeightUtil {
 
-		public void setListViewHeightBasedOnChildren(ListView listView,
-				int attHeight) {
+		public void setListViewHeightBasedOnChildren(ListView listView, int attHeight) {
 			ListAdapter listAdapter = listView.getAdapter();
 			if (listAdapter == null) {
 				return;
@@ -531,9 +471,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 
 			ViewGroup.LayoutParams params = listView.getLayoutParams();
-			params.height = totalHeight
-					+ (listView.getDividerHeight() * (listAdapter.getCount() - 1))
-					+ attHeight;
+			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + attHeight;
 			listView.setLayoutParams(params);
 		}
 	}
@@ -546,14 +484,12 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		mBottomGridView = (GridView) findViewById(R.id.gv_action_menu);
 
-		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(
-				this, 4);
+		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 4);
 		mBottomGridView.setAdapter(actionBarMenuAdapter);
 		mBottomGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 				Intent i = null;
 				switch (position) {
 				case 0:
@@ -609,11 +545,9 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	protected void onTablePopupResult(int requestCode) {
-		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case WATER:
-			Intent j = new Intent(ItemsActivity.this,
-					WaterServiceActivity.class);
+			Intent j = new Intent(ItemsActivity.this, WaterServiceActivity.class);
 			j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(j);
 			break;
@@ -637,8 +571,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	private void takeAwayPopup() {
-		final AlertDialog alertTakeAway = new AlertDialog.Builder(this)
-				.create();
+		final AlertDialog alertTakeAway = new AlertDialog.Builder(this).create();
 		alertTakeAway.setTitle("Pick a time :)");
 		alertTakeAway.setMessage("and leave your phone number");
 		LinearLayout textInputLayoutHolder = new LinearLayout(this);
@@ -660,21 +593,16 @@ public class ItemsActivity extends ExpandableListActivity {
 		textInputLayoutHolder.addView(textPhoneNumber);
 		alertTakeAway.setView(textInputLayoutHolder);
 
-		alertTakeAway.setButton2("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						//
-					}
-				});
+		alertTakeAway.setButton2("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//
+			}
+		});
 		alertTakeAway.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Takeaway: "
-						+ textTime.getText()
-						+ ", "
-						+ "phone: "
-						+ textPhoneNumber.getText();
-				if (textTime.getText().toString() == null
-						|| textTime.getText().toString().equals("")
+						+ textTime.getText() + ", " + "phone: " + textPhoneNumber.getText();
+				if (textTime.getText().toString() == null || textTime.getText().toString().equals("")
 						|| textPhoneNumber.getText().toString().equals("")
 						|| textPhoneNumber.getText().toString() == null
 						|| textPhoneNumber.getText().toString().length() != 8) {
@@ -685,20 +613,16 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 		alertTakeAway.show();
-		final int alertTitle = alertTakeAway.getContext().getResources()
-				.getIdentifier("alertTitle", "id", "android");
+		final int alertTitle = alertTakeAway.getContext().getResources().getIdentifier("alertTitle", "id", "android");
 		TextView titleView = (TextView) alertTakeAway.findViewById(alertTitle);
 		titleView.setGravity(Gravity.CENTER);
 		titleView.setTypeface(null, Typeface.BOLD);
 		titleView.setTextSize(19);
 		titleView.setTextColor(getResources().getColor(android.R.color.black));
-		int divierId = alertTakeAway.getContext().getResources()
-				.getIdentifier("android:id/titleDivider", null, null);
+		int divierId = alertTakeAway.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
 		View divider = alertTakeAway.findViewById(divierId);
-		divider.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		TextView messageViewBill = (TextView) alertTakeAway
-				.findViewById(android.R.id.message);
+		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		TextView messageViewBill = (TextView) alertTakeAway.findViewById(android.R.id.message);
 		messageViewBill.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageViewBill.setTextSize(17);
@@ -719,28 +643,24 @@ public class ItemsActivity extends ExpandableListActivity {
 		newFragment.show(getFragmentManager(), "timePicker");
 	}
 
-	public static class TimePickerFragment extends DialogFragment implements
-			TimePickerDialog.OnTimeSetListener {
+	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			final Calendar c = Calendar.getInstance();
 			int hour = c.get(Calendar.HOUR_OF_DAY);
 			int minute = c.get(Calendar.MINUTE);
-			return new TimePickerDialog(getActivity(), this, hour, minute,
-					DateFormat.is24HourFormat(getActivity()));
+			return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
 		}
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			String currentDate = new SimpleDateFormat("MM/dd/yyyy")
-					.format(new Date());
+			String currentDate = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 			String minuteDisplay;
 			if (minute < 10)
 				minuteDisplay = "0" + Integer.toString(minute);
 			else
 				minuteDisplay = Integer.toString(minute);
-			textTime.setText(currentDate + " " + hourOfDay + ":"
-					+ minuteDisplay);
+			textTime.setText(currentDate + " " + hourOfDay + ":" + minuteDisplay);
 		}
 	}
 
@@ -763,8 +683,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 		alert.show();
-		TextView messageView = (TextView) alert
-				.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alert.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageView.setTextSize(17);
@@ -795,14 +714,12 @@ public class ItemsActivity extends ExpandableListActivity {
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				performBillRequest();
-				Intent i = new Intent(ItemsActivity.this,
-						UserReviewActivity.class);
+				Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
 				startActivity(i);
 			}
 		});
 		alert2.show();
-		TextView messageView2 = (TextView) alert2
-				.findViewById(android.R.id.message);
+		TextView messageView2 = (TextView) alert2.findViewById(android.R.id.message);
 		messageView2.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageView2.setTextSize(17);
@@ -819,7 +736,6 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void waitorPopup() {
-		// TODO Auto-generated method stub
 		final EditText inputWaitor = new EditText(this);
 		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
 		alertWaitor.setTitle("Call For Service");
@@ -834,25 +750,20 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
-				User.getInstance(ItemsActivity.this).requestForWater(
-						inputWaitor.getText().toString());
+				User.getInstance(ItemsActivity.this).requestForWater(inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();
-		final int alertTitle = alertWaitor.getContext().getResources()
-				.getIdentifier("alertTitle", "id", "android");
+		final int alertTitle = alertWaitor.getContext().getResources().getIdentifier("alertTitle", "id", "android");
 		TextView titleView = (TextView) alertWaitor.findViewById(alertTitle);
 		titleView.setGravity(Gravity.CENTER);
 		titleView.setTypeface(null, Typeface.BOLD);
 		titleView.setTextSize(19);
 		titleView.setTextColor(getResources().getColor(android.R.color.black));
-		int divierId = alertWaitor.getContext().getResources()
-				.getIdentifier("android:id/titleDivider", null, null);
+		int divierId = alertWaitor.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
 		View divider = alertWaitor.findViewById(divierId);
-		divider.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
-		TextView messageViewBill = (TextView) alertWaitor
-				.findViewById(android.R.id.message);
+		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		TextView messageViewBill = (TextView) alertWaitor.findViewById(android.R.id.message);
 		messageViewBill.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageViewBill.setTextSize(17);
@@ -883,12 +794,10 @@ public class ItemsActivity extends ExpandableListActivity {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String tableCode = input.getText().toString();
 				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
-					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
-							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).tableId = User
-								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
-						User.getInstance(ItemsActivity.this).isForTakeAway = User
-								.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
+					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code.toLowerCase().equals(
+							tableCode.toLowerCase())) {
+						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {
@@ -903,8 +812,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 		alert.show();
-		TextView messageView = (TextView) alert
-				.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alert.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageView.setTextSize(17);
@@ -921,30 +829,25 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void incorrectTableCodePopup(final int requestCode) {
-		// TODO Auto-generated method stub
 		final EditText inputIncorrect = new EditText(this);
-		final AlertDialog alertIncorrect = new AlertDialog.Builder(this)
-				.create();
+		final AlertDialog alertIncorrect = new AlertDialog.Builder(this).create();
 		alertIncorrect
 				.setMessage("Table ID incorrect. Please enter your table ID or ask your friendly waiter for assistance");
 		alertIncorrect.setView(inputIncorrect, 10, 0, 10, 0);
 
-		alertIncorrect.setButton2("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						//
-					}
-				});
+		alertIncorrect.setButton2("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//
+			}
+		});
 		alertIncorrect.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String tableCode = inputIncorrect.getText().toString();
 				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
-					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code
-							.toLowerCase().equals(tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).tableId = User
-								.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
-						User.getInstance(ItemsActivity.this).isForTakeAway = User
-								.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
+					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code.toLowerCase().equals(
+							tableCode.toLowerCase())) {
+						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
+						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {
@@ -955,8 +858,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
 		alertIncorrect.show();
-		TextView messageView = (TextView) alertIncorrect
-				.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alertIncorrect.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);
 		messageView.setTextSize(17);
@@ -975,40 +877,32 @@ public class ItemsActivity extends ExpandableListActivity {
 	@SuppressWarnings("deprecation")
 	private void setUpLocationFailPopup() {
 		final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		AlertDialog alertLocationFail = new AlertDialog.Builder(
-				ItemsActivity.this).create();
+		AlertDialog alertLocationFail = new AlertDialog.Builder(ItemsActivity.this).create();
 		alertLocationFail.setTitle("BigSpoon couldn't find you");
-		alertLocationFail
-				.setMessage("Orders can only be sent when you are at the restaurant."
-						+ "\n\n"
-						+ "If you are already there, kindly speak to the friendly waitor for your orders.");
+		alertLocationFail.setMessage("Orders can only be sent when you are at the restaurant." + "\n\n"
+				+ "If you are already there, kindly speak to the friendly waitor for your orders.");
 		alertLocationFail.setView(null);
-		alertLocationFail.setButton("OK",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						if (!manager
-								.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-							buildAlertMessageNoGps();
-						}
-					}
-				});
+		alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+					buildAlertMessageNoGps();
+				}
+			}
+		});
 		alertLocationFail.show();
 		int divierId = alertLocationFail.getContext().getResources()
 				.getIdentifier("android:id/titleDivider", null, null);
 		View divider = alertLocationFail.findViewById(divierId);
-		divider.setBackgroundColor(getResources().getColor(
-				android.R.color.transparent));
+		divider.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 		final int alertTitle = alertLocationFail.getContext().getResources()
 				.getIdentifier("alertTitle", "id", "android");
-		TextView titleView = (TextView) alertLocationFail
-				.findViewById(alertTitle);
+		TextView titleView = (TextView) alertLocationFail.findViewById(alertTitle);
 		titleView.setGravity(Gravity.CENTER);
 		titleView.setTypeface(null, Typeface.BOLD);
 		titleView.setTextSize(19);
 		titleView.setTextColor(getResources().getColor(android.R.color.black));
 
-		TextView messageView = (TextView) alertLocationFail
-				.findViewById(android.R.id.message);
+		TextView messageView = (TextView) alertLocationFail.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		messageView.setPadding(20, 0, 20, 25);
 		messageView.setTextSize(17);
@@ -1016,20 +910,13 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void buildAlertMessageNoGps() {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(
-				"Your GPS seems to be disabled, do you want to enable it?")
-				.setCancelable(false)
-				.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(final DialogInterface dialog,
-									final int id) {
-								startActivity(new Intent(
-										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-							}
-						})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog,
-							final int id) {
+		builder.setMessage("Your GPS seems to be disabled, do you want to enable it?").setCancelable(false)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int id) {
+						startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+					}
+				}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int id) {
 						dialog.cancel();
 					}
 				});
@@ -1039,28 +926,18 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void performBillRequest() {
 
-		Ion.with(this)
-				.load(BILL_URL)
-				.setHeader("Content-Type", "application/json; charset=utf-8")
-				.setHeader(
-						"Authorization",
-						"Token "
-								+ loginPreferences.getString(
-										LOGIN_INFO_AUTHTOKEN, ""))
-				.setJsonObjectBody(
-						User.getInstance(ItemsActivity.this).getTableId())
-				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+		Ion.with(this).load(BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(User.getInstance(ItemsActivity.this).getTableId()).asJsonObject()
+				.setCallback(new FutureCallback<JsonObject>() {
 
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(ItemsActivity.this,
-									"Error requesting bills", Toast.LENGTH_LONG)
-									.show();
+							Toast.makeText(ItemsActivity.this, "Error requesting bills", Toast.LENGTH_LONG).show();
 							return;
 						}
-						Toast.makeText(ItemsActivity.this, "Success",
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
 					}
 				});
 	}

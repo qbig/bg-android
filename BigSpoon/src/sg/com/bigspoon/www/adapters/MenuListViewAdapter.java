@@ -85,7 +85,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 		mOrderDishButtonOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				// TODO: add dish properly, once currentOrderedDish is done
+			
 				final Integer itemPosition = (Integer) view.getTag();
 				final DishModel currentDish = (DishModel) getItem(itemPosition
 						.intValue());
