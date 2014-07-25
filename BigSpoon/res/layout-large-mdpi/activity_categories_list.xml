@@ -1,22 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="@color/white">
+    android:background="@color/white" >
 
     <ImageView
         android:id="@+id/category_list_restaurant_icon"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:paddingTop="15dp"
+        android:layout_height="190dp"
+        android:layout_alignParentTop="true"
         android:paddingBottom="15dp"
+        android:paddingTop="15dp"
         android:src="@drawable/shin_kushiya" />
-    
+
     <ListView
         android:id="@+id/category_list"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_below="@+id/category_list_restaurant_icon" >
     </ListView>
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/category_list"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
 
+</RelativeLayout>

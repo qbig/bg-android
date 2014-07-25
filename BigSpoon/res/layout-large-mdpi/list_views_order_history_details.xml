@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:orientation="horizontal" >  
-     
-     <TableRow android:gravity="center">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
          
         <TextView
             android:id="@+id/number"
@@ -14,7 +11,6 @@
             android:ellipsize="end"
             android:gravity="center"
             android:textSize="16sp"
-            android:textStyle="bold"
             />
          
         <TextView
@@ -23,7 +19,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="3"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:gravity="center"
           android:textSize="16sp"  />
         
@@ -38,7 +34,5 @@
         android:textSize="16sp" />
         
         
-         
-      </TableRow>
 
-</TableLayout>
+</LinearLayout>

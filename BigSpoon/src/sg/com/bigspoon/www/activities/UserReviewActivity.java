@@ -38,6 +38,10 @@ public class UserReviewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_review);
+		Toast.makeText(
+				getApplicationContext(),
+				"Request for bill is submitted, the waiter will be right with you.",
+				Toast.LENGTH_LONG).show();
 		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
 		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.pastOrder.mItems.size()];
 
@@ -48,7 +52,10 @@ public class UserReviewActivity extends Activity {
 			public void onClick(View v) {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
-				finish();
+				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
+			    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
+				
 			}
 		});
 
@@ -58,7 +65,9 @@ public class UserReviewActivity extends Activity {
 				performFeedbackSubmission();
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
-				finish();
+				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
+			    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
 			}
 		});
 

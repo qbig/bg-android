@@ -36,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -167,6 +168,8 @@ public class OutletListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_out_list);
+		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		progressBar.setVisibility(View.VISIBLE);
 		Ion.getDefault(this).configure()
 				.setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
@@ -185,6 +188,7 @@ public class OutletListActivity extends Activity {
 									.show();
 							return;
 						}
+						progressBar.setVisibility(View.GONE);
 
 						outlets = result;
 						list = (ListView) findViewById(R.id.outlist);

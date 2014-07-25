@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/testingbg"
-        android:textColor="#00FF00"
-        android:textSize="25dp" />
+        android:textColor="@color/BigSpoonGreen"
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/orderDate"
@@ -24,8 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/historyTitle"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:text="@string/orderDate"
-        android:textSize="20dp" />
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/listoforderDetails"
@@ -33,11 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/orderDate"
         android:layout_marginTop="15dp"
-        android:layout_weight="1"
         android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp" >
+        android:dividerHeight="10.0sp" >
     </ListView>
 
     <Button
@@ -46,10 +45,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/listoforderDetails"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:background="@color/BigSpoonBlue"
+        android:layout_marginTop="25dp"
+        android:background="@color/BigSpoonRed"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="Add to items list " />
+        android:text="Add to items list"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
 </RelativeLayout>

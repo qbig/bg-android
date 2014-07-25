@@ -1,10 +1,12 @@
 package sg.com.bigspoon.www.adapters;
 
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Context;
-import android.view.KeyEvent;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,13 +14,10 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
@@ -119,6 +118,8 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) == 0) {
 					User.getInstance(mContext).currentSession.currentOrder.removeDishAtIndex(groupPosition);
 					notifyDataSetChanged();
+					Intent intent = new Intent(NOTIF_ORDER_UPDATE);
+					LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 				}
 			}
 		});

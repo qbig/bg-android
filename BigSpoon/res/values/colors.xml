@@ -2,4 +2,5 @@
 <resources>
     <color name="BigSpoonBlue">#86CBD7</color>
     <color name="BigSpoonGreen">#63CD68</color>
+    <color name="BigSpoonRed">#FF4D45</color>
 </resources>

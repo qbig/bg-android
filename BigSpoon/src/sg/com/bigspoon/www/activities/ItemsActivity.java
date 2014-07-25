@@ -29,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.ClipData.Item;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -92,13 +91,13 @@ public class ItemsActivity extends ExpandableListActivity {
 	static EditText textTime;
 
 	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-		  @Override
-		  public void onReceive(Context context, Intent intent) {
-		    Log.d("receiver", "Got broadcast " + NOTIF_ORDER_UPDATE);
-		    ItemsActivity.this.updateDisplay();
-		  }
-		};
-	
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("receiver", "Got broadcast " + NOTIF_ORDER_UPDATE);
+			ItemsActivity.this.updateDisplay();
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,9 +113,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		loadMenu();
 		setupPlaceOrderButton();
 		setupPlacedOrderListView();
-		
-		LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-			      new IntentFilter(NOTIF_ORDER_UPDATE));
+
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
 				mExpandableList, 0);
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(
@@ -131,11 +130,12 @@ public class ItemsActivity extends ExpandableListActivity {
 			toggleAddNoteState();
 		}
 	};
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+				mMessageReceiver);
 	}
 
 	protected void updateDisplay() {

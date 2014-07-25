@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.Session;
@@ -51,6 +52,7 @@ public class EntryActivity extends Activity {
 	private SharedPreferences.Editor loginPrefsEditor;
 	private MixpanelAPI mMixpanel;
 	private boolean firstTimeStartingApp;
+	ProgressBar progressBar;
 	
 	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 		public void call(Session session, SessionState state,
@@ -63,6 +65,7 @@ public class EntryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 		Ion.getDefault(this).configure()
 				.setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
@@ -107,7 +110,7 @@ public class EntryActivity extends Activity {
 	private void updateAccordingToFBSessionChange() {
 		Session session = Session.getActiveSession();
 		if (session.isOpened()) {
-
+			progressBar.setVisibility(View.VISIBLE);
 			final JsonObject json = new JsonObject();
 			json.addProperty("access_token", session.getAccessToken());
 			Ion.with(this)
@@ -157,10 +160,10 @@ public class EntryActivity extends Activity {
 							} catch (JSONException e1) {
 								e1.printStackTrace();
 							}
-							
 							Intent intent = new Intent(EntryActivity.this,
 									OutletListActivity.class);
 							EntryActivity.this.startActivity(intent);
+							progressBar.setVisibility(View.GONE);
 						}
 					});
 

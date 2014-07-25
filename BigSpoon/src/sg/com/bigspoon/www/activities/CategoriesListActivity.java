@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +38,6 @@ public class CategoriesListActivity extends Activity implements
 	private SharedPreferences loginPreferences;
 	private static final String ION_LOGGING_CATEGORY_LIST = "ion-category-list";
 	ListView catrgoriesList;
-	String[] categories = { "Popular Items", "Brunch", "Dinner", "BreakFast",
-			"Beers", "Roasted" };
-	int[] images = { R.drawable.fb_1, R.drawable.fb_2, R.drawable.fb_3,
-			R.drawable.fb_4, R.drawable.fb_5, R.drawable.fb_6 };
 	private ActionBar mActionBar;
 	private View mActionBarView;
 
@@ -49,6 +45,8 @@ public class CategoriesListActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_categories_list);
+		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		progressBar.setVisibility(View.VISIBLE);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		catrgoriesList = (ListView) findViewById(R.id.category_list);
 		Ion.getDefault(this).configure()
@@ -86,6 +84,7 @@ public class CategoriesListActivity extends Activity implements
 										Toast.LENGTH_LONG).show();
 								return;
 							}
+							progressBar.setVisibility(View.GONE);
 
 							final OutletDetailsModel outletDetails = OutletDetailsModel
 									.getInstanceFromJsonObject(result);

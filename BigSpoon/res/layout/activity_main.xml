@@ -53,5 +53,16 @@
         android:layout_marginRight="20dp"
         android:background="@null"
         android:src="@drawable/login_btn" />
+    
+    <ProgressBar
+        android:id="@+id/progressBarMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>
