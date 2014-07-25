@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -51,6 +52,7 @@ public class EntryActivity extends Activity {
 	private SharedPreferences.Editor loginPrefsEditor;
 	private MixpanelAPI mMixpanel;
 	private boolean firstTimeStartingApp;
+	private boolean doubleBackToExitPressedOnce;
 	
 	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
 		public void call(Session session, SessionState state,
@@ -282,11 +284,27 @@ public class EntryActivity extends Activity {
 			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		}
 	}
-
+	
+	@Override
 	public void onBackPressed() {
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-	}
+	    if (doubleBackToExitPressedOnce) {
+	    	Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+	        super.onBackPressed();
+	        return;
+	    }
+
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce=false;                       
+	        }
+	    }, 2000);
+	} 
 }

@@ -28,6 +28,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -60,8 +61,7 @@ public class OutletListActivity extends Activity {
 	private ImageButton toggleButton;
 	private ImageButton logoutButton;
 	OutletModel outletSelected;
-
-	// public Boolean isLocationChecked;
+	private boolean doubleBackToExitPressedOnce;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,13 +74,11 @@ public class OutletListActivity extends Activity {
 	}
 
 	private void setupHistoryButton() {
-		orderHistoryButton = (ImageButton) mActionBarView
-				.findViewById(R.id.order_history);
+		orderHistoryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
 		orderHistoryButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(),
-						OrderHistoryListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
 				intent.putExtra("callingActivityName", "OutletListActivity");
 				startActivity(intent);
 			}
@@ -90,8 +88,7 @@ public class OutletListActivity extends Activity {
 	private void setupLogoutButton() {
 
 		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_VERTICAL);
 		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
 		logoutButton.setImageResource(R.drawable.logout_button);
@@ -102,14 +99,12 @@ public class OutletListActivity extends Activity {
 		final StateListDrawable states = new StateListDrawable();
 		states.addState(new int[] { android.R.attr.state_pressed },
 				getResources().getDrawable(R.drawable.logout_button_pressed));
-		states.addState(new int[] {},
-				getResources().getDrawable(R.drawable.logout_button));
+		states.addState(new int[] {}, getResources().getDrawable(R.drawable.logout_button));
 		logoutButton.setImageDrawable(states);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final SharedPreferences.Editor loginPrefsEditor = loginPreferences
-						.edit();
+				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
 				loginPrefsEditor.clear();
 				loginPrefsEditor.commit();
 
@@ -118,8 +113,7 @@ public class OutletListActivity extends Activity {
 					session.closeAndClearTokenInformation();
 				}
 				if (OutletListActivity.this.isTaskRoot()) {
-					Intent intent = new Intent(OutletListActivity.this,
-							EntryActivity.class);
+					Intent intent = new Intent(OutletListActivity.this, EntryActivity.class);
 					startActivity(intent);
 				} else {
 					finish();
@@ -132,12 +126,10 @@ public class OutletListActivity extends Activity {
 	private void setupActionBar() {
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar, null);
 
-		toggleButton = (ImageButton) mActionBarView
-				.findViewById(R.id.toggleButton);
+		toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
 		toggleButton.setVisibility(View.GONE);
 
-		final TextView title = (TextView) mActionBarView
-				.findViewById(R.id.title);
+		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText(R.string.outlet_title);
 
 		actionBar = getActionBar();
@@ -150,8 +142,7 @@ public class OutletListActivity extends Activity {
 		Session session = Session.getActiveSession();
 		if (session == null) {
 			if (savedInstanceState != null) {
-				session = Session.restoreSession(this, null, null,
-						savedInstanceState);
+				session = Session.restoreSession(this, null, null, savedInstanceState);
 			}
 			if (session == null) {
 				session = new Session(this);
@@ -167,54 +158,38 @@ public class OutletListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_out_list);
-		Ion.getDefault(this).configure()
-				.setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
 
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
-		Ion.with(this).load(LIST_OUTLETS)
-				.setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
 					@Override
-					public void onCompleted(Exception e,
-							List<OutletModel> result) {
+					public void onCompleted(Exception e, List<OutletModel> result) {
 						if (e != null) {
-							Toast.makeText(OutletListActivity.this,
-									"Error loading history", Toast.LENGTH_LONG)
-									.show();
+							Toast.makeText(OutletListActivity.this, "Error loading history", Toast.LENGTH_LONG).show();
 							return;
 						}
 
 						outlets = result;
 						list = (ListView) findViewById(R.id.outlist);
-						list.setAdapter(new OutletListAdapter(
-								OutletListActivity.this, result));
+						list.setAdapter(new OutletListAdapter(OutletListActivity.this, result));
 						list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id) {
+							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 								outletSelected = outlets.get(position);
 								if (outletSelected.isActive) {
-									Intent intent = new Intent(
-											OutletListActivity.this,
-											CategoriesListActivity.class);
-									intent.putExtra(OUTLET_ID,
-											outletSelected.outletID);
+									Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+									intent.putExtra(OUTLET_ID, outletSelected.outletID);
 
-									final Editor loginPrefEditor = loginPreferences
-											.edit();
-									loginPrefEditor.putInt(OUTLET_ID,
-											outletSelected.outletID);
-									loginPrefEditor
-											.putString(
-													OUTLET_ICON,
-													outletSelected.restaurant.icon.thumbnail);
+									final Editor loginPrefEditor = loginPreferences.edit();
+									loginPrefEditor.putInt(OUTLET_ID, outletSelected.outletID);
+									loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
 									loginPrefEditor.commit();
 
-									OutletListActivity.this
-											.startActivity(intent);
+									OutletListActivity.this.startActivity(intent);
 								} else {
 									showComingSoonDialog();
 								}
@@ -222,33 +197,25 @@ public class OutletListActivity extends Activity {
 
 							@SuppressWarnings("deprecation")
 							private void showComingSoonDialog() {
-								AlertDialog alertDialog = new AlertDialog.Builder(
-										OutletListActivity.this).create();
-								alertDialog
-										.setMessage("The restaurant is coming soon.");
+								AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
+								alertDialog.setMessage("The restaurant is coming soon.");
 
-								alertDialog.setButton("Okay",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
+								alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
 
-											}
-										});
+									}
+								});
 
 								alertDialog.show();
 
 								// Change the style of the button text and
 								// message
-								TextView messageView = (TextView) alertDialog
-										.findViewById(android.R.id.message);
+								TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
 								messageView.setGravity(Gravity.CENTER);
 								messageView.setHeight(140);
 								messageView.setTextSize(17);
-								Button okButton = alertDialog
-										.getButton(DialogInterface.BUTTON1);
-								okButton.setTextColor(Color
-										.parseColor("#117AFE"));
+								Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
+								okButton.setTextColor(Color.parseColor("#117AFE"));
 								okButton.setTypeface(null, Typeface.BOLD);
 								okButton.setTextSize(19);
 							}
@@ -256,4 +223,24 @@ public class OutletListActivity extends Activity {
 					}
 				});
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    if (doubleBackToExitPressedOnce || !this.isTaskRoot()) {
+	        super.onBackPressed();
+	        return;
+	    }
+
+	    this.doubleBackToExitPressedOnce = true;
+	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+	    new Handler().postDelayed(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            doubleBackToExitPressedOnce=false;                       
+	        }
+	    }, 2000);
+	} 
+	
 }
