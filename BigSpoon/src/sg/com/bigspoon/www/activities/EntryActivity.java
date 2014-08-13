@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.BigSpoon;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -123,19 +125,19 @@ public class EntryActivity extends Activity {
 						@Override
 						public void onCompleted(Exception e, JsonObject result) {
 							if (e != null) {
-								Toast.makeText(EntryActivity.this,
-										"Error login with FB",
-										Toast.LENGTH_LONG).show();
-								
-								MixpanelAPI mixpanel =
-									    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
-								final JSONObject errorJson = new JSONObject();
-								try {
-									final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
-									errorJson.put(email, e.toString());
-									mixpanel.registerSuperPropertiesOnce(errorJson);
-								} catch (JSONException e1) {
-									e1.printStackTrace();
+								if (Constants.LOG) {
+									Toast.makeText(EntryActivity.this,
+											"Error login with FB",
+											Toast.LENGTH_LONG).show();
+								} else {
+									final JSONObject errorJson = new JSONObject();
+									try {
+										final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
+										errorJson.put(email, e.toString());
+										User.getInstance(EntryActivity.this).mMixpanel.registerSuperPropertiesOnce(errorJson);
+									} catch (JSONException e1) {
+										e1.printStackTrace();
+									}
 								}
 								return;
 							}

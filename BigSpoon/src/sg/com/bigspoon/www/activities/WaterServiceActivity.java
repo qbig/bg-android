@@ -34,7 +34,7 @@ public class WaterServiceActivity extends Activity {
             public void onClick(View v) {
             	WaterQuantityPickerAdapter warmWaterPicker = (WaterQuantityPickerAdapter) findViewById(R.id.Picker2);
             	WaterQuantityPickerAdapter coldWaterPicker = (WaterQuantityPickerAdapter) findViewById(R.id.Picker1);
-            	User.getInstance(WaterServiceActivity.this).requestForWater(String.format("Cold Water: %d cups. Warm Water: %d cups", coldWaterPicker.value, warmWaterPicker.value));
+            	User.getInstance(WaterServiceActivity.this.getApplicationContext()).requestForWater(String.format("Cold Water: %d cups. Warm Water: %d cups", coldWaterPicker.value, warmWaterPicker.value));
             	WaterServiceActivity.this.finish();
             }
         });

@@ -3,8 +3,13 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -197,7 +202,7 @@ public class ActionBarActivity extends FragmentActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
-				User.getInstance(ActionBarActivity.this).requestForWater(
+				User.getInstance(ActionBarActivity.this).requestForWaiter(
 						inputWaitor.getText().toString());
 			}
 		});
@@ -413,9 +418,20 @@ public class ActionBarActivity extends FragmentActivity {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(ActionBarActivity.this,
-									"Error requesting bills", Toast.LENGTH_LONG)
-									.show();
+							if (Constants.LOG) {
+								Toast.makeText(ActionBarActivity.this,
+										"Error requesting bills", Toast.LENGTH_LONG)
+										.show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(ActionBarActivity.this).mMixpanel.track("Error requesting bills", info);
+							}
+							
 							return;
 						}
 						Toast.makeText(ActionBarActivity.this, "Success",

@@ -57,6 +57,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 				new IntentFilter(NOTIF_TO_START_LOCATION_SERVICE));
 		BugSenseHandler.initAndStartSession(this, "625f7944");
 		mMixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+		User.getInstance(this).mMixpanel = this.mMixpanel;
 		final SharedPreferences pref = getSharedPreferences(PREFS_NAME, 0);
 		if (pref.contains(LOGIN_INFO_EMAIL)) {
 			final String email = pref.getString(LOGIN_INFO_EMAIL, null);

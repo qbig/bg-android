@@ -7,8 +7,12 @@ import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryListAdapter;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -169,9 +173,20 @@ public class OrderHistoryListActivity extends Activity {
 					public void onCompleted(Exception e,
 							List<RetrievedOrder> result) {
 						if (e != null) {
-							Toast.makeText(OrderHistoryListActivity.this,
-									"Error login with FB", Toast.LENGTH_LONG)
-									.show();
+							if (Constants.LOG) {
+								Toast.makeText(OrderHistoryListActivity.this,
+										"Error loading histories", Toast.LENGTH_LONG)
+										.show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(OrderHistoryListActivity.this).mMixpanel.track("Error loading histories", info);
+							}
+
 							return;
 						}
 

@@ -12,8 +12,12 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OutletListAdapter;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -183,9 +187,20 @@ public class OutletListActivity extends Activity {
 					public void onCompleted(Exception e,
 							List<OutletModel> result) {
 						if (e != null) {
-							Toast.makeText(OutletListActivity.this,
-									"Error loading history", Toast.LENGTH_LONG)
-									.show();
+							if (Constants.LOG) {
+								Toast.makeText(OutletListActivity.this,
+										"Error loading outlets", Toast.LENGTH_LONG)
+										.show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(OutletListActivity.this).mMixpanel.track("Error loading outlets", info);
+							}
+							
 							return;
 						}
 						progressBar.setVisibility(View.GONE);

@@ -16,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,16 +74,18 @@ public class EmailLoginActivity extends Activity {
 								@Override
 								public void onCompleted(Exception e, JsonObject result) {
 									if (e != null) {
-										Toast.makeText(EmailLoginActivity.this, "Error during login", Toast.LENGTH_LONG)
-												.show();
-										MixpanelAPI mixpanel =
-											    MixpanelAPI.getInstance(EmailLoginActivity.this, MIXPANEL_TOKEN);
-										final JSONObject errorJson = new JSONObject();
-										try {
-											errorJson.put(mLoginEmailField.getText().toString(), e.toString());
-											mixpanel.registerSuperPropertiesOnce(errorJson);
-										} catch (JSONException e1) {
-											e1.printStackTrace();
+										if (Constants.LOG) {
+											Toast.makeText(EmailLoginActivity.this, "Error during login",
+													Toast.LENGTH_LONG).show();
+										} else {
+											final JSONObject errorJson = new JSONObject();
+											try {
+												errorJson.put(mLoginEmailField.getText().toString(), e.toString());
+												User.getInstance(EmailLoginActivity.this).mMixpanel
+														.registerSuperPropertiesOnce(errorJson);
+											} catch (JSONException e1) {
+												e1.printStackTrace();
+											}
 										}
 										return;
 									}
@@ -98,9 +102,9 @@ public class EmailLoginActivity extends Activity {
 										loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
 										loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
 										loginPrefsEditor.commit();
-										
-										MixpanelAPI mixpanel =
-											    MixpanelAPI.getInstance(EmailLoginActivity.this, MIXPANEL_TOKEN);
+
+										MixpanelAPI mixpanel = MixpanelAPI.getInstance(EmailLoginActivity.this,
+												MIXPANEL_TOKEN);
 										JSONObject firstTime = new JSONObject();
 										try {
 											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
@@ -108,7 +112,7 @@ public class EmailLoginActivity extends Activity {
 										} catch (JSONException e1) {
 											e1.printStackTrace();
 										}
-										
+
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										EmailLoginActivity.this.startActivity(intent);
 									} catch (NullPointerException nullException) {

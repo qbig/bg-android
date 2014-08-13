@@ -11,10 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -204,7 +208,19 @@ public class ItemsActivity extends ExpandableListActivity {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
+							if (Constants.LOG) {
+								Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(ItemsActivity.this).mMixpanel.track("Error sending orders",
+										info);
+							}
+							
 							return;
 						}
 						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
@@ -750,7 +766,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
-				User.getInstance(ItemsActivity.this).requestForWater(inputWaitor.getText().toString());
+				User.getInstance(ItemsActivity.this).requestForWaiter(inputWaitor.getText().toString());
 			}
 		});
 		alertWaitor.show();
@@ -934,7 +950,19 @@ public class ItemsActivity extends ExpandableListActivity {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(ItemsActivity.this, "Error requesting bills", Toast.LENGTH_LONG).show();
+							if (Constants.LOG) {
+								Toast.makeText(ItemsActivity.this, "Error requesting bills", Toast.LENGTH_LONG).show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(ItemsActivity.this).mMixpanel.track("Error requesting bills",
+										info);
+							}
+							
 							return;
 						}
 						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();

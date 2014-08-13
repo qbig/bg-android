@@ -7,8 +7,12 @@ import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.CustomListOfUserReview;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
@@ -113,7 +117,18 @@ public class UserReviewActivity extends Activity {
 						@Override
 						public void onCompleted(Exception e, JsonObject result) {
 							if (e != null) {
-								//Toast.makeText(getApplicationContext(), "Error sending ratings", Toast.LENGTH_LONG).show();
+								if (Constants.LOG) {
+									Toast.makeText(getApplicationContext(), "Error sending ratings", Toast.LENGTH_LONG).show();
+								} else {
+									final JSONObject info = new JSONObject();
+									try {
+										info.put("error", e.toString());
+									} catch (JSONException e1) {
+										e1.printStackTrace();
+									}
+									User.getInstance(UserReviewActivity.this).mMixpanel.track("Error sending ratings", info);
+								}
+								
 								return;
 							}
 							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
@@ -139,7 +154,18 @@ public class UserReviewActivity extends Activity {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
-							Toast.makeText(getApplicationContext(), "Error sending feedback", Toast.LENGTH_LONG).show();
+							if (Constants.LOG) {
+								Toast.makeText(getApplicationContext(), "Error sending feedback", Toast.LENGTH_LONG).show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(UserReviewActivity.this).mMixpanel.track("Error sending feedback", info);
+							}
+							
 							return;
 						}
 						Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();

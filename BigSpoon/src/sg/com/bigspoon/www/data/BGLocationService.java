@@ -6,6 +6,11 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sg.com.bigspoon.www.activities.UserReviewActivity;
+
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
@@ -58,7 +63,18 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 			}
 		} else {
 			Log.e(TAG, "unable to connect to google play services.");
-			Toast.makeText(this, "Google Play Service not available.", Toast.LENGTH_LONG).show();
+			if (Constants.LOG) {
+				Toast.makeText(this, "Google Play Service not available.", Toast.LENGTH_LONG).show();
+			} else {
+				final JSONObject info = new JSONObject();
+				try {
+					info.put("error", "Google Play Service not available.");
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+				User.getInstance(this).mMixpanel.track("Google Play Service not available.", info);
+			}
+			
 			mNoGooglePlayAlternativeLocationService = new AndroidLocationService(this);
 			mNoGooglePlayAlternativeLocationService.startUpdate();
 		}

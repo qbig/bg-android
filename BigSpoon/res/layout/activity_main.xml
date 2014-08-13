@@ -61,7 +61,7 @@
         android:layout_below="@+id/imageView2"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="false"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="125dp"
         android:indeterminate="true"
         android:visibility="invisible" />
 

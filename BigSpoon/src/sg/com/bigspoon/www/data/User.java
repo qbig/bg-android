@@ -9,6 +9,11 @@ import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sg.com.bigspoon.www.activities.UserReviewActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class User {
 	private static User sInstance;
@@ -36,6 +42,7 @@ public class User {
 	public int tableId = -1;
 	public Boolean isContainDessert = false;
 	public Boolean isForTakeAway = false;
+	public MixpanelAPI mMixpanel;
 	
 	private User(Context context) {
 		setContext(context.getApplicationContext());
@@ -116,8 +123,19 @@ public class User {
 					@Override
 					public void onCompleted(Exception e, RetrievedOrder result) {
 						if (e != null) {
-							Toast.makeText(mContext, "Error login with FB",
-									Toast.LENGTH_LONG).show();
+							if (Constants.LOG) {
+								Toast.makeText(mContext, "Error updating orders",
+										Toast.LENGTH_LONG).show();
+							} else {
+								final JSONObject info = new JSONObject();
+								try {
+									info.put("error", e.toString());
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+								User.getInstance(mContext).mMixpanel.track("Error updating orders", info);
+							}
+							
 							return;
 						}
 
@@ -158,7 +176,18 @@ public class User {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				if (e != null) {
-                    Toast.makeText(mContext, "Error sending request", Toast.LENGTH_LONG).show();
+					if (Constants.LOG) {
+						Toast.makeText(mContext, "Error sending request", Toast.LENGTH_LONG).show();
+					}  else {
+						final JSONObject info = new JSONObject();
+						try {
+							info.put("error", e.toString());
+						} catch (JSONException e1) {
+							e1.printStackTrace();
+						}
+						User.getInstance(mContext).mMixpanel.track("Error sending request", info);
+					}
+                    
                     return;
                 }
 				Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();

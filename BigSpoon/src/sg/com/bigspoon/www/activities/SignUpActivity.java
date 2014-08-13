@@ -7,7 +7,13 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.USER_SIGNUP;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -69,9 +75,21 @@ public class SignUpActivity extends Activity {
 			            @Override
 			            public void onCompleted(Exception e, JsonObject result) {
 			                if (e != null) {
-			                    Toast.makeText(SignUpActivity.this, "Error during sign up", Toast.LENGTH_LONG).show();
+			                	if (Constants.LOG) {
+			                		Toast.makeText(SignUpActivity.this, "Error signing up with emails", Toast.LENGTH_LONG).show();
+			                	} else {
+									final JSONObject info = new JSONObject();
+									try {
+										info.put("error", e.toString());
+										info.put("email", mSignupEmailField.getText().toString());
+									} catch (JSONException e1) {
+										e1.printStackTrace();
+									}
+									User.getInstance(SignUpActivity.this).mMixpanel.track("Error signing up with emails", info);
+								}
+								
 			                    return;
-			                }
+			                } 
 			                final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
 			                final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
 			                final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
