@@ -171,7 +171,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		backToOutletList.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
