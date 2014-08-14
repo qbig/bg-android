@@ -220,7 +220,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
+		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);		
 	}
 
 	private void setupPlacedOrderListView() {
@@ -545,10 +545,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loadMenu();
-		updateOrderedDishCounter();
-		updatePriceLabels();
-		mPastOrderAdapter.notifyDataSetChanged();
+		updateDisplay();
 	}
 
 	public class ListViewHeightUtil {

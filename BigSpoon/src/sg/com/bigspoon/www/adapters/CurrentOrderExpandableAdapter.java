@@ -1,7 +1,13 @@
 package sg.com.bigspoon.www.adapters;
 
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.ItemsActivity;
+import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
+import sg.com.bigspoon.www.activities.ModifierActivity;
+import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Context;
@@ -69,16 +75,21 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			convertView = inflater.inflate(R.layout.list_items_parent, null);
 		}
 
-		TextView numberView = (TextView) convertView.findViewById(R.id.quantitytxt);
-		TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
-		TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
-
+		final TextView numberView = (TextView) convertView.findViewById(R.id.quantitytxt);
+		final TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
+		final TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
+		final DishModel dish = User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish;
 		numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.currentOrder
 				.getQuantityOfDishByIndex(groupPosition)));
 		itemdescView
 				.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.name);
-		priceView.setText(Double.toString(User.getInstance(mContext).currentSession.currentOrder.mItems
-				.get(groupPosition).dish.price));
+		if (dish.customizable) {
+			priceView.setText(Double.toString(User.getInstance(mContext).currentSession.currentOrder
+					.getModifierPriceChangeAtIndex(groupPosition) + dish.price));
+		} else {
+			priceView.setText(Double.toString(dish.price));
+		}
+
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
 		modifierSubTitle.setVisibility(View.GONE);
 
@@ -108,11 +119,17 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		plusButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				User.getInstance(mContext).currentSession.currentOrder.incrementDishAtIndex(groupPosition);
-				
-				notifyDataSetChanged();
-				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
-				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+				if (dish.customizable) {
+					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
+					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, dish.id);
+					((ItemsActivity) mContext).startActivity(intentForModifier);
+				} else {
+					User.getInstance(mContext).currentSession.currentOrder.incrementDishAtIndex(groupPosition);
+
+					notifyDataSetChanged();
+					Intent intent = new Intent(NOTIF_ORDER_UPDATE);
+					LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+				}
 			}
 		});
 

@@ -106,8 +106,14 @@ public class Order {
 
 	public double getTotalPrice() {
 		double result = 0;
-		for (OrderItem item : mItems) {
-			result += item.quantity * item.dish.price;
+		for (int i = 0; i < mItems.size(); i ++) {
+			OrderItem item = mItems.get(i);
+			if (item.dish.customizable) {
+				result += getModifierPriceChangeAtIndex(i) + item.dish.price;
+			} else {
+				result += item.quantity * item.dish.price;
+			}
+			
 		}
 		return result;
 	}
@@ -148,19 +154,21 @@ public class Order {
 	}
 
 	public String getModifierDetailsTextAtIndex(int dishIndex) {
-		mItems.get(dishIndex).dish.modifier
-				.setAnswer(mItems.get(dishIndex).modifierAnswer);
+		mItems.get(dishIndex).dish.modifier.setAnswer(mItems.get(dishIndex).modifierAnswer);
 		return mItems.get(dishIndex).dish.modifier.getDetailsTextForDisplay();
+	}
+
+	public double getModifierPriceChangeAtIndex(int dishIndex) {
+		mItems.get(dishIndex).dish.modifier.setAnswer(mItems.get(dishIndex).modifierAnswer);
+		return mItems.get(dishIndex).dish.modifier.getPriceChange();
 	}
 
 	public HashMap<String, String> getMergedTextForNotesAndModifier() {
 		final HashMap<String, String> result = new HashMap<String, String>();
 		for (int i = 0, len = mItems.size(); i < len; i++) {
 			OrderItem item = mItems.get(i);
-			if (item.note != null && item.note.length() != 0
-					&& item.dish.customizable) {
-				result.put(i + "", String.format("%s\nnote:%s",
-						getModifierDetailsTextAtIndex(i), item.note));
+			if (item.note != null && item.note.length() != 0 && item.dish.customizable) {
+				result.put(i + "", String.format("%s\nnote:%s", getModifierDetailsTextAtIndex(i), item.note));
 			} else if (item.note != null && item.note.length() != 0) {
 				result.put(i + "", item.note);
 			} else if (item.dish.customizable) {
@@ -229,7 +237,7 @@ public class Order {
 			jsonOrders.add("modifiers", gson.toJsonTree(modifierAnswers));
 		}
 
-		if (mGeneralNote != null && !mGeneralNote.equals("")) {	
+		if (mGeneralNote != null && !mGeneralNote.equals("")) {
 			jsonOrders.addProperty("note", mGeneralNote);
 		}
 

@@ -52,5 +52,13 @@ public class DishModel {
 	public boolean isDummyDish(){
 		return price < 0.01;
 	}
+	
+	public double getCost() {
+		if (customizable) {
+			return price + modifier.getPriceChange();
+		} else {
+			return price;
+		}
+	}
 
 }
