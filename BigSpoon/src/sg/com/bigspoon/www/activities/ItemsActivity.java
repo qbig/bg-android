@@ -19,7 +19,9 @@ import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
 import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -50,8 +52,8 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -107,12 +109,39 @@ public class ItemsActivity extends ExpandableListActivity {
 		}
 	};
 
+	private TextView mCurrentSubTotalValue;
+
+	private TextView mCurrentServiceChargeLabel;
+
+	private TextView mCurrentServiceChargeValue;
+
+	private TextView mCurrentGSTLabel;
+
+	private TextView mCurrentTotalValue;
+
+	private TextView mOrderredSubTotalValue;
+
+	private TextView mOrderredServiceChargeLabel;
+
+	private TextView mOrderredServiceChargeValue;
+
+	private TextView mOrderredGSTLabel;
+
+	private TextView mOrderredTotalValue;
+
+	private TextView mCurrentGSTValue;
+
+	private TextView mOrderredGSTValue;
+
+	private OutletDetailsModel mCurrentOutlet;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
-
+		mCurrentOutlet = User.getInstance(this).currentOutlet;
+		
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
 		updateOrderedDishCounter();
@@ -121,12 +150,53 @@ public class ItemsActivity extends ExpandableListActivity {
 		loadMenu();
 		setupPlaceOrderButton();
 		setupPlacedOrderListView();
-
+		setupPriceLabels();
+		
 		LocalBroadcastManager.getInstance(this)
 				.registerReceiver(mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
 
+	}
+
+	private void setupPriceLabels() {
+		
+		final String serviceChargeLabelString = "Service Charge(" + mCurrentOutlet.serviceChargeRate + "%)";
+		final String GSTChargeLabelString = "GST (" + mCurrentOutlet.gstRate + "%) :";
+		
+		mCurrentSubTotalValue = (TextView) findViewById(R.id.textView2);
+		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.textView3);
+		mCurrentServiceChargeValue = (TextView) findViewById(R.id.textView4);
+		mCurrentGSTLabel = (TextView) findViewById(R.id.textView5);
+		mCurrentGSTValue = (TextView) findViewById(R.id.textView6);
+		mCurrentTotalValue = (TextView) findViewById(R.id.textView8);
+		
+		mCurrentServiceChargeLabel.setText(serviceChargeLabelString);
+		mCurrentGSTLabel.setText(GSTChargeLabelString);
+		
+		mOrderredSubTotalValue = (TextView) findViewById(R.id.textView10);
+		mOrderredServiceChargeLabel = (TextView) findViewById(R.id.textView11);
+		mOrderredServiceChargeValue = (TextView) findViewById(R.id.textView12);
+		mOrderredGSTLabel = (TextView) findViewById(R.id.textView13);
+		mOrderredGSTValue = (TextView) findViewById(R.id.textView14);
+		mOrderredTotalValue = (TextView) findViewById(R.id.textView16);
+		
+		mOrderredGSTLabel.setText(GSTChargeLabelString);
+		mOrderredServiceChargeLabel.setText(serviceChargeLabelString);
+	}
+	
+	private void updatePriceLabels() {
+		final DiningSession session = User.getInstance(this).currentSession;
+		
+		mCurrentSubTotalValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice()));
+		mCurrentServiceChargeValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mCurrentGSTValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() * mCurrentOutlet.gstRate));
+		mCurrentTotalValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() + session.currentOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.currentOrder.getTotalPrice() * mCurrentOutlet.gstRate));
+		
+		mOrderredSubTotalValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice()));
+		mOrderredServiceChargeValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mOrderredGSTValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredTotalValue.setText(String.format("%.2f",  session.pastOrder.getTotalPrice() + session.pastOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.pastOrder.getTotalPrice() * mCurrentOutlet.gstRate));
 	}
 
 	@Override
@@ -146,6 +216,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	protected void updateDisplay() {
 		updateOrderedDishCounter();
+		updatePriceLabels();
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
 		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
@@ -430,6 +501,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		} else {
 			orderCounterText.setVisibility(View.GONE);
 		}
+		
+		final Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+		orderCounterText.startAnimation(a);
 	}
 
 	@Override
@@ -473,6 +547,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onResume();
 		loadMenu();
 		updateOrderedDishCounter();
+		updatePriceLabels();
 		mPastOrderAdapter.notifyDataSetChanged();
 	}
 

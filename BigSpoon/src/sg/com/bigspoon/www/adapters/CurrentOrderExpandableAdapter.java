@@ -95,32 +95,13 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			public void onClick(View view) {
 				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) > 0) {
 					User.getInstance(mContext).currentSession.currentOrder.decrementDishAtIndex(groupPosition);
-					notifyDataSetChanged();
-					final View parent = (View) view.getParent().getParent().getParent().getParent().getParent();
-					TextView cornertext;
-					cornertext = (TextView) parent.findViewById(R.id.corner);
-					if (User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity() <= 0) {
-
-						cornertext.setVisibility(View.VISIBLE);
-						cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity()
-								+ "");
-						Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-						cornertext.startAnimation(a);
-						cornertext.setVisibility(View.GONE);
-					} else {
-						cornertext.setVisibility(View.VISIBLE);
-						cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity()
-								+ "");
-						Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-						cornertext.startAnimation(a);
-					}
 				}
 				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) == 0) {
 					User.getInstance(mContext).currentSession.currentOrder.removeDishAtIndex(groupPosition);
-					notifyDataSetChanged();
-					Intent intent = new Intent(NOTIF_ORDER_UPDATE);
-					LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 				}
+				notifyDataSetChanged();
+				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
+				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 			}
 		});
 
@@ -128,14 +109,10 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			@Override
 			public void onClick(View view) {
 				User.getInstance(mContext).currentSession.currentOrder.incrementDishAtIndex(groupPosition);
+				
 				notifyDataSetChanged();
-				final View parent = (View) view.getParent().getParent().getParent().getParent().getParent();
-				TextView cornertext;
-				cornertext = (TextView) parent.findViewById(R.id.corner);
-				cornertext.setVisibility(View.VISIBLE);
-				cornertext.setText(User.getInstance(mContext).currentSession.currentOrder.getTotalQuantity() + "");
-				Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-				cornertext.startAnimation(a);
+				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
+				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 			}
 		});
 

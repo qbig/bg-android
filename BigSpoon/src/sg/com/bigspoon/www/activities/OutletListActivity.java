@@ -81,7 +81,7 @@ public class OutletListActivity extends Activity {
 			updateListData();
 		}
 	};
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -93,13 +93,11 @@ public class OutletListActivity extends Activity {
 	}
 
 	private void setupHistoryButton() {
-		orderHistoryButton = (ImageButton) mActionBarView
-				.findViewById(R.id.order_history);
+		orderHistoryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
 		orderHistoryButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(),
-						OrderHistoryListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
 				intent.putExtra("callingActivityName", "OutletListActivity");
 				startActivity(intent);
 			}
@@ -109,8 +107,7 @@ public class OutletListActivity extends Activity {
 	private void setupLogoutButton() {
 
 		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_VERTICAL);
 		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
 		logoutButton.setImageResource(R.drawable.logout_button);
@@ -121,14 +118,12 @@ public class OutletListActivity extends Activity {
 		final StateListDrawable states = new StateListDrawable();
 		states.addState(new int[] { android.R.attr.state_pressed },
 				getResources().getDrawable(R.drawable.logout_button_pressed));
-		states.addState(new int[] {},
-				getResources().getDrawable(R.drawable.logout_button));
+		states.addState(new int[] {}, getResources().getDrawable(R.drawable.logout_button));
 		logoutButton.setImageDrawable(states);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final SharedPreferences.Editor loginPrefsEditor = loginPreferences
-						.edit();
+				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
 				loginPrefsEditor.clear();
 				loginPrefsEditor.commit();
 
@@ -137,8 +132,7 @@ public class OutletListActivity extends Activity {
 					session.closeAndClearTokenInformation();
 				}
 				if (OutletListActivity.this.isTaskRoot()) {
-					Intent intent = new Intent(OutletListActivity.this,
-							EntryActivity.class);
+					Intent intent = new Intent(OutletListActivity.this, EntryActivity.class);
 					startActivity(intent);
 				} else {
 					finish();
@@ -151,12 +145,10 @@ public class OutletListActivity extends Activity {
 	private void setupActionBar() {
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar, null);
 
-		toggleButton = (ImageButton) mActionBarView
-				.findViewById(R.id.toggleButton);
+		toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
 		toggleButton.setVisibility(View.GONE);
 
-		final TextView title = (TextView) mActionBarView
-				.findViewById(R.id.title);
+		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText(R.string.outlet_title);
 
 		actionBar = getActionBar();
@@ -169,8 +161,7 @@ public class OutletListActivity extends Activity {
 		Session session = Session.getActiveSession();
 		if (session == null) {
 			if (savedInstanceState != null) {
-				session = Session.restoreSession(this, null, null,
-						savedInstanceState);
+				session = Session.restoreSession(this, null, null, savedInstanceState);
 			}
 			if (session == null) {
 				session = new Session(this);
@@ -181,40 +172,32 @@ public class OutletListActivity extends Activity {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		updateListData();
-		
-		if (User.getInstance(this).currentLocation == null) {
-			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
-					new IntentFilter(NOTIF_LOCATION_UPDATED));
-		}
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_out_list);
+		list = (ListView) findViewById(R.id.outlist);
 		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.VISIBLE);
-		Ion.getDefault(this).configure()
-				.setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
-		
+
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
-		Ion.with(this).load(LIST_OUTLETS)
-				.setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
 					@Override
-					public void onCompleted(Exception e,
-							List<OutletModel> result) {
+					public void onCompleted(Exception e, List<OutletModel> result) {
 						if (e != null) {
 							if (Constants.LOG) {
-								Toast.makeText(OutletListActivity.this,
-										"Error loading outlets", Toast.LENGTH_LONG)
+								Toast.makeText(OutletListActivity.this, "Error loading outlets", Toast.LENGTH_LONG)
 										.show();
 							} else {
 								final JSONObject info = new JSONObject();
@@ -223,40 +206,30 @@ public class OutletListActivity extends Activity {
 								} catch (JSONException e1) {
 									e1.printStackTrace();
 								}
-								User.getInstance(OutletListActivity.this).mMixpanel.track("Error loading outlets", info);
+								User.getInstance(OutletListActivity.this).mMixpanel
+										.track("Error loading outlets", info);
 							}
-							
+
 							return;
 						}
 						progressBar.setVisibility(View.GONE);
 						outlets = result;
-						
 						updateListData();
 						list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id) {
+							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 								outletSelected = outlets.get(position);
 								if (outletSelected.isActive) {
-									Intent intent = new Intent(
-											OutletListActivity.this,
-											CategoriesListActivity.class);
-									intent.putExtra(OUTLET_ID,
-											outletSelected.outletID);
+									Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+									intent.putExtra(OUTLET_ID, outletSelected.outletID);
 
-									final Editor loginPrefEditor = loginPreferences
-											.edit();
-									loginPrefEditor.putInt(OUTLET_ID,
-											outletSelected.outletID);
-									loginPrefEditor
-											.putString(
-													OUTLET_ICON,
-													outletSelected.restaurant.icon.thumbnail);
+									final Editor loginPrefEditor = loginPreferences.edit();
+									loginPrefEditor.putInt(OUTLET_ID, outletSelected.outletID);
+									loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
 									loginPrefEditor.commit();
 
-									OutletListActivity.this
-											.startActivity(intent);
+									OutletListActivity.this.startActivity(intent);
 								} else {
 									showComingSoonDialog();
 								}
@@ -264,33 +237,25 @@ public class OutletListActivity extends Activity {
 
 							@SuppressWarnings("deprecation")
 							private void showComingSoonDialog() {
-								AlertDialog alertDialog = new AlertDialog.Builder(
-										OutletListActivity.this).create();
-								alertDialog
-										.setMessage("The restaurant is coming soon.");
+								AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
+								alertDialog.setMessage("The restaurant is coming soon.");
 
-								alertDialog.setButton("Okay",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
+								alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
 
-											}
-										});
+									}
+								});
 
 								alertDialog.show();
 
 								// Change the style of the button text and
 								// message
-								TextView messageView = (TextView) alertDialog
-										.findViewById(android.R.id.message);
+								TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
 								messageView.setGravity(Gravity.CENTER);
 								messageView.setHeight(140);
 								messageView.setTextSize(17);
-								Button okButton = alertDialog
-										.getButton(DialogInterface.BUTTON1);
-								okButton.setTextColor(Color
-										.parseColor("#117AFE"));
+								Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
+								okButton.setTextColor(Color.parseColor("#117AFE"));
 								okButton.setTypeface(null, Typeface.BOLD);
 								okButton.setTextSize(19);
 							}
@@ -299,15 +264,18 @@ public class OutletListActivity extends Activity {
 
 				});
 	}
-	
 
 	private void updateListData() {
-		if (User.getInstance(getApplicationContext()).currentLocation != null && outlets != null) {
-			
+		if (outlets == null) {
+			return;
+		}
+		
+		if (User.getInstance(getApplicationContext()).currentLocation != null) {
+
 			Collections.sort(outlets, new Comparator<OutletModel>() {
 				@Override
 				public int compare(OutletModel lhs, OutletModel rhs) {
-					final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;		
+					final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;
 					final Location locationForLhs = new Location("lhs");
 					locationForLhs.setLatitude(lhs.lat);
 					locationForLhs.setLongitude(lhs.lng);
@@ -316,17 +284,18 @@ public class OutletListActivity extends Activity {
 					locationForRhs.setLongitude(rhs.lng);
 					int distanceForLhs = (int) currentLocation.distanceTo(locationForLhs);
 					int distanceForRhs = (int) currentLocation.distanceTo(locationForRhs);
-					
+
 					return distanceForLhs - distanceForRhs;
 				}
 			});
+		} else {
+			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
+					new IntentFilter(NOTIF_LOCATION_UPDATED));
 		}
 		
-		list = (ListView) findViewById(R.id.outlist);
-		list.setAdapter(new OutletListAdapter(
-				OutletListActivity.this, outlets));
+		list.setAdapter(new OutletListAdapter(OutletListActivity.this, outlets));
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce || !this.isTaskRoot()) {
@@ -335,8 +304,7 @@ public class OutletListActivity extends Activity {
 		}
 
 		this.doubleBackToExitPressedOnce = true;
-		Toast.makeText(this, "Please click BACK again to exit",
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
 		new Handler().postDelayed(new Runnable() {
 
