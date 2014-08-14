@@ -38,6 +38,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -45,8 +47,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -822,12 +827,24 @@ public class ItemsActivity extends ExpandableListActivity {
 					if (User.getInstance(ItemsActivity.this).isForTakeAway) {
 						int requestCodeTake = TAKE_AWAY;
 						onTablePopupResult(requestCodeTake);
-					} else
+					} else {
 						onTablePopupResult(requestCode);
+					}
 				}
 			}
 		});
 		alert.show();
+
+		
+		(new Handler()).postDelayed(new Runnable() {
+			public void run() {
+				input.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_DOWN, 0, 0, 0));
+				input.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_UP, 0, 0, 0));
+			}
+		}, 200);
+		
 		TextView messageView = (TextView) alert.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
 		// messageView.setHeight(140);

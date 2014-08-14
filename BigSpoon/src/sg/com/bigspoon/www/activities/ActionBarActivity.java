@@ -22,8 +22,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -268,6 +271,16 @@ public class ActionBarActivity extends FragmentActivity {
 			}
 		});
 		alert.show();
+		
+		(new Handler()).postDelayed(new Runnable() {
+			public void run() {
+				input.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_DOWN, 0, 0, 0));
+				input.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_UP, 0, 0, 0));
+			}
+		}, 200);
+		
 		TextView messageView = (TextView) alert
 				.findViewById(android.R.id.message);
 		messageView.setGravity(Gravity.CENTER);
