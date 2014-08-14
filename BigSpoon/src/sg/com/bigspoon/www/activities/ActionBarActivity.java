@@ -137,10 +137,22 @@ public class ActionBarActivity extends FragmentActivity {
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
 		case WATER:
-			Intent j = new Intent(ActionBarActivity.this,
-					WaterServiceActivity.class);
-			j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(j);
+			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
+				Intent j = new Intent(ActionBarActivity.this,
+						WaterServiceActivity.class);
+				j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(j);
+			} else {
+				AlertDialog alertLocationFail = new AlertDialog.Builder(this).create();
+				alertLocationFail.setMessage(User.getInstance(this).currentOutlet.waterText);
+				alertLocationFail.setView(null);
+				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+				alertLocationFail.show();
+			}
+			
 			break;
 		case WAITER:
 			waitorPopup();
@@ -170,6 +182,9 @@ public class ActionBarActivity extends FragmentActivity {
 				Intent i = new Intent(ActionBarActivity.this,
 						UserReviewActivity.class);
 				startActivity(i);
+				if (! User.getInstance(ActionBarActivity.this).currentOutlet.isBillEnabled) {
+					Toast.makeText(ActionBarActivity.this, User.getInstance(ActionBarActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		alert2.show();

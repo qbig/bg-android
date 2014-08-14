@@ -640,9 +640,21 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
 		case WATER:
-			Intent j = new Intent(ItemsActivity.this, WaterServiceActivity.class);
-			j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(j);
+			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
+				Intent j = new Intent(ItemsActivity.this, WaterServiceActivity.class);
+				j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(j);
+			} else {
+				AlertDialog alertLocationFail = new AlertDialog.Builder(ItemsActivity.this).create();
+				alertLocationFail.setMessage(User.getInstance(this).currentOutlet.waterText);
+				alertLocationFail.setView(null);
+				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+				alertLocationFail.show();
+			}
+			
 			break;
 		case WAITER:
 			waitorPopup();
@@ -809,6 +821,9 @@ public class ItemsActivity extends ExpandableListActivity {
 				performBillRequest();
 				Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
 				startActivity(i);
+				if (! User.getInstance(ItemsActivity.this).currentOutlet.isBillEnabled) {
+					Toast.makeText(ItemsActivity.this, User.getInstance(ItemsActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		alert2.show();
