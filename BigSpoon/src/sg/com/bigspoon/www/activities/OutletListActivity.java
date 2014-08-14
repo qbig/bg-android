@@ -6,10 +6,14 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -23,8 +27,11 @@ import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
@@ -33,6 +40,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -67,7 +75,13 @@ public class OutletListActivity extends Activity {
 	private ImageButton logoutButton;
 	OutletModel outletSelected;
 	private boolean doubleBackToExitPressedOnce;
-
+	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			updateListData();
+		}
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -167,7 +181,18 @@ public class OutletListActivity extends Activity {
 			}
 		}
 	}
-
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		updateListData();
+		
+		if (User.getInstance(this).currentLocation == null) {
+			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
+					new IntentFilter(NOTIF_LOCATION_UPDATED));
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -177,7 +202,7 @@ public class OutletListActivity extends Activity {
 		Ion.getDefault(this).configure()
 				.setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
-
+		
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		Ion.with(this).load(LIST_OUTLETS)
 				.setHeader("Content-Type", "application/json; charset=utf-8")
@@ -204,11 +229,9 @@ public class OutletListActivity extends Activity {
 							return;
 						}
 						progressBar.setVisibility(View.GONE);
-
 						outlets = result;
-						list = (ListView) findViewById(R.id.outlist);
-						list.setAdapter(new OutletListAdapter(
-								OutletListActivity.this, result));
+						
+						updateListData();
 						list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 							@Override
@@ -273,9 +296,37 @@ public class OutletListActivity extends Activity {
 							}
 						});
 					}
+
 				});
 	}
+	
 
+	private void updateListData() {
+		if (User.getInstance(getApplicationContext()).currentLocation != null && outlets != null) {
+			
+			Collections.sort(outlets, new Comparator<OutletModel>() {
+				@Override
+				public int compare(OutletModel lhs, OutletModel rhs) {
+					final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;		
+					final Location locationForLhs = new Location("lhs");
+					locationForLhs.setLatitude(lhs.lat);
+					locationForLhs.setLongitude(lhs.lng);
+					final Location locationForRhs = new Location("rhs");
+					locationForRhs.setLatitude(rhs.lat);
+					locationForRhs.setLongitude(rhs.lng);
+					int distanceForLhs = (int) currentLocation.distanceTo(locationForLhs);
+					int distanceForRhs = (int) currentLocation.distanceTo(locationForRhs);
+					
+					return distanceForLhs - distanceForRhs;
+				}
+			});
+		}
+		
+		list = (ListView) findViewById(R.id.outlist);
+		list.setAdapter(new OutletListAdapter(
+				OutletListActivity.this, outlets));
+	}
+	
 	@Override
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce || !this.isTaskRoot()) {

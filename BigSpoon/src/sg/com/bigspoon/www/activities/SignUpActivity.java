@@ -105,6 +105,7 @@ public class SignUpActivity extends Activity {
 			                
 				            Intent intent = new Intent(SignUpActivity.this, OutletListActivity.class);
 				   			SignUpActivity.this.startActivity(intent);
+				   			SignUpActivity.this.finish();
 			            }
 			        });
 				} else {

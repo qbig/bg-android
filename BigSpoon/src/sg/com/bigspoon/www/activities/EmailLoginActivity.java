@@ -115,6 +115,7 @@ public class EmailLoginActivity extends Activity {
 
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										EmailLoginActivity.this.startActivity(intent);
+										EmailLoginActivity.this.finish();
 									} catch (NullPointerException nullException) {
 										Toast.makeText(EmailLoginActivity.this,
 												"User not found, please check your email address.", Toast.LENGTH_LONG)

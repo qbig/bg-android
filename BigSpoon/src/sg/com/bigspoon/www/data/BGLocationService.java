@@ -31,7 +31,7 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
 	private final static float TEN_METERS = 10.0f;
-	private static final long POLLING_FREQ = 5000;
+	private static final long POLLING_FREQ = 1000;
 	private static final long RESTART_TIME = 120 * 1000;
 	private static final String TAG = "BGLocationService";
 

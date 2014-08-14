@@ -178,6 +178,7 @@ public class EntryActivity extends Activity {
 									OutletListActivity.class);
 							EntryActivity.this.startActivity(intent);
 							progressBar.setVisibility(View.GONE);
+							EntryActivity.this.finish();
 						}
 					});
 
