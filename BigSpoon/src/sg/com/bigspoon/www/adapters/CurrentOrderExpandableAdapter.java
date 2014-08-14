@@ -24,6 +24,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
@@ -119,6 +120,11 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		plusButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				if (dish.quantity <= 0) {
+					Toast.makeText(mContext, "This is dish is out of stock", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
 				if (dish.customizable) {
 					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
 					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, dish.id);

@@ -48,13 +48,11 @@ public class MenuListViewAdapter extends BaseAdapter {
 	private static final int TYPE_PHOTO_ITEM = 0;
 	private static final int TYPE_TEXT_ITEM = 1;
 
-	public MenuListViewAdapter(Context context,
-			final OutletDetailsModel outletInfo) {
+	public MenuListViewAdapter(Context context, final OutletDetailsModel outletInfo) {
 		super();
 		this.mOutletInfo = outletInfo;
 		this.mContext = context;
-		Ion.getDefault(context).configure()
-				.setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
+		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
 		initAddDishButtonListener();
 		initFilteredList();
 		addFilterObeserver();
@@ -90,45 +88,54 @@ public class MenuListViewAdapter extends BaseAdapter {
 		mOrderDishButtonOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				
+
 				final Integer itemPosition = (Integer) view.getTag();
-				final DishModel currentDish = (DishModel) getItem(itemPosition
-						.intValue());
+				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
 				if (!currentDish.isServedNow()) {
 					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
 					alertLocationFail.setTitle("Sorry");
-					alertLocationFail.setMessage("This dish is only available from " + currentDish.startTime + " to " + currentDish.endTime);
+					alertLocationFail.setMessage("This dish is only available from " + currentDish.startTime + " to "
+							+ currentDish.endTime);
 					alertLocationFail.setView(null);
 					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							
+
 						}
 					});
 					alertLocationFail.show();
-					
-					return ;
+
+					return;
 				}
-				
+
+				if (currentDish.quantity == 0) {
+					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
+					alertLocationFail.setTitle("Sorry");
+					alertLocationFail.setMessage("This is out of stock :(");
+					alertLocationFail.setView(null);
+					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+
+						}
+					});
+					alertLocationFail.show();
+
+					return;
+				}
+
 				if (currentDish.customizable) {
-					final Intent intentForModifier = new Intent(mContext,
-							ModifierActivity.class);
-					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID,
-							currentDish.id);
-					((MenuPhotoListActivity) mContext).startActivityForResult(
-							intentForModifier, MODIFIER_POPUP_REQUEST);
+					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
+					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
+					((MenuPhotoListActivity) mContext)
+							.startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
 				} else {
-					User.getInstance(mContext).currentSession.currentOrder
-							.addDish(currentDish);
-					final View parent = (View) view.getParent().getParent()
-							.getParent();
+					User.getInstance(mContext).currentSession.currentOrder.addDish(currentDish);
+					final View parent = (View) view.getParent().getParent().getParent();
 					TextView cornertext;
 					cornertext = (TextView) parent.findViewById(R.id.corner);
 					cornertext.setVisibility(View.VISIBLE);
-					cornertext.setText(String.valueOf(User
-							.getInstance(mContext).currentSession.currentOrder
+					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.currentOrder
 							.getTotalQuantity()));
-					Animation a = AnimationUtils.loadAnimation(mContext,
-							R.anim.scale_up);
+					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
 				}
 			}
@@ -157,8 +164,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		return MenuPhotoListActivity.isPhotoMode ? TYPE_PHOTO_ITEM
-				: TYPE_TEXT_ITEM;
+		return MenuPhotoListActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
 	}
 
 	@Override
@@ -175,6 +181,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 				photoViewHolder = new ListPhotoItemViewHolder();
 				photoViewHolder.imageView = (ImageView) convertView
 						.findViewById(R.id.menuitem);
+				photoViewHolder.overlay = (ImageView) convertView.findViewById(R.id.overlay);
 				photoViewHolder.textItemDesc = (TextView) convertView
 						.findViewById(R.id.itemdesc);
 				photoViewHolder.textItemPrice = (TextView) convertView
@@ -194,7 +201,12 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
 					.intoImageView(photoViewHolder.imageView);
-
+			if (currentDish.quantity <= 0) {
+				photoViewHolder.overlay.setVisibility(View.VISIBLE);
+			} else {
+				photoViewHolder.overlay.setVisibility(View.GONE);
+			}
+			
 			photoViewHolder.textItemName.setText(currentDish.name);
 			photoViewHolder.textItemDesc.setText(currentDish.description);
 			photoViewHolder.textItemPrice.setText(currentDish.price + "");
@@ -249,7 +261,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 	}
 
 	class ListPhotoItemViewHolder {
-		ImageView imageView;
+		ImageView imageView, overlay;
 		TextView textItemPrice, textItemName, textItemDesc;
 		ImageButton imageButton;
 	}
