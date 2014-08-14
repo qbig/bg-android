@@ -9,14 +9,18 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.ItemsActivity;
 import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.internal.cu;
 import com.koushikdutta.ion.Ion;
 
 public class MenuListViewAdapter extends BaseAdapter {
@@ -85,10 +90,25 @@ public class MenuListViewAdapter extends BaseAdapter {
 		mOrderDishButtonOnClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-			
+				
 				final Integer itemPosition = (Integer) view.getTag();
 				final DishModel currentDish = (DishModel) getItem(itemPosition
 						.intValue());
+				if (!currentDish.isServedNow()) {
+					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
+					alertLocationFail.setTitle("Sorry");
+					alertLocationFail.setMessage("This dish is only available from " + currentDish.startTime + " to " + currentDish.endTime);
+					alertLocationFail.setView(null);
+					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							
+						}
+					});
+					alertLocationFail.show();
+					
+					return ;
+				}
+				
 				if (currentDish.customizable) {
 					final Intent intentForModifier = new Intent(mContext,
 							ModifierActivity.class);
