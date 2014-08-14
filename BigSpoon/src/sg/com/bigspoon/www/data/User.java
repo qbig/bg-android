@@ -139,7 +139,7 @@ public class User {
 							return;
 						}
 
-						if (result == null) {
+						if (result == null || result.orders == null) {
 							User.getInstance(mContext).currentSession
 									.closeCurrentSession();
 						} else {

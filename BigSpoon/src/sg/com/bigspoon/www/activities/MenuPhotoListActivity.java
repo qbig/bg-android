@@ -118,7 +118,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		actionbar.setIcon(R.drawable.dummy_icon);
 		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText(R.string.menu_title);
+		title.setText(User.getInstance(this).currentOutlet.name);
 	}
 
 	private void setupHistoryButton() {

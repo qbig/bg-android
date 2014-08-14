@@ -92,6 +92,10 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 							final OutletDetailsModel outletDetails = OutletDetailsModel
 									.getInstanceFromJsonObject(result);
 							User.getInstance(getApplicationContext()).currentOutlet = outletDetails;
+							
+							final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+							title.setText(outletDetails.name);
+							
 							CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
 									outletDetails);
 							catrgoriesList.setAdapter(categoriesAdapter);
@@ -121,8 +125,6 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
-		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText(R.string.category_title);
 		final ImageButton togglebutton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
 		togglebutton.setVisibility(View.GONE);
 	}
