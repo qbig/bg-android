@@ -172,7 +172,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 						.getTag();
 			}
 
-			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnail)
+			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
 					.intoImageView(photoViewHolder.imageView);
 
 			photoViewHolder.textItemName.setText(currentDish.name);
