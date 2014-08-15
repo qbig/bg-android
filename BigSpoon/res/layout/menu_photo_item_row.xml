@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:paddingTop="4dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:paddingLeft="3dp"
     android:paddingRight="3dp"
-    android:background="@color/white">
+    android:paddingTop="4dp" >
 
     <ImageView
         android:id="@+id/menuitem"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:src="@drawable/fb_2"
-        android:scaleType="centerCrop" 
-        />
+        android:scaleType="centerCrop"
+        android:src="@drawable/fb_2" />
+
     <ImageView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:src="@drawable/out_of_stock"
-        android:scaleType="centerCrop" 
-        />
+        android:scaleType="centerCrop"
+        android:src="@drawable/out_of_stock" />
 
-          <!--    android:layout_alignParentBottom="true"
+    <!--
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:scaleType="fitXY" -->
+        android:scaleType="fitXY"
+    -->
 
     <ImageButton
         android:id="@+id/addbutton"
@@ -34,24 +35,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
-        android:paddingRight="15dp"
-        android:src="@drawable/add_btn_with_circle"
         android:background="@android:color/transparent"
-        />
+        android:paddingRight="15dp"
+        android:src="@drawable/add_btn_with_circle" />
 
-     <TextView
-            android:id="@+id/itemdesc"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignBottom="@+id/menuitem"
-            android:background="@drawable/text_background_gradient"
-            android:gravity="bottom"
-            android:paddingLeft="10dp"
-            android:text="Testing.....!!!!!!"
-            android:textColor="#514747"
-            android:paddingBottom="15dp"
-            android:textSize="11sp" />
-    
+    <TextView
+        android:id="@+id/itemdesc"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/menuitem"
+        android:background="@drawable/text_background_gradient"
+        android:gravity="bottom"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:text="Testing.....!!!!!!"
+        android:textColor="#514747"
+        android:textSize="11sp" />
+
     <TextView
         android:id="@+id/textitemprice"
         android:layout_width="wrap_content"
@@ -62,21 +62,20 @@
         android:paddingRight="10dp"
         android:text="TextView"
         android:textColor="@color/black"
-        android:textSize="16sp"
-         />
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textitemname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/itemdesc"
-            android:layout_alignTop="@+id/itemdesc"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/addbutton"
-            android:paddingLeft="10dp"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textStyle="italic"
-            android:textSize="11sp" />
+    <TextView
+        android:id="@+id/textitemname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/itemdesc"
+        android:layout_alignTop="@+id/itemdesc"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/addbutton"
+        android:paddingLeft="10dp"
+        android:text="TextView"
+        android:textColor="@color/black"
+        android:textSize="11sp"
+        android:textStyle="italic" />
 
 </RelativeLayout>
