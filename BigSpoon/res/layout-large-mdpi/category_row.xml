@@ -11,7 +11,14 @@
         android:layout_alignParentTop="true"
         android:paddingBottom="10dp"
         android:src="@drawable/shin_kushiya" />
-
+ <ImageView
+        android:id="@+id/category_list_restaurant_icon"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:src="@drawable/shin_kushiya" />
     <TextView
         android:id="@+id/categoryname"
         android:layout_width="wrap_content"

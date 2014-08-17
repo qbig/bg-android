@@ -3,20 +3,12 @@
     android:layout_height="fill_parent"
     android:background="@color/white" >
 
-    <ImageView
-        android:id="@+id/category_list_restaurant_icon"
-        android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:src="@drawable/shin_kushiya" />
+   
 
     <ListView
         android:id="@+id/category_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/category_list_restaurant_icon" >
+        android:layout_height="wrap_content" >
     </ListView>
 
     <ProgressBar

@@ -62,8 +62,6 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 			intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intentBackToOutlets);
 		} else {
-			final ImageView restaurantIcon = (ImageView) findViewById(R.id.category_list_restaurant_icon);
-			Ion.with(this).load(BASE_URL + outletIcon).intoImageView(restaurantIcon);
 
 			Ion.with(this).load(LIST_OUTLETS + "/" + outletId)
 					.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "xxx"))
@@ -97,7 +95,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 							title.setText(outletDetails.name);
 
 							CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
-									outletDetails);
+									outletDetails, outletIcon);
 							catrgoriesList.setAdapter(categoriesAdapter);
 						}
 					});
@@ -170,8 +168,11 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (position == 0) {
+			return;
+		}
 		Intent i = new Intent(getApplicationContext(), MenuPhotoListActivity.class);
-		i.putExtra(POS_FOR_CLICKED_CATEGORY, position);
+		i.putExtra(POS_FOR_CLICKED_CATEGORY, position - 1);
 		startActivity(i);
 	}
 }
