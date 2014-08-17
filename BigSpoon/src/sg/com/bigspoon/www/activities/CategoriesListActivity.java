@@ -82,8 +82,8 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 									} catch (JSONException e1) {
 										e1.printStackTrace();
 									}
-									User.getInstance(CategoriesListActivity.this).mMixpanel.track("Error with category list loading",
-											info);
+									User.getInstance(CategoriesListActivity.this).mMixpanel.track(
+											"Error with category list loading", info);
 								}
 								return;
 							}
@@ -92,10 +92,10 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 							final OutletDetailsModel outletDetails = OutletDetailsModel
 									.getInstanceFromJsonObject(result);
 							User.getInstance(getApplicationContext()).currentOutlet = outletDetails;
-							
+
 							final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 							title.setText(outletDetails.name);
-							
+
 							CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
 									outletDetails);
 							catrgoriesList.setAdapter(categoriesAdapter);
@@ -160,12 +160,10 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		homeBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (CategoriesListActivity.this.isTaskRoot()) {
-					Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
-					startActivity(intent);
-				} else {
-					finish();
-				}
+
+				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
 			}
 		});
 	}

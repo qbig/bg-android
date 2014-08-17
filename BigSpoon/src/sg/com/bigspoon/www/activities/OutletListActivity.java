@@ -1,16 +1,10 @@
 package sg.com.bigspoon.www.activities;
 
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +16,7 @@ import org.json.JSONObject;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OutletListAdapter;
 import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.OutletModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -222,13 +217,17 @@ public class OutletListActivity extends Activity {
 								outletSelected = outlets.get(position);
 								if (outletSelected.isActive) {
 									Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+									intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 									intent.putExtra(OUTLET_ID, outletSelected.outletID);
 
 									final Editor loginPrefEditor = loginPreferences.edit();
 									loginPrefEditor.putInt(OUTLET_ID, outletSelected.outletID);
 									loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
 									loginPrefEditor.commit();
-
+									final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
+									if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
+										User.getInstance(getApplicationContext()).currentSession.closeCurrentSession();
+									}
 									OutletListActivity.this.startActivity(intent);
 								} else {
 									showComingSoonDialog();

@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.EntryActivity;
+import sg.com.bigspoon.www.activities.TutorialActivity;
 import sg.com.bigspoon.www.fragments.TutorialScreenFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,7 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 		if (position == this.lastScreenIndex) {
 			Intent intent = new Intent(mContext, EntryActivity.class);
 			mContext.startActivity(intent);
+			((TutorialActivity) mContext).finish();
 		} 
 		
 		TutorialScreenFragment fragment = new TutorialScreenFragment();
