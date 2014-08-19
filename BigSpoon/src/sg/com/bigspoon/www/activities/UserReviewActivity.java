@@ -57,9 +57,9 @@ public class UserReviewActivity extends Activity {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
-			    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
-				
+				UserReviewActivity.this.finish();
 			}
 		});
 
@@ -70,8 +70,9 @@ public class UserReviewActivity extends Activity {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
-			    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
+				UserReviewActivity.this.finish();
 			}
 		});
 
@@ -131,6 +132,7 @@ public class UserReviewActivity extends Activity {
 								
 								return;
 							}
+							
 							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
 						}
 					});

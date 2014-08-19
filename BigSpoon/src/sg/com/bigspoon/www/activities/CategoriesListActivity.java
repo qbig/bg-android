@@ -172,6 +172,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 			return;
 		}
 		Intent i = new Intent(getApplicationContext(), MenuPhotoListActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra(POS_FOR_CLICKED_CATEGORY, position - 1);
 		startActivity(i);
 	}

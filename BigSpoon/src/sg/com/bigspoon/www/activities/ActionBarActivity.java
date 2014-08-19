@@ -124,7 +124,7 @@ public class ActionBarActivity extends FragmentActivity {
 					break;
 				case 3:
 					i = new Intent(ctx, ItemsActivity.class);
-					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(i);
 					break;
 				}
