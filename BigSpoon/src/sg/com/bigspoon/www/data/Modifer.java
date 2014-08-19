@@ -17,6 +17,7 @@ public class Modifer {
 	public String itemTitleColor;
 	public String backgroundColor;
 	public ModifierSection[] sections;
+	public boolean inited;
 	
 	public HashMap<String, Integer> getAnswer(){
 		final HashMap<String, Integer> result = new HashMap<String, Integer>();
@@ -29,6 +30,15 @@ public class Modifer {
 			}
 		}
 		return result;	
+	}
+	
+	public void initRadio() {
+		if (! inited) {
+			for( int i = 0, len = sections.length; i < len; i++){
+				sections[i].setDefaultAnswerForRadio();
+			}
+			inited = true;
+		}
 	}
 	
 	public void setAnswer(HashMap<String, Integer> answer){

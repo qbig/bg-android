@@ -34,6 +34,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	public ModifierListViewAdapter(Context context, Modifer model) {
 		super();
 		mContext = context;
+		model.initRadio();
 		mModifierModel = model;
 		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mScale = context.getResources().getDisplayMetrics().density;
