@@ -98,7 +98,7 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 					+ location.getAccuracy());
 			
 			broadcastUpdatedLocation(location);
-			if (location.getAccuracy() < TEN_METERS) {
+			if (location.getAccuracy() < TEN_METERS && User.getInstance(getApplicationContext()).tableId != -1) {
 				stopLocationUpdates();
 				Executors.newScheduledThreadPool(1).schedule(new Runnable() {
 					@Override

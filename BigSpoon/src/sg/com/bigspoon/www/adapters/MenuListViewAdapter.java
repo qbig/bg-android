@@ -202,6 +202,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
 					.intoImageView(photoViewHolder.imageView);
 			if (currentDish.quantity <= 0) {
+				photoViewHolder.overlay.setBackgroundResource(R.drawable.out_of_stock);
 				photoViewHolder.overlay.setVisibility(View.VISIBLE);
 			} else {
 				photoViewHolder.overlay.setVisibility(View.GONE);
