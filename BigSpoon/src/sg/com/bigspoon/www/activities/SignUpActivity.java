@@ -12,12 +12,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -35,90 +37,102 @@ public class SignUpActivity extends Activity {
 	EditText mSignupNameField;
 	EditText mSignupEmailField;
 	EditText mSignupPasswordField;
-	
+	final Handler mHandler = new Handler();
 	ImageButton mSignUpConfirmButton;
-	
+
 	private SharedPreferences.Editor loginPrefsEditor;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_SIGNUP, Log.DEBUG);
-		loginPrefsEditor = getSharedPreferences(PREFS_NAME,0).edit();
-		
+		loginPrefsEditor = getSharedPreferences(PREFS_NAME, 0).edit();
+
 		setContentView(R.layout.activity_sign_up);
 		mSignupNameField = (EditText) findViewById(R.id.signupFullName);
 		mSignupEmailField = (EditText) findViewById(R.id.signupEmail);
 		mSignupPasswordField = (EditText) findViewById(R.id.signupPassword);
-		
+
 		addSignupButtonHandler();
 	}
 
 	private void addSignupButtonHandler() {
 		mSignUpConfirmButton = (ImageButton) findViewById(R.id.signupButton);
-		mSignUpConfirmButton.setOnClickListener( new OnClickListener() {
+		mSignUpConfirmButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (isSignUpFieldsValid()){
+				if (isSignUpFieldsValid()) {
 					final JsonObject json = new JsonObject();
 					json.addProperty("first_name", mSignupNameField.getText().toString());
 					json.addProperty("email", mSignupEmailField.getText().toString());
 					json.addProperty("password", mSignupPasswordField.getText().toString());
-					
-					Ion.with(SignUpActivity.this)
-					.load(USER_SIGNUP)
-					.setHeader("Content-Type", "application/json; charset=utf-8")
-					.setJsonObjectBody(json)
-					.asJsonObject()
-					.setCallback(new FutureCallback<JsonObject>() {
-			            @Override
-			            public void onCompleted(Exception e, JsonObject result) {
-			                if (e != null) {
-			                	if (Constants.LOG) {
-			                		Toast.makeText(SignUpActivity.this, "Error signing up with emails", Toast.LENGTH_LONG).show();
-			                	} else {
-									final JSONObject info = new JSONObject();
-									try {
-										info.put("error", e.toString());
-										info.put("email", mSignupEmailField.getText().toString());
-									} catch (JSONException e1) {
-										e1.printStackTrace();
+
+					Ion.with(SignUpActivity.this).load(USER_SIGNUP)
+							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
+							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+								@Override
+								public void onCompleted(Exception e, JsonObject result) {
+									if (e != null) {
+										if (Constants.LOG) {
+											Toast.makeText(SignUpActivity.this, "Error signing up with emails",
+													Toast.LENGTH_LONG).show();
+										} else {
+											final JSONObject info = new JSONObject();
+											try {
+												info.put("error", e.toString());
+												info.put("email", mSignupEmailField.getText().toString());
+											} catch (JSONException e1) {
+												e1.printStackTrace();
+											}
+											User.getInstance(SignUpActivity.this).mMixpanel.track(
+													"Error signing up with emails", info);
+										}
+
+										return;
 									}
-									User.getInstance(SignUpActivity.this).mMixpanel.track("Error signing up with emails", info);
+									final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
+									if (email.contains("Enter a valid email address.")) {
+										new Thread() {
+											public void run() {
+												SignUpActivity.this.mHandler.post(new Runnable() {
+													public void run() {
+														Toast.makeText(SignUpActivity.this, "Please enter a valid email address.", Toast.LENGTH_LONG).show();
+													}
+												});
+											}
+										}.start();
+										return;
+									}
+
+									final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
+									final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+									final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+									final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+
+									loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
+									loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+									loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+									loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+									loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+									loginPrefsEditor.commit();
+
+									Intent intent = new Intent(SignUpActivity.this, OutletListActivity.class);
+									SignUpActivity.this.startActivity(intent);
+									SignUpActivity.this.finish();
 								}
-								
-			                    return;
-			                } 
-			                final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
-			                final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
-			                final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
-			                final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
-			                final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString(); 
-				            
-			                loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
-			                loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
-			                loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
-			                loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
-			                loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
-			                loginPrefsEditor.commit();
-			                
-				            Intent intent = new Intent(SignUpActivity.this, OutletListActivity.class);
-				   			SignUpActivity.this.startActivity(intent);
-				   			SignUpActivity.this.finish();
-			            }
-			        });
+							});
 				} else {
-					Toast.makeText(SignUpActivity.this, "Sorry, you need to fill up the forms", Toast.LENGTH_LONG).show();
+					Toast.makeText(SignUpActivity.this, "Sorry, you need to fill up the forms", Toast.LENGTH_LONG)
+							.show();
 				}
 			}
 		});
 	}
-	
+
 	private boolean isSignUpFieldsValid() {
-		return ! mSignupEmailField.getText().toString().isEmpty() &&
-				! mSignupNameField.getText().toString().isEmpty() &&
-				! mSignupPasswordField.getText().toString().isEmpty();
+		return !mSignupEmailField.getText().toString().isEmpty() && !mSignupNameField.getText().toString().isEmpty()
+				&& !mSignupPasswordField.getText().toString().isEmpty();
 	}
 
 	@Override
