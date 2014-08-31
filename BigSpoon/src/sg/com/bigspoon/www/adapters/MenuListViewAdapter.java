@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,11 +48,13 @@ public class MenuListViewAdapter extends BaseAdapter {
 	private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
 	private static final int TYPE_PHOTO_ITEM = 0;
 	private static final int TYPE_TEXT_ITEM = 1;
+	private Drawable outOfStockBackground;
 
 	public MenuListViewAdapter(Context context, final OutletDetailsModel outletInfo) {
 		super();
 		this.mOutletInfo = outletInfo;
 		this.mContext = context;
+		this.outOfStockBackground = context.getResources().getDrawable( R.drawable.out_of_stock);
 		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
 		initAddDishButtonListener();
 		initFilteredList();
@@ -202,9 +205,10 @@ public class MenuListViewAdapter extends BaseAdapter {
 			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
 					.intoImageView(photoViewHolder.imageView);
 			if (currentDish.quantity <= 0) {
-				photoViewHolder.overlay.setBackgroundResource(R.drawable.out_of_stock);
+				photoViewHolder.overlay.setBackgroundDrawable(this.outOfStockBackground);
 				photoViewHolder.overlay.setVisibility(View.VISIBLE);
 			} else {
+				photoViewHolder.overlay.setBackgroundResource(0);
 				photoViewHolder.overlay.setVisibility(View.GONE);
 			}
 			
