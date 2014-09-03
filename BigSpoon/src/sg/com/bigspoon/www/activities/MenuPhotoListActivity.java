@@ -182,6 +182,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
+		adapter.updateFilteredList();
 		adapter.notifyDataSetChanged();
 	}
 	

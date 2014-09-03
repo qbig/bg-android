@@ -57,22 +57,15 @@ public class MenuListViewAdapter extends BaseAdapter {
 		this.outOfStockBackground = context.getResources().getDrawable( R.drawable.out_of_stock);
 		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
 		initAddDishButtonListener();
-		initFilteredList();
-		addFilterObeserver();
+		updateFilteredList();
 	}
 
-	private void addFilterObeserver() {
-		this.registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				initFilteredList();
-				super.onChanged();
-			}
-		});
-	}
-
-	private void initFilteredList() {
+	public void updateFilteredList() {
 		mFilteredDishes = new ArrayList<DishModel>();
+		if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0){
+			return;
+		}
+		
 		for (int i = 0, len = mOutletInfo.dishes.length; i < len; i++) {
 			if (mOutletInfo.dishes[i].categories[0].id == mOutletInfo.categoriesDetails[mCurrentSelectedCategoryTabIndex].id) {
 				mFilteredDishes.add(mOutletInfo.dishes[i]);
