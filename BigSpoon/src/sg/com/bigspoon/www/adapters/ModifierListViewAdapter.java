@@ -99,8 +99,15 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			} else {
 				radioViewHolder = (RadioItemViewHolder) convertView.getTag(R.id.HOLDER);
 			}
-
-			final String itemName = mModifierModel.sections[section].items.keySet().toArray()[position].toString();
+			
+			String itemName = "";
+			for (String item : currentSectionModel.items.keySet()){
+				if (currentSectionModel.itemSequences.get(item).intValue() == position){
+					itemName= item;
+					break;
+				}
+			}
+			
 			radioViewHolder.itemNameView.setText(itemName);
 			final int answer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers.get(
 					itemName).intValue() : 0;
@@ -137,7 +144,13 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 				counterViewHolder = (CounterItemViewHolder) convertView.getTag(R.id.HOLDER);
 			}
 
-			final String itemName = mModifierModel.sections[section].items.keySet().toArray()[position].toString();
+			String itemName = "";
+			for (String item : currentSectionModel.items.keySet()){
+				if (currentSectionModel.itemSequences.get(item).intValue() == position){
+					itemName= item;
+					break;
+				}
+			}
 			final int counterAnswer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers
 					.get(itemName) : 0;
 			counterViewHolder.decreButton.setTag(R.id.ITEM_NAME, itemName);

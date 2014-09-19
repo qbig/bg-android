@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_COUNTER;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
+
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.LinkedTreeMap;
 
 public class ModifierSection {
@@ -17,6 +19,9 @@ public class ModifierSection {
 	public String type;
 	public String itemTitleDescription;
 	public LinkedHashMap<String, Double> items;
+	
+	@SerializedName("item-sequences")
+	public LinkedHashMap<String, Double> itemSequences;
 	public LinkedHashMap<String, Integer> answers;
 
 	public ModifierSection() {
@@ -25,7 +30,13 @@ public class ModifierSection {
 
 	public void setDefaultAnswerForRadio() {
 		if (type != null && type.equals(MODIFIER_SECTION_TYPE_RADIO) && ! items.isEmpty()) {
-			answers.put(items.keySet().iterator().next(), 1);
+			for (String itemName : this.items.keySet()){
+				if (this.itemSequences.get(itemName).intValue() == 0) {
+					answers.put(itemName, 1);
+					return;
+				}
+			}
+			
 		}
 	}
 
