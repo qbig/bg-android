@@ -577,7 +577,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		mBottomGridView = (GridView) findViewById(R.id.gv_action_menu);
 
-		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 4);
+		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(this, 3);
 		mBottomGridView.setAdapter(actionBarMenuAdapter);
 		mBottomGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -585,13 +585,27 @@ public class ItemsActivity extends ExpandableListActivity {
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 				Intent i = null;
 				switch (position) {
+//				case 0:
+//					if (User.getInstance(ItemsActivity.this).checkLocation()) {
+//						if (User.getInstance(ItemsActivity.this).tableId == -1) {
+//							int requestCode = WATER;
+//							setUpTablePopup(requestCode);
+//						} else {
+//							int requestCode = WATER;
+//							onTablePopupResult(requestCode);
+//						}
+//					} else {
+//						setUpLocationFailPopup();
+//						User.getInstance(ItemsActivity.this).tableId = -1;
+//					}
+//					break;
 				case 0:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						if (User.getInstance(ItemsActivity.this).tableId == -1) {
-							int requestCode = WATER;
+							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
-							int requestCode = WATER;
+							int requestCode = WAITER;
 							onTablePopupResult(requestCode);
 						}
 					} else {
@@ -602,10 +616,10 @@ public class ItemsActivity extends ExpandableListActivity {
 				case 1:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						if (User.getInstance(ItemsActivity.this).tableId == -1) {
-							int requestCode = WAITER;
+							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
-							int requestCode = WAITER;
+							int requestCode = BILL;
 							onTablePopupResult(requestCode);
 						}
 					} else {
@@ -614,20 +628,6 @@ public class ItemsActivity extends ExpandableListActivity {
 					}
 					break;
 				case 2:
-					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).tableId == -1) {
-							int requestCode = BILL;
-							setUpTablePopup(requestCode);
-						} else {
-							int requestCode = BILL;
-							onTablePopupResult(requestCode);
-						}
-					} else {
-						setUpLocationFailPopup();
-						User.getInstance(ItemsActivity.this).tableId = -1;
-					}
-					break;
-				case 3:
 					// i = new Intent(ctx, ItemsActivity.class);
 					// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					// startActivity(i);

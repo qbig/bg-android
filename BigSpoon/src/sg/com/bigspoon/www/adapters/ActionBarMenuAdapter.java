@@ -38,20 +38,6 @@ public class ActionBarMenuAdapter extends ArrayAdapter<String> {
 					.findViewById(R.id.grd_option_txt);
 			ImageView imageViewIte = (ImageView) row
 					.findViewById(R.id.grd_option_icon);
-
-//			if (position == 0) {
-//				textViewTitle.setText(options[position]);
-//				imageViewIte.setImageResource(icons[position]);
-//			} else if (position == 1) {
-//				textViewTitle.setText(options[position]);
-//				imageViewIte.setImageResource(icons[position]);
-//			}else if (position == 2) {
-//				textViewTitle.setText(options[position]);
-//				imageViewIte.setImageResource(icons[position]);
-//			}else if (position == 3) {
-//				textViewTitle.setText(options[position]);
-//				imageViewIte.setImageResource(icons[position]);
-//			}
 		}
 		return row;
 	}

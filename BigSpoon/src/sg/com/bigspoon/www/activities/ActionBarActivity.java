@@ -64,7 +64,7 @@ public class ActionBarActivity extends FragmentActivity {
 		gridView = (GridView) findViewById(R.id.gv_action_menu);
 		// Create the Custom Adapter Object
 		ActionBarMenuAdapter actionBarMenuAdapter = new ActionBarMenuAdapter(
-				this, 4);
+				this, 3);
 		// Set the Adapter to GridView
 		gridView.setAdapter(actionBarMenuAdapter);
 
@@ -76,14 +76,30 @@ public class ActionBarActivity extends FragmentActivity {
 					long arg3) {
 				Intent i = null;
 				switch (position) {
+//				case 0:
+//					if (User.getInstance(ActionBarActivity.this)
+//							.checkLocation()) {
+//						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
+//							int requestCode = WATER;
+//							setUpTablePopup(requestCode);
+//						} else {
+//							int requestCode = WATER;
+//							onTablePopupResult(requestCode);
+//						}
+//					} else {
+//						setUpLocationFailPopup();
+//						User.getInstance(ActionBarActivity.this).tableId = -1;
+//					}
+//					break;
+
 				case 0:
 					if (User.getInstance(ActionBarActivity.this)
 							.checkLocation()) {
 						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
-							int requestCode = WATER;
+							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
-							int requestCode = WATER;
+							int requestCode = WAITER;
 							onTablePopupResult(requestCode);
 						}
 					} else {
@@ -91,15 +107,14 @@ public class ActionBarActivity extends FragmentActivity {
 						User.getInstance(ActionBarActivity.this).tableId = -1;
 					}
 					break;
-
 				case 1:
 					if (User.getInstance(ActionBarActivity.this)
 							.checkLocation()) {
 						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
-							int requestCode = WAITER;
+							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
-							int requestCode = WAITER;
+							int requestCode = BILL;
 							onTablePopupResult(requestCode);
 						}
 					} else {
@@ -108,21 +123,6 @@ public class ActionBarActivity extends FragmentActivity {
 					}
 					break;
 				case 2:
-					if (User.getInstance(ActionBarActivity.this)
-							.checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
-							int requestCode = BILL;
-							setUpTablePopup(requestCode);
-						} else {
-							int requestCode = BILL;
-							onTablePopupResult(requestCode);
-						}
-					} else {
-						setUpLocationFailPopup();
-						User.getInstance(ActionBarActivity.this).tableId = -1;
-					}
-					break;
-				case 3:
 					i = new Intent(ctx, ItemsActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(i);
