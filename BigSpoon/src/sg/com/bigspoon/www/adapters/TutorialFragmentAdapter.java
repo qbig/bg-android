@@ -16,7 +16,8 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 		IconPagerAdapter {
 	
 	private Context mContext;
-	private final int tutScreenLayouts[] = { R.layout.activity_tutorial_screen1,
+	private final int tutScreenLayouts[] = { 
+			R.layout.activity_tutorial_screen1,
 			R.layout.activity_tutorial_screen2,
 			R.layout.activity_tutorial_screen3,
 			R.layout.activity_tutorial_screen4,
