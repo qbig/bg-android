@@ -31,12 +31,13 @@ public class ModifierSection {
 	public void setDefaultAnswerForRadio() {
 		if (type != null && type.equals(MODIFIER_SECTION_TYPE_RADIO) && ! items.isEmpty()) {
 			for (String itemName : this.items.keySet()){
-				if (this.itemSequences.get(itemName).intValue() == 0) {
+				if (this.itemSequences != null && this.itemSequences.get(itemName).intValue() == 0) {
 					answers.put(itemName, 1);
 					return;
 				}
 			}
 			
+			answers.put(items.keySet().iterator().next(), 1);
 		}
 	}
 

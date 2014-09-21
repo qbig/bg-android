@@ -86,7 +86,7 @@ public class ModifierActivity extends Activity {
 		mFooter = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
 		mModifierListView.addFooterView(mFooter);
 
-		mModifierListView.getRootView().setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor));
+		mModifierListView.getRootView().setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class ModifierActivity extends Activity {
 	private void setTitleColor() {
 		mTitle = (TextView) mActionBarView.findViewById(R.id.title);
 		mTitle.setText(mSelectedDish.name);
-		mTitle.setTextColor(Color.parseColor(mSelectedDish.modifier.itemTextColor));
+		mTitle.setTextColor(Color.parseColor(mSelectedDish.modifier.itemTextColor.trim()));
 	}
 
 	private void setupTopActionBar() {

@@ -102,10 +102,13 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			
 			String itemName = "";
 			for (String item : currentSectionModel.items.keySet()){
-				if (currentSectionModel.itemSequences.get(item).intValue() == position){
+				if (currentSectionModel.itemSequences != null && currentSectionModel.itemSequences.get(item).intValue() == position){
 					itemName= item;
 					break;
 				}
+			}
+			if (itemName.isEmpty()){
+				itemName = (String) currentSectionModel.items.keySet().toArray()[position];
 			}
 			
 			radioViewHolder.itemNameView.setText(itemName);
@@ -151,6 +154,10 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 					break;
 				}
 			}
+			if (itemName.isEmpty()){
+				itemName = (String) currentSectionModel.items.keySet().toArray()[position];
+			}
+			
 			final int counterAnswer = currentSectionModel.answers.containsKey(itemName) ? currentSectionModel.answers
 					.get(itemName) : 0;
 			counterViewHolder.decreButton.setTag(R.id.ITEM_NAME, itemName);
@@ -249,9 +256,9 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			layout = (LinearLayout) convertView;
 		}
 		((TextView) layout.findViewById(R.id.maintitle)).setText(mModifierModel.sections[section].itemTitle);
-		((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor(mModifierModel.itemTitleColor));
+		((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor(mModifierModel.itemTitleColor.trim()));
 		((TextView) layout.findViewById(R.id.subtitle)).setText(mModifierModel.sections[section].itemTitleDescription);
-		((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor(mModifierModel.itemTextColor));
+		((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
 		return layout;
 	}
 
