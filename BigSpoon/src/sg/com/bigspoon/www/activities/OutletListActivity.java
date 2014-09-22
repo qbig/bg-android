@@ -227,7 +227,7 @@ public class OutletListActivity extends Activity {
 									loginPrefEditor.commit();
 									final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
 									if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
-										User.getInstance(getApplicationContext()).currentSession.closeCurrentSession();
+										User.getInstance(getApplicationContext()).currentSession.swithToOulet(outletSelected.name);
 									}
 									OutletListActivity.this.startActivity(intent);
 								} else {
@@ -304,7 +304,7 @@ public class OutletListActivity extends Activity {
 		}
 
 		this.doubleBackToExitPressedOnce = true;
-		Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_SHORT).show();
 
 		new Handler().postDelayed(new Runnable() {
 

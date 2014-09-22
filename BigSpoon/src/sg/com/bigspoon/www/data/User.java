@@ -46,10 +46,13 @@ public class User {
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());
-		currentSession = new DiningSession();
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
 	}
-
+	
+	public void startSession(String currentOutletName) {
+		this.currentSession = new DiningSession(currentOutletName);
+	}
+	
 	public Boolean checkLocation() {
 
 		if (currentLocation == null) {
@@ -92,7 +95,11 @@ public class User {
 	}
 
 	public void checkThrough(RetrievedOrder updatedOrder) {
-		final Order existingOrder = currentSession.pastOrder;
+		if (currentSession == null) {
+			this.startSession(updatedOrder.outlet.name);
+		}
+		
+		final Order existingOrder = currentSession.getPastOrder();
 		boolean changed = false;
 		for (int i = 0, len = updatedOrder.orders.length; i < len; i++) {
 			OrderItem item = updatedOrder.orders[i];
@@ -103,7 +110,7 @@ public class User {
 		}
 
 		if (changed) {
-			currentSession.pastOrder = updatedOrder.toOrder();
+			currentSession.setPastOrder(updatedOrder.toOrder());
 			Intent intent = new Intent(NOTIF_ORDER_UPDATE);
 			LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 		}
@@ -136,7 +143,9 @@ public class User {
 						}
 
 						if (result == null || result.orders == null) {
-							User.getInstance(mContext).currentSession.closeCurrentSession();
+							if (User.getInstance(mContext).currentSession != null){
+								User.getInstance(mContext).currentSession.closeCurrentSession();
+							}
 						} else {
 							User.getInstance(mContext).checkThrough(result);
 						}

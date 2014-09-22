@@ -188,15 +188,15 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void updatePriceLabels() {
 		final DiningSession session = User.getInstance(this).currentSession;
 		
-		mCurrentSubTotalValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice()));
-		mCurrentServiceChargeValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate));
-		mCurrentGSTValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() * mCurrentOutlet.gstRate));
-		mCurrentTotalValue.setText(String.format("%.2f", session.currentOrder.getTotalPrice() + session.currentOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.currentOrder.getTotalPrice() * mCurrentOutlet.gstRate));
+		mCurrentSubTotalValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice()));
+		mCurrentServiceChargeValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mCurrentGSTValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mCurrentTotalValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
 		
-		mOrderredSubTotalValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice()));
-		mOrderredServiceChargeValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate));
-		mOrderredGSTValue.setText(String.format("%.2f", session.pastOrder.getTotalPrice() * mCurrentOutlet.gstRate));
-		mOrderredTotalValue.setText(String.format("%.2f",  session.pastOrder.getTotalPrice() + session.pastOrder.getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.pastOrder.getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredSubTotalValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice()));
+		mOrderredServiceChargeValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mOrderredGSTValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredTotalValue.setText(String.format("%.2f",  session.getPastOrder().getTotalPrice() + session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void setupPlacedOrderListView() {
 		mPastOrderList = (ListView) findViewById(R.id.listOfOrderPlaced);
-		mPastOrderAdapter = new PastOrdersAdapter(this, User.getInstance(this).currentSession.pastOrder.mItems);
+		mPastOrderAdapter = new PastOrdersAdapter(this, User.getInstance(this).currentSession.getPastOrder().mItems);
 		mPastOrderList.setAdapter(mPastOrderAdapter);
 	}
 
@@ -238,7 +238,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					toggleAddNoteState();
 				}
 
-				if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.isEmpty()) {
+				if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.isEmpty()) {
 					showNoOrderPopup();
 				} else {
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
@@ -265,8 +265,8 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	protected void checkIfContainDessert() {
-		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
-			if (User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.categories[0].id == DESSERT_CATEGORY_ID) {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
+			if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.get(i).dish.categories[0].id == DESSERT_CATEGORY_ID) {
 				User.getInstance(ItemsActivity.this).isContainDessert = true;
 			}
 		}
@@ -275,7 +275,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void performSendOrderRequest() {
 
-		final Order currentOrder = User.getInstance(this).currentSession.currentOrder;
+		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId))
@@ -331,14 +331,14 @@ public class ItemsActivity extends ExpandableListActivity {
 		textTitle.setTypeface(null, Typeface.BOLD);
 		layoutholder.addView(textTitle);
 
-		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+		for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
 			final FrameLayout childLayout = new FrameLayout(getBaseContext());
 			final TextView textNumber = new TextView(getBaseContext());
 			final FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
 					FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 			params2.setMargins(padding_10dp, 0, 0, 0);
 			textNumber.setLayoutParams(params2);
-			textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.currentOrder
+			textNumber.setText(Integer.toString(User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder()
 					.getQuantityOfDishByIndex(i)));
 			textNumber.setTextColor(getResources().getColor(android.R.color.black));
 			childLayout.addView(textNumber);
@@ -358,7 +358,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			params4.setMargins(padding_35dp, 0, padding_15dp, 0);
 			params4.gravity = Gravity.RIGHT;
 			itemName.setLayoutParams(params4);
-			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.get(i).dish.name);
+			itemName.setText(User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.get(i).dish.name);
 			itemName.setTextColor(getResources().getColor(android.R.color.black));
 			itemName.setTextSize(12);
 			childLayout.addView(itemName);
@@ -378,9 +378,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				performSendOrderRequest();
-				User.getInstance(ItemsActivity.this).currentSession.pastOrder.mergeWithAnotherOrder(User
-						.getInstance(ItemsActivity.this).currentSession.currentOrder);
-				User.getInstance(ItemsActivity.this).currentSession.currentOrder = new Order();
+				User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
+						.getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
+				User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
 				User.getInstance(ItemsActivity.this).isContainDessert = false;
 				Toast.makeText(getApplicationContext(),
 						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
@@ -472,12 +472,12 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void toggleAddNoteState() {
 		if (!isExpanded) {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
 				mExpandableList.expandGroup(i, true);
 				isExpanded = true;
 			}
 		} else {
-			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.currentOrder.mItems.size(); i++) {
+			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
 				mExpandableList.collapseGroup(i);
 				isExpanded = false;
 			}
@@ -495,9 +495,9 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void updateOrderedDishCounter() {
-		if (User.getInstance(this).currentSession.currentOrder.getTotalQuantity() != 0) {
+		if (User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity() != 0) {
 			orderCounterText.setVisibility(View.VISIBLE);
-			orderCounterText.setText(User.getInstance(this).currentSession.currentOrder.getTotalQuantity() + "");
+			orderCounterText.setText(User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity() + "");
 		} else {
 			orderCounterText.setVisibility(View.GONE);
 		}
@@ -708,7 +708,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alertTakeAway.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Takeaway: "
+				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Takeaway: "
 						+ textTime.getText() + ", " + "phone: " + textPhoneNumber.getText();
 				if (textTime.getText().toString() == null || textTime.getText().toString().equals("")
 						|| textPhoneNumber.getText().toString().equals("")
@@ -780,13 +780,13 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		alert.setButton2("Now", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Serve dessert now";
+				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Serve dessert now";
 				showOrderDetailsPopup();
 			}
 		});
 		alert.setButton("Serve later", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(ItemsActivity.this).currentSession.currentOrder.mGeneralNote = "Serve dessert later";
+				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Serve dessert later";
 				showOrderDetailsPopup();
 			}
 		});

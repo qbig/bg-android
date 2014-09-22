@@ -23,7 +23,7 @@ public class PastOrdersAdapter extends ArrayAdapter<OrderItem> {
 
 	@Override
 	public int getCount() {
-		return User.getInstance(mContext).currentSession.pastOrder.mItems
+		return User.getInstance(mContext).currentSession.getPastOrder().mItems
 				.size();
 
 	}
@@ -42,22 +42,22 @@ public class PastOrdersAdapter extends ArrayAdapter<OrderItem> {
 				.findViewById(R.id.subTitle);
 		modifierSubTitle.setVisibility(View.GONE);
 
-		if (User.getInstance(mContext).currentSession.pastOrder.mItems
+		if (User.getInstance(mContext).currentSession.getPastOrder().mItems
 				.get(position).dish.customizable) {
 			modifierSubTitle.setVisibility(View.VISIBLE);
-			final String test = User.getInstance(mContext).currentSession.pastOrder
+			final String test = User.getInstance(mContext).currentSession.getPastOrder()
 					.getModifierDetailsTextAtIndex(position);
 			modifierSubTitle.setText(test);
 		}
 
 		numberView
-				.setText(Integer.toString(User.getInstance(mContext).currentSession.pastOrder
+				.setText(Integer.toString(User.getInstance(mContext).currentSession.getPastOrder()
 						.getQuantityOfDishByIndex(position)));
 		itemdescView
-				.setText(User.getInstance(mContext).currentSession.pastOrder.mItems
+				.setText(User.getInstance(mContext).currentSession.getPastOrder().mItems
 						.get(position).dish.name);
 		priceView
-				.setText(Double.toString(User.getInstance(mContext).currentSession.pastOrder.mItems
+				.setText(Double.toString(User.getInstance(mContext).currentSession.getPastOrder().mItems
 						.get(position).dish.price));
 
 		return rowView;

@@ -47,7 +47,7 @@ public class UserReviewActivity extends Activity {
 				"Request for bill is submitted, the waiter will be right with you.",
 				Toast.LENGTH_LONG).show();
 		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
-		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.pastOrder.mItems.size()];
+		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.getPastOrder().mItems.size()];
 
 		Button cancel = (Button) findViewById(R.id.button1);
 		Button submit = (Button) findViewById(R.id.button2);
@@ -78,7 +78,7 @@ public class UserReviewActivity extends Activity {
 
 		list = (ListView) findViewById(R.id.ratingList);
 		CustomListOfUserReview adapter = new CustomListOfUserReview(this,
-				User.getInstance(this).currentSession.pastOrder.mItems);
+				User.getInstance(this).currentSession.getPastOrder().mItems);
 		list.setAdapter(adapter);
 
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,7 +94,7 @@ public class UserReviewActivity extends Activity {
 
 	private void performRatingSubmission() {
 		float sum = 0;
-		Order submittingOrder = User.getInstance(this).currentSession.pastOrder;
+		Order submittingOrder = User.getInstance(this).currentSession.getPastOrder();
 		for (int i = 0, len = UserReviewActivity.ratingsArray.length; i < len; i++) {
 			sum += UserReviewActivity.ratingsArray[i];
 		}

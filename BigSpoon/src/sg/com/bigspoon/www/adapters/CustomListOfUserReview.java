@@ -27,7 +27,7 @@ public class CustomListOfUserReview extends ArrayAdapter<OrderItem> {
 
 	@Override
 	public int getCount() {
-		return User.getInstance(mContext).currentSession.pastOrder.mItems
+		return User.getInstance(mContext).currentSession.getPastOrder().mItems
 				.size();
 
 	}
@@ -40,7 +40,7 @@ public class CustomListOfUserReview extends ArrayAdapter<OrderItem> {
 		TextView itemName = (TextView) rowView
 				.findViewById(R.id.list_review_text);
 
-		itemName.setText(User.getInstance(mContext).currentSession.pastOrder.mItems
+		itemName.setText(User.getInstance(mContext).currentSession.getPastOrder().mItems
 				.get(position).dish.name);
 		final RatingBar ratingBar = (RatingBar) rowView.findViewById(R.id.ratingBar);
 		ratingBar.setOnRatingBarChangeListener( new OnRatingBarChangeListener() {

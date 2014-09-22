@@ -149,7 +149,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 
 			String itemName = "";
 			for (String item : currentSectionModel.items.keySet()){
-				if (currentSectionModel.itemSequences.get(item).intValue() == position){
+				if (currentSectionModel.itemSequences != null && currentSectionModel.itemSequences.get(item).intValue() == position){
 					itemName= item;
 					break;
 				}

@@ -52,13 +52,13 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		final EditText addNoteField = (EditText) convertView.findViewById(R.id.editText1);
 		addNoteField.setTag(groupPosition);
 
-		addNoteField.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).note);
+		addNoteField.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).note);
 		addNoteField.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
 					final int itemIndex = ((Integer) v.getTag()).intValue();
-					if (User.getInstance(mContext).currentSession.currentOrder.mItems.size() - 1 >= itemIndex) {
-						User.getInstance(mContext).currentSession.currentOrder.mItems.get(itemIndex).note = ((EditText) v)
+					if (User.getInstance(mContext).currentSession.getCurrentOrder().mItems.size() - 1 >= itemIndex) {
+						User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(itemIndex).note = ((EditText) v)
 								.getText().toString();
 					}
 				}
@@ -79,13 +79,13 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		final TextView numberView = (TextView) convertView.findViewById(R.id.quantitytxt);
 		final TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
 		final TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
-		final DishModel dish = User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish;
-		numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.currentOrder
+		final DishModel dish = User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish;
+		numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.getCurrentOrder()
 				.getQuantityOfDishByIndex(groupPosition)));
 		itemdescView
-				.setText(User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.name);
+				.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish.name);
 		if (dish.customizable) {
-			priceView.setText(Double.toString(User.getInstance(mContext).currentSession.currentOrder
+			priceView.setText(Double.toString(User.getInstance(mContext).currentSession.getCurrentOrder()
 					.getModifierPriceChangeAtIndex(groupPosition) + dish.price));
 		} else {
 			priceView.setText(Double.toString(dish.price));
@@ -94,9 +94,9 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
 		modifierSubTitle.setVisibility(View.GONE);
 
-		if (User.getInstance(mContext).currentSession.currentOrder.mItems.get(groupPosition).dish.customizable) {
+		if (User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish.customizable) {
 			modifierSubTitle.setVisibility(View.VISIBLE);
-			modifierSubTitle.setText(User.getInstance(mContext).currentSession.currentOrder
+			modifierSubTitle.setText(User.getInstance(mContext).currentSession.getCurrentOrder()
 					.getModifierDetailsTextAtIndex(groupPosition));
 		}
 
@@ -105,11 +105,11 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		minusButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) > 0) {
-					User.getInstance(mContext).currentSession.currentOrder.decrementDishAtIndex(groupPosition);
+				if (User.getInstance(mContext).currentSession.getCurrentOrder().getQuantityOfDishByIndex(groupPosition) > 0) {
+					User.getInstance(mContext).currentSession.getCurrentOrder().decrementDishAtIndex(groupPosition);
 				}
-				if (User.getInstance(mContext).currentSession.currentOrder.getQuantityOfDishByIndex(groupPosition) == 0) {
-					User.getInstance(mContext).currentSession.currentOrder.removeDishAtIndex(groupPosition);
+				if (User.getInstance(mContext).currentSession.getCurrentOrder().getQuantityOfDishByIndex(groupPosition) == 0) {
+					User.getInstance(mContext).currentSession.getCurrentOrder().removeDishAtIndex(groupPosition);
 				}
 				notifyDataSetChanged();
 				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
@@ -130,7 +130,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, dish.id);
 					((ItemsActivity) mContext).startActivity(intentForModifier);
 				} else {
-					User.getInstance(mContext).currentSession.currentOrder.incrementDishAtIndex(groupPosition);
+					User.getInstance(mContext).currentSession.getCurrentOrder().incrementDishAtIndex(groupPosition);
 
 					notifyDataSetChanged();
 					Intent intent = new Intent(NOTIF_ORDER_UPDATE);
@@ -164,7 +164,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getGroupCount() {
-		return User.getInstance(mContext).currentSession.currentOrder.mItems.size();
+		return User.getInstance(mContext).currentSession.getCurrentOrder().mItems.size();
 	}
 
 	@Override

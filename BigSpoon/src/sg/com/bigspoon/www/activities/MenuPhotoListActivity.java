@@ -75,7 +75,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	}
 
 	private void updateOrderedDishCounter() {
-		final int orderCount = User.getInstance(this).currentSession.currentOrder.getTotalQuantity();
+		final int orderCount = User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity();
 		if (orderCount != 0) {
 			mOrderedDishCounterText.setVisibility(View.VISIBLE);
 			mOrderedDishCounterText.setText(String.valueOf(orderCount));

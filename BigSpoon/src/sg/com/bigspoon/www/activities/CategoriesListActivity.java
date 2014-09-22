@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.CategoriesAdapter;
 import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -89,7 +90,14 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 							final OutletDetailsModel outletDetails = OutletDetailsModel
 									.getInstanceFromJsonObject(result);
-							User.getInstance(getApplicationContext()).currentOutlet = outletDetails;
+							final User user = User.getInstance(getApplicationContext());
+							
+							if (user.currentSession == null){
+								user.startSession(outletDetails.name);
+							}
+							
+							user.currentSession.getCurrentOrder(outletDetails.name);
+							user.currentOutlet = outletDetails;
 
 							final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 							title.setText(outletDetails.name);

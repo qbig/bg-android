@@ -124,12 +124,12 @@ public class MenuListViewAdapter extends BaseAdapter {
 					((MenuPhotoListActivity) mContext)
 							.startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
 				} else {
-					User.getInstance(mContext).currentSession.currentOrder.addDish(currentDish);
+					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
 					final View parent = (View) view.getParent().getParent().getParent();
 					TextView cornertext;
 					cornertext = (TextView) parent.findViewById(R.id.corner);
 					cornertext.setVisibility(View.VISIBLE);
-					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.currentOrder
+					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
 							.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);

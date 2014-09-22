@@ -52,7 +52,7 @@ public class OrderHistoryDetailsActivity extends Activity {
 				final User user = User
 						.getInstance(OrderHistoryDetailsActivity.this);
 				if (user.currentOutlet.outletID == selectedItem.outlet.id) {
-					user.currentSession.currentOrder
+					user.currentSession.getCurrentOrder()
 							.mergeWithAnotherOrder(selectedItem.toOrder());
 				}
 				final Intent intent = new Intent(

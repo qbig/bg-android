@@ -63,7 +63,7 @@ public class ModifierActivity extends Activity {
 		mOkayButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				setResult(RESULT_OK);
-				User.getInstance(ModifierActivity.this).currentSession.currentOrder.addDish(mSelectedDish);
+				User.getInstance(ModifierActivity.this).currentSession.getCurrentOrder().addDish(mSelectedDish);
 				finish();
 			}
 		});
