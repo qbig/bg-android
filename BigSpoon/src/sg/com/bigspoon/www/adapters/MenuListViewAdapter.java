@@ -182,6 +182,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 						.findViewById(R.id.itemdesc);
 				photoViewHolder.textItemPrice = (TextView) convertView
 						.findViewById(R.id.textitemprice);
+				photoViewHolder.textItemPrice.bringToFront();
 				photoViewHolder.textItemName = (TextView) convertView
 						.findViewById(R.id.textitemname);
 				photoViewHolder.imageButton = (ImageButton) convertView
