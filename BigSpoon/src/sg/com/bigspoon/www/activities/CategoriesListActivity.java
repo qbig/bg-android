@@ -158,14 +158,21 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		homeBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
 				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
 		});
 	}
-
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		super.onBackPressed();
+	}
+	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (position == 0) {

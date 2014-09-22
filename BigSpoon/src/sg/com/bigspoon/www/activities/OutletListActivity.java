@@ -89,14 +89,15 @@ public class OutletListActivity extends Activity {
 
 	private void setupHistoryButton() {
 		orderHistoryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-		orderHistoryButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-				intent.putExtra("callingActivityName", "OutletListActivity");
-				startActivity(intent);
-			}
-		});
+		orderHistoryButton.setVisibility(View.INVISIBLE);
+//		orderHistoryButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+//				intent.putExtra("callingActivityName", "OutletListActivity");
+//				startActivity(intent);
+//			}
+//		});
 	}
 
 	private void setupLogoutButton() {

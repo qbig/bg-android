@@ -161,8 +161,8 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void setupPriceLabels() {
 		
-		final String serviceChargeLabelString = "Service Charge(" + mCurrentOutlet.serviceChargeRate + "%)";
-		final String GSTChargeLabelString = "GST (" + mCurrentOutlet.gstRate + "%) :";
+		final String serviceChargeLabelString = "Service Charge(" + (int) (mCurrentOutlet.serviceChargeRate * 100) + "%)";
+		final String GSTChargeLabelString = "GST (" + (int) (mCurrentOutlet.gstRate * 100) + "%) :";
 		
 		mCurrentSubTotalValue = (TextView) findViewById(R.id.textView2);
 		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.textView3);
@@ -514,6 +514,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		
+		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+		title.setText(User.getInstance(this).currentOutlet.name);
 
 		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
 		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
