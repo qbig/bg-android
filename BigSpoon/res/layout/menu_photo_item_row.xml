@@ -38,10 +38,10 @@
         android:layout_height="30dp"
         android:layout_alignBottom="@+id/menuitem"
         android:background="@drawable/text_background_gradient"
-        android:gravity="bottom"
-        android:paddingBottom="0dp"
+        android:gravity="top"
+        android:paddingTop="0dp"
         android:paddingLeft="10dp"
-        android:textColor="#6D6D6D"
+        android:textColor="#575757"
         android:textSize="11sp" />
 
     <TextView
