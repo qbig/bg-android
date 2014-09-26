@@ -118,6 +118,7 @@ public class SignUpActivity extends Activity {
 									loginPrefsEditor.commit();
 
 									Intent intent = new Intent(SignUpActivity.this, OutletListActivity.class);
+									intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 									SignUpActivity.this.startActivity(intent);
 									SignUpActivity.this.finish();
 								}

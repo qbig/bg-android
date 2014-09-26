@@ -47,6 +47,7 @@ public class LaunchActivity extends Activity {
             
             private void startOutletActivity() {
 				Intent i = new Intent(LaunchActivity.this, OutletListActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 			}
             

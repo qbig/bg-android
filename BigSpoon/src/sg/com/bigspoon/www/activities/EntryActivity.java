@@ -58,8 +58,7 @@ public class EntryActivity extends Activity {
 	ProgressBar progressBar;
 	private boolean doubleBackToExitPressedOnce;
 	private Session.StatusCallback fbStatusCallback = new Session.StatusCallback() {
-		public void call(Session session, SessionState state,
-				Exception exception) {
+		public void call(Session session, SessionState state, Exception exception) {
 			updateAccordingToFBSessionChange();
 		}
 	};
@@ -69,22 +68,19 @@ public class EntryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
-		Ion.getDefault(this).configure()
-				.setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
+		Ion.getDefault(this).configure().setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPreferences.edit();
-		
-		mMixpanel =
-			    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+
+		mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 		initFBSession(savedInstanceState);
 		addListenerOnButtonLogin();
 		addListenerOnButtonSignUp();
 		addListenerOnButtonFBSignUp();
 		updateAccordingToFBSessionChange();
-		
+
 		firstTimeStartingApp = true;
-		final boolean hasShownTutorial = loginPreferences.getBoolean(
-				TUTORIAL_SET, false);
+		final boolean hasShownTutorial = loginPreferences.getBoolean(TUTORIAL_SET, false);
 		if (!hasShownTutorial) {
 			((BigSpoon) getApplication()).checkLocationEnabledByForce();
 		} else {
@@ -96,16 +92,14 @@ public class EntryActivity extends Activity {
 		Session session = Session.getActiveSession();
 		if (session == null) {
 			if (savedInstanceState != null) {
-				session = Session.restoreSession(this, null, fbStatusCallback,
-						savedInstanceState);
+				session = Session.restoreSession(this, null, fbStatusCallback, savedInstanceState);
 			}
 			if (session == null) {
 				session = new Session(this);
 			}
 			Session.setActiveSession(session);
 			if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-				session.openForRead(new Session.OpenRequest(this)
-						.setCallback(fbStatusCallback));
+				session.openForRead(new Session.OpenRequest(this).setCallback(fbStatusCallback));
 			}
 		}
 	}
@@ -116,56 +110,40 @@ public class EntryActivity extends Activity {
 			progressBar.setVisibility(View.VISIBLE);
 			final JsonObject json = new JsonObject();
 			json.addProperty("access_token", session.getAccessToken());
-			Ion.with(this)
-					.load(USER_LOGIN_WITH_FB)
-					.setHeader("Content-Type",
-							"application/json; charset=utf-8")
-					.setJsonObjectBody(json).asJsonObject()
-					.setCallback(new FutureCallback<JsonObject>() {
+			Ion.with(this).load(USER_LOGIN_WITH_FB).setHeader("Content-Type", "application/json; charset=utf-8")
+					.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 						@Override
 						public void onCompleted(Exception e, JsonObject result) {
 							if (e != null) {
 								if (Constants.LOG) {
-									Toast.makeText(EntryActivity.this,
-											"Error login with FB",
-											Toast.LENGTH_LONG).show();
+									Toast.makeText(EntryActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
 								} else {
 									final JSONObject errorJson = new JSONObject();
 									try {
 										final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
 										errorJson.put(email, e.toString());
-										User.getInstance(EntryActivity.this).mMixpanel.registerSuperPropertiesOnce(errorJson);
+										User.getInstance(EntryActivity.this).mMixpanel
+												.registerSuperPropertiesOnce(errorJson);
 									} catch (JSONException e1) {
 										e1.printStackTrace();
 									}
 								}
 								return;
 							}
-							final String email = result.get(LOGIN_INFO_EMAIL)
-									.getAsString();
-							final String lastName = result.get(
-									LOGIN_INFO_LAST_NAME).getAsString();
-							final String firstName = result.get(
-									LOGIN_INFO_FIRST_NAME).getAsString();
-							final String authToken = result.get(
-									LOGIN_INFO_AUTHTOKEN).getAsString();
-							final String avatarUrl = result.get(
-									LOGIN_INFO_AVATAR_URL).getAsString();
-							
-							
+							final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
+							final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
+							final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+							final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+							final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+
 							loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
-							loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME,
-									lastName);
-							loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME,
-									firstName);
-							loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN,
-									authToken);
-							loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL,
-									avatarUrl);
+							loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+							loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+							loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+							loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
 							loginPrefsEditor.commit();
-							
-							mMixpanel =
-								    MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+
+							mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 							JSONObject firstTime = new JSONObject();
 							try {
 								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
@@ -174,8 +152,8 @@ public class EntryActivity extends Activity {
 							} catch (JSONException e1) {
 								e1.printStackTrace();
 							}
-							Intent intent = new Intent(EntryActivity.this,
-									OutletListActivity.class);
+							Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							EntryActivity.this.startActivity(intent);
 							progressBar.setVisibility(View.GONE);
 							EntryActivity.this.finish();
@@ -198,8 +176,7 @@ public class EntryActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				final Intent intent = new Intent(getApplicationContext(),
-						EmailLoginActivity.class);
+				final Intent intent = new Intent(getApplicationContext(), EmailLoginActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -211,8 +188,7 @@ public class EntryActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(getApplicationContext(),
-						SignUpActivity.class);
+				Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -234,16 +210,14 @@ public class EntryActivity extends Activity {
 							e.printStackTrace();
 						}
 					}
-					
+
 				}
-				
+				Toast.makeText(getApplicationContext(), "This may take a few seconds.", Toast.LENGTH_SHORT).show();
 				Session session = Session.getActiveSession();
 				if (!session.isOpened() && !session.isClosed()) {
-					session.openForRead(new Session.OpenRequest(
-							EntryActivity.this).setCallback(fbStatusCallback));
+					session.openForRead(new Session.OpenRequest(EntryActivity.this).setCallback(fbStatusCallback));
 				} else {
-					Session.openActiveSession(EntryActivity.this, true,
-							fbStatusCallback);
+					Session.openActiveSession(EntryActivity.this, true, fbStatusCallback);
 				}
 			}
 		});
@@ -264,8 +238,7 @@ public class EntryActivity extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
 
 	@Override
@@ -280,7 +253,7 @@ public class EntryActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -289,27 +262,27 @@ public class EntryActivity extends Activity {
 			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-	    if (doubleBackToExitPressedOnce) {
-	    	Intent intent = new Intent(Intent.ACTION_MAIN);
+		if (doubleBackToExitPressedOnce) {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
-	        super.onBackPressed();
-	        return;
-	    }
+			super.onBackPressed();
+			return;
+		}
 
-	    this.doubleBackToExitPressedOnce = true;
-	    Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+		this.doubleBackToExitPressedOnce = true;
+		Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-	    new Handler().postDelayed(new Runnable() {
+		new Handler().postDelayed(new Runnable() {
 
-	        @Override
-	        public void run() {
-	            doubleBackToExitPressedOnce=false;                       
-	        }
-	    }, 2000);
-	} 
+			@Override
+			public void run() {
+				doubleBackToExitPressedOnce = false;
+			}
+		}, 2000);
+	}
 }

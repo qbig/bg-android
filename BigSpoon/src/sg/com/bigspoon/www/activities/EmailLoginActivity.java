@@ -114,6 +114,7 @@ public class EmailLoginActivity extends Activity {
 										}
 
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
+										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 										EmailLoginActivity.this.startActivity(intent);
 										
 									} catch (NullPointerException nullException) {
