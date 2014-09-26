@@ -12,9 +12,9 @@
     <GridView
         android:id="@+id/gv_action_menu"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/new_bottom_buttons"
+        android:background="@drawable/new_bottom_button_croped"
         android:gravity="center"
         android:horizontalSpacing="1dp"
         android:listSelector="@null"

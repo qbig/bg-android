@@ -1,3 +1,4 @@
+
 package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
