@@ -45,6 +45,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 	private ArrayList<DishModel> mFilteredDishes;
 
 	private static final String ION_LOGGING_MENU_LIST = "ion-menu-list";
+	private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
 	private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
 	private static final int TYPE_PHOTO_ITEM = 0;
 	private static final int TYPE_TEXT_ITEM = 1;
@@ -195,9 +196,15 @@ public class MenuListViewAdapter extends BaseAdapter {
 				photoViewHolder = (ListPhotoItemViewHolder) convertView
 						.getTag();
 			}
-
-			Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
-					.intoImageView(photoViewHolder.imageView);
+			
+			if (currentDish.photo.thumbnailLarge.contains(DEFAULT_DISH_PHOTO_URL)) {
+				Ion.with(mContext).load(BASE_URL + "media/" + this.mOutletInfo.defaultDishPhoto)
+				.intoImageView(photoViewHolder.imageView);
+			} else {
+				Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
+				.intoImageView(photoViewHolder.imageView);
+			}
+			
 			if (currentDish.quantity <= 0) {
 				photoViewHolder.overlay.setBackgroundDrawable(this.outOfStockBackground);
 				photoViewHolder.overlay.setVisibility(View.VISIBLE);
