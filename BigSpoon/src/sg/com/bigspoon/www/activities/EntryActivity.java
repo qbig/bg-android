@@ -5,12 +5,11 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

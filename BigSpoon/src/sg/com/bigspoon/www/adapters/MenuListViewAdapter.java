@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.ItemsActivity;
 import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
@@ -19,9 +18,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +30,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.internal.cu;
 import com.koushikdutta.ion.Ion;
 
 public class MenuListViewAdapter extends BaseAdapter {

@@ -1,12 +1,10 @@
 package sg.com.bigspoon.www.data;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_COUNTER;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 
+import java.util.LinkedHashMap;
+
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.LinkedTreeMap;
 
 public class ModifierSection {
 	/*

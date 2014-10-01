@@ -1,18 +1,12 @@
 package sg.com.bigspoon.www.adapters;
 
+import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.koushikdutta.ion.Ion;
-
-import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
-import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
 import sg.com.bigspoon.www.data.CategoryModel;
-import sg.com.bigspoon.www.data.CategoryOrder;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.koushikdutta.ion.Ion;
 
 public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	Context context;

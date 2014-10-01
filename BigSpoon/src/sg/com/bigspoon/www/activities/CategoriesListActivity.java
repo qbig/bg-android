@@ -1,6 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.CategoriesAdapter;
 import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
@@ -28,7 +26,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;

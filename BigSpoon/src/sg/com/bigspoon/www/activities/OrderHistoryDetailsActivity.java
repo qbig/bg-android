@@ -3,8 +3,6 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.OrderItem;
 import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;

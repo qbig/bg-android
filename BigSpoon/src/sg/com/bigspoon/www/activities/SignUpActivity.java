@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;

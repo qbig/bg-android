@@ -1,14 +1,14 @@
 package sg.com.bigspoon.www.activities;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
- 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
  
 /**
  * From : http://steveliles.github.io/is_my_android_app_currently_foreground_or_background.html

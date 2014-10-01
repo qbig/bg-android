@@ -3,8 +3,6 @@ package sg.com.bigspoon.www.adapters;
 import java.util.List;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
 import sg.com.bigspoon.www.data.RetrievedOrder;
 import android.app.Activity;
 import android.view.LayoutInflater;

@@ -2,8 +2,6 @@
 package sg.com.bigspoon.www.adapters;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.id;
-import sg.com.bigspoon.www.R.layout;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

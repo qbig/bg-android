@@ -1,11 +1,9 @@
 package sg.com.bigspoon.www.adapters;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.ItemsActivity;
-import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.User;
@@ -18,8 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;

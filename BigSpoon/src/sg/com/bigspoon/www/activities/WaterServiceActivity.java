@@ -1,12 +1,10 @@
 package sg.com.bigspoon.www.activities;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.R.layout;
 import sg.com.bigspoon.www.adapters.WaterQuantityPickerAdapter;
 import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;

@@ -5,11 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
-import sg.com.bigspoon.www.data.CategoryModel;
-import sg.com.bigspoon.www.data.CategoryOrder;
-import sg.com.bigspoon.www.data.DishModel;
-import sg.com.bigspoon.www.data.TableModel;
-
 public class OutletDetailsModel {
 	public DishModel[] dishes;
 	public CategoryModel[] categoriesDetails;

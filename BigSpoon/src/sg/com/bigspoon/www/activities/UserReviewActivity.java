@@ -1,9 +1,10 @@
 package sg.com.bigspoon.www.activities;
 
+import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.RATING_URL;
-import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

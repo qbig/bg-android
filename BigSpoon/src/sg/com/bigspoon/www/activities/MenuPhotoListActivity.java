@@ -1,7 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
 import sg.com.bigspoon.www.data.User;

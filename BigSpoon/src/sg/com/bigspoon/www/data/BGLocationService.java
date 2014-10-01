@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sg.com.bigspoon.www.activities.UserReviewActivity;
-
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;

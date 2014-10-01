@@ -1,12 +1,12 @@
 package sg.com.bigspoon.www.data;
 
+import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 
 public class Order {
 	/*
