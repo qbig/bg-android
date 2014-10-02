@@ -57,7 +57,7 @@ public class PastOrdersAdapter extends ArrayAdapter<OrderItem> {
 				.setText(User.getInstance(mContext).currentSession.getPastOrder().mItems
 						.get(position).dish.name);
 		priceView
-				.setText(Double.toString(User.getInstance(mContext).currentSession.getPastOrder().mItems
+				.setText("$" + Double.toString(User.getInstance(mContext).currentSession.getPastOrder().mItems
 						.get(position).dish.price));
 
 		return rowView;

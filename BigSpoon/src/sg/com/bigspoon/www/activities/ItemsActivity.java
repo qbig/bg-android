@@ -188,15 +188,15 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void updatePriceLabels() {
 		final DiningSession session = User.getInstance(this).currentSession;
 		
-		mCurrentSubTotalValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice()));
-		mCurrentServiceChargeValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
-		mCurrentGSTValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
-		mCurrentTotalValue.setText(String.format("%.2f", session.getCurrentOrder().getTotalPrice() + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mCurrentSubTotalValue.setText("$" + String.format("%.2f", session.getCurrentOrder().getTotalPrice()));
+		mCurrentServiceChargeValue.setText("$" + String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mCurrentGSTValue.setText(String.format("$" + "%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mCurrentTotalValue.setText(String.format("$" + "%.2f", session.getCurrentOrder().getTotalPrice() + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
 		
-		mOrderredSubTotalValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice()));
-		mOrderredServiceChargeValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
-		mOrderredGSTValue.setText(String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
-		mOrderredTotalValue.setText(String.format("%.2f",  session.getPastOrder().getTotalPrice() + session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredSubTotalValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice()));
+		mOrderredServiceChargeValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
+		mOrderredGSTValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredTotalValue.setText("$" + String.format("%.2f",  session.getPastOrder().getTotalPrice() + session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
 	}
 
 	@Override
