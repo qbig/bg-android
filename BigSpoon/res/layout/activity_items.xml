@@ -312,7 +312,7 @@
         android:layout_height="25dp"
         android:layout_alignRight="@id/gv_action_menu"
         android:layout_alignTop="@id/gv_action_menu"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="30dp"
         android:background="@drawable/badge_circle"
         android:gravity="center"
         android:text="1"
