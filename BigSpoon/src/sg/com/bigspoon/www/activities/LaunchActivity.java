@@ -1,6 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import com.crashlytics.android.Crashlytics;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
@@ -11,6 +10,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+
+import com.crashlytics.android.Crashlytics;
 
 
 public class LaunchActivity extends Activity {

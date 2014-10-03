@@ -10,13 +10,20 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -24,10 +31,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener {
 
-	ActionBar actionbar;
+	ActionBar mCategoriesTabBar;
 	ListView listview;
 
 	MenuListViewAdapter adapter;
@@ -39,33 +45,106 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	private ImageButton historyButton;
 	private View bottomActionBar;
 	private TextView mOrderedDishCounterText;
+	private int mCategoryPosition;
+	private Handler mHandler;
+	private boolean shouldShowTabs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
-		setupBottomActionBar();		
+		setupBottomActionBar();
 		setupListView();
 		setupCategoryTabs();
+		setupHideCategoriesTabsEvent();
+	}
+
+	private void setupHideCategoriesTabsEvent() {
+		shouldShowTabs = false;
+		listview.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				final Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out);
+				final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+				switch (scrollState) {
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					if (! shouldShowTabs && mCategoriesTabBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
+						animFadeOut.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+								getActionBarViewContainer().startAnimation(animFadeIn);
+							}
+						});
+						getActionBarViewContainer().startAnimation(animFadeOut);
+					} else if (shouldShowTabs && mCategoriesTabBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD){
+						animFadeOut.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+								for (int i = 0, len = User.getInstance(getApplicationContext()).currentOutlet.categoriesDetails.length; i < len; i++) {
+									mCategoriesTabBar.addTab(mCategoriesTabBar
+											.newTab()
+											.setText(
+													User.getInstance(MenuPhotoListActivity.this).currentOutlet.categoriesDetails[i].name)
+											.setTabListener(MenuPhotoListActivity.this));
+									
+								}
+								
+								mCategoriesTabBar.setSelectedNavigationItem(adapter.mCurrentSelectedCategoryTabIndex);
+								getActionBarViewContainer().startAnimation(animFadeIn);
+							}
+						});
+						getActionBarViewContainer().startAnimation(animFadeOut);
+					}
+					break;
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				if (firstVisibleItem == 0) {
+					shouldShowTabs = true;
+				} else {
+					shouldShowTabs = false;
+				}
+			}
+		});
 	}
 
 	private void setupListView() {
-		adapter = new MenuListViewAdapter(this, User.getInstance(this).currentOutlet);
 		listview = (ListView) findViewById(R.id.list);
 		final LayoutInflater inflater = getLayoutInflater();
 		final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
 		listview.addFooterView(footer, null, false);
+		adapter = new MenuListViewAdapter(this, User.getInstance(this).currentOutlet);
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
+
 				isPhotoMode = true;
 				getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon);
 				adapter.notifyDataSetChanged();
 				listview.setSelection(position);
 			}
 		});
+
 	}
 
 	private void setupBottomActionBar() {
@@ -85,22 +164,26 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	}
 
 	private void setupCategoryTabs() {
-		int initialCategoryPosition = 0;
+		mCategoryPosition = 0;
 		final Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			initialCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
+			mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
 		}
-		actionbar = getActionBar();
-		actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		mCategoriesTabBar = getActionBar();
+		mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
-			actionbar.addTab(actionbar.newTab().setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
+			mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
+					.setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
 		}
-
-		actionbar.setSelectedNavigationItem(initialCategoryPosition);
+		mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
 	}
-
 	
-
+	public View getActionBarViewContainer() {
+		return ((ViewGroup)getWindow().
+    			findViewById(
+				Resources.getSystem().getIdentifier("action_bar_container", "id", "android")));
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -108,15 +191,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		setupBackToOutletButton();
 		setupHistoryButton();
 		setupToggleButton();
-		
+		new Handler();
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	private void setupActionButton() {
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar, null);
-		actionbar.setCustomView(mActionBarView);
-		actionbar.setIcon(R.drawable.dummy_icon);
-		actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+		mCategoriesTabBar.setCustomView(mActionBarView);
+		mCategoriesTabBar.setIcon(R.drawable.dummy_icon);
+		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText(User.getInstance(this).currentOutlet.name);
 	}
@@ -155,8 +238,8 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	private void setupBackToOutletButton() {
 		backToOutletList = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
 		backToOutletList.setImageResource(R.drawable.home_with_arrow);
-		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_VERTICAL);
 		backToOutletList.setLayoutParams(params);
 		backToOutletList.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
@@ -178,7 +261,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		});
 	}
 
-	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
@@ -186,13 +268,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		adapter.notifyDataSetChanged();
 		listview.setSelection(0);
 	}
-	
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
 
 	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
-	
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -206,13 +290,12 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		final int resId = getResources().getIdentifier("action_bar_container", "id", "android");
 		return v.findViewById(resId);
 	}
-	
-	  protected void onActivityResult(int requestCode, int resultCode,
-	             Intent data) {
-	         if (requestCode == MODIFIER_POPUP_REQUEST) {
-	             if (resultCode == RESULT_OK) {
-	            	 updateOrderedDishCounter();
-	             } 
-	         }
-	     }
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MODIFIER_POPUP_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				updateOrderedDishCounter();
+			}
+		}
+	}
 }
