@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www.activities;
 
+import com.crashlytics.android.Crashlytics;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
@@ -21,6 +22,7 @@ public class LaunchActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crashlytics.start(this);
 		setContentView(R.layout.activity_launch);
 		new Handler().postDelayed(new Runnable() {
 
