@@ -76,15 +76,17 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		final TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
 		final TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
 		final DishModel dish = User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish;
-		numberView.setText(Integer.toString(User.getInstance(mContext).currentSession.getCurrentOrder()
-				.getQuantityOfDishByIndex(groupPosition)));
+		final int dishQuantity = User.getInstance(mContext).currentSession.getCurrentOrder()
+				.getQuantityOfDishByIndex(groupPosition); 
+				
+		numberView.setText(Integer.toString(dishQuantity));
 		itemdescView
 				.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish.name);
 		if (dish.customizable) {
 			priceView.setText("$" + Double.toString(User.getInstance(mContext).currentSession.getCurrentOrder()
 					.getModifierPriceChangeAtIndex(groupPosition) + dish.price));
 		} else {
-			priceView.setText("$" + Double.toString(dish.price));
+			priceView.setText("$" + Double.toString(dish.price * dishQuantity));
 		}
 
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
