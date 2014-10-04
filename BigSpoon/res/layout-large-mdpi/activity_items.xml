@@ -163,7 +163,7 @@
         android:background="@color/BigSpoonGreen"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:text="Place Order"
+        android:text="Send Order Now"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
