@@ -24,7 +24,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"
-          android:text="New Order:"
+          android:text="Unsent Order:"
           android:textSize="18sp" />
         
       <ExpandableListView 
@@ -175,7 +175,7 @@
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" 
-        android:text="Ordered Items:" 
+        android:text="Sent Orders:" 
         android:textSize="18sp"/>
 
     <ListView
