@@ -86,7 +86,7 @@ public class Order {
 	public int getQuantityOfDishByID(int dishID) {
 		for (OrderItem item : mItems) {
 			if (item.dish.id == dishID) {
-				return item.dish.quantity;
+				return item.quantity;
 			}
 		}
 		return 0;
