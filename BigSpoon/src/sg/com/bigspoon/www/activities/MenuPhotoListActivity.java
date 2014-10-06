@@ -97,6 +97,8 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 							@Override
 							public void onAnimationEnd(Animation animation) {
 								mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+								int oldPosition = adapter.mCurrentSelectedCategoryTabIndex;
+								mCategoriesTabBar.removeAllTabs();
 								for (int i = 0, len = User.getInstance(getApplicationContext()).currentOutlet.categoriesDetails.length; i < len; i++) {
 									mCategoriesTabBar.addTab(mCategoriesTabBar
 											.newTab()
@@ -106,7 +108,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 									
 								}
 								
-								mCategoriesTabBar.setSelectedNavigationItem(adapter.mCurrentSelectedCategoryTabIndex);
+								mCategoriesTabBar.setSelectedNavigationItem(oldPosition);
 								getActionBarViewContainer().startAnimation(animFadeIn);
 							}
 						});

@@ -122,12 +122,13 @@ public class AndroidLocationService {
 				|| mBestReading.getTime() < System.currentTimeMillis()
 						- TWO_MIN) {
 
-			// Register for network location updates
-			mLocationManager.requestLocationUpdates(
+			if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				mLocationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, POLLING_FREQ, MIN_DISTANCE,
 					mLocationListener);
-
+			}
 			// Register for GPS location updates
+			
 			mLocationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, POLLING_FREQ, MIN_DISTANCE,
 					mLocationListener);
