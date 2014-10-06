@@ -29,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 
@@ -130,6 +131,10 @@ public class MenuListViewAdapter extends BaseAdapter {
 							.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
+					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1){
+						Toast.makeText(mContext, "Order added to 'Unsent Order'. Tab 'Orders' to view.", Toast.LENGTH_LONG).show();
+					}
+					
 				}
 			}
 		};
