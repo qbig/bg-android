@@ -132,9 +132,8 @@ public class MenuListViewAdapter extends BaseAdapter {
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1){
-						Toast.makeText(mContext, "Order added to 'Unsent Order'. Tab 'Orders' to view.", Toast.LENGTH_LONG).show();
+						Toast.makeText(mContext, "Order saved to 'Unsent Order'. Tab 'Orders' to view.", Toast.LENGTH_LONG).show();
 					}
-					
 				}
 			}
 		};
