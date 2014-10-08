@@ -34,7 +34,7 @@ import android.widget.TextView;
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener {
 
 	ActionBar mCategoriesTabBar;
-	ListView listview;
+	public ListView listview;
 
 	MenuListViewAdapter adapter;
 	public static boolean isPhotoMode = true;

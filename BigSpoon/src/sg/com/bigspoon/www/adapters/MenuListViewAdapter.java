@@ -230,7 +230,8 @@ public class MenuListViewAdapter extends BaseAdapter {
 		int fromLoc[] = new int[2];
 		start.getLocationOnScreen(fromLoc);
 		float startX = fromLoc[0];
-		float startY = fromLoc[1];
+		float startY = fromLoc[1];	
+		position -= ((MenuPhotoListActivity) mContext).listview.getFirstVisiblePosition();
 		startY += ((position - 1) * (MenuPhotoListActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
 
 		float destX = CORNER_POS_X;
