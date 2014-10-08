@@ -69,7 +69,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 				final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
 				switch (scrollState) {
 				case OnScrollListener.SCROLL_STATE_IDLE:
-					if (! shouldShowTabs && mCategoriesTabBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
+					if (! shouldShowTabs) {
 						animFadeOut.setAnimationListener(new AnimationListener() {
 							
 							@Override
@@ -80,12 +80,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 							
 							@Override
 							public void onAnimationEnd(Animation animation) {
-								mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 								getActionBarViewContainer().startAnimation(animFadeIn);
+								mCategoriesTabBar.setDisplayShowHomeEnabled(false);
+								mCategoriesTabBar.setDisplayShowTitleEnabled(false);
+								mActionBarView.setVisibility(View.GONE);
 							}
 						});
 						getActionBarViewContainer().startAnimation(animFadeOut);
-					} else if (shouldShowTabs && mCategoriesTabBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD){
+						
+					} else {
 						animFadeOut.setAnimationListener(new AnimationListener() {
 							
 							@Override
@@ -96,23 +99,14 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 							
 							@Override
 							public void onAnimationEnd(Animation animation) {
-								mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-								int oldPosition = adapter.mCurrentSelectedCategoryTabIndex;
-								mCategoriesTabBar.removeAllTabs();
-								for (int i = 0, len = User.getInstance(getApplicationContext()).currentOutlet.categoriesDetails.length; i < len; i++) {
-									mCategoriesTabBar.addTab(mCategoriesTabBar
-											.newTab()
-											.setText(
-													User.getInstance(MenuPhotoListActivity.this).currentOutlet.categoriesDetails[i].name)
-											.setTabListener(MenuPhotoListActivity.this));
-									
-								}
-								
-								mCategoriesTabBar.setSelectedNavigationItem(oldPosition);
 								getActionBarViewContainer().startAnimation(animFadeIn);
+								mCategoriesTabBar.setDisplayShowHomeEnabled(true);
+								mCategoriesTabBar.setDisplayShowTitleEnabled(true);
+								mActionBarView.setVisibility(View.VISIBLE);
 							}
 						});
 						getActionBarViewContainer().startAnimation(animFadeOut);
+						
 					}
 					break;
 				}
