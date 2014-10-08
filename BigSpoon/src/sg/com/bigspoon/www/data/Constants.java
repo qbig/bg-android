@@ -69,6 +69,7 @@ public class Constants {
 	    public static final String HIDE_NOTE = "hideNote";
 	    public static final String NOTIF_LOCATION_UPDATED = "location-broadcast";
 	    public static final String NOTIF_LOCATION_KEY = "location-extra";
+	    public static final String NOTIF_MODIFIER_OK = "modifierSelectOk";
 	    
 	    public static final String NOTIF_TO_START_LOCATION_SERVICE = "start-location";
 	    

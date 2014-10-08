@@ -1,6 +1,9 @@
 package sg.com.bigspoon.www.activities;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ModifierListViewAdapter;
 import sg.com.bigspoon.www.data.DishModel;
@@ -10,8 +13,10 @@ import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -65,6 +70,8 @@ public class ModifierActivity extends Activity {
 				setResult(RESULT_OK);
 				User.getInstance(ModifierActivity.this).currentSession.getCurrentOrder().addDish(mSelectedDish);
 				finish();
+				Intent intent = new Intent(NOTIF_MODIFIER_OK);
+				LocalBroadcastManager.getInstance(ModifierActivity.this).sendBroadcast(intent);
 			}
 		});
 	}
