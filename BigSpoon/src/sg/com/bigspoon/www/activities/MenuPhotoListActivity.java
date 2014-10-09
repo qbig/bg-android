@@ -69,7 +69,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 				final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
 				switch (scrollState) {
 				case OnScrollListener.SCROLL_STATE_IDLE:
-					if (! shouldShowTabs) {
+					if (! shouldShowTabs && mActionBarView.getVisibility() == View.VISIBLE) {
 						animFadeOut.setAnimationListener(new AnimationListener() {
 							
 							@Override
@@ -88,7 +88,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 						});
 						getActionBarViewContainer().startAnimation(animFadeOut);
 						
-					} else {
+					} else if (shouldShowTabs && mActionBarView.getVisibility() == View.GONE){
 						animFadeOut.setAnimationListener(new AnimationListener() {
 							
 							@Override

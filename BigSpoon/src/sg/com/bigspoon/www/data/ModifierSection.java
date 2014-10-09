@@ -64,7 +64,7 @@ public class ModifierSection {
 				if (itemNameKey.equals(toggledItemName)) {
 					answers.put(itemNameKey, toggledAnswer);
 				} else {
-					answers.put(itemNameKey, currentAnswerForItem);
+					answers.put(itemNameKey, 0);
 				}
 			}
 		}
