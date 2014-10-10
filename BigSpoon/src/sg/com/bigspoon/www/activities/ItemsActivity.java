@@ -100,6 +100,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int BILL = 3;
 	public static final int PLACE_ORDER = 4;
 	public static final int TAKE_AWAY = 5;
+	public static final int MODIFIER_TEXT_WIDTH = 600;
 	static EditText textTime;
 
 	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -564,8 +565,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			for (int i = 0; i < listAdapter.getCount(); i++) {
 				View listItem = listAdapter.getView(i, null, listView);
 				listItem.measure(
-		                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-
+						MeasureSpec.makeMeasureSpec(MODIFIER_TEXT_WIDTH, MeasureSpec.EXACTLY),
 		                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 				totalHeight += listItem.getMeasuredHeight();
 			}
