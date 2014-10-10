@@ -51,6 +51,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -562,13 +563,17 @@ public class ItemsActivity extends ExpandableListActivity {
 			int totalHeight = 0;
 			for (int i = 0; i < listAdapter.getCount(); i++) {
 				View listItem = listAdapter.getView(i, null, listView);
-				listItem.measure(0, 0);
+				listItem.measure(
+		                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+
+		                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 				totalHeight += listItem.getMeasuredHeight();
 			}
 
 			ViewGroup.LayoutParams params = listView.getLayoutParams();
 			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + attHeight;
 			listView.setLayoutParams(params);
+			listView.requestLayout();
 		}
 	}
 
