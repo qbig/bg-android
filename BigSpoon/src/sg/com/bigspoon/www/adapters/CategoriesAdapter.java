@@ -9,6 +9,11 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.CategoryModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.ImageViewBitmapInfo;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
 
 public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	Context context;
 	private OutletDetailsModel outletDetails;
 	private String outletIcon;
+	private Drawable mRestaurantIconDrawable;
 	public CategoriesAdapter(Context context, final OutletDetailsModel outletDetails, String outletIcon) {
 		super(context, R.layout.category_row, R.id.categoryname, outletDetails.categoriesDetails);
 		this.context = context;
@@ -69,7 +78,20 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	public int getItemViewType(int position) {
 		return position == 0 ? 0 : 1;
 	}
+	
+	public static Bitmap drawableToBitmap (Drawable drawable) {
+	    if (drawable instanceof BitmapDrawable) {
+	        return ((BitmapDrawable)drawable).getBitmap();
+	    }
 
+	    Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(bitmap); 
+	    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+	    drawable.draw(canvas);
+
+	    return bitmap;
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
@@ -79,8 +101,17 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 				row = inflater.inflate(R.layout.category_row_icon, parent, false);
 			}
 			
-			final ImageView restaurantIcon = (ImageView) row.findViewById(R.id.category_list_restaurant_icon);
-			Ion.with(context).load(BASE_URL + outletIcon).intoImageView(restaurantIcon);
+			final ImageView iconView = (ImageView) row.findViewById(R.id.category_list_restaurant_icon);
+			Ion.with(context).load(BASE_URL + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
+				
+				@Override
+				public void onCompleted(Exception arg0, ImageView arg1) {
+					if (arg0 == null && arg1 != null && arg1.getDrawable() != null) {
+						// hack to copy a drawable
+						mRestaurantIconDrawable = new BitmapDrawable(CategoriesAdapter.this.context.getResources(), CategoriesAdapter.this.drawableToBitmap(arg1.getDrawable()));
+					}
+				}
+			});
 			return row;
 		} else {
 			final CategoryModel currentCategory = getItem(position - 1);
@@ -92,7 +123,16 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			
 			final ImageView image = (ImageView) row.findViewById(R.id.categoryimage);
 			final TextView categoryName = (TextView) row.findViewById(R.id.categoryname);
-			Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).intoImageView(image);
+			//Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).intoImageView(image);
+			ImageViewFutureBuilder ionBuilder;
+			if (mRestaurantIconDrawable != null ){
+				ionBuilder = Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).withBitmap().placeholder(mRestaurantIconDrawable);
+			} else {
+				ionBuilder = Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).withBitmap();
+			}
+			
+			ionBuilder.intoImageView(image);
+			
 			categoryName.setText(currentCategory.name);
 			return row;
 		}		
