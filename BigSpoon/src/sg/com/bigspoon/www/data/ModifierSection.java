@@ -57,12 +57,9 @@ public class ModifierSection {
 
 	public void toggle(String toggledItemName) {
 		if (type.equals(MODIFIER_SECTION_TYPE_RADIO)) {
-			final int currentAnswerForItem = answers.containsKey(toggledItemName) ? answers.get(toggledItemName)
-					.intValue() : 0;
-			final int toggledAnswer = currentAnswerForItem == 0 ? 1 : 0;
 			for (String itemNameKey : items.keySet()) {
 				if (itemNameKey.equals(toggledItemName)) {
-					answers.put(itemNameKey, toggledAnswer);
+					answers.put(itemNameKey, 1);
 				} else {
 					answers.put(itemNameKey, 0);
 				}
