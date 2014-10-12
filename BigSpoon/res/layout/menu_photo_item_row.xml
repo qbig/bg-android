@@ -13,14 +13,13 @@
         android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:src="@drawable/fb_2" />
-    
+
     <ImageView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:visibility="gone" />
-
 
     <ImageButton
         android:id="@+id/addbutton"
@@ -39,8 +38,8 @@
         android:layout_alignBottom="@+id/menuitem"
         android:background="@drawable/text_background_gradient"
         android:gravity="top"
-        android:paddingTop="0dp"
         android:paddingLeft="10dp"
+        android:paddingTop="0dp"
         android:textColor="#575757"
         android:textSize="11sp" />
 
@@ -52,9 +51,11 @@
         android:layout_alignTop="@+id/textitemname"
         android:layout_marginTop="0dp"
         android:paddingRight="5dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="30dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textitemname"
@@ -66,6 +67,8 @@
         android:background="@drawable/text_background_gradient_light"
         android:paddingLeft="10dp"
         android:paddingRight="50dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="30dp"
         android:textColor="@color/black"
         android:textSize="13sp"
         android:textStyle="italic" />
