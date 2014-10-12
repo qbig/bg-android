@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -245,7 +246,20 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 		TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, startX, Animation.ABSOLUTE, destX,
 				Animation.ABSOLUTE, startY, Animation.ABSOLUTE, destY);
+		
 		animSet.addAnimation(translate);
+		animSet.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {}
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				start.setVisibility(View.GONE);
+			}
+		});
+		
 		start.startAnimation(animSet);
 	}
 

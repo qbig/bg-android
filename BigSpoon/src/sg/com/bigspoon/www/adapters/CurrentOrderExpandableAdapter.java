@@ -83,10 +83,10 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		itemdescView
 				.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish.name);
 		if (dish.customizable) {
-			priceView.setText("$" + Double.toString(User.getInstance(mContext).currentSession.getCurrentOrder()
+			priceView.setText("$" + String.format("%.1f", User.getInstance(mContext).currentSession.getCurrentOrder()
 					.getModifierPriceChangeAtIndex(groupPosition) + dish.price));
 		} else {
-			priceView.setText("$" + Double.toString(dish.price * dishQuantity));
+			priceView.setText("$" + String.format("%.1f",dish.price * dishQuantity));
 		}
 
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
