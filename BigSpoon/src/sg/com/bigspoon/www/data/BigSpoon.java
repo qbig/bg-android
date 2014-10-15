@@ -99,6 +99,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onBecameBackground() {
 		this.stopService(new Intent(this, BGLocationService.class));
+		SocketIOManager.getInstance(this).disconnect();
 	}
 
 	public void checkLocationEnabledByForce() {
