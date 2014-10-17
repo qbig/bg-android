@@ -4,7 +4,7 @@ public class Constants {
 	   public static final String PREFS_NAME = "MyPrefsFile";
 	   
 	   public static final boolean LOG = false;
-	   
+//	   
 //	    public static final String BASE_URL =  "http://54.255.17.69/";
 //	    public static final String USER_SIGNUP =  "http://54.255.17.69/api/v1/user";
 //	    public static final String USER_LOGIN =  "http://54.255.17.69/api/v1/login";
