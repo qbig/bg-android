@@ -5,20 +5,20 @@ public class Constants {
 	   
 	   public static final boolean LOG = false;
 //	   
-//	    public static final String BASE_URL =  "http://54.255.17.69/";
-//	    public static final String USER_SIGNUP =  "http://54.255.17.69/api/v1/user";
-//	    public static final String USER_LOGIN =  "http://54.255.17.69/api/v1/login";
-//	    public static final String USER_LOGIN_WITH_FB =  "http://54.255.17.69/api/v1/fblogin";
-//	    public static final String LIST_OUTLETS =  "http://54.255.17.69/api/v1/outlets";
-//	    public static final String REQUEST_URL =  "http://54.255.17.69/api/v1/request";
-//	    public static final String PROFILE_URL =  "http://54.255.17.69/api/v1/profile";
-//	    public static final String ORDER_URL =  "http://54.255.17.69/api/v1/meal";
-//	    public static final String BILL_URL =  "http://54.255.17.69/api/v1/askbill";
-//	    public static final String RATING_URL =  "http://54.255.17.69/api/v1/rating";
-//	    public static final String FEEDBACK_URL =  "http://54.255.17.69/api/v1/review";
-//	    public static final String DISH_CATEGORY_URL =  "http://54.255.17.69/api/v1/categories";
-//	    public static final String ORDER_HISTORY_URL =  "http://54.255.17.69/api/v1/mealhistory";
-//	    public static final String SOCKET_URL =  "54.255.17.69";
+//	    public static final String BASE_URL =  "http://122.248.206.174/";
+//	    public static final String USER_SIGNUP =  "http://122.248.206.174/api/v1/user";
+//	    public static final String USER_LOGIN =  "http://122.248.206.174/api/v1/login";
+//	    public static final String USER_LOGIN_WITH_FB =  "http://122.248.206.174/api/v1/fblogin";
+//	    public static final String LIST_OUTLETS =  "http://122.248.206.174/api/v1/outlets";
+//	    public static final String REQUEST_URL =  "http://122.248.206.174/api/v1/request";
+//	    public static final String PROFILE_URL =  "http://122.248.206.174/api/v1/profile";
+//	    public static final String ORDER_URL =  "http://122.248.206.174/api/v1/meal";
+//	    public static final String BILL_URL =  "http://122.248.206.174/api/v1/askbill";
+//	    public static final String RATING_URL =  "http://122.248.206.174/api/v1/rating";
+//	    public static final String FEEDBACK_URL =  "http://122.248.206.174/api/v1/review";
+//	    public static final String DISH_CATEGORY_URL =  "http://122.248.206.174/api/v1/categories";
+//	    public static final String ORDER_HISTORY_URL =  "http://122.248.206.174/api/v1/mealhistory";
+//	    public static final String SOCKET_URL =  "122.248.206.174";
 
 	   
 	    public static final String BASE_URL =  "http://bigspoon.biz/"; // public static final String BASE_URL =  "http://54.255.0.38/";
@@ -78,5 +78,8 @@ public class Constants {
 	    
 	    //TOKEN 
 	    public static final String MIXPANEL_TOKEN = "2e7017c4be6254ba2e5fae51651f476d";
+	    
+	    // OUTLET LOCATION FILTER
+	    public static final double OUTLET_LOCATION_FILTER_DISTANCE = 100000;
 	    
 }

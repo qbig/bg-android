@@ -5,9 +5,10 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-
+import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -271,7 +272,17 @@ public class OutletListActivity extends Activity {
 		}
 		
 		if (User.getInstance(getApplicationContext()).currentLocation != null) {
-
+			final Iterator<OutletModel> it = outlets.iterator();
+			final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;
+			while (it.hasNext()){
+				OutletModel outletToFilter = it.next();
+				final Location locationToFilter = new Location("lhs");
+				locationToFilter.setLatitude(outletToFilter.lat);
+				locationToFilter.setLongitude(outletToFilter.lng);
+				if (currentLocation.distanceTo(locationToFilter) > OUTLET_LOCATION_FILTER_DISTANCE) {
+					it.remove();
+				}
+			}
 			Collections.sort(outlets, new Comparator<OutletModel>() {
 				@Override
 				public int compare(OutletModel lhs, OutletModel rhs) {
@@ -288,6 +299,7 @@ public class OutletListActivity extends Activity {
 					return distanceForLhs - distanceForRhs;
 				}
 			});
+			
 		} else {
 			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
 					new IntentFilter(NOTIF_LOCATION_UPDATED));
