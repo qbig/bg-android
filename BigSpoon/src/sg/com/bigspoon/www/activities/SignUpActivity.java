@@ -5,6 +5,7 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.USER_SIGNUP;
 
@@ -30,12 +31,14 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class SignUpActivity extends Activity {
 	private static String ION_LOGGING_SIGNUP = "ion-email-signup";
 	EditText mSignupNameField;
 	EditText mSignupEmailField;
 	EditText mSignupPasswordField;
+	private MixpanelAPI mMixpanel;
 	final Handler mHandler = new Handler();
 	ImageButton mSignUpConfirmButton;
 
@@ -46,7 +49,8 @@ public class SignUpActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_SIGNUP, Log.DEBUG);
 		loginPrefsEditor = getSharedPreferences(PREFS_NAME, 0).edit();
-
+		mMixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+		
 		setContentView(R.layout.activity_sign_up);
 		mSignupNameField = (EditText) findViewById(R.id.signupFullName);
 		mSignupEmailField = (EditText) findViewById(R.id.signupEmail);
@@ -108,7 +112,9 @@ public class SignUpActivity extends Activity {
 									final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
 									final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
 									final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
-
+									mMixpanel.alias(email, mMixpanel.getDistinctId());									
+									mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
+									
 									loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
 									loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
 									loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);

@@ -28,6 +28,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.mixpanel.android.mpmetrics.MPConfig;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class BigSpoon extends Application implements Foreground.Listener {
@@ -58,6 +59,9 @@ public class BigSpoon extends Application implements Foreground.Listener {
 				new IntentFilter(NOTIF_TO_START_LOCATION_SERVICE));
 		BugSenseHandler.initAndStartSession(this, "625f7944");
 		mMixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+		mMixpanel.identify(mMixpanel.getDistinctId());
+		mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
+		
 		User.getInstance(this).mMixpanel = this.mMixpanel;
 		final SharedPreferences pref = getSharedPreferences(PREFS_NAME, 0);
 		if (pref.contains(LOGIN_INFO_EMAIL)) {

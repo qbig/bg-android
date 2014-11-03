@@ -107,6 +107,8 @@ public class EmailLoginActivity extends Activity {
 												MIXPANEL_TOKEN);
 										JSONObject firstTime = new JSONObject();
 										try {
+											mixpanel.identify(email);
+											mixpanel.getPeople().identify(email);
 											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 											mixpanel.registerSuperPropertiesOnce(firstTime);
 										} catch (JSONException e1) {

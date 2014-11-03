@@ -145,6 +145,8 @@ public class EntryActivity extends Activity {
 							mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 							JSONObject firstTime = new JSONObject();
 							try {
+								mMixpanel.alias(email, mMixpanel.getDistinctId());
+								mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
 								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 								mMixpanel.registerSuperPropertiesOnce(firstTime);
 								mMixpanel.track("fbLogin Success", firstTime);
