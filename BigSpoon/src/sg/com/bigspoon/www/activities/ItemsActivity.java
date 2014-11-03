@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
@@ -76,6 +77,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class ItemsActivity extends ExpandableListActivity {
 
@@ -102,7 +104,8 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int TAKE_AWAY = 5;
 	public static final int MODIFIER_TEXT_WIDTH = 600;
 	static EditText textTime;
-
+	private MixpanelAPI mMixpanel;
+	
 	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -143,6 +146,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_ITEM_ACTIVITY, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		mCurrentOutlet = User.getInstance(this).currentOutlet;
+		mMixpanel = MixpanelAPI.getInstance(ItemsActivity.this, MIXPANEL_TOKEN);
 		
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
@@ -914,6 +918,8 @@ public class ItemsActivity extends ExpandableListActivity {
 							tableCode.toLowerCase())) {
 						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
 						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
+						mMixpanel.getPeople().setOnce("Type", "Restaurant");
+						mMixpanel.getPeople().increment("Orders Placed", 1);
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {

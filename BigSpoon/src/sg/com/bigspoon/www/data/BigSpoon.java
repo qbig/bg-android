@@ -28,7 +28,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.mixpanel.android.mpmetrics.MPConfig;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class BigSpoon extends Application implements Foreground.Listener {
