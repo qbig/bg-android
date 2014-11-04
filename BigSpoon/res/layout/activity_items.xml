@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Unsent Order:"
+                android:text="Order These?"
                 android:textSize="18sp" />
 
             <ExpandableListView
@@ -159,7 +159,7 @@
                 android:background="@color/BigSpoonGreen"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:text="Send Order Now"
+                android:text="Send to Kitchen"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
