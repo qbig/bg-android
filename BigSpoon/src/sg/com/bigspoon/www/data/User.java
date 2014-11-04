@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.data;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
@@ -59,6 +60,8 @@ public class User {
 		}
 		
 		if (currentLocation == null) {
+			Intent intent = new Intent(NOTIF_TO_START_LOCATION_SERVICE);
+			LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 			return false;
 		}
 		Boolean checkLocationPass = false;

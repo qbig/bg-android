@@ -112,8 +112,6 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 	private void broadcastUpdatedLocation(Location location) {
 		Log.d("sender", "Broadcasting message");
 		Intent intent = new Intent(NOTIF_LOCATION_UPDATED);
-		// You can also include some extra data.
-
 		intent.putExtra(NOTIF_LOCATION_KEY, location);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
