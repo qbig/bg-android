@@ -45,7 +45,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 public class EntryActivity extends Activity {
 
 	private static String ION_LOGGING_FB_LOGIN = "ion-fb-login";
-
+	private static String FB_LOGIN_COUNT = "fb-login-count";
 	private ImageButton loginImageButton;
 	private ImageButton signUpImageButton;
 	private ImageButton fbLoginButton;
@@ -149,6 +149,7 @@ public class EntryActivity extends Activity {
 								mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
 								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 								mMixpanel.registerSuperPropertiesOnce(firstTime);
+								mMixpanel.getPeople().increment(FB_LOGIN_COUNT, 1);
 								mMixpanel.track("fbLogin Success", firstTime);
 							} catch (JSONException e1) {
 								e1.printStackTrace();

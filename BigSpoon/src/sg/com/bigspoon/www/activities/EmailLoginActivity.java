@@ -37,6 +37,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class EmailLoginActivity extends Activity {
 	private static String ION_LOGGING_LOGIN = "ion-email-login";
+	private static String EMAIL_LOGIN_COUNT = "email-login-count";
 	EditText mLoginEmailField;
 	EditText mLoginPasswordField;
 
@@ -109,6 +110,7 @@ public class EmailLoginActivity extends Activity {
 										try {
 											mixpanel.identify(email);
 											mixpanel.getPeople().identify(email);
+											mixpanel.getPeople().increment(EMAIL_LOGIN_COUNT, 1);
 											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 											mixpanel.registerSuperPropertiesOnce(firstTime);
 										} catch (JSONException e1) {
