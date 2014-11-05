@@ -234,9 +234,11 @@ public class MenuListViewAdapter extends BaseAdapter {
 		float startY = fromLoc[1];	
 		position -= ((MenuPhotoListActivity) mContext).listview.getFirstVisiblePosition();
 		startY += ((position - 1) * (MenuPhotoListActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
-
-		float destX = CORNER_POS_X;
-		float destY = CORNER_POS_Y;
+		
+		int toLoc[] = new int[2];
+		((MenuPhotoListActivity) mContext).listview.getLocationOnScreen(toLoc);
+		float destX = toLoc[0] + + ((MenuPhotoListActivity) mContext).listview.getWidth();
+		float destY = toLoc[1] + ((MenuPhotoListActivity) mContext).listview.getHeight();
 
 		AnimationSet animSet = new AnimationSet(true);
 		animSet.setFillAfter(true);
