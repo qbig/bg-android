@@ -11,6 +11,10 @@ import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -44,6 +49,8 @@ public class EmailLoginActivity extends Activity {
 	ImageButton mLoginConfirmButton;
 
 	private SharedPreferences.Editor loginPrefsEditor;
+	private Runnable mShowToastTask;
+	private Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,17 @@ public class EmailLoginActivity extends Activity {
 		mLoginEmailField = (EditText) findViewById(R.id.loginEmail);
 		mLoginPasswordField = (EditText) findViewById(R.id.loginPassword);
 		addListenerOnButtonLogin();
+		mHandler = new Handler();
+		mShowToastTask = new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(EmailLoginActivity.this, "No such user with given email and password:(", Toast.LENGTH_LONG).show();
+			}
+		};
 	}
-
+	
+	
+	
 	private void addListenerOnButtonLogin() {
 
 		mLoginConfirmButton = (ImageButton) findViewById(R.id.loginButton);
@@ -65,6 +81,7 @@ public class EmailLoginActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				if (isLoginFieldsValid()) {
+					mHandler.postDelayed(mShowToastTask, 2000);
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
 					json.addProperty("password", mLoginPasswordField.getText().toString());
@@ -74,6 +91,7 @@ public class EmailLoginActivity extends Activity {
 							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 								@Override
 								public void onCompleted(Exception e, JsonObject result) {
+									mHandler.removeCallbacks(mShowToastTask);
 									if (e != null) {
 										if (Constants.LOG) {
 											Toast.makeText(EmailLoginActivity.this, "Error during login",
