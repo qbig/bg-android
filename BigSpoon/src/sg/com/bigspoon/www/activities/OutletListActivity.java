@@ -6,6 +6,8 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -122,6 +124,7 @@ public class OutletListActivity extends Activity {
 			public void onClick(View view) {
 				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
 				loginPrefsEditor.clear();
+				loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
 				loginPrefsEditor.commit();
 
 				Session session = Session.getActiveSession();
