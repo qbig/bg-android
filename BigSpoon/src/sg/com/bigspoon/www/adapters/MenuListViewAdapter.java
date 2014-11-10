@@ -31,6 +31,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -310,6 +311,12 @@ public class MenuListViewAdapter extends BaseAdapter {
 				convertView.setTag(photoViewHolder);
 
 				photoViewHolder.imageButton.setOnClickListener(mOrderDishButtonOnClickListener);
+				photoViewHolder.imageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						photoViewHolder.imageButton.performClick();
+					}
+				});
 			} else {
 				photoViewHolder = (ListPhotoItemViewHolder) convertView.getTag();
 			}
