@@ -59,7 +59,8 @@ public class PastOrdersAdapter extends ArrayAdapter<OrderItem> {
 				modifierSubTitle.setText(modifierTxt);
 			}
 
-			priceView.setText("$" + String.format("%.1f",currentItem.dish.price));
+			priceView.setText("$" + String.format("%.1f", User.getInstance(mContext).currentSession.getPastOrder()
+					.getModifierPriceChangeAtIndex(position) + currentItem.dish.price));
 		} else {
 			priceView.setText("$" + String.format("%.1f",currentItem.dish.price * dishQuantity));
 			if (currentItem.note != null && !currentItem.note.isEmpty()){

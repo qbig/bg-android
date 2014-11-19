@@ -3,6 +3,7 @@ package sg.com.bigspoon.www.activities;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import io.fabric.sdk.android.Fabric;
 import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +24,7 @@ public class LaunchActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crashlytics.start(this);
+		Fabric.with(this, new Crashlytics());
 		setContentView(R.layout.activity_launch);
 		new Handler().postDelayed(new Runnable() {
 
