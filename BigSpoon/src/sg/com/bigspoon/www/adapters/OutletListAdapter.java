@@ -49,6 +49,12 @@ public class OutletListAdapter extends ArrayAdapter<OutletModel> {
 
 		final ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
 		Ion.with(imageView).load(BASE_URL + outlet.restaurant.icon.thumbnail);
+		if (position == 0){
+			rowView.setBackgroundResource(R.drawable.outlet_item_border);
+		} else {
+			rowView.setBackgroundResource(0);
+		}
+	
 
 		return rowView;
 	}
