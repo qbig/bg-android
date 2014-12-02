@@ -55,9 +55,6 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 
 		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
 			locationClient = new LocationClient(this, this, this);
-			if (locationClient.getLastLocation() != null) {
-				broadcastUpdatedLocation(locationClient.getLastLocation());
-			}
 			
 			if (!locationClient.isConnected() || !locationClient.isConnecting()) {
 				locationClient.connect();
@@ -138,7 +135,9 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 	@Override
 	public void onConnected(Bundle arg0) {
 		Log.d(TAG, "onConnected");
-
+		if (locationClient.getLastLocation() != null) {
+			broadcastUpdatedLocation(locationClient.getLastLocation());
+		}
 		locationRequest = LocationRequest.create();
 		locationRequest.setInterval(POLLING_FREQ); 
 		locationRequest.setFastestInterval(POLLING_FREQ);
