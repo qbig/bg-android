@@ -6,6 +6,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import io.fabric.sdk.android.Fabric;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -76,7 +78,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 									try {
 										info.put("error", e.toString());
 									} catch (JSONException e1) {
-										e1.printStackTrace();
+										Crashlytics.logException(e1);
 									}
 									User.getInstance(CategoriesListActivity.this).mMixpanel.track(
 											"Error with category list loading", info);
@@ -96,8 +98,12 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 							user.currentSession.getCurrentOrder(outletDetails.name);
 							user.currentOutlet = outletDetails;
 
-							final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-							title.setText(outletDetails.name);
+							try {
+								final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+								title.setText(outletDetails.name);
+							} catch (NullPointerException ne) {
+								Crashlytics.logException(ne);
+							}
 
 							CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
 									outletDetails, outletIcon);

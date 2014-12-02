@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -66,8 +67,13 @@ public class UserReviewActivity extends Activity {
 
 		submit.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				performRatingSubmission();
-				performFeedbackSubmission();
+				try {
+					performRatingSubmission();
+					performFeedbackSubmission();
+				} catch (IndexOutOfBoundsException ie) {
+					Crashlytics.logException(ie);
+				}
+
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
 				User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
@@ -126,15 +132,13 @@ public class UserReviewActivity extends Activity {
 									try {
 										info.put("error", e.toString());
 									} catch (JSONException e1) {
-										e1.printStackTrace();
+										Crashlytics.logException(e1);
 									}
 									User.getInstance(UserReviewActivity.this).mMixpanel.track("Error sending ratings", info);
 								}
 								
 								return;
 							}
-							
-							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
 						}
 					});
 
@@ -164,14 +168,13 @@ public class UserReviewActivity extends Activity {
 								try {
 									info.put("error", e.toString());
 								} catch (JSONException e1) {
-									e1.printStackTrace();
+									Crashlytics.logException(e1);
 								}
 								User.getInstance(UserReviewActivity.this).mMixpanel.track("Error sending feedback", info);
 							}
 							
 							return;
 						}
-						Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
 					}
 				});
 	}

@@ -35,6 +35,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.gson.JsonObject;
@@ -113,7 +114,7 @@ public class EntryActivity extends Activity {
 					.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 						@Override
 						public void onCompleted(Exception e, JsonObject result) {
-							if (e != null) {
+							if (e != null || result == null) {
 								if (Constants.LOG) {
 									Toast.makeText(EntryActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
 								} else {
@@ -124,23 +125,28 @@ public class EntryActivity extends Activity {
 										User.getInstance(EntryActivity.this).mMixpanel
 												.registerSuperPropertiesOnce(errorJson);
 									} catch (JSONException e1) {
-										e1.printStackTrace();
+										Crashlytics.logException(e1);
 									}
 								}
 								return;
 							}
-							final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
-							final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
-							final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
-							final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
-							final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
-
-							loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
-							loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
-							loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
-							loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
-							loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
-							loginPrefsEditor.commit();
+							
+							final String email = result.get(LOGIN_INFO_EMAIL) == null ? null : result.get(LOGIN_INFO_EMAIL).getAsString();
+							final String lastName = result.get(LOGIN_INFO_LAST_NAME) == null ? null : result.get(LOGIN_INFO_LAST_NAME).getAsString();
+							final String firstName = result.get(LOGIN_INFO_FIRST_NAME) == null ? null : result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+							final String authToken = result.get(LOGIN_INFO_AUTHTOKEN) == null ? null : result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+							final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL) == null ? null : result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+							
+							try {
+								loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
+								loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+								loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+								loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+								loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+								loginPrefsEditor.commit();
+							} catch (NullPointerException ne){
+								Crashlytics.logException(ne);
+							}
 
 							mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
 							JSONObject firstTime = new JSONObject();
@@ -152,7 +158,7 @@ public class EntryActivity extends Activity {
 								mMixpanel.getPeople().increment(FB_LOGIN_COUNT, 1);
 								mMixpanel.track("fbLogin Success", firstTime);
 							} catch (JSONException e1) {
-								e1.printStackTrace();
+								Crashlytics.logException(e1);
 							}
 							Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -74,6 +74,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -297,7 +298,7 @@ public class ItemsActivity extends ExpandableListActivity {
 								try {
 									info.put("error", e.toString());
 								} catch (JSONException e1) {
-									e1.printStackTrace();
+									Crashlytics.logException(e1);
 								}
 								User.getInstance(ItemsActivity.this).mMixpanel.track("Error sending orders",
 										info);
@@ -1075,7 +1076,7 @@ public class ItemsActivity extends ExpandableListActivity {
 								try {
 									info.put("error", e.toString());
 								} catch (JSONException e1) {
-									e1.printStackTrace();
+									Crashlytics.logException(e1);
 								}
 								User.getInstance(ItemsActivity.this).mMixpanel.track("Error requesting bills",
 										info);
