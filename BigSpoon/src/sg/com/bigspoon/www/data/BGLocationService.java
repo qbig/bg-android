@@ -46,7 +46,7 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 			currentlyProcessingLocation = true;
 			startTracking();
 		}
-
+		
 		return START_STICKY;
 	}
 
@@ -55,7 +55,10 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 
 		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
 			locationClient = new LocationClient(this, this, this);
-
+			if (locationClient.getLastLocation() != null) {
+				broadcastUpdatedLocation(locationClient.getLastLocation());
+			}
+			
 			if (!locationClient.isConnected() || !locationClient.isConnecting()) {
 				locationClient.connect();
 			}
