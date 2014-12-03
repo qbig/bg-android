@@ -57,6 +57,8 @@ import com.facebook.SessionState;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 
 public class OutletListActivity extends Activity {
 	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
@@ -176,6 +178,7 @@ public class OutletListActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        LocationLibrary.forceLocationUpdate(this);
 		updateListData();
 	}
 
@@ -306,6 +309,8 @@ public class OutletListActivity extends Activity {
 		} else {
 			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
 					new IntentFilter(NOTIF_LOCATION_UPDATED));
+			LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
+					new IntentFilter(LocationLibraryConstants.getLocationChangedPeriodicBroadcastAction()));
 		}
 		
 		list.setAdapter(new OutletListAdapter(OutletListActivity.this, outlets));

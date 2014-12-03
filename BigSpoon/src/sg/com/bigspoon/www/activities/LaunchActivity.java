@@ -24,7 +24,6 @@ public class LaunchActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
 		setContentView(R.layout.activity_launch);
 		new Handler().postDelayed(new Runnable() {
 
