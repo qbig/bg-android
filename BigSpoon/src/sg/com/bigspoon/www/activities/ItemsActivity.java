@@ -306,7 +306,7 @@ public class ItemsActivity extends ExpandableListActivity {
 							
 							return;
 						}
-						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
+						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
 					}
 				});
 	}
@@ -831,11 +831,15 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				performBillRequest();
-				Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
-				startActivity(i);
-				if (! User.getInstance(ItemsActivity.this).currentOutlet.isBillEnabled) {
-					Toast.makeText(ItemsActivity.this, User.getInstance(ItemsActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+				if (User.getInstance(ItemsActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0){
+					performBillRequest();
+					Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
+					startActivity(i);
+					if (! User.getInstance(ItemsActivity.this).currentOutlet.isBillEnabled) {
+						Toast.makeText(ItemsActivity.this, User.getInstance(ItemsActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+					}
+				} else {
+					Toast.makeText(ItemsActivity.this, "You haven't ordered anything yet :)", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -1084,7 +1088,7 @@ public class ItemsActivity extends ExpandableListActivity {
 							
 							return;
 						}
-						Toast.makeText(ItemsActivity.this, "Success", Toast.LENGTH_LONG).show();
+						Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 					}
 				});
 	}

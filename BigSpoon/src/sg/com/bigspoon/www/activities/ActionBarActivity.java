@@ -178,13 +178,18 @@ public class ActionBarActivity extends FragmentActivity {
 		});
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				performBillRequest();
-				Intent i = new Intent(ActionBarActivity.this,
-						UserReviewActivity.class);
-				startActivity(i);
-				if (! User.getInstance(ActionBarActivity.this).currentOutlet.isBillEnabled) {
-					Toast.makeText(ActionBarActivity.this, User.getInstance(ActionBarActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+				if (User.getInstance(ActionBarActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0){
+					performBillRequest();
+					Intent i = new Intent(ActionBarActivity.this,
+							UserReviewActivity.class);
+					startActivity(i);
+					if (! User.getInstance(ActionBarActivity.this).currentOutlet.isBillEnabled) {
+						Toast.makeText(ActionBarActivity.this, User.getInstance(ActionBarActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
+					}
+				} else {
+					Toast.makeText(ActionBarActivity.this, "You haven't ordered anything yet :)", Toast.LENGTH_LONG).show();
 				}
+				
 			}
 		});
 		alert2.show();
@@ -462,8 +467,7 @@ public class ActionBarActivity extends FragmentActivity {
 							
 							return;
 						}
-						Toast.makeText(ActionBarActivity.this, "Success",
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(ActionBarActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 					}
 				});
 	}

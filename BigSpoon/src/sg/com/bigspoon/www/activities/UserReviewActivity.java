@@ -44,10 +44,6 @@ public class UserReviewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_review);
-		Toast.makeText(
-				getApplicationContext(),
-				"Request for bill is submitted, the waiter will be right with you.",
-				Toast.LENGTH_LONG).show();
 		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
 		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.getPastOrder().mItems.size()];
 
