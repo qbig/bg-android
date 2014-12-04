@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.SocketIOManager;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
@@ -160,6 +161,7 @@ public class EntryActivity extends Activity {
 							} catch (JSONException e1) {
 								Crashlytics.logException(e1);
 							}
+							SocketIOManager.getInstance(EntryActivity.this).setupSocketIOConnection();
 							Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							EntryActivity.this.startActivity(intent);

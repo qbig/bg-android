@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.SocketIOManager;
 import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
@@ -134,7 +135,8 @@ public class EmailLoginActivity extends Activity {
 										} catch (JSONException e1) {
 											e1.printStackTrace();
 										}
-
+										
+										SocketIOManager.getInstance(EmailLoginActivity.this).setupSocketIOConnection();
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 										EmailLoginActivity.this.startActivity(intent);
