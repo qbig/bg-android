@@ -69,6 +69,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 	private static final long DURATION_SHORT = 500;
 	private Drawable outOfStockBackground;
 	private Runnable taskAfterModifierPopup;
+	private SuperActivityToast mSuperActivityToast;
 	
 	private BroadcastReceiver mAfterModifierPopupReceiver = new BroadcastReceiver() {
 		@Override
@@ -83,6 +84,15 @@ public class MenuListViewAdapter extends BaseAdapter {
 		super();
 		this.mOutletInfo = outletInfo;
 		this.mContext = context;
+		mSuperActivityToast = new SuperActivityToast((Activity)mContext,
+                SuperToast.Type.STANDARD);
+		mSuperActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
+		mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
+		mSuperActivityToast.setAnimations(SuperToast.Animations.FLYIN);
+		mSuperActivityToast.setDuration(SuperToast.Duration.LONG);
+		mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
+		mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+		
 		LocalBroadcastManager.getInstance(context).registerReceiver(mAfterModifierPopupReceiver,
 				new IntentFilter(NOTIF_MODIFIER_OK));
 		this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
@@ -113,11 +123,13 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 	private void initAddDishButtonListener() {
 		mOrderDishButtonOnClickListener = new View.OnClickListener() {
+
 			@Override
 			public void onClick(final View view) {
 
 				final Integer itemPosition = (Integer) view.getTag();
 				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
+				mSuperActivityToast.dismiss();
 				if (!currentDish.isServedNow()) {
 					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
 					alertLocationFail.setTitle("Sorry");
@@ -164,16 +176,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
 								}
 								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
-									final SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext,
-					                        SuperToast.Type.STANDARD);
-									superActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
-									superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-									superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
-									superActivityToast.setDuration(SuperToast.Duration.LONG);
-									superActivityToast.setBackground(SuperToast.Background.ORANGE);
-									superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
-									superActivityToast.show();
-									
+									mSuperActivityToast.show();
 								}
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
@@ -192,15 +195,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
-						final SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext,
-		                        SuperToast.Type.STANDARD);
-						superActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
-						superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-						superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
-						superActivityToast.setDuration(SuperToast.Duration.LONG);
-						superActivityToast.setBackground(SuperToast.Background.ORANGE);
-						superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
-						superActivityToast.show();
+						mSuperActivityToast.show();
 					}
 
 					if (MenuPhotoListActivity.isPhotoMode) {

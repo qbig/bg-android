@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.SocketIOManager;
 import sg.com.bigspoon.www.data.User;
@@ -136,7 +137,7 @@ public class EmailLoginActivity extends Activity {
 											e1.printStackTrace();
 										}
 										
-										SocketIOManager.getInstance(EmailLoginActivity.this).setupSocketIOConnection();
+										SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 										EmailLoginActivity.this.startActivity(intent);

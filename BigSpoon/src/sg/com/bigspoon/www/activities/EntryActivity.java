@@ -161,7 +161,7 @@ public class EntryActivity extends Activity {
 							} catch (JSONException e1) {
 								Crashlytics.logException(e1);
 							}
-							SocketIOManager.getInstance(EntryActivity.this).setupSocketIOConnection();
+							SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
 							Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							EntryActivity.this.startActivity(intent);

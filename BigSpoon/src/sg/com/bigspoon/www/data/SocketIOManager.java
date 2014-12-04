@@ -31,16 +31,16 @@ public class SocketIOManager {
 	private static SocketIOManager sInstance;
 	private SharedPreferences loginPrefs;
 	private ConnectCallback socketIOCallback;
-	private Context mContext;
+	private BigSpoon mContext;
 	private int failCount;
 	private SocketIOClient mClient;
-	private SocketIOManager(Context context) {
+	private SocketIOManager(BigSpoon context) {
 		mContext = context;
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
 		failCount = 0;
 	}
 
-	static public SocketIOManager getInstance(Context context) {
+	static public SocketIOManager getInstance(BigSpoon context) {
 		synchronized (SocketIOManager.class) {
 			if (sInstance == null) {
 				sInstance = new SocketIOManager(context);
@@ -148,7 +148,7 @@ public class SocketIOManager {
 					
 					new Thread() {
 					    public void run() {
-					    	((BigSpoon) mContext).mHandler.post(new Runnable() {
+					    	mContext.mHandler.post(new Runnable() {
 					    	    public void run() {
 					    	    	Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
 					    	    }});
