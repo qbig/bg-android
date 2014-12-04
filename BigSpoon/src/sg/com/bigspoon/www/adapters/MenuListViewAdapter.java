@@ -170,7 +170,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 									superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
 									superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
 									superActivityToast.setDuration(SuperToast.Duration.LONG);
-									superActivityToast.setBackground(SuperToast.Background.GREEN);
+									superActivityToast.setBackground(SuperToast.Background.ORANGE);
 									superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
 									superActivityToast.show();
 									
@@ -198,7 +198,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 						superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
 						superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
 						superActivityToast.setDuration(SuperToast.Duration.LONG);
-						superActivityToast.setBackground(SuperToast.Background.GREEN);
+						superActivityToast.setBackground(SuperToast.Background.ORANGE);
 						superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
 						superActivityToast.show();
 					}
