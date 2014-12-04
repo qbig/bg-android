@@ -152,18 +152,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		final boolean hasShownTutorial = loginPreferences.getBoolean(TUTORIAL_SET, false);
 		if (hasShownTutorial || force) {
 			final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-			Criteria locationCritera = new Criteria();
-			locationCritera.setAccuracy(Criteria.ACCURACY_COARSE);
-			locationCritera.setAltitudeRequired(false);
-			locationCritera.setBearingRequired(false);
-			locationCritera.setCostAllowed(true);
-			locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
-
-			final String providerName = locationManager.getBestProvider(locationCritera, true);
-
-			if (providerName == null || providerName.equals(LocationManager.PASSIVE_PROVIDER)
-					|| !locationManager.isProviderEnabled(providerName)) {
+			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 				Toast.makeText(this, R.string.please_turn_on_gps, Toast.LENGTH_LONG).show();
 				Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 				myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

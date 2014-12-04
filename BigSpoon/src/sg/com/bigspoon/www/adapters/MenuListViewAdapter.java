@@ -3,9 +3,8 @@ package sg.com.bigspoon.www.adapters;
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,7 +15,7 @@ import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,8 +24,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.location.GpsStatus.Listener;
-import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +44,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
 public class MenuListViewAdapter extends BaseAdapter {
@@ -165,8 +164,16 @@ public class MenuListViewAdapter extends BaseAdapter {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
 								}
 								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
-									Toast.makeText(mContext, "Order saved to 'Unsent Order'. Tab 'Orders' to view.",
-											Toast.LENGTH_LONG).show();
+									final SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext,
+					                        SuperToast.Type.STANDARD);
+									superActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
+									superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
+									superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
+									superActivityToast.setDuration(SuperToast.Duration.LONG);
+									superActivityToast.setBackground(SuperToast.Background.GREEN);
+									superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+									superActivityToast.show();
+									
 								}
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
@@ -185,8 +192,15 @@ public class MenuListViewAdapter extends BaseAdapter {
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
-						Toast.makeText(mContext, "Order saved to 'Unsent Order'. Tab 'Orders' to view.",
-								Toast.LENGTH_LONG).show();
+						final SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext,
+		                        SuperToast.Type.STANDARD);
+						superActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
+						superActivityToast.setTextSize(SuperToast.TextSize.LARGE);
+						superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
+						superActivityToast.setDuration(SuperToast.Duration.LONG);
+						superActivityToast.setBackground(SuperToast.Background.GREEN);
+						superActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+						superActivityToast.show();
 					}
 
 					if (MenuPhotoListActivity.isPhotoMode) {
