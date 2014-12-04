@@ -175,7 +175,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 								} else {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
 								}
-								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
+								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 									mSuperActivityToast.show();
 								}
 							} catch (Exception e) {
@@ -194,7 +194,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 							.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
-					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1) {
+					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 						mSuperActivityToast.show();
 					}
 
