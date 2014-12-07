@@ -128,6 +128,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();
+		LocationLibrary.startAlarmAndListener(this);
 	}
 
 	// Foreground Callback
@@ -135,6 +136,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	public void onBecameBackground() {
 		this.stopService(new Intent(this, BGLocationService.class));
 		SocketIOManager.getInstance(this).disconnect();
+		LocationLibrary.stopAlarmAndListener(this);
 	}
 
 	public void checkLocationEnabledByForce() {
