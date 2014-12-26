@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    
+
+    <GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/new_bottom_button_croped"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:stretchMode="columnWidth" >
+    </GridView>
+    
+        <TextView
+        android:id="@+id/corner"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@id/gv_action_menu"
+        android:layout_alignRight="@id/gv_action_menu" 
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginRight="33dp"
+        android:background="@drawable/badge_circle"/>
+
+</RelativeLayout>

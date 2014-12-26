@@ -1,0 +1,23 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 12
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 13
+        targetSdkVersion 13
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile files('libs/bolts.jar')
+    compile 'com.android.support:support-v4:21.0.3'
+}

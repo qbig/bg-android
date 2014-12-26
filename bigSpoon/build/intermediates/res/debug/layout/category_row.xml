@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/categoryimage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:id="@+id/categoryname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/categoryimage"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/categoryimage"
+        android:layout_marginBottom="36dp"
+        style="@android:style/TextAppearance.Medium" />
+    
+     <ImageView
+    android:id="@+id/image1"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:layout_alignParentRight="true"
+     android:layout_centerVertical="true"
+    android:src="@drawable/icon_arrow_right" />
+
+</RelativeLayout><!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/src/main/res/layout/category_row.xml -->

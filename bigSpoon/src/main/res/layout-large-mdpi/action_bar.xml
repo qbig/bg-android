@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:textSize="92sp" >
+    
+     <TextView
+         android:id="@+id/title"
+         style="?android:attr/tabWidgetStyle"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_centerVertical="true"
+         android:text="@string/title_outlet"
+         android:textColor="#000000"
+         android:textSize="@dimen/default_title_indicator_text_size"
+         android:textStyle="bold" />
+
+    <ImageButton 
+        android:id="@+id/btn_back"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:onClick="toggleMenu"
+        android:layout_centerVertical="true"
+        />
+    
+   <!-- android:paddingTop="8dp"
+        android:paddingLeft="10dp" 
+        android:src="@drawable/logout_button_test"-->
+
+     <ImageButton 
+        android:id="@+id/order_history"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/gear"
+        android:onClick="toggleMenu"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"
+        android:layout_centerVertical="true"/>
+
+     <ImageButton
+         android:id="@+id/toggleButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginRight="10dp"
+         android:layout_centerVertical="true"
+         android:layout_toLeftOf="@+id/order_history" />
+
+     
+
+</RelativeLayout>

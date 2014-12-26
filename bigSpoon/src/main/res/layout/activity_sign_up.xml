@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/new_entry_background"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/signupFullName"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/top"
+        android:ellipsize="start"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="@string/fullName"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:textColorHint="#cbc4c4" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/signupEmail"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/signupFullName"
+        android:layout_below="@+id/signupFullName"
+        android:background="@drawable/middle_withoutborder"
+        android:ellipsize="start"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="@string/emailAddress"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="15dp"
+        android:singleLine="true"
+        android:textColorHint="#cbc4c4" />
+
+    <EditText
+        android:id="@+id/signupPassword"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/signupEmail"
+        android:layout_below="@+id/signupEmail"
+        android:background="@drawable/down"
+        android:ellipsize="start"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="@string/password"
+        android:paddingLeft="15dp"
+        android:password="true"
+        android:singleLine="true"
+        android:textColorHint="#cbc4c4" />
+
+    <ImageView
+        android:id="@+id/signupImageBackground"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-30dp"
+        android:background="@null"
+        android:src="@drawable/bg_logo" />
+
+    <ImageButton
+        android:id="@+id/signupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signupPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="@null"
+        android:src="@drawable/new_signup_button" />
+
+</RelativeLayout>

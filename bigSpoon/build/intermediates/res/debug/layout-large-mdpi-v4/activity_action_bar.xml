@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="#CCCCCC"
+    android:layout_alignParentBottom="true"
+    tools:context=".MenuLayout" >
+
+    <GridView
+        android:id="@+id/gv_action_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/new_bottom_button_croped"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:listSelector="@null"
+        android:numColumns="3"
+        android:stretchMode="columnWidth" >
+    </GridView>
+
+</RelativeLayout><!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/src/main/res/layout-large-mdpi/activity_action_bar.xml -->

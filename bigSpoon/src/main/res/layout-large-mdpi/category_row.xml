@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/categoryimage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp" />
+ <ImageView
+        android:id="@+id/category_list_restaurant_icon"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"/>
+    <TextView
+        android:id="@+id/categoryname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/categoryimage"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/categoryimage"
+        android:layout_marginBottom="36dp"
+        style="@android:style/TextAppearance.Medium" />
+    
+     <ImageView
+    android:id="@+id/image1"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:layout_alignParentRight="true"
+     android:layout_centerVertical="true"
+    android:src="@drawable/icon_arrow_right" />
+
+</RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+     android:shape="rectangle"> 
+     <gradient 
+         android:startColor="#bbFFFFFF"
+         android:endColor="#ffFFFFFF" 
+         android:angle="270"/> 
+
+</shape> <!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/src/main/res/drawable/text_background_gradient.xml -->

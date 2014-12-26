@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/libViewPagerIndicator/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e02517f6eb41b18eab0df48ec94c43a5ddfc6e1d">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-c2d6a150888f8d3a52949cae072763c302899045.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_answers/unspecified/libs/com-crashlytics-sdk-android_answers-classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7363bd9461c166e18592b58547720fbad8d4b0bc">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/com-crashlytics-sdk-android_answers-classes-87052ef0a84e20bb177fb000e3b30299a5e39702.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_crashlytics/unspecified/libs/com-crashlytics-sdk-android_crashlytics-classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1adf75e3d87301236c2d4de507b4a668092ff070">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/com-crashlytics-sdk-android_crashlytics-classes-dca84d9e0c4d8349b4bfcf77f146533be9fba63d.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-db774c6cd047c8487cb850571d3e74834b971762.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_beta/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4d28052787eef2bf4329e0d2ab161aebe9ed3050">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-ee8d66db03d3723bdc8d7bfc5eb7fe03694e53ff.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-0fe77cc8ab32f71456540d640ac4e5fdb1ce48e5.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/androidAsync/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2e313d6d698eb6cf65d1a32b7bbe0ccbcb0f3da0">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-ee487316e47b3420bfcd94f7e50d11cb6dfbac44.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/mixpanelandroid/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5095f0e4834389cafdd2cd930bdef7ea45148d9">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-1c050b3a67b7b2a21ccc77d82cba5ac418811b7c.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/iofabricsdkandroid_fabric/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a5b832a086e73c88dfb752e7ea095cbcaa3bde9a">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-3d334748b2661c11620c09382b97df0e8cddc9fe.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/iofabricsdkandroid_fabric/unspecified/libs/io-fabric-sdk-android_fabric-classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7b46e0b1175dbb7d47f130d6ed14097340e1b77f">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/io-fabric-sdk-android_fabric-classes-73f32436864fd0273cbdbb6bb98ef859cb5c96ab.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/supertoasts/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e896f65b248a9bc471026af95c6b7995bf3e9631">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-f05207ec291b099b8ffa05762e155ae1cb17496c.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/commonJars/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6a708051920a1795f594bea6a734368f73e57cbf">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-570394a910218a1471c787e8deb8be4d62b40ef3.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/libFacebookSDK/unspecified/libs/bolts.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1e5ba33c837d05dcca9dc40a0ab458f8599d7aef">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/bolts-abdf49983f7463723a950a2a8e33dcd9af3625e1.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-d3ae541d86090590f1b54c68505b061e47d6e3ae.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-a67be3a9529b0d1070dfa9ea6d41d159d66741a7.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/libFacebookSDK/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1d7714be8bb41569118f22c80068a7ebe80b3945">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-403188e9664404bda9955a87f7b1f7682aedb7a3.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_crashlytics/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3e067dafbc29652c6c495ec4da2cf67a6a3e07bf">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-bb7136b9a94919b8dda2b1a7e708019f9cb8d1f2.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/gson-2.2.4-b04b37b09096853c1da862c0ffdbee466d7374ed.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/libs/bugsense-3.6.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="bf354591194bef969ec162609bd1cc279d2d113b">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/bugsense-3.6.1-707e2058e0bdd29a22a92e40b747e3922c9b494f.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_beta/unspecified/libs/com-crashlytics-sdk-android_beta-classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ac8bb9f7af7ca5dae03650dc1b43a305e1df2f1b">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/com-crashlytics-sdk-android_beta-classes-e9401b300286fd142250978e69f863e4d2621214.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/libs/littlefluffylocationlibrary_r15.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b0c58bb48f671992c2e186cebc8587187d108699">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/littlefluffylocationlibrary_r15-8d7c36fda04e03d6624ec75d51d79f1da079323e.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/libs/ion-1.3.8.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1fc0413880bde2e3ffab3c5e5a243f39dd409b1c">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/ion-1.3.8-e3b4319e13e1882c01d24d7e21ecc433b48b3a9b.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.11/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f700f6802ba1a1f1fa7ac26d5db0666a89d75a6">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-312b9aae6654831b42a1e3df8700ad6fd4860b63.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/comcrashlyticssdkandroid_answers/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4299a192125d4443d4b5d57abde5dceed02c8e59">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-47166ecc3d48a6eeb6a09f34ddfd08f3257dcc37.jar" />
+    </item>
+    <item
+        jar="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/libPinnedHeaderListView/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0ea31587a030a9bdaa0fa89cb76269cba7389201">
+        <dex dex="/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/pre-dexed/debug/classes-ccf1a2c3e4906e17361291911b2a83da5b0b9ef6.jar" />
+    </item>
+
+</items>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BigSpoonAndroid.iml" filepath="$PROJECT_DIR$/BigSpoonAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidAsync/androidAsync.iml" filepath="$PROJECT_DIR$/androidAsync/androidAsync.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigSpoon/bigSpoon.iml" filepath="$PROJECT_DIR$/bigSpoon/bigSpoon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/comcrashlyticssdkandroid_answers/comcrashlyticssdkandroid_answers.iml" filepath="$PROJECT_DIR$/comcrashlyticssdkandroid_answers/comcrashlyticssdkandroid_answers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/comcrashlyticssdkandroid_beta/comcrashlyticssdkandroid_beta.iml" filepath="$PROJECT_DIR$/comcrashlyticssdkandroid_beta/comcrashlyticssdkandroid_beta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/comcrashlyticssdkandroid_crashlytics/comcrashlyticssdkandroid_crashlytics.iml" filepath="$PROJECT_DIR$/comcrashlyticssdkandroid_crashlytics/comcrashlyticssdkandroid_crashlytics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commonJars/commonJars.iml" filepath="$PROJECT_DIR$/commonJars/commonJars.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iofabricsdkandroid_fabric/iofabricsdkandroid_fabric.iml" filepath="$PROJECT_DIR$/iofabricsdkandroid_fabric/iofabricsdkandroid_fabric.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libFacebookSDK/libFacebookSDK.iml" filepath="$PROJECT_DIR$/libFacebookSDK/libFacebookSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libPinnedHeaderListView/libPinnedHeaderListView.iml" filepath="$PROJECT_DIR$/libPinnedHeaderListView/libPinnedHeaderListView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libViewPagerIndicator/libViewPagerIndicator.iml" filepath="$PROJECT_DIR$/libViewPagerIndicator/libViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mixpanelandroid/mixpanelandroid.iml" filepath="$PROJECT_DIR$/mixpanelandroid/mixpanelandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/supertoasts/supertoasts.iml" filepath="$PROJECT_DIR$/supertoasts/supertoasts.iml" />
+    </modules>
+  </component>
+</project>
+

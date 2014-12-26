@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="sg.com.bigspoon.www"
+    android:versionCode="31"
+    android:versionName="1.152" >
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-feature android:name="android.hardware.location" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    
+    <application
+        android:name=".data.BigSpoon"
+        android:allowBackup="true"
+        android:largeHeap="true"
+        android:icon="@drawable/bigspoonmobileappiconwithname"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="sg.com.bigspoon.www.activities.TutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
+        <activity
+            android:name="sg.com.bigspoon.www.activities.LaunchActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.OutletListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.ItemsActivity"
+            android:label="@string/title_activity_items"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.EmailLoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.EntryActivity"
+            android:label="@string/title_activity_entry"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.CategoriesListActivity"
+            android:label="@string/title_activity_categories_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
+
+        <activity
+            android:name="sg.com.bigspoon.www.activities.MenuPhotoListActivity"
+            android:label="@string/title_activity_menu_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
+
+        <activity
+            android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
+            android:label="@string/title_activity_order_history"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
+            android:label="@string/title_activity_order_history_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
+            android:label="@string/title_activity_call_water_service"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
+            android:label="@string/title_activity_call_water_service"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.UserReviewActivity"
+            android:label="@string/title_activity_user_review"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="sg.com.bigspoon.www.activities.ModifierActivity"
+            android:label="@string/title_activity_modifier" >
+        </activity>
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="sg.com.bigspoon.www.activities.ExpandableViewUtil"
+            android:windowSoftInputMode="adjustPan" />
+
+        <service
+            android:name="sg.com.bigspoon.www.data.BGLocationService"
+            android:icon="@drawable/icon"
+            android:label="@string/service_name" >
+        </service>
+		<service android:name="com.littlefluffytoys.littlefluffylocationlibrary.LocationBroadcastService" />
+        <receiver android:name="com.littlefluffytoys.littlefluffylocationlibrary.StartupBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />  
+            </intent-filter>  
+        </receiver>
+
+    
+
+    <meta-data android:name="com.crashlytics.ApiKey" android:value="5e0d63d5b12c89cf3ff015e07958d5a94a75722a"/>
+    </application>
+
+</manifest>
