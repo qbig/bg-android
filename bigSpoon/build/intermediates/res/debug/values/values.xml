@@ -388,7 +388,7 @@
     <string name="category_title">Categories</string>
     <!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/src/main/res/values/com_crashlytics_export_strings.xml -->
     <eat-comment/>
-    <string name="com.crashlytics.android.build_id" translatable="false">79db39c8-4f6d-46fb-b89a-cf817bde71ca</string>
+    <string name="com.crashlytics.android.build_id" translatable="false">9d3d01c3-d0a8-4e7a-9db8-435add55be51</string>
     <!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/exploded-aar/BigSpoonAndroid/libFacebookSDK/unspecified/res/values/values.xml -->
     <eat-comment/>
     <string name="com_facebook_choose_friends">Choose Friends</string>
