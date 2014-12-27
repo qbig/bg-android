@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="io-fabric-sdk-android_fabric-classes">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/iofabricsdkandroid_fabric/libs/io-fabric-sdk-android_fabric-classes.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

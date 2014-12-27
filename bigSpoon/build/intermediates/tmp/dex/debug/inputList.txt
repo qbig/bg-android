@@ -1,1 +1,0 @@
-/Users/qiaoliang89/Documents/BigSpoonAndroid/bigSpoon/build/intermediates/multi-dex/debug/allclasses.jar
