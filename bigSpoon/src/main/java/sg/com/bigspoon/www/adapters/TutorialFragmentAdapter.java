@@ -1,9 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.EntryActivity;
-import sg.com.bigspoon.www.activities.TutorialActivity;
-import sg.com.bigspoon.www.fragments.TutorialScreenFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -11,6 +7,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.viewpagerindicator.IconPagerAdapter;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.EmailLoginActivity;
+import sg.com.bigspoon.www.activities.TutorialActivity;
+import sg.com.bigspoon.www.fragments.TutorialScreenFragment;
 
 public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 		IconPagerAdapter {
@@ -20,8 +21,6 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 			R.layout.activity_tutorial_screen1,
 			R.layout.activity_tutorial_screen2,
 			R.layout.activity_tutorial_screen3,
-			R.layout.activity_tutorial_screen4,
-			R.layout.activity_tutorial_screen5,
 			R.layout.activity_tutorial_screen6,
 			R.layout.activity_tutorial_screenlast };
 	
@@ -36,7 +35,7 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 	public Fragment getItem(int position) {
 		
 		if (position == this.lastScreenIndex) {
-			Intent intent = new Intent(mContext, EntryActivity.class);
+			Intent intent = new Intent(mContext, EmailLoginActivity.class);
 			mContext.startActivity(intent);
 			((TutorialActivity) mContext).finish();
 		} 
@@ -48,7 +47,7 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 
 	@Override
 	public int getCount() {
-		return 7;
+		return tutScreenLayouts.length;
 	}
 
 	@Override

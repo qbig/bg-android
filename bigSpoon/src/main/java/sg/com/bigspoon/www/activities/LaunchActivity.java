@@ -1,10 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import io.fabric.sdk.android.Fabric;
-import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 
-import com.crashlytics.android.Crashlytics;
+import sg.com.bigspoon.www.R;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 
 public class LaunchActivity extends Activity {
@@ -40,7 +39,7 @@ public class LaunchActivity extends Activity {
             		if (loginPreferences.contains(LOGIN_INFO_AUTHTOKEN)){
             			startOutletActivity();
             		} else {
-            			startEntryActivity();
+            			startEmailActivity();
             		}
             		
             	}
@@ -54,8 +53,8 @@ public class LaunchActivity extends Activity {
 				startActivity(i);
 			}
             
-			private void startEntryActivity() {
-				Intent i = new Intent(LaunchActivity.this, EntryActivity.class);
+			private void startEmailActivity() {
+				Intent i = new Intent(LaunchActivity.this, EmailLoginActivity.class);
 				startActivity(i);
 			}
 
