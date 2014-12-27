@@ -23,7 +23,6 @@
     <list default="true" id="4ddbc57b-fddc-437d-bee4-06dd4ab10b68" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bigSpoon/build/intermediates/multi-dex/debug/allclasses.jar" afterPath="$PROJECT_DIR$/bigSpoon/build/intermediates/multi-dex/debug/allclasses.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bigSpoon/build/intermediates/multi-dex/debug/componentClasses.jar" afterPath="$PROJECT_DIR$/bigSpoon/build/intermediates/multi-dex/debug/componentClasses.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="BigSpoon.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -103,8 +102,8 @@
       <file leaf-file-name="EmailLoginActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bigSpoon/src/main/java/sg/com/bigspoon/www/activities/EmailLoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4490196" vertical-offset="71" max-vertical-offset="1920">
-              <caret line="60" column="47" selection-start-line="60" selection-start-column="47" selection-end-line="60" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.74313724" vertical-offset="71" max-vertical-offset="1920">
+              <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -6482,8 +6481,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bigSpoon/src/main/java/sg/com/bigspoon/www/activities/EmailLoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4490196" vertical-offset="71" max-vertical-offset="1920">
-          <caret line="60" column="47" selection-start-line="60" selection-start-column="47" selection-end-line="60" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.74313724" vertical-offset="71" max-vertical-offset="1920">
+          <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
           <folding />
         </state>
       </provider>
