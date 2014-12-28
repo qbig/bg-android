@@ -1,40 +1,20 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.BigSpoon;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.SocketIOManager;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -42,25 +22,52 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.BigSpoon;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.SocketIOManager;
+import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
+
 public class EmailLoginActivity extends Activity {
 	private static String ION_LOGGING_LOGIN = "ion-email-login";
 	private static String EMAIL_LOGIN_COUNT = "email-login-count";
 	EditText mLoginEmailField;
 	EditText mLoginPasswordField;
-
-	ImageButton mLoginConfirmButton;
+	Button mLoginConfirmButton;
 
 	private SharedPreferences.Editor loginPrefsEditor;
+    private SharedPreferences loginPreferences;
 	private Runnable mShowToastTask;
 	private Handler mHandler;
+    private boolean doubleBackToExitPressedOnce;
+    ProgressBar progressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_LOGIN, Log.DEBUG);
-		loginPrefsEditor = getSharedPreferences(PREFS_NAME, 0).edit();
-
+        loginPreferences = getSharedPreferences(PREFS_NAME, 0);
+		loginPrefsEditor = loginPreferences.edit();
+        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 		mLoginEmailField = (EditText) findViewById(R.id.loginEmail);
 		mLoginPasswordField = (EditText) findViewById(R.id.loginPassword);
 		addListenerOnButtonLogin();
@@ -71,13 +78,23 @@ public class EmailLoginActivity extends Activity {
 				Toast.makeText(EmailLoginActivity.this, "No such user with given email and password:(", Toast.LENGTH_LONG).show();
 			}
 		};
+
+
+        if (!loginPreferences.getBoolean(TUTORIAL_SET, false)) {
+            ((BigSpoon) getApplication()).checkLocationEnabledByForce();
+        }
 	}
-	
-	
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
 	
 	private void addListenerOnButtonLogin() {
 
-		mLoginConfirmButton = (ImageButton) findViewById(R.id.loginButton);
+		mLoginConfirmButton = (Button) findViewById(R.id.loginButton);
+        //Start Ordering, Om nom nom
+        mLoginConfirmButton.setText(Html.fromHtml("<font color='white'>Start Ordering, </font><font color='#5BD6CD'>Om nom nom</font>"));
 		mLoginConfirmButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -136,7 +153,8 @@ public class EmailLoginActivity extends Activity {
 										} catch (JSONException e1) {
 											e1.printStackTrace();
 										}
-										
+
+                                        EmailLoginActivity.this.progressBar.setVisibility(View.GONE);
 										SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -160,7 +178,7 @@ public class EmailLoginActivity extends Activity {
 	}
 
 	private boolean isLoginFieldsValid() {
-		return !mLoginEmailField.getText().toString().isEmpty() && !mLoginPasswordField.getText().toString().isEmpty();
+		return !mLoginEmailField.getText().toString().isEmpty();
 	}
 
 	@Override
@@ -169,4 +187,37 @@ public class EmailLoginActivity extends Activity {
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (loginPreferences.getBoolean(TUTORIAL_SET, false)) {
+            Intent intent = new Intent(NOTIF_TO_START_LOCATION_SERVICE);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
 }

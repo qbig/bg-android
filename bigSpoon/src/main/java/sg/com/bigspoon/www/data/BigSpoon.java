@@ -1,26 +1,11 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import io.fabric.sdk.android.Fabric;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.Foreground;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
@@ -34,6 +19,22 @@ import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.fabric.sdk.android.Fabric;
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.Foreground;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 public class BigSpoon extends Application implements Foreground.Listener {
 	final Handler mHandler = new Handler();
@@ -109,6 +110,8 @@ public class BigSpoon extends Application implements Foreground.Listener {
 				}
 			}
 		}
+
+        CalligraphyConfig.initDefault("fonts/segoeui.ttf", R.attr.fontPath);
 	}
 
 	@Override

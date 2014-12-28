@@ -88,11 +88,25 @@
         <item name="android:windowTitleSize">35dip</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
- 
-    
-    
-    
-    
+
+
+
+
+    <style name="FontSegoeUI">
+        <item name="fontPath">fonts/segoeui.ttf</item>
+    </style>
+    <style name="FontSegoeUILight">
+        <item name="fontPath">fonts/segoeuil.ttf</item>
+    </style>
+    <style name="FontSegoeUISemiLight">
+        <item name="fontPath">fonts/segoeuisl.ttf</item>
+    </style>
+    <style name="FontSegoeUIBold">
+        <item name="fontPath">fonts/segoeuib.ttf</item>
+    </style>
+    <style name="FontSegoeUISemiBold">
+        <item name="fontPath">fonts/segoeuisb.ttf</item>
+    </style>
     
     
     

@@ -1,27 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.BigSpoon;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.SocketIOManager;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +21,29 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.BigSpoon;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.SocketIOManager;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
 
 public class EntryActivity extends Activity {
 
@@ -68,7 +69,7 @@ public class EntryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_FB_LOGIN, Log.DEBUG);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPreferences.edit();
