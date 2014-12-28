@@ -47,3 +47,4 @@ bigSpoon/build/*
 /.idea/libraries
 .DS_Store
 /build
+bigSpoon/src/main/assets/crashlytics-build.properties
