@@ -3,4 +3,9 @@
     <color name="BigSpoonBlue">#86CBD7</color>
     <color name="BigSpoonGreen">#63CD68</color>
     <color name="BigSpoonRed">#FF4D45</color>
+    <color name="BigSpoonLightBlue">#5BD6CD</color>
+    <color name="BigSpoonDarkBlue">#27AB9E</color>
+    <color name="BigSpoonGray">#565656</color>
+    <color name="BigSpoonPink">#F76463</color>
+    <color name="BigSpoonBloodRed">#CC0104</color>
 </resources>

@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,31 +96,19 @@ public class OutletListActivity extends Activity {
 	private void setupHistoryButton() {
 		orderHistoryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
 		orderHistoryButton.setVisibility(View.INVISIBLE);
-//		orderHistoryButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-//				intent.putExtra("callingActivityName", "OutletListActivity");
-//				startActivity(intent);
-//			}
-//		});
 	}
 
 	private void setupLogoutButton() {
 
-		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.CENTER_VERTICAL);
 		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
-		logoutButton.setImageResource(R.drawable.logout_button);
-		logoutButton.setLayoutParams(params);
-		logoutButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+        logoutButton.setImageResource(R.drawable.white_menu_icon);
+		logoutButton.setScaleType(ImageButton.ScaleType.FIT_CENTER);
 		logoutButton.setPadding(22, 0, 0, 0);
 
 		final StateListDrawable states = new StateListDrawable();
 		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.logout_button_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.logout_button));
+				getResources().getDrawable(R.drawable.white_menu_icon_pressed));
+		states.addState(new int[] {}, getResources().getDrawable(R.drawable.white_menu_icon));
 		logoutButton.setImageDrawable(states);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override

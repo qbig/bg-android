@@ -49,7 +49,7 @@
     <dimen name="default_title_indicator_footer_indicator_underline_padding">20dp</dimen>
     <dimen name="default_title_indicator_footer_line_height">2dp</dimen>
     <dimen name="default_title_indicator_footer_padding">7dp</dimen>
-    <dimen name="default_title_indicator_text_size">15dp</dimen>
+    <dimen name="default_title_indicator_text_size">20dp</dimen>
     <dimen name="default_title_indicator_title_padding">5dp</dimen>
     <dimen name="default_title_indicator_top_padding">7dp</dimen>
     <integer name="default_circle_indicator_orientation">0</integer>
