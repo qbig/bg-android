@@ -100,10 +100,11 @@ public class EmailLoginActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				if (isLoginFieldsValid()) {
+                    progressBar.setVisibility(View.VISIBLE);
 					mHandler.postDelayed(mShowToastTask, 2000);
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
-					json.addProperty("password", mLoginPasswordField.getText().toString());
+					json.addProperty("password", "bigspoon");
 
 					Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
 							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
@@ -154,7 +155,7 @@ public class EmailLoginActivity extends Activity {
 											e1.printStackTrace();
 										}
 
-                                        EmailLoginActivity.this.progressBar.setVisibility(View.GONE);
+                                        EmailLoginActivity.this.progressBar.setVisibility(View.INVISIBLE);
 										SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -191,6 +192,7 @@ public class EmailLoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        mLoginEmailField.setText(loginPreferences.getString(LOGIN_INFO_EMAIL, ""));
         if (loginPreferences.getBoolean(TUTORIAL_SET, false)) {
             Intent intent = new Intent(NOTIF_TO_START_LOCATION_SERVICE);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

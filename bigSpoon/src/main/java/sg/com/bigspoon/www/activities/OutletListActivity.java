@@ -1,27 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
-import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.OutletListAdapter;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.OutletDetailsModel;
-import sg.com.bigspoon.www.data.OutletModel;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,6 +37,30 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.OutletListAdapter;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
+import sg.com.bigspoon.www.data.OutletModel;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 public class OutletListActivity extends Activity {
 	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
@@ -125,8 +127,10 @@ public class OutletListActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
+                final String previousEmail = loginPreferences.getString(LOGIN_INFO_EMAIL, "");
 				loginPrefsEditor.clear();
 				loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
+                loginPrefsEditor.putString(LOGIN_INFO_EMAIL, previousEmail);
 				loginPrefsEditor.commit();
 
 				Session session = Session.getActiveSession();
@@ -134,7 +138,7 @@ public class OutletListActivity extends Activity {
 					session.closeAndClearTokenInformation();
 				}
 				if (OutletListActivity.this.isTaskRoot()) {
-					Intent intent = new Intent(OutletListActivity.this, EntryActivity.class);
+					Intent intent = new Intent(OutletListActivity.this, EmailLoginActivity.class);
 					startActivity(intent);
 				} else {
 					finish();
