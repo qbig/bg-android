@@ -101,17 +101,14 @@ public class EmailLoginActivity extends Activity {
 			public void onClick(View arg0) {
 				if (isLoginFieldsValid()) {
                     progressBar.setVisibility(View.VISIBLE);
-					mHandler.postDelayed(mShowToastTask, 2000);
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
 					json.addProperty("password", "bigspoon");
-
 					Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
 							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
 							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 								@Override
 								public void onCompleted(Exception e, JsonObject result) {
-									mHandler.removeCallbacks(mShowToastTask);
 									if (e != null) {
 										if (Constants.LOG) {
 											Toast.makeText(EmailLoginActivity.this, "Error during login",
