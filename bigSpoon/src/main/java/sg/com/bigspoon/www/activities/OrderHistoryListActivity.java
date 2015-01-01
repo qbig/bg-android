@@ -1,20 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.ORDER_HISTORY_URL;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
-
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.OrderHistoryListAdapter;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.RetrievedOrder;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +19,22 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.OrderHistoryListAdapter;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.RetrievedOrder;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.ORDER_HISTORY_URL;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 
 public class OrderHistoryListActivity extends Activity {
 
@@ -96,7 +97,7 @@ public class OrderHistoryListActivity extends Activity {
 		mTopActionBar.setCustomView(mActionBarView);
 
 		TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText("Settings");
+		title.setText(R.string.order_history);
 		mTopActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 	}
 

@@ -1,10 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
-import sg.com.bigspoon.www.data.RetrievedOrder;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,20 +12,27 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
+import sg.com.bigspoon.www.data.RetrievedOrder;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
+
 public class OrderHistoryDetailsActivity extends Activity {
 
 	ListView list;
 	private ActionBar actionBar;
 	private View mActionBarView;
 	private ImageButton backButton;
-
+    private TextView detailsTitle;
+    private TextView detailsDate;
 	private Button addToItemsButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_order_history_details);
-
 		final int selectedPosition = getIntent().getIntExtra(
 				SELECTED_HISTORY_ITEM_POSITION, -1);
 		if (selectedPosition == -1) {
@@ -39,6 +41,10 @@ public class OrderHistoryDetailsActivity extends Activity {
 
 		final RetrievedOrder selectedItem = User.getInstance(this).diningHistory
 				.get(selectedPosition);
+        detailsTitle = (TextView) findViewById(R.id.historyTitle);
+        detailsTitle.setText(selectedItem.outlet.name);
+        detailsDate = (TextView) findViewById(R.id.orderDate);
+        detailsDate.setText(selectedItem.orderTime);
 		list = (ListView) findViewById(R.id.listoforderDetails);
 		list.setAdapter(new OrderHistoryDetailsAdapter(this, selectedItem));
 

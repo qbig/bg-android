@@ -30,10 +30,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/listoforder"
         android:layout_centerHorizontal="true"
-        android:text="Have a suggestion?"
+        android:text="@string/have_suggestion"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
-        android:textColor="#86CBD7"
+        android:textColor="@color/BigSpoonLightBlue"
         android:textSize="30dp"/>
       
       <ImageButton
