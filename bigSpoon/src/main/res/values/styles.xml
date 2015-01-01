@@ -138,7 +138,9 @@
         <item name="android:textColor">@color/tab_text</item>  
     </style>  
   
-    <style name="MyActionBarTabs" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">  
+    <style name="MyActionBarTabs" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:layout_marginTop">1dp</item>
         <item name="android:background">@drawable/tab_indicator_ab_example</item>  
     </style>  
     

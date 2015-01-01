@@ -311,7 +311,7 @@
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/new_bottom_button_croped"
+        android:background="@drawable/botton_action_bar"
         android:horizontalSpacing="2dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"

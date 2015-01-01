@@ -1,10 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
-import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -30,6 +25,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 public class MenuPhotoListActivity extends ActionBarActivity implements TabListener {
 
@@ -135,7 +137,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				isPhotoMode = true;
-				getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon);
+				getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon_new);
 				adapter.notifyDataSetChanged();
 				listview.setSelection(position);
 			}
@@ -214,17 +216,17 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
 	private void setupToggleButton() {
 		togglebutton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
-		togglebutton.setBackgroundResource(R.drawable.list_icon);
+		togglebutton.setBackgroundResource(R.drawable.list_icon_new);
 		togglebutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 
 				if (isPhotoMode == true) {
 					isPhotoMode = false;
-					view.setBackgroundResource(R.drawable.photo_icon);
+					view.setBackgroundResource(R.drawable.photo_icon_new);
 				} else {
 					isPhotoMode = true;
-					view.setBackgroundResource(R.drawable.list_icon);
+					view.setBackgroundResource(R.drawable.list_icon_new);
 				}
 				adapter.notifyDataSetChanged();
 			}

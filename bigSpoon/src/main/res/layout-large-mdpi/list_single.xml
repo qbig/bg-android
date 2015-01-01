@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableRow>
+    <TableRow
+        android:layout_width="match_parent">
 
         <ImageView
             android:id="@+id/img"
@@ -11,9 +12,8 @@
             android:layout_height="160dp"
             android:layout_weight="1"
             android:gravity="left"
-            android:paddingBottom="10dp"
-            android:paddingRight="5dp"
-            android:paddingTop="10dp" />
+            android:padding="5dp"
+        />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,21 +27,29 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:paddingTop="18sp"
-                android:textStyle="bold" />
+                android:textSize="13dp"
+                android:textColor="@color/text_light_gray"
+                android:textAppearance="@style/FontSegoeUISemiBold" />
 
             <TextView
                 android:id="@+id/address"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="18sp" />
+                android:paddingTop="18sp"
+                android:textSize="13dp"
+                android:textColor="@color/text_light_gray"
+                android:textAppearance="@style/FontSegoeUILight"/>
 
             <TextView
                 android:id="@+id/contact"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="18sp" />
+                android:paddingTop="18sp"
+                android:textSize="13dp"
+                android:textColor="@color/text_light_gray"
+                android:textAppearance="@style/FontSegoeUILight"/>
 
             <TextView
                 android:id="@+id/desc"
@@ -50,8 +58,9 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:maxLines="3"
-                android:textColor="@android:color/black"
-                android:textSize="13sp" />
+                android:textSize="13dp"
+                android:textColor="@color/text_light_gray"
+                android:textAppearance="@style/FontSegoeUILight" />
 
             <TextView
                 android:id="@+id/coming"
@@ -61,9 +70,9 @@
                 android:gravity="center_horizontal"
                 android:maxLines="1"
                 android:text="@string/coming_soon"
-                android:textColor="@android:color/black"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textSize="13dp"
+                android:textColor="@color/text_light_gray"
+                android:textAppearance="@style/FontSegoeUISemiBold"/>
         </LinearLayout>
     </TableRow>
 

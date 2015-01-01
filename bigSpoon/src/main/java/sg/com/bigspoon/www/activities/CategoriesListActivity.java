@@ -1,12 +1,24 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
-import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import io.fabric.sdk.android.Fabric;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,27 +28,13 @@ import sg.com.bigspoon.www.adapters.CategoriesAdapter;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.StateListDrawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
@@ -152,28 +150,29 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 	private void setupBackToOutletListButton() {
 		final ImageButton homeBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
-		homeBackButton.setImageResource(R.drawable.home_with_arrow);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.CENTER_VERTICAL);
-		homeBackButton.setLayoutParams(params);
-		homeBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		homeBackButton.setPadding(22, 0, 0, 0);
-
-		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.home_with_arrow_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.home_with_arrow));
-		homeBackButton.setImageDrawable(states);
-
-		homeBackButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-			}
-		});
+        homeBackButton.setVisibility(View.INVISIBLE);
+//		homeBackButton.setImageResource(R.drawable.home_with_arrow);
+//		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+//				RelativeLayout.LayoutParams.WRAP_CONTENT);
+//		params.addRule(RelativeLayout.CENTER_VERTICAL);
+//		homeBackButton.setLayoutParams(params);
+//		homeBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+//		homeBackButton.setPadding(22, 0, 0, 0);
+//
+//		final StateListDrawable states = new StateListDrawable();
+//		states.addState(new int[] { android.R.attr.state_pressed },
+//				getResources().getDrawable(R.drawable.home_with_arrow_pressed));
+//		states.addState(new int[] {}, getResources().getDrawable(R.drawable.home_with_arrow));
+//		homeBackButton.setImageDrawable(states);
+//
+//		homeBackButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				Intent intent = new Intent(getApplicationContext(), OutletListActivity.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				startActivity(intent);
+//			}
+//		});
 	}
 	
 	@Override

@@ -101,6 +101,7 @@ public class OutletListActivity extends Activity {
 	private void setupLogoutButton() {
 
 		logoutButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
+        logoutButton.setVisibility(View.VISIBLE);
         logoutButton.setImageResource(R.drawable.white_menu_icon);
 		logoutButton.setScaleType(ImageButton.ScaleType.FIT_CENTER);
 		logoutButton.setPadding(22, 0, 0, 0);
@@ -176,8 +177,8 @@ public class OutletListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_out_list);
-		list = (ListView) findViewById(R.id.outlist);
+		setContentView(R.layout.activity_outlet_list);
+		list = (ListView) findViewById(R.id.outlet_list);
 		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.VISIBLE);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);

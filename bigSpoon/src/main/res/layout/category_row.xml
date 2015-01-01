@@ -19,7 +19,9 @@
         android:layout_centerInParent="true"
         android:layout_toRightOf="@id/categoryimage"
         android:layout_marginBottom="36dp"
-        style="@android:style/TextAppearance.Medium" />
+        android:textSize="20dp"
+        android:textColor="@color/text_dark_gray"
+        android:textAppearance="@style/FontSegoeUILight"/>
     
      <ImageView
     android:id="@+id/image1"
