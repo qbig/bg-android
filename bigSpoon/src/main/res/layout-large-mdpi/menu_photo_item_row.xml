@@ -29,7 +29,8 @@
         android:gravity="top"
         android:paddingTop="0dp"
         android:paddingLeft="10dp"
-        android:textColor="#575757"
+        android:textColor="@color/text_dark_gray"
+        android:textAppearance="@style/FontSegoeUISemiLight"
         android:textSize="12sp" />
 
     <TextView
@@ -42,8 +43,8 @@
         android:paddingRight="5dp"
         android:paddingBottom="0dp"
         android:paddingTop="30dp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
+        android:textColor="@color/text_dark_gray"
+        android:textAppearance="@style/FontSegoeUISemiBold"
         android:textSize="16sp" />
 
     <TextView
@@ -59,20 +60,22 @@
         android:paddingRight="50dp"
         android:paddingBottom="0dp"
         android:paddingTop="30dp"
-        android:textColor="@color/black"
+        android:textColor="@color/dark_gray"
+        android:textAppearance="@style/FontSegoeUISemiBold"
         android:textSize="13sp"
-        android:textStyle="italic" />
+         />
 
 
     <ImageButton
         android:id="@+id/addbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="28dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
         android:background="@android:color/transparent"
         android:paddingRight="15dp"
-        android:src="@drawable/add_btn_with_circle" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/red_add_bt" />
     
     
 

@@ -42,7 +42,8 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/textitemprice"
         android:text="TextView"
-        android:textStyle="bold" />
+        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textSize="22sp"/>
 
     <TextView
         android:id="@+id/textitemdesc"
@@ -51,10 +52,11 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textitemname"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="25dp"
         android:text="TextView"
-        android:textColor="@android:color/darker_gray"
-        android:textStyle="italic" 
+        android:textColor="@color/text_light_gray"
+        android:textAppearance="@style/FontSegoeUILight"
+        android:textSize="13sp"
         />
 
 </RelativeLayout>
