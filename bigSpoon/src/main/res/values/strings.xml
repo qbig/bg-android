@@ -66,6 +66,8 @@
     <string name="i_am_hungry_eat_planet">I’m so hungry I could eat a planet. Yee Hah!</string>
     <string name="email_login_hint_text">Email</string>
     <string name="have_suggestion">Have a suggestion?</string>
+    <string name="order_these">ORDER THESE?</string>
+    <string name="sent_orders">SENT ORDERS:</string>
 
     <item type="id" name="POSITION"/>
     <item type="id" name="SECTION"/>

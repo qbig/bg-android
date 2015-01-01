@@ -1,29 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.BILL_URL;
-import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
-import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
-import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.DiningSession;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.OutletDetailsModel;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -70,6 +46,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -79,6 +56,31 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
+import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
+import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.DiningSession;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
+import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class ItemsActivity extends ExpandableListActivity {
 
@@ -112,6 +114,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		public void onReceive(Context context, Intent intent) {
 			Log.d("receiver", "Got broadcast " + NOTIF_ORDER_UPDATE);
 			ItemsActivity.this.updateDisplay();
+            if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 0){
+                ItemsActivity.this.scrollToSentItems();
+            }
 		}
 	};
 
@@ -141,6 +146,10 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private OutletDetailsModel mCurrentOutlet;
 
+    private ScrollView scrollView;
+
+    private Handler handler;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -148,9 +157,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		mCurrentOutlet = User.getInstance(this).currentOutlet;
 		mMixpanel = MixpanelAPI.getInstance(ItemsActivity.this, MIXPANEL_TOKEN);
-		
+		handler = new Handler();
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
+        scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
 		updateOrderedDishCounter();
 		setupExpandableCurrentOrdersListView();
 		setupAddNoteButton();
@@ -166,7 +176,16 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	}
 
-	private void setupPriceLabels() {
+    private final void scrollToSentItems(){
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                ItemsActivity.this.scrollView.smoothScrollTo(0, 540);
+            }
+        });
+    }
+
+    private void setupPriceLabels() {
 		
 		final String serviceChargeLabelString = "Service Charge(" + (int) (mCurrentOutlet.serviceChargeRate * 100) + "%)";
 		final String GSTChargeLabelString = "GST (" + (int) (mCurrentOutlet.gstRate * 100) + "%) :";
@@ -306,6 +325,7 @@ public class ItemsActivity extends ExpandableListActivity {
 							
 							return;
 						}
+                        scrollToSentItems();
 						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
 					}
 				});
@@ -556,6 +576,9 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onResume() {
 		super.onResume();
 		updateDisplay();
+        if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 0){
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NOTIF_ORDER_UPDATE));
+        }
 	}
 
 	public class ListViewHeightUtil {

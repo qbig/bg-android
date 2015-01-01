@@ -8,7 +8,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_minus_no_circle" />
+        android:background="@drawable/button_minus_no_circle_gray" />
 
     <TextView
         android:id="@+id/quantitytxt"
@@ -17,7 +17,8 @@
         android:layout_marginTop="13dp"
         android:gravity="center"
         android:text="00"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/BigSpoonPink"/>
 
     <ImageButton
         android:id="@+id/imgPlus"
@@ -25,7 +26,7 @@
         android:layout_height="25dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_add_no_circle" />
+        android:background="@drawable/button_add_no_circle_gray" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -40,7 +41,9 @@
             android:gravity="center|left"
             android:minLines="3"
             android:text="main title"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textColor="@color/BigSpoonPink"
+            android:textAppearance="@style/FontSegoeUISemiLight"/>
 
         <TextView
             android:id="@+id/subTitle"
