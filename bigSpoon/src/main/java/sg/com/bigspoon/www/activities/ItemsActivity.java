@@ -161,7 +161,13 @@ public class ItemsActivity extends ExpandableListActivity {
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
-		updateOrderedDishCounter();
+        try {
+            updateOrderedDishCounter();
+        } catch (NullPointerException e) {
+            Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
+            finish();
+        }
+
 		setupExpandableCurrentOrdersListView();
 		setupAddNoteButton();
 		loadMenu();
