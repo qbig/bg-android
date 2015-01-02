@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-    android:background="@color/BigSpoonLightGray">
+    android:background="#434751">
 
     <za.co.immedia.pinnedheaderlistview.PinnedHeaderListView
         android:id="@+id/pinnedListView"

@@ -10,6 +10,14 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
+preBuild {
+    doFirst {
+        JavaCompile jc = android.applicationVariants.find { it.name == 'debug' }.javaCompile
+        jc.options.compilerArgs = ["-Xlint:unchecked"]
+    }
+}
+
+
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
@@ -39,7 +47,6 @@ android {
 }
 
 dependencies {
-    compile project(':androidAsync')
     compile project(':libFacebookSDK')
     compile project(':libPinnedHeaderListView')
     compile project(':mixpanelandroid')
@@ -48,7 +55,7 @@ dependencies {
     compile project(':supertoasts')
     compile 'com.google.code.gson:gson:2.2.4'
     compile files('libs/bugsense-3.6.1.jar')
-    compile files('libs/ion-1.3.8.jar')
+    compile 'com.koushikdutta.ion:ion:2.+'
     compile files('libs/littlefluffylocationlibrary_r15.jar')
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.android.support:appcompat-v7:21.0.0'

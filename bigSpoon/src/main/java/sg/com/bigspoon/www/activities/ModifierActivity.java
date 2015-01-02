@@ -89,6 +89,7 @@ public class ModifierActivity extends Activity {
 	private void uiSetup() {
 		setContentView(R.layout.activity_modifier);
 		mModifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
+        mModifierListView.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
 		final LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mFooter = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
         mFooter.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));

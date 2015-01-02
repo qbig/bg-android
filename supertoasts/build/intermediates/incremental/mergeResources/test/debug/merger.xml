@@ -13,7 +13,7 @@
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
-    </style><dimen name="buttontoast_hover">24dp</dimen><color name="black">#000000</color><style name="SuperActivityToast_Button_Divider">
+    </style><dimen name="buttontoast_hover">24dp</dimen><color name="black">#000000</color><color name="text_light_gray">#888888</color><color name="text_dark_gray">#535353</color><style name="SuperActivityToast_Button_Divider">
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
     </style><style name="SuperActivityToast_Button_TextView" parent="DefaultText">
