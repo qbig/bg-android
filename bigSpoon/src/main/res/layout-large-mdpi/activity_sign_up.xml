@@ -49,7 +49,7 @@ android:orientation="vertical" >
          android:singleLine="true" />
 
      <ImageButton
-         android:id="@+id/imageButton1"
+         android:id="@+id/signupButton"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_centerHorizontal="true" 
