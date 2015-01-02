@@ -26,6 +26,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
 import sg.com.bigspoon.www.data.User;
@@ -130,7 +132,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		final LayoutInflater inflater = getLayoutInflater();
 		final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
 		listview.addFooterView(footer, null, false);
-		adapter = new MenuListViewAdapter(this, User.getInstance(this).currentOutlet);
+        try {
+            adapter = new MenuListViewAdapter(this, User.getInstance(this).currentOutlet);
+        } catch (NullPointerException e) {
+            Crashlytics.log("currentOutlet is null:" + e.getMessage());
+            Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override

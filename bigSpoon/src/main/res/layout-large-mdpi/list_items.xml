@@ -32,17 +32,7 @@
             android:text="testName"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/subTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="center|left"
-            android:text="subtitle"
-            android:textSize="10sp"
-            android:visibility="gone"
-            />
-    </LinearLayout>
+ LinearLayout>
     <TextView
         android:id="@+id/priceText"
         android:layout_width="0dp"
