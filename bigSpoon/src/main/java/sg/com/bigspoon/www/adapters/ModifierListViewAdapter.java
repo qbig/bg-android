@@ -91,10 +91,10 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
 				radioViewHolder = new RadioItemViewHolder();
                 convertView.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
-				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
+				final FrameLayout containerLayout = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
 				final RadioButton radioButton = new RadioButton(parent.getContext());
 				setupRadioButton(radioButton);
-				layoutholder.addView(radioButton);
+				containerLayout.addView(radioButton);
 
 				radioViewHolder.radioButton = radioButton;
 				radioViewHolder.itemNameView = (TextView) convertView.findViewById(R.id.text);
@@ -129,19 +129,19 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
                 convertView.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
 				counterViewHolder = new CounterItemViewHolder();
-				final FrameLayout layoutHolder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
+				final FrameLayout containerLayout = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
 
 				final ImageButton minusButton = new ImageButton(parent.getContext());
 				setupMinusButton(minusButton);
-				layoutHolder.addView(minusButton);
+				containerLayout.addView(minusButton);
 
 				final ImageButton plusButton = new ImageButton(parent.getContext());
 				setupPlusButton(plusButton);
-				layoutHolder.addView(plusButton);
+				containerLayout.addView(plusButton);
 
 				final TextView itemCounterText = new TextView(parent.getContext());
 				setupCounterText(itemCounterText);
-				layoutHolder.addView(itemCounterText);
+				containerLayout.addView(itemCounterText);
 
 				counterViewHolder.itemNameView = ((TextView) convertView.findViewById(R.id.text));
                 counterViewHolder.itemNameView.setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
@@ -238,7 +238,9 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		params.setMargins(0, 0, PADDING_37DP, 0);
 		radioButton.setLayoutParams(params);
 		radioButton.setPadding(PADDING_5DP, PADDING_5DP, PADDING_25DP, PADDING_5DP);
+        radioButton.setBackgroundResource(R.drawable.radiobackground);
         radioButton.setButtonDrawable(android.R.color.transparent);
+
 		radioButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

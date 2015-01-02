@@ -6,20 +6,6 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
 
-    <!--
-        <sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter
-            android:id="@+id/Picker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingRight="15dp"
-             >
-
-        </sg.com.bigspoon.www.adapters.WaterQuantityPickerSmallAdapter>
-    -->
-
     <FrameLayout
         android:id="@+id/frameLayout1"
         android:layout_width="125dp"
@@ -38,9 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="85dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:background="@android:color/transparent"
+        android:layout_toLeftOf="@+id/frameLayout1"
         android:padding="5dp"
         android:text="text"
         android:textColor="#ffffff"
