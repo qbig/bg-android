@@ -17,7 +17,7 @@
         android:textSize="12sp" />   
        
       <RatingBar
-      android:id="@+id/ratingBar1"
+      android:id="@+id/ratingBar"
       android:scaleX="0.5"
       android:gravity="center_vertical|left"
       style="@style/RatingBarStar"
