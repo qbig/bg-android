@@ -1,10 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.Modifer;
-import sg.com.bigspoon.www.data.ModifierSection;
-import za.co.immedia.pinnedheaderlistview.SectionedBaseAdapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -16,6 +11,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.Modifer;
+import sg.com.bigspoon.www.data.ModifierSection;
+import za.co.immedia.pinnedheaderlistview.SectionedBaseAdapter;
+
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 
 public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	private static final int ITEM_VIEW_TYPE_RADIO = 0;
@@ -88,6 +90,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 			if (null == convertView) {
 				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
 				radioViewHolder = new RadioItemViewHolder();
+                convertView.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
 				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
 				final RadioButton radioButton = new RadioButton(parent.getContext());
 				setupRadioButton(radioButton);
@@ -95,7 +98,8 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 
 				radioViewHolder.radioButton = radioButton;
 				radioViewHolder.itemNameView = (TextView) convertView.findViewById(R.id.text);
-				convertView.setTag(R.id.HOLDER, radioViewHolder);
+                radioViewHolder.itemNameView.setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
+                convertView.setTag(R.id.HOLDER, radioViewHolder);
 			} else {
 				radioViewHolder = (RadioItemViewHolder) convertView.getTag(R.id.HOLDER);
 			}
@@ -123,22 +127,24 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		} else {
 			if (null == convertView) {
 				convertView = inflator.inflate(R.layout.activity_modifier_addon, null);
+                convertView.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
 				counterViewHolder = new CounterItemViewHolder();
-				final FrameLayout layoutholder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
+				final FrameLayout layoutHolder = (FrameLayout) convertView.findViewById(R.id.frameLayout1);
 
 				final ImageButton minusButton = new ImageButton(parent.getContext());
 				setupMinusButton(minusButton);
-				layoutholder.addView(minusButton);
+				layoutHolder.addView(minusButton);
 
 				final ImageButton plusButton = new ImageButton(parent.getContext());
 				setupPlusButton(plusButton);
-				layoutholder.addView(plusButton);
+				layoutHolder.addView(plusButton);
 
 				final TextView itemCounterText = new TextView(parent.getContext());
 				setupCounterText(itemCounterText);
-				layoutholder.addView(itemCounterText);
+				layoutHolder.addView(itemCounterText);
 
 				counterViewHolder.itemNameView = ((TextView) convertView.findViewById(R.id.text));
+                counterViewHolder.itemNameView.setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
 				counterViewHolder.increButton = plusButton;
 				counterViewHolder.decreButton = minusButton;
 				counterViewHolder.counterTextView = itemCounterText;
@@ -232,8 +238,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		params.setMargins(0, 0, PADDING_37DP, 0);
 		radioButton.setLayoutParams(params);
 		radioButton.setPadding(PADDING_5DP, PADDING_5DP, PADDING_25DP, PADDING_5DP);
-		radioButton.setBackgroundResource(R.drawable.radiobackground);
-		radioButton.setButtonDrawable(android.R.color.transparent);
+        radioButton.setButtonDrawable(android.R.color.transparent);
 		radioButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -252,6 +257,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		LinearLayout layout = null;
 		if (convertView == null) {
 			layout = (LinearLayout) inflator.inflate(R.layout.header_item, null);
+            layout.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
 		} else {
 			layout = (LinearLayout) convertView;
 		}

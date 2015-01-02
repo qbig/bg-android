@@ -1,14 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.ModifierListViewAdapter;
-import sg.com.bigspoon.www.data.DishModel;
-import sg.com.bigspoon.www.data.User;
-import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -23,6 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.ModifierListViewAdapter;
+import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.User;
+import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
+
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 
 public class ModifierActivity extends Activity {
 
@@ -91,8 +91,8 @@ public class ModifierActivity extends Activity {
 		mModifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
 		final LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mFooter = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
+        mFooter.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
 		mModifierListView.addFooterView(mFooter);
-
 		mModifierListView.getRootView().setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
 	}
 
@@ -114,6 +114,7 @@ public class ModifierActivity extends Activity {
 		mActionBar = getActionBar();
 		mActionBar.setDisplayShowHomeEnabled(false);
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_modifier, null);
+        mActionBarView.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
 		final LayoutParams layout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		mActionBar.setCustomView(mActionBarView, layout);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
