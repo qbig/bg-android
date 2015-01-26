@@ -1,20 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.MenuActivity;
-import sg.com.bigspoon.www.activities.ModifierActivity;
-import sg.com.bigspoon.www.data.DishModel;
-import sg.com.bigspoon.www.data.OutletDetailsModel;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -47,7 +32,23 @@ import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
-public class MenuListViewAdapter extends BaseAdapter {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.MenuActivity;
+import sg.com.bigspoon.www.activities.ModifierActivity;
+import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
+
+public class MenuAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private OutletDetailsModel mOutletInfo;
@@ -79,7 +80,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 		}
 	};
 	
-	public MenuListViewAdapter(Context context, final OutletDetailsModel outletInfo) {
+	public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
 		super();
 		this.mOutletInfo = outletInfo;
 		this.mContext = context;
@@ -165,7 +166,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
 					((MenuActivity) mContext)
 							.startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
-					MenuListViewAdapter.this.taskAfterModifierPopup = new Runnable() {
+					MenuAdapter.this.taskAfterModifierPopup = new Runnable() {
 						@Override
 						public void run() {
 							try {
@@ -210,7 +211,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
 		View viewToCopy = (View) view.getParent();
 
-		ImageView viewToAnimate = new ImageView(MenuListViewAdapter.this.mContext);
+		ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewToCopy.getWidth(),
 				viewToCopy.getHeight());
 		viewToAnimate.setLayoutParams(params);
@@ -222,18 +223,18 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 		viewToAnimate.setImageBitmap(bm);
 		((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
-		MenuListViewAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
+		MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
 	}
 
 	private void animatePhotoItemToCorner(View view, final Integer itemPosition, long duration) {
 		ImageView imageViewToCopy = (ImageView) ((View) view.getParent()).findViewById(R.id.menuitem);
-		ImageView viewToAnimate = new ImageView(MenuListViewAdapter.this.mContext);
+		ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageViewToCopy.getWidth(),
 				imageViewToCopy.getHeight());
 		viewToAnimate.setLayoutParams(params);
 		viewToAnimate.setImageDrawable(imageViewToCopy.getDrawable());
 		((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
-		MenuListViewAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
+		MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
 	}
 
 	private void moveViewToScreenCorner(int position, final View start, long duration) {

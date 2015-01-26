@@ -29,7 +29,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.MenuListViewAdapter;
+import sg.com.bigspoon.www.adapters.MenuAdapter;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
@@ -40,7 +40,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	ActionBar mCategoriesTabBar;
 	public ListView listview;
 
-	MenuListViewAdapter adapter;
+	MenuAdapter adapter;
 	public static boolean isPhotoMode = true;
 
 	private View mActionBarView;
@@ -133,7 +133,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
 		listview.addFooterView(footer, null, false);
         try {
-            adapter = new MenuListViewAdapter(this, User.getInstance(this).currentOutlet);
+            adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet);
         } catch (NullPointerException e) {
             Crashlytics.log("currentOutlet is null:" + e.getMessage());
             Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
