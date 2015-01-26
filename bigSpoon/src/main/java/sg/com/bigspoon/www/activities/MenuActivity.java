@@ -194,8 +194,16 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		mCategoriesTabBar.setIcon(R.drawable.dummy_icon);
 		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText(User.getInstance(this).currentOutlet.name);
+        title.setText(strElipsize(User.getInstance(this).currentOutlet.name, 20));
 	}
+
+    private String strElipsize(String str, int lengthLimit) {
+        if (str.length() <= lengthLimit) {
+            return str;
+        } else {
+            return str.substring(0, Math.min(str.length(), lengthLimit - 3)) + "...";
+        }
+    }
 
 	private void setupHistoryButton() {
 		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
