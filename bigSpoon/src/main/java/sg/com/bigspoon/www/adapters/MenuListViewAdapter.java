@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.MenuPhotoListActivity;
+import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -41,7 +41,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
@@ -75,7 +74,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (taskAfterModifierPopup != null && mContext !=null){
-				((MenuPhotoListActivity) mContext).runOnUiThread(taskAfterModifierPopup);
+				((MenuActivity) mContext).runOnUiThread(taskAfterModifierPopup);
 			}
 		}
 	};
@@ -164,13 +163,13 @@ public class MenuListViewAdapter extends BaseAdapter {
 				if (currentDish.customizable) {
 					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
 					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
-					((MenuPhotoListActivity) mContext)
+					((MenuActivity) mContext)
 							.startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
 					MenuListViewAdapter.this.taskAfterModifierPopup = new Runnable() {
 						@Override
 						public void run() {
 							try {
-								if (MenuPhotoListActivity.isPhotoMode) {
+								if (MenuActivity.isPhotoMode) {
 									animatePhotoItemToCorner(view, itemPosition, DURATION_LONG);
 								} else {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
@@ -198,7 +197,7 @@ public class MenuListViewAdapter extends BaseAdapter {
 						mSuperActivityToast.show();
 					}
 
-					if (MenuPhotoListActivity.isPhotoMode) {
+					if (MenuActivity.isPhotoMode) {
 						animatePhotoItemToCorner(view, itemPosition, DURATION_SHORT);
 					} else {
 						animateTextItemToCorner(view, itemPosition, DURATION_SHORT);
@@ -242,13 +241,13 @@ public class MenuListViewAdapter extends BaseAdapter {
 		start.getLocationOnScreen(fromLoc);
 		float startX = fromLoc[0];
 		float startY = fromLoc[1];	
-		position -= ((MenuPhotoListActivity) mContext).listview.getFirstVisiblePosition();
-		startY += ((position - 1) * (MenuPhotoListActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
+		position -= ((MenuActivity) mContext).listview.getFirstVisiblePosition();
+		startY += ((position - 1) * (MenuActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
 		
 		int toLoc[] = new int[2];
-		((MenuPhotoListActivity) mContext).listview.getLocationOnScreen(toLoc);
-		float destX = toLoc[0] + + ((MenuPhotoListActivity) mContext).listview.getWidth();
-		float destY = toLoc[1] + ((MenuPhotoListActivity) mContext).listview.getHeight();
+		((MenuActivity) mContext).listview.getLocationOnScreen(toLoc);
+		float destX = toLoc[0] + + ((MenuActivity) mContext).listview.getWidth();
+		float destY = toLoc[1] + ((MenuActivity) mContext).listview.getHeight();
 
 		AnimationSet animSet = new AnimationSet(true);
 		animSet.setFillAfter(true);
@@ -297,14 +296,14 @@ public class MenuListViewAdapter extends BaseAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		return MenuPhotoListActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
+		return MenuActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		final DishModel currentDish = getItem(position);
 
-		if (MenuPhotoListActivity.isPhotoMode) {
+		if (MenuActivity.isPhotoMode) {
 			final ListPhotoItemViewHolder photoViewHolder;
 
 			if (convertView == null) {

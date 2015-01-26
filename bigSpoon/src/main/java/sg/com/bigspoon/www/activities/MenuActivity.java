@@ -35,7 +35,7 @@ import sg.com.bigspoon.www.data.User;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
-public class MenuPhotoListActivity extends ActionBarActivity implements TabListener {
+public class MenuActivity extends ActionBarActivity implements TabListener {
 
 	ActionBar mCategoriesTabBar;
 	public ListView listview;
@@ -44,7 +44,7 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	public static boolean isPhotoMode = true;
 
 	private View mActionBarView;
-	private ImageButton togglebutton;
+	private ImageButton toggleButton;
 	private ImageButton backToOutletList;
 	private ImageButton historyButton;
 	private View bottomActionBar;
@@ -210,22 +210,22 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 	}
 
 	private void setupToggleButton() {
-		togglebutton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
-		togglebutton.setBackgroundResource(R.drawable.list_icon_new);
-		togglebutton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
+		toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
+		toggleButton.setBackgroundResource(R.drawable.list_icon_new);
+		toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-				if (isPhotoMode == true) {
-					isPhotoMode = false;
-					view.setBackgroundResource(R.drawable.photo_icon_new);
-				} else {
-					isPhotoMode = true;
-					view.setBackgroundResource(R.drawable.list_icon_new);
-				}
-				adapter.notifyDataSetChanged();
-			}
-		});
+                if (isPhotoMode == true) {
+                    isPhotoMode = false;
+                    view.setBackgroundResource(R.drawable.photo_icon_new);
+                } else {
+                    isPhotoMode = true;
+                    view.setBackgroundResource(R.drawable.list_icon_new);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 	}
 
 	private void setupBackToOutletButton() {
@@ -261,12 +261,15 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
             mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
         }
         mCategoriesTabBar = getActionBar();
-        mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
-            mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
-                    .setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
+        if (mCategoriesTabBar != null) {
+            mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
+                mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
+                        .setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
+            }
+            mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
         }
-        mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
     }
 
 
@@ -275,10 +278,10 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 
         if (isPhotoMode && User.getInstance(this).currentOutlet.categoriesDetails[tab.getPosition()].isListOnly) {
             isPhotoMode = false;
-            togglebutton.setBackgroundResource(R.drawable.photo_icon_new);
+            toggleButton.setBackgroundResource(R.drawable.photo_icon_new);
         } else if (!isPhotoMode && User.getInstance(this).currentOutlet.categoriesDetails[adapter.mCurrentSelectedCategoryTabIndex].isListOnly && ! User.getInstance(this).currentOutlet.categoriesDetails[tab.getPosition()].isListOnly) {
             isPhotoMode = true;
-            togglebutton.setBackgroundResource(R.drawable.list_icon_new);
+            toggleButton.setBackgroundResource(R.drawable.list_icon_new);
         }
         adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
 		adapter.updateFilteredList();
