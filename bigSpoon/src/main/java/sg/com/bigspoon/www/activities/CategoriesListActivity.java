@@ -132,20 +132,20 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
-		final ImageButton togglebutton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
-		togglebutton.setVisibility(View.GONE);
+		final ImageButton toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
+		toggleButton.setVisibility(View.GONE);
 	}
 
 	private void setupHistoryButton() {
-		ImageButton hisotryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-		hisotryButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-				intent.putExtra("callingActivityName", "CategoriesListActivity");
-				startActivity(intent);
-			}
-		});
+		ImageButton historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+		historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+                intent.putExtra("callingActivityName", "CategoriesListActivity");
+                startActivity(intent);
+            }
+        });
 	}
 
 	private void setupBackToOutletListButton() {

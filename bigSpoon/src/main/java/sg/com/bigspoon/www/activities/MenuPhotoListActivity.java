@@ -171,21 +171,6 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		}
 	}
 
-	private void setupCategoryTabs() {
-		mCategoryPosition = 0;
-		final Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
-		}
-		mCategoriesTabBar = getActionBar();
-		mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
-			mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
-					.setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
-		}
-		mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
-	}
-	
 	public View getActionBarViewContainer() {
 		return ((ViewGroup)getWindow().
     			findViewById(
@@ -269,9 +254,33 @@ public class MenuPhotoListActivity extends ActionBarActivity implements TabListe
 		});
 	}
 
-	@Override
+    private void setupCategoryTabs() {
+        mCategoryPosition = 0;
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
+        }
+        mCategoriesTabBar = getActionBar();
+        mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
+            mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
+                    .setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
+        }
+        mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+    }
+
+
+    @Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
+
+        if (isPhotoMode && User.getInstance(this).currentOutlet.categoriesDetails[tab.getPosition()].isListOnly) {
+            isPhotoMode = false;
+            togglebutton.setBackgroundResource(R.drawable.photo_icon_new);
+        } else if (!isPhotoMode && User.getInstance(this).currentOutlet.categoriesDetails[adapter.mCurrentSelectedCategoryTabIndex].isListOnly && ! User.getInstance(this).currentOutlet.categoriesDetails[tab.getPosition()].isListOnly) {
+            isPhotoMode = true;
+            togglebutton.setBackgroundResource(R.drawable.list_icon_new);
+        }
+        adapter.mCurrentSelectedCategoryTabIndex = tab.getPosition();
 		adapter.updateFilteredList();
 		adapter.notifyDataSetChanged();
 		listview.setSelection(0);
