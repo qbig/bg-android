@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
 import sg.com.bigspoon.www.data.RetrievedOrder;
@@ -19,7 +21,8 @@ import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 
-public class OrderHistoryDetailsActivity extends Activity {
+public class
+        OrderHistoryDetailsActivity extends Activity {
 
 	ListView list;
 	private ActionBar actionBar;
@@ -38,9 +41,14 @@ public class OrderHistoryDetailsActivity extends Activity {
 		if (selectedPosition == -1) {
 			finish();
 		}
+        try {
+            final RetrievedOrder selectedItem = User.getInstance(this).diningHistory
+                    .get(selectedPosition);
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            finish();
+        }
 
-		final RetrievedOrder selectedItem = User.getInstance(this).diningHistory
-				.get(selectedPosition);
         detailsTitle = (TextView) findViewById(R.id.historyTitle);
         detailsTitle.setText(selectedItem.outlet.name);
         detailsDate = (TextView) findViewById(R.id.orderDate);
