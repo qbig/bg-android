@@ -1,12 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.ItemsActivity;
-import sg.com.bigspoon.www.activities.ModifierActivity;
-import sg.com.bigspoon.www.data.DishModel;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +14,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.ItemsActivity;
+import sg.com.bigspoon.www.activities.ModifierActivity;
+import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 
 public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
@@ -162,7 +166,13 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getGroupCount() {
-		return User.getInstance(mContext).currentSession.getCurrentOrder().mItems.size();
+        try {
+            return User.getInstance(mContext).currentSession.getCurrentOrder().mItems.size();
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            return 0;
+        }
+
 	}
 
 	@Override
