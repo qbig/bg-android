@@ -44,36 +44,35 @@ public class
         try {
             final RetrievedOrder selectedItem = User.getInstance(this).diningHistory
                     .get(selectedPosition);
+            detailsTitle = (TextView) findViewById(R.id.historyTitle);
+            detailsTitle.setText(selectedItem.outlet.name);
+            detailsDate = (TextView) findViewById(R.id.orderDate);
+            detailsDate.setText(selectedItem.orderTime);
+            list = (ListView) findViewById(R.id.listoforderDetails);
+            list.setAdapter(new OrderHistoryDetailsAdapter(this, selectedItem));
+
+            addToItemsButton = (Button) findViewById(R.id.buttonAddToItems);
+            addToItemsButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    final User user = User
+                            .getInstance(OrderHistoryDetailsActivity.this);
+                    if (user.currentOutlet.outletID == selectedItem.outlet.id) {
+                        user.currentSession.getCurrentOrder()
+                                .mergeWithAnotherOrder(selectedItem.toOrder());
+                    }
+                    final Intent intent = new Intent(
+                            OrderHistoryDetailsActivity.this, ItemsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            });
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
             finish();
         }
-
-        detailsTitle = (TextView) findViewById(R.id.historyTitle);
-        detailsTitle.setText(selectedItem.outlet.name);
-        detailsDate = (TextView) findViewById(R.id.orderDate);
-        detailsDate.setText(selectedItem.orderTime);
-		list = (ListView) findViewById(R.id.listoforderDetails);
-		list.setAdapter(new OrderHistoryDetailsAdapter(this, selectedItem));
-
-		addToItemsButton = (Button) findViewById(R.id.buttonAddToItems);
-		addToItemsButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				final User user = User
-						.getInstance(OrderHistoryDetailsActivity.this);
-				if (user.currentOutlet.outletID == selectedItem.outlet.id) {
-					user.currentSession.getCurrentOrder()
-							.mergeWithAnotherOrder(selectedItem.toOrder());
-				}
-				final Intent intent = new Intent(
-						OrderHistoryDetailsActivity.this, ItemsActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-						| Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
-			}
-		});
 	}
 
 	@Override
