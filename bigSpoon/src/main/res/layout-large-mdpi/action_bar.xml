@@ -13,7 +13,7 @@
          android:layout_centerHorizontal="true"
          android:layout_centerVertical="true"
          android:text="@string/outlet_title"
-         android:textColor="#000000"
+         android:textColor="@color/white"
          android:textSize="@dimen/default_title_indicator_text_size"
          android:textStyle="bold" />
 

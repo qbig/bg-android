@@ -15,6 +15,7 @@
         android:src="@drawable/bg_logo" />
 
     <TextView
+        android:id="@+id/i_am_hungry"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginImageBackground"
