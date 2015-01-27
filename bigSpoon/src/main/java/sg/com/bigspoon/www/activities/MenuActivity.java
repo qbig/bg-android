@@ -58,8 +58,14 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
 		setupBottomActionBar();
-		setupListView();
-		setupCategoryTabs();
+        try {
+            setupListView();
+            setupCategoryTabs();
+        } catch (NullPointerException npe){
+            Crashlytics.log(npe.getMessage());
+            finish();
+        }
+
 		setupHideCategoriesTabsEvent();
 	}
 
@@ -73,45 +79,50 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 				final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
 				switch (scrollState) {
 				case OnScrollListener.SCROLL_STATE_IDLE:
-					if (! shouldShowTabs && mActionBarView.getVisibility() == View.VISIBLE) {
-						animFadeOut.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								getActionBarViewContainer().startAnimation(animFadeIn);
-								mCategoriesTabBar.setDisplayShowHomeEnabled(false);
-								mCategoriesTabBar.setDisplayShowTitleEnabled(false);
-								mActionBarView.setVisibility(View.GONE);
-							}
-						});
-						getActionBarViewContainer().startAnimation(animFadeOut);
-						
-					} else if (shouldShowTabs && mActionBarView.getVisibility() == View.GONE){
-						animFadeOut.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								getActionBarViewContainer().startAnimation(animFadeIn);
-								mCategoriesTabBar.setDisplayShowHomeEnabled(true);
-								mCategoriesTabBar.setDisplayShowTitleEnabled(true);
-								mActionBarView.setVisibility(View.VISIBLE);
-							}
-						});
-						getActionBarViewContainer().startAnimation(animFadeOut);
-						
-					}
+                    try {
+                        if (! shouldShowTabs && mActionBarView.getVisibility() == View.VISIBLE) {
+                            animFadeOut.setAnimationListener(new AnimationListener() {
+
+                                @Override
+                                public void onAnimationStart(Animation animation) {}
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {}
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    getActionBarViewContainer().startAnimation(animFadeIn);
+                                    mCategoriesTabBar.setDisplayShowHomeEnabled(false);
+                                    mCategoriesTabBar.setDisplayShowTitleEnabled(false);
+                                    mActionBarView.setVisibility(View.GONE);
+                                }
+                            });
+                            getActionBarViewContainer().startAnimation(animFadeOut);
+
+                        } else if (shouldShowTabs && mActionBarView.getVisibility() == View.GONE){
+                            animFadeOut.setAnimationListener(new AnimationListener() {
+
+                                @Override
+                                public void onAnimationStart(Animation animation) {}
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {}
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    getActionBarViewContainer().startAnimation(animFadeIn);
+                                    mCategoriesTabBar.setDisplayShowHomeEnabled(true);
+                                    mCategoriesTabBar.setDisplayShowTitleEnabled(true);
+                                    mActionBarView.setVisibility(View.VISIBLE);
+                                }
+                            });
+                            getActionBarViewContainer().startAnimation(animFadeOut);
+
+                        }
+                    } catch (NullPointerException npe) {
+                        Crashlytics.log(npe.getMessage());
+                    }
+
 					break;
 				}
 			}
