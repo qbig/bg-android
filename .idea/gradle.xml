@@ -6,23 +6,6 @@
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/androidAsync" />
-            <option value="$PROJECT_DIR$/bigSpoon" />
-            <option value="$PROJECT_DIR$/comcrashlyticssdkandroid_answers" />
-            <option value="$PROJECT_DIR$/comcrashlyticssdkandroid_beta" />
-            <option value="$PROJECT_DIR$/comcrashlyticssdkandroid_crashlytics" />
-            <option value="$PROJECT_DIR$/commonJars" />
-            <option value="$PROJECT_DIR$/iofabricsdkandroid_fabric" />
-            <option value="$PROJECT_DIR$/libFacebookSDK" />
-            <option value="$PROJECT_DIR$/libPinnedHeaderListView" />
-            <option value="$PROJECT_DIR$/libViewPagerIndicator" />
-            <option value="$PROJECT_DIR$/mixpanelandroid" />
-            <option value="$PROJECT_DIR$/supertoasts" />
-          </set>
-        </option>
       </GradleProjectSettings>
     </option>
   </component>

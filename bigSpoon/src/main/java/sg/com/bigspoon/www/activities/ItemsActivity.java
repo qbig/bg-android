@@ -68,6 +68,7 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
+import sg.com.bigspoon.www.common.Util.Util;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
@@ -186,7 +187,7 @@ public class ItemsActivity extends ExpandableListActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ItemsActivity.this.scrollView.smoothScrollTo(0, 540);
+                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 280));
             }
         });
     }
