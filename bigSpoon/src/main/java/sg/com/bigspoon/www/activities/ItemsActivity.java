@@ -68,6 +68,7 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
+import sg.com.bigspoon.www.common.Util.Util;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
@@ -163,30 +164,28 @@ public class ItemsActivity extends ExpandableListActivity {
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
         try {
             updateOrderedDishCounter();
+            setupExpandableCurrentOrdersListView();
+            setupAddNoteButton();
+            loadMenu();
+            setupPlaceOrderButton();
+            setupPlacedOrderListView();
+            setupPriceLabels();
+
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
+            new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
+            new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
         } catch (NullPointerException e) {
             Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
             finish();
         }
-
-		setupExpandableCurrentOrdersListView();
-		setupAddNoteButton();
-		loadMenu();
-		setupPlaceOrderButton();
-		setupPlacedOrderListView();
-		setupPriceLabels();
-		
-		LocalBroadcastManager.getInstance(this)
-				.registerReceiver(mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
-		new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
-
 	}
 
     private final void scrollToSentItems(){
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ItemsActivity.this.scrollView.smoothScrollTo(0, 540);
+                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 280));
             }
         });
     }

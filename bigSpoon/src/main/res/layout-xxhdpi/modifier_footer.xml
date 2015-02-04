@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#434751"
+     >
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center" >
+
+        <FrameLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
+
+            <Button
+                android:id="@+id/cancle"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="left"
+                android:layout_marginRight="40dp"
+                android:background="@android:color/black"
+                android:text="Cancel"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+        
+   <FrameLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+   <Button
+       android:id="@+id/ok"
+       android:layout_width="100dp"
+       android:layout_height="35dp"
+       android:layout_marginLeft="40dp"
+       android:background="#8BCC6F"
+       android:text="Okay"
+       android:textColor="@color/white"
+       android:textStyle="bold" />
+
+    </FrameLayout>
+
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:gravity="center_horizontal"
+        android:background="#00ffffff" />
+        
+    </TableRow>
+</TableLayout>

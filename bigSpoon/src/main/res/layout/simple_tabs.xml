@@ -19,6 +19,7 @@
         android:horizontalSpacing="2dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"
+        android:scrollbars="none"
         android:stretchMode="columnWidth" 
         >
     </GridView>

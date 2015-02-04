@@ -132,20 +132,20 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		mActionBar.setCustomView(mActionBarView);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
-		final ImageButton togglebutton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
-		togglebutton.setVisibility(View.GONE);
+		final ImageButton toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
+		toggleButton.setVisibility(View.GONE);
 	}
 
 	private void setupHistoryButton() {
-		ImageButton hisotryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-		hisotryButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-				intent.putExtra("callingActivityName", "CategoriesListActivity");
-				startActivity(intent);
-			}
-		});
+		ImageButton historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+		historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+                intent.putExtra("callingActivityName", "CategoriesListActivity");
+                startActivity(intent);
+            }
+        });
 	}
 
 	private void setupBackToOutletListButton() {
@@ -188,7 +188,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		if (position == 0) {
 			return;
 		}
-		Intent i = new Intent(getApplicationContext(), MenuPhotoListActivity.class);
+		Intent i = new Intent(getApplicationContext(), MenuActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra(POS_FOR_CLICKED_CATEGORY, position - 1);
 		startActivity(i);

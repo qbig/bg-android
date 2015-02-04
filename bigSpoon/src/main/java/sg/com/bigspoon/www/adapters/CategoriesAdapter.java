@@ -1,13 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-
-import java.util.Arrays;
-import java.util.Comparator;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.CategoryModel;
-import sg.com.bigspoon.www.data.OutletDetailsModel;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -22,9 +14,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.ImageViewBitmapInfo;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.CategoryModel;
+import sg.com.bigspoon.www.data.OutletDetailsModel;
+
+import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 
 public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	Context context;
@@ -32,7 +32,7 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	private String outletIcon;
 	private Drawable mRestaurantIconDrawable;
 	public CategoriesAdapter(Context context, final OutletDetailsModel outletDetails, String outletIcon) {
-		super(context, R.layout.category_row, R.id.categoryname, outletDetails.categoriesDetails);
+		super(context, R.layout.category_row, R.id.category_name, outletDetails.categoriesDetails);
 		this.context = context;
 		this.outletDetails = outletDetails;
 		this.outletIcon = outletIcon;
@@ -121,8 +121,8 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 				row = inflater.inflate(R.layout.category_row, parent, false);
 			}
 			
-			final ImageView image = (ImageView) row.findViewById(R.id.categoryimage);
-			final TextView categoryName = (TextView) row.findViewById(R.id.categoryname);
+			final ImageView image = (ImageView) row.findViewById(R.id.category_image);
+			final TextView categoryName = (TextView) row.findViewById(R.id.category_name);
 			//Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).intoImageView(image);
 			ImageViewFutureBuilder ionBuilder;
 			if (mRestaurantIconDrawable != null ){

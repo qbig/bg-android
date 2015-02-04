@@ -4,7 +4,7 @@ public class Constants {
 	   public static final String PREFS_NAME = "MyPrefsFile";
 	   
 	   public static final boolean LOG = false;
-	   
+
 //	    public static final String BASE_URL =  "http://175.41.178.102/";
 //	    public static final String USER_SIGNUP =  "http://175.41.178.102/api/v1/user";
 //	    public static final String USER_LOGIN =  "http://175.41.178.102/api/v1/login";
@@ -47,7 +47,7 @@ public class Constants {
 	    public static final String MODIFIER_SECTION_TYPE_RADIO = "radio";
 	    public static final String MODIFIER_SECTION_TYPE_COUNTER = "count";
 	    
-	    //KEY 
+	    //KEY
 	    public static final String OUTLET_ID = "outletID";
 	    public static final String OUTLET_ICON = "outletICon";
 	    public static final String POS_FOR_CLICKED_CATEGORY = "startposition";

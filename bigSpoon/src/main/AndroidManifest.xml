@@ -87,7 +87,7 @@
         </activity>
 
         <activity
-            android:name="sg.com.bigspoon.www.activities.MenuPhotoListActivity"
+            android:name=".activities.MenuActivity"
             android:label="@string/title_activity_menu_list"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme" >

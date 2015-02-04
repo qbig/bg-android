@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -59,6 +60,7 @@ public class EmailLoginActivity extends Activity {
 	private Handler mHandler;
     private boolean doubleBackToExitPressedOnce;
     ProgressBar progressBar;
+    private Future<com.google.gson.JsonObject> loginFuture;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class EmailLoginActivity extends Activity {
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
 					json.addProperty("password", "bigspoon");
-					Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
+					EmailLoginActivity.this.loginFuture = Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
 							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
 							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 								@Override
@@ -198,6 +200,14 @@ public class EmailLoginActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        if (this.progressBar.getVisibility() == View.VISIBLE) {
+            EmailLoginActivity.this.progressBar.setVisibility(View.INVISIBLE);
+            if (this.loginFuture != null) {
+                this.loginFuture.cancel();
+            }
+            return;
+        }
+
         if (doubleBackToExitPressedOnce) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
