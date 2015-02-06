@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 
 public class OrderHistoryListActivity extends Activity {
 
-	private ImageButton mTellUsImageButton;
+	private Button mTellUsImageButton;
 	private ListView mList;
 	private ActionBar mTopActionBar;
 	private static final String ION_LOGGING_HISTORY_LIST = "ion-hisotry-list";
@@ -90,7 +91,7 @@ public class OrderHistoryListActivity extends Activity {
 		mTopActionBar = getActionBar();
 		mTopActionBar.setDisplayShowHomeEnabled(false);
 
-		mTellUsImageButton = (ImageButton) findViewById(R.id.imagetellus);
+		mTellUsImageButton = (Button) findViewById(R.id.tellusBt);
 		mTellUsImageButton.setOnClickListener(sendEmailButtonListener);
 		mActionBarView = getLayoutInflater().inflate(
 				R.layout.action_bar_items_activity, null);
