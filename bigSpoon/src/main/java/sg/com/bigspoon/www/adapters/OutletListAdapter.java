@@ -1,11 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-
-import java.util.List;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.OutletModel;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
+
+import java.util.List;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.OutletModel;
+
+import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 
 public class OutletListAdapter extends ArrayAdapter<OutletModel> {
 
@@ -33,14 +34,10 @@ public class OutletListAdapter extends ArrayAdapter<OutletModel> {
 
 		final TextView txtTitle = (TextView) rowView.findViewById(R.id.name);
 		final TextView txtAddress = (TextView) rowView.findViewById(R.id.address);
-		final TextView txtContact = (TextView) rowView.findViewById(R.id.contact);
-		final TextView txtDesc = (TextView) rowView.findViewById(R.id.desc);
 		final TextView txtComingSoon = (TextView) rowView.findViewById(R.id.coming);
 
 		txtTitle.setText(outlet.name);
 		txtAddress.setText(outlet.address);
-		txtContact.setText(outlet.phoneNumber);
-		txtDesc.setText(outlet.promotionalText);
 		if (outlet.isActive) {
 			txtComingSoon.setVisibility(View.GONE);
 		} else {
