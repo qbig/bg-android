@@ -27,7 +27,7 @@
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         android:paddingRight="15dp"
-        android:src="@drawable/red_add_bt" />
+        android:src="@drawable/orange_add_bt" />
 
     <TextView
         android:id="@+id/itemdesc"
@@ -58,6 +58,7 @@
         android:shadowRadius="5"
         android:shadowColor="@color/black"
         android:textAppearance="@style/FontProxiSemiBold"
+        android:textStyle="bold"
         android:textSize="16sp"
         />
 
@@ -77,6 +78,7 @@
         android:shadowRadius="5"
         android:shadowColor="@color/black"
         android:textAppearance="@style/FontProxiSemiBold"
+        android:textStyle="bold"
         android:textSize="13sp"
          />
 

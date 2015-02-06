@@ -18,6 +18,7 @@
         android:layout_alignBottom="@+id/category_image"
         android:layout_centerInParent="true"
         android:layout_toRightOf="@id/category_image"
+        android:layout_toLeftOf="@+id/arrow_right_img"
         android:textSize="20dp"
         android:textColor="@color/text_dark_gray"
         android:textAppearance="@style/FontProxiRegular" />
