@@ -28,8 +28,9 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="18sp"
                 android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold" />
+                android:textColor="@color/text_dark_gray"
+                android:textStyle="bold"
+                android:textAppearance="@style/FontProxiBold" />
 
             <TextView
                 android:id="@+id/address"
@@ -39,7 +40,7 @@
                 android:paddingTop="18sp"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
             <TextView
                 android:id="@+id/contact"
@@ -49,7 +50,7 @@
                 android:paddingTop="18sp"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
             <TextView
                 android:id="@+id/desc"
@@ -60,7 +61,7 @@
                 android:maxLines="3"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight" />
+                android:textAppearance="@style/FontProxiRegular" />
 
             <TextView
                 android:id="@+id/coming"
@@ -72,7 +73,7 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>
 

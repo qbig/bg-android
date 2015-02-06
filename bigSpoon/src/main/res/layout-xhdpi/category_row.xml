@@ -20,7 +20,7 @@
         android:layout_toRightOf="@id/category_image"
         android:textSize="20dp"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight" />
+        android:textAppearance="@style/FontProxiRegular" />
 
     <ImageView
         android:id="@+id/arrow_right_img"

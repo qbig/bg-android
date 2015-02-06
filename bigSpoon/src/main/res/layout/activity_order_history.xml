@@ -33,7 +33,7 @@
         android:text="@string/have_suggestion"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
-        android:textColor="@color/BigSpoonLightBlue"
+        android:textColor="@color/BigSpoonOrange"
         android:textSize="25dp"/>
       
           <ImageButton

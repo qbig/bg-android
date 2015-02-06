@@ -29,7 +29,7 @@
                 android:paddingTop="14sp"
                 android:textSize="20dp"
                 android:textColor="@color/text_dark_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textAppearance="@style/FontProxiBold"/>
 
             <TextView
                 android:id="@+id/address"
@@ -39,7 +39,7 @@
                 android:paddingTop="5sp"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
             <TextView
                 android:id="@+id/contact"
@@ -49,7 +49,7 @@
                 android:paddingTop="5sp"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
             <TextView
                 android:id="@+id/desc"
@@ -61,7 +61,7 @@
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
                 android:paddingTop="5sp"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
             <TextView
                 android:id="@+id/coming"
@@ -73,7 +73,7 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_dark_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>
 

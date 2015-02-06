@@ -95,7 +95,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/addNoteButton"
             android:layout_width="120sp"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"
@@ -106,7 +106,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/sentToKitchenButton"
             android:layout_width="120sp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"

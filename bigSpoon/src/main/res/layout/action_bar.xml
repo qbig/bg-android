@@ -16,7 +16,7 @@
          android:textColor="@color/white"
          android:textSize="@dimen/default_title_indicator_text_size"
          android:textStyle="bold"
-         android:textAppearance="@style/FontSegoeUIBold"
+         android:textAppearance="@style/FontProxiBold"
          />
 
     <ImageButton

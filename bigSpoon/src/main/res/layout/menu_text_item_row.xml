@@ -42,7 +42,7 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/textitemprice"
         android:text="TextView"
-        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textAppearance="@style/FontProxiSemiBold"
         android:textSize="22sp"/>
 
     <TextView
@@ -55,7 +55,7 @@
         android:layout_marginTop="25dp"
         android:text="TextView"
         android:textColor="@color/text_light_gray"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textAppearance="@style/FontProxiRegular"
         android:textSize="13sp"
         />
 

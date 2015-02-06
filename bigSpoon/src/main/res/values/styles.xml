@@ -92,20 +92,14 @@
 
 
 
-    <style name="FontSegoeUI">
-        <item name="fontPath">fonts/segoeui.ttf</item>
+    <style name="FontProxiBold">
+        <item name="fontPath">fonts/ProximaNovaBold.otf</item>
     </style>
-    <style name="FontSegoeUILight">
-        <item name="fontPath">fonts/segoeuil.ttf</item>
+    <style name="FontProxiSemiBold">
+        <item name="fontPath">fonts/ProximaNovaSemibold.otf</item>
     </style>
-    <style name="FontSegoeUISemiLight">
-        <item name="fontPath">fonts/segoeuisl.ttf</item>
-    </style>
-    <style name="FontSegoeUIBold">
-        <item name="fontPath">fonts/segoeuib.ttf</item>
-    </style>
-    <style name="FontSegoeUISemiBold">
-        <item name="fontPath">fonts/segoeuisb.ttf</item>
+    <style name="FontProxiRegular">
+        <item name="fontPath">fonts/ProximaNovaRegular.otf</item>
     </style>
     
     
@@ -122,15 +116,15 @@
   
     <!-- ActionBar styles -->  
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">  
-        <item name="android:background">@color/BigSpoonLightBlue</item>
+        <item name="android:background">@color/BigSpoonOrange</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>  
-        <item name="android:backgroundStacked">@color/BigSpoonLightBlue</item>
+        <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
     </style>  
   
     <!-- ActionBar title text -->  
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">  
         <item name="android:textColor">@color/white</item>
-        <item name="android:textAppearance">@style/FontSegoeUIBold</item>
+        <item name="android:textAppearance">@style/FontProxiBold</item>
     </style>  
   
     <!-- ActionBar tabs text -->  

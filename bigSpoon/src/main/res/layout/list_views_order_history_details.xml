@@ -12,7 +12,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight" />
+        android:textAppearance="@style/FontProxiRegular" />
 
     <TextView
         android:id="@+id/descriptionOrder"
@@ -23,7 +23,7 @@
         android:layout_weight="4"
         android:gravity="center"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textAppearance="@style/FontProxiRegular"
         android:textSize="16sp" />
 
     <TextView
@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textAppearance="@style/FontProxiRegular"
         android:textSize="16sp" />
 
 

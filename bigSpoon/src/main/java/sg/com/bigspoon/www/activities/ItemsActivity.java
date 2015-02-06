@@ -195,22 +195,22 @@ public class ItemsActivity extends ExpandableListActivity {
 		final String serviceChargeLabelString = "Service Charge(" + (int) (mCurrentOutlet.serviceChargeRate * 100) + "%)";
 		final String GSTChargeLabelString = "GST (" + (int) (mCurrentOutlet.gstRate * 100) + "%) :";
 		
-		mCurrentSubTotalValue = (TextView) findViewById(R.id.textView2);
-		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.textView3);
-		mCurrentServiceChargeValue = (TextView) findViewById(R.id.textView4);
-		mCurrentGSTLabel = (TextView) findViewById(R.id.textView5);
-		mCurrentGSTValue = (TextView) findViewById(R.id.textView6);
-		mCurrentTotalValue = (TextView) findViewById(R.id.textView8);
+		mCurrentSubTotalValue = (TextView) findViewById(R.id.currentSubTotalValue);
+		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.currentServiceChargeLabel);
+		mCurrentServiceChargeValue = (TextView) findViewById(R.id.currentServiceChargeValue);
+		mCurrentGSTLabel = (TextView) findViewById(R.id.currentGSTLabel);
+		mCurrentGSTValue = (TextView) findViewById(R.id.currentGSTValue);
+		mCurrentTotalValue = (TextView) findViewById(R.id.currentTotalValue);
 		
 		mCurrentServiceChargeLabel.setText(serviceChargeLabelString);
 		mCurrentGSTLabel.setText(GSTChargeLabelString);
 		
-		mOrderredSubTotalValue = (TextView) findViewById(R.id.textView10);
-		mOrderredServiceChargeLabel = (TextView) findViewById(R.id.textView11);
-		mOrderredServiceChargeValue = (TextView) findViewById(R.id.textView12);
-		mOrderredGSTLabel = (TextView) findViewById(R.id.textView13);
-		mOrderredGSTValue = (TextView) findViewById(R.id.textView14);
-		mOrderredTotalValue = (TextView) findViewById(R.id.textView16);
+		mOrderredSubTotalValue = (TextView) findViewById(R.id.sentSubTotalValue);
+		mOrderredServiceChargeLabel = (TextView) findViewById(R.id.sentServiceChargeLabel);
+		mOrderredServiceChargeValue = (TextView) findViewById(R.id.sentServiceChargeValue);
+		mOrderredGSTLabel = (TextView) findViewById(R.id.sentGSTLabel);
+		mOrderredGSTValue = (TextView) findViewById(R.id.sentGSTValue);
+		mOrderredTotalValue = (TextView) findViewById(R.id.sentSubTotalValue);
 		
 		mOrderredGSTLabel.setText(GSTChargeLabelString);
 		mOrderredServiceChargeLabel.setText(serviceChargeLabelString);
@@ -261,7 +261,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupPlaceOrderButton() {
-		mPlaceOrder = (Button) findViewById(R.id.button2);
+		mPlaceOrder = (Button) findViewById(R.id.sentToKitchenButton);
 		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -517,7 +517,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupAddNoteButton() {
-		mAddNote = (Button) findViewById(R.id.button1);
+		mAddNote = (Button) findViewById(R.id.addNoteButton);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

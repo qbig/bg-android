@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@color/BigSpoonLightBlue"
+    android:background="@color/BigSpoonOrange"
     android:orientation="vertical">
 
     <TextView
@@ -15,7 +15,7 @@
         android:textSize="25sp"
         android:layout_centerHorizontal="true"
         android:textColor="@color/white"
-        android:textAppearance="@style/FontSegoeUIBold" />
+        android:textAppearance="@style/FontProxiBold" />
 
     <TextView
         android:id="@+id/date"
@@ -25,7 +25,7 @@
         android:gravity="center"
         android:layout_below="@+id/txt_title"
         android:textColor="@color/white"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textAppearance="@style/FontProxiRegular"
         android:layout_height="50dp" />
 
 </RelativeLayout>

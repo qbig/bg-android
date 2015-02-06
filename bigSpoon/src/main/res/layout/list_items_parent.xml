@@ -43,7 +43,7 @@
             android:text="main title"
             android:textSize="12sp"
             android:textColor="@color/BigSpoonPink"
-            android:textAppearance="@style/FontSegoeUISemiLight"/>
+            android:textAppearance="@style/FontProxiRegular"/>
 
         <TextView
             android:id="@+id/subTitle"

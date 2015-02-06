@@ -41,7 +41,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:text="TextView"
-        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textAppearance="@style/FontProxiSemiBold"
         android:textSize="22sp"
          />
 
@@ -55,7 +55,7 @@
         android:layout_marginTop="25dp"
         android:text="TextView"
         android:textColor="@color/text_light_gray"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textAppearance="@style/FontProxiRegular"
         android:textSize="13sp"
         />
 

@@ -27,6 +27,7 @@ import io.fabric.sdk.android.Fabric;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
@@ -111,8 +112,17 @@ public class BigSpoon extends Application implements Foreground.Listener {
 			}
 		}
 
-        CalligraphyConfig.initDefault("fonts/segoeui.ttf", R.attr.fontPath);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/PromiaNovaRegular.otf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 	}
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	public void onTerminate() {

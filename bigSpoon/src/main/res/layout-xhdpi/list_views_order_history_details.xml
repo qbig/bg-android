@@ -12,7 +12,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight" />
+        android:textAppearance="@style/FontProxiRegular" />
 
     <TextView
         android:id="@+id/descriptionOrder"
@@ -24,7 +24,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight" />
+        android:textAppearance="@style/FontProxiRegular" />
 
     <TextView
         android:id="@+id/price"
@@ -36,7 +36,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUILight" />
+        android:textAppearance="@style/FontProxiRegular" />
 
 
 </LinearLayout>
