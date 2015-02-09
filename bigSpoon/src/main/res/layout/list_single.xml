@@ -28,7 +28,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="14sp"
                 android:textSize="20dp"
-                android:textColor="@color/text_dark_gray"
+                android:textColor="@color/BigSpoonGray"
                 android:textAppearance="@style/FontProxiBold"/>
 
             <TextView
