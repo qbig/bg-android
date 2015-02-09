@@ -5,11 +5,13 @@
     <ImageView
         android:id="@+id/category_image"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="75dp"
         android:layout_margin="10dp"
+        android:padding="3dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:paddingBottom="10dp" />
+        android:background="@drawable/container_shadow"
+         />
 
     <TextView
         android:id="@+id/category_name"
@@ -20,8 +22,10 @@
         android:layout_toRightOf="@id/category_image"
         android:layout_toLeftOf="@+id/arrow_right_img"
         android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontProxiRegular" />
+        android:textAppearance="@style/FontProxiSemiBold" />
 
     <ImageView
         android:id="@+id/arrow_right_img"

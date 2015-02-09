@@ -99,9 +99,14 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			if (convertView == null) {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				row = inflater.inflate(R.layout.category_row_icon, parent, false);
+                row.setActivated(false);
 			}
 			
 			final ImageView iconView = (ImageView) row.findViewById(R.id.category_list_restaurant_icon);
+            final TextView contactText = (TextView) row.findViewById(R.id.phone_text);
+            contactText.setText(outletDetails.phoneNumber);
+            final TextView openHoursText = (TextView) row.findViewById(R.id.open_hours);
+            openHoursText.setText(outletDetails.operatingHours);
 			Ion.with(context).load(BASE_URL + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
 				
 				@Override

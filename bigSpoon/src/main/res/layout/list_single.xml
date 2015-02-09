@@ -52,6 +52,7 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_dark_gray"
+                android:textStyle="bold"
                 android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>

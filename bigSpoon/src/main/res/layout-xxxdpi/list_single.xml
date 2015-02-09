@@ -9,7 +9,7 @@
         <ImageView
             android:id="@+id/img"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="130dp"
             android:layout_weight="1"
             android:gravity="left"
             android:padding="5dp"
@@ -52,6 +52,7 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
+                android:textStyle="bold"
                 android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>
