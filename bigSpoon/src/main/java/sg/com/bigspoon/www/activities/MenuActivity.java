@@ -91,10 +91,14 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    getActionBarViewContainer().startAnimation(animFadeIn);
-                                    mCategoriesTabBar.setDisplayShowHomeEnabled(false);
-                                    mCategoriesTabBar.setDisplayShowTitleEnabled(false);
-                                    mActionBarView.setVisibility(View.GONE);
+                                    try {
+                                        getActionBarViewContainer().startAnimation(animFadeIn);
+                                        MenuActivity.this.mCategoriesTabBar.setDisplayShowHomeEnabled(false);
+                                        MenuActivity.this.mCategoriesTabBar.setDisplayShowTitleEnabled(false);
+                                        MenuActivity.this.mActionBarView.setVisibility(View.GONE);
+                                    } catch (NullPointerException npe) {
+                                        Crashlytics.log(npe.getMessage());
+                                    }
                                 }
                             });
                             getActionBarViewContainer().startAnimation(animFadeOut);
@@ -190,13 +194,18 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		setupActionButton();
-		setupBackToOutletButton();
-		setupHistoryButton();
-		setupToggleButton();
-		new Handler();
-		return super.onCreateOptionsMenu(menu);
+        try {
+            setupActionButton();
+            setupBackToOutletButton();
+            setupHistoryButton();
+            setupToggleButton();
+            new Handler();
+            return super.onCreateOptionsMenu(menu);
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            finish();
+            return  false;
+        }
 	}
 
 	private void setupActionButton() {

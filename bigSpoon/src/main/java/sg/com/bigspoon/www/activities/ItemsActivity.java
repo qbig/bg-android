@@ -185,7 +185,7 @@ public class ItemsActivity extends ExpandableListActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 280));
+            ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 310));
             }
         });
     }

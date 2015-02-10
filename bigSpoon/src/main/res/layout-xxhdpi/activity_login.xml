@@ -39,7 +39,7 @@
         android:layout_marginTop="215dp"
         android:textColorHint="#cbc4c4"
         android:inputType="textEmailAddress"
-        android:paddingLeft="5dp"
+        android:paddingLeft="15dp"
         android:fontFamily="sans-serif"
         android:singleLine="true"
         android:drawableLeft="@drawable/email_icon">

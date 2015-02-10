@@ -117,7 +117,7 @@ public class OutletListActivity extends Activity {
 				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
                 final String previousEmail = loginPreferences.getString(LOGIN_INFO_EMAIL, "");
 				loginPrefsEditor.clear();
-				loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
+                loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
                 loginPrefsEditor.putString(LOGIN_INFO_EMAIL, previousEmail);
 				loginPrefsEditor.commit();
 

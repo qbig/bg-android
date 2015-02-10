@@ -98,7 +98,13 @@ public class MenuAdapter extends BaseAdapter {
 		this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
 		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
 		initAddDishButtonListener();
-		updateFilteredList();
+        try {
+            updateFilteredList();
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            ((Activity) mContext).finish();
+        }
+
 	}
 
 	public void updateFilteredList() {

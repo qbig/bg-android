@@ -21,11 +21,12 @@ public class TutorialFragmentAdapter extends FragmentPagerAdapter implements
 			R.layout.activity_tutorial_screen1,
 			R.layout.activity_tutorial_screen2,
 			R.layout.activity_tutorial_screen3,
+            R.layout.activity_tutorial_screen4,
 			R.layout.activity_tutorial_screen6,
 			R.layout.activity_tutorial_screenlast };
 	
 	private final int lastScreenIndex = tutScreenLayouts.length - 1;
-	
+
 	public TutorialFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.mContext = context;

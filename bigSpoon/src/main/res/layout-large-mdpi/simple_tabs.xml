@@ -5,30 +5,30 @@
     android:orientation="vertical" >
 
     <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
     <GridView
         android:id="@+id/gv_action_menu"
         android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/botton_action_bar"
+        android:background="@drawable/bottom_action_bar"
         android:horizontalSpacing="2dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"
         android:scrollbars="none"
         android:stretchMode="columnWidth" >
     </GridView>
-    
-        <TextView
+
+    <TextView
         android:id="@+id/corner"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignTop="@id/gv_action_menu"
-        android:layout_alignRight="@id/gv_action_menu" 
+        android:layout_alignRight="@id/gv_action_menu"
         android:text="1"
         android:gravity="center"
         android:textColor="#FFF"

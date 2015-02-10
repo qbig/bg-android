@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.Modifer;
 import sg.com.bigspoon.www.data.ModifierSection;
@@ -259,14 +261,19 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		LinearLayout layout = null;
 		if (convertView == null) {
 			layout = (LinearLayout) inflator.inflate(R.layout.header_item, null);
-            layout.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
 		} else {
 			layout = (LinearLayout) convertView;
 		}
-		((TextView) layout.findViewById(R.id.maintitle)).setText(mModifierModel.sections[section].itemTitle);
-		((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor(mModifierModel.itemTitleColor.trim()));
-		((TextView) layout.findViewById(R.id.subtitle)).setText(mModifierModel.sections[section].itemTitleDescription);
-		((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
+        try {
+            layout.setBackgroundColor(Color.parseColor(mModifierModel.backgroundColor.trim()));
+            ((TextView) layout.findViewById(R.id.maintitle)).setText(mModifierModel.sections[section].itemTitle);
+            ((TextView) layout.findViewById(R.id.maintitle)).setTextColor(Color.parseColor(mModifierModel.itemTitleColor.trim()));
+            ((TextView) layout.findViewById(R.id.subtitle)).setText(mModifierModel.sections[section].itemTitleDescription);
+            ((TextView) layout.findViewById(R.id.subtitle)).setTextColor(Color.parseColor(mModifierModel.itemTextColor.trim()));
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.toString());
+        }
+
 		return layout;
 	}
 
