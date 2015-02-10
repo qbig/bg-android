@@ -144,11 +144,16 @@ public class EmailLoginActivity extends Activity {
 										MixpanelAPI mixpanel = MixpanelAPI.getInstance(EmailLoginActivity.this,
 												MIXPANEL_TOKEN);
 										JSONObject firstTime = new JSONObject();
+                                        JSONObject props = new JSONObject();
 										try {
 											mixpanel.identify(email);
 											mixpanel.getPeople().identify(email);
 											mixpanel.getPeople().increment(EMAIL_LOGIN_COUNT, 1);
+                                            mixpanel.getPeople().set("Email", email);
+                                            mixpanel.getPeople().set("$email", email);
+                                            props.put("$email", email);
 											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+                                            mixpanel.registerSuperPropertiesOnce(props);
 											mixpanel.registerSuperPropertiesOnce(firstTime);
 										} catch (JSONException e1) {
 											e1.printStackTrace();
@@ -196,6 +201,13 @@ public class EmailLoginActivity extends Activity {
             Intent intent = new Intent(NOTIF_TO_START_LOCATION_SERVICE);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        MixpanelAPI.getInstance(EmailLoginActivity.this,
+                MIXPANEL_TOKEN).flush();
+        super.onDestroy();
     }
 
     @Override
