@@ -79,7 +79,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
 		try {
 			LocationLibrary.initialiseLibrary(getBaseContext(), "sg.com.bigspoon.www");
 		} catch (UnsupportedOperationException ex) {
