@@ -41,6 +41,10 @@
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10.0sp"
                 android:fadingEdge="none"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:groupIndicator="@android:color/transparent"></ExpandableListView>
 
             <Button
