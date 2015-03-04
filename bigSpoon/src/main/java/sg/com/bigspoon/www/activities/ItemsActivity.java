@@ -74,6 +74,7 @@ import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
@@ -150,6 +151,10 @@ public class ItemsActivity extends ExpandableListActivity {
     private ScrollView scrollView;
 
     private Handler handler;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

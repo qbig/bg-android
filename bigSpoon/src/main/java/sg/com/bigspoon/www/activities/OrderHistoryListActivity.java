@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.StateListDrawable;
@@ -31,6 +32,7 @@ import sg.com.bigspoon.www.adapters.OrderHistoryListAdapter;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.ORDER_HISTORY_URL;
@@ -71,6 +73,10 @@ public class OrderHistoryListActivity extends Activity {
 	private View mActionBarView;
 	private ImageButton mBackButton;
 	private String callingActivityName;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

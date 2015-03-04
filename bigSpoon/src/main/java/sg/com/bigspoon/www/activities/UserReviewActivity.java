@@ -1,22 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.RATING_URL;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.CustomListOfUserReview;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,11 +19,33 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.CustomListOfUserReview;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.RATING_URL;
+
 public class UserReviewActivity extends Activity {
 
 	ListView list;
 	public static float[] ratingsArray;
 	private SharedPreferences loginPrefs;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

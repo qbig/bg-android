@@ -51,6 +51,7 @@ import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.OutletModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
@@ -92,6 +93,10 @@ public class OutletListActivity extends Activity {
 
 		return super.onCreateOptionsMenu(menu);
 	}
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	private void setupHistoryButton() {
 		orderHistoryButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
