@@ -335,8 +335,11 @@ public class ItemsActivity extends ExpandableListActivity {
 							
 							return;
 						}
-                        scrollToSentItems();
+                        //scrollToSentItems();
 						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
 					}
 				});
 	}
@@ -851,7 +854,6 @@ public class ItemsActivity extends ExpandableListActivity {
 		bq1.setTextSize(19);
 		Button bq2 = alert.getButton(DialogInterface.BUTTON2);
 		bq2.setTextColor(Color.parseColor("#117AFE"));
-		// bq2.setTypeface(null, Typeface.BOLD);
 		bq2.setTextSize(19);
 
 	}
