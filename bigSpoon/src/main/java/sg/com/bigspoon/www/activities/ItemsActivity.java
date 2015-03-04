@@ -546,11 +546,17 @@ public class ItemsActivity extends ExpandableListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		mActionBar = getActionBar();
-		mActionBar.setDisplayShowHomeEnabled(false);
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
-		mActionBar.setCustomView(mActionBarView);
-		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		try {
+            mActionBar = getActionBar();
+            mActionBar.setDisplayShowHomeEnabled(false);
+            mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+            mActionBar.setCustomView(mActionBarView);
+            mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            finish();
+            return false;
+        }
 		
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText(User.getInstance(this).currentOutlet.name);
