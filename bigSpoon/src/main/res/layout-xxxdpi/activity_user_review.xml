@@ -37,7 +37,8 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/enjoy_meal"
             android:textColor="#D2E841"
-            android:textSize="15dp" />
+            android:textAppearance="@style/FontProxiRegular"
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/ReviewLine3"
@@ -47,7 +48,8 @@
             android:layout_marginBottom="5dp"
             android:text="@string/ratings"
             android:textColor="#D2E841"
-            android:textSize="15dp" />
+            android:textAppearance="@style/FontProxiRegular"
+            android:textSize="12dp" />
     </LinearLayout>
 
     <ListView
@@ -95,7 +97,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/addNoteButton"
+            android:id="@+id/cancel_button"
             android:layout_width="120sp"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"
@@ -106,7 +108,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/sentToKitchenButton"
+            android:id="@+id/submit_button"
             android:layout_width="120sp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"

@@ -266,7 +266,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupPlaceOrderButton() {
-		mPlaceOrder = (Button) findViewById(R.id.sentToKitchenButton);
+		mPlaceOrder = (Button) findViewById(R.id.submit_button);
 		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -522,7 +522,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupAddNoteButton() {
-		mAddNote = (Button) findViewById(R.id.addNoteButton);
+		mAddNote = (Button) findViewById(R.id.cancel_button);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
