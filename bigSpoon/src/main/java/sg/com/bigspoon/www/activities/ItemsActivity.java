@@ -215,7 +215,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		mOrderredServiceChargeValue = (TextView) findViewById(R.id.sentServiceChargeValue);
 		mOrderredGSTLabel = (TextView) findViewById(R.id.sentGSTLabel);
 		mOrderredGSTValue = (TextView) findViewById(R.id.sentGSTValue);
-		mOrderredTotalValue = (TextView) findViewById(R.id.sentSubTotalValue);
+		mOrderredTotalValue = (TextView) findViewById(R.id.sentTotalValue);
 		
 		mOrderredGSTLabel.setText(GSTChargeLabelString);
 		mOrderredServiceChargeLabel.setText(serviceChargeLabelString);
