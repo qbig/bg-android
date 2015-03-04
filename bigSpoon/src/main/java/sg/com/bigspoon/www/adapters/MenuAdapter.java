@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,15 +25,22 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,14 +49,18 @@ import java.util.Comparator;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class MenuAdapter extends BaseAdapter {
 
@@ -183,7 +197,11 @@ public class MenuAdapter extends BaseAdapter {
 								}
 								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 									mSuperActivityToast.show();
+                                    if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1  && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                                        MenuAdapter.this.showClearOrderPopup();
+                                    }
 								}
+
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
 							}							
@@ -193,15 +211,18 @@ public class MenuAdapter extends BaseAdapter {
 
 					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
 					final View parent = (View) view.getParent().getParent().getParent();
-					TextView cornertext;
-					cornertext = (TextView) parent.findViewById(R.id.corner);
+					TextView cornertext = (TextView) parent.findViewById(R.id.corner);
 					cornertext.setVisibility(View.VISIBLE);
 					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
 							.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
+
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 						mSuperActivityToast.show();
+                        if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                            MenuAdapter.this.showClearOrderPopup();
+                        }
 					}
 
 					if (MenuActivity.isPhotoMode) {
@@ -213,6 +234,66 @@ public class MenuAdapter extends BaseAdapter {
 			}
 		};
 	}
+
+    @SuppressWarnings("deprecation")
+    private void showClearOrderPopup() {
+        final AlertDialog alert = new AlertDialog.Builder(mContext).create();
+        alert.setTitle("Just Arrived?");
+        alert.setMessage(
+                "We found an existing order. If it belongs " +
+                "to you, tap continue. Otherwise tap Start new session.");
+        alert.setView(null);
+        alert.setButton2("Start new session", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                JsonObject tableInfo = new JsonObject();
+                tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
+                User.getInstance(mContext).currentSession.clearPastOrder();
+                Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+                        .setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
+                        .setJsonObjectBody(tableInfo)
+                        .asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            if (Constants.LOG) {
+                                Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
+                            } else {
+                                final JSONObject info = new JSONObject();
+                                try {
+                                    info.put("error", e.toString());
+                                } catch (JSONException e1) {
+                                    Crashlytics.logException(e1);
+                                }
+                                User.getInstance(mContext).mMixpanel.track("Error clearing orders",
+                                        info);
+                            }
+
+                            return;
+                        }
+                        Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+        alert.setButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {}
+        });
+        alert.show();
+        TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.CENTER);
+        // messageView.setHeight(140);
+        messageView.setTextSize(17);
+
+        Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+        bq1.setTextColor(Color.parseColor("#117AFE"));
+        bq1.setTypeface(null, Typeface.BOLD);
+        bq1.setTextSize(19);
+        Button bq2 = alert.getButton(DialogInterface.BUTTON2);
+        bq2.setTextColor(Color.parseColor("#117AFE"));
+        bq2.setTextSize(19);
+
+    }
 
 	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
 		View viewToCopy = (View) view.getParent();
