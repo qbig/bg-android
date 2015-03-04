@@ -60,7 +60,7 @@ public class UserReviewActivity extends Activity {
 		cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
-				User.getInstance(UserReviewActivity.this).tableId = -1;
+				//User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
@@ -78,7 +78,7 @@ public class UserReviewActivity extends Activity {
 				}
 
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
-				User.getInstance(UserReviewActivity.this).tableId = -1;
+				//User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
