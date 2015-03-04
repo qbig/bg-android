@@ -112,7 +112,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		}
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/ProximaNovaRegular.otf")
+                        .setDefaultFontPath("fonts/ProximaNovaSemibold.otf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );

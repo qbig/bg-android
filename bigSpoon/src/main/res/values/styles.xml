@@ -117,19 +117,20 @@
     <!-- ActionBar styles -->  
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">  
         <item name="android:background">@color/BigSpoonOrange</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>  
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
-    </style>  
+    </style>
   
     <!-- ActionBar title text -->  
     <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">  
         <item name="android:textColor">@color/white</item>
         <item name="android:textAppearance">@style/FontProxiBold</item>
+        <item name="android:textStyle">bold</item>
     </style>  
   
     <!-- ActionBar tabs text -->  
     <style name="MyActionBarTabText" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">  
-        <item name="android:textColor">@color/tab_text</item>  
+        <item name="android:textColor">@color/tab_text</item>
     </style>  
   
     <style name="MyActionBarTabs" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
