@@ -1,19 +1,5 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
-import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
-
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +14,20 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
+
 public class User {
 	private static User sInstance;
 	private Context mContext;
@@ -40,9 +40,10 @@ public class User {
 	private static int FOR_WATER = 0;
 	private static int FOR_WAITER = 1;
 	public int tableId = -1;
-	public Boolean isContainDessert = false;
-	public Boolean isForTakeAway = false;
+	public boolean isContainDessert = false;
+	public boolean isForTakeAway = false;
 	public MixpanelAPI mMixpanel;
+    public boolean shouldShowRemidnerPopup = false;
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());

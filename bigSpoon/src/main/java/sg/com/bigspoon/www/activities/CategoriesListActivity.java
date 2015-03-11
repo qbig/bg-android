@@ -49,6 +49,17 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance(this).shouldShowRemidnerPopup) {
+            startActivity(new Intent(this, ImageDialog.class));
+            User.getInstance(this).shouldShowRemidnerPopup = false;
+        }
+
+    }
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

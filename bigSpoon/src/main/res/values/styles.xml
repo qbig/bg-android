@@ -128,21 +128,21 @@
         <item name="android:textStyle">bold</item>
     </style>  
   
-    <!-- ActionBar tabs text -->  
-    <style name="MyActionBarTabText" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">  
+    <!-- ActionBar tabs text -->
+    <style name="MyActionBarTabText" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
         <item name="android:textColor">@color/tab_text</item>
-    </style>  
-  
+    </style>
+
     <style name="MyActionBarTabs" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
         <item name="android:paddingTop">1dp</item>
         <item name="android:layout_marginTop">1dp</item>
         <item name="android:background">@drawable/tab_indicator_ab_example</item>
-    </style>  
-    
-    <style name="RatingBarStar" parent="@android:style/Widget.RatingBar">  
-        <item name="android:progressDrawable">@drawable/rating_bar</item>  
-        <item name="android:minHeight">48dip</item>  
-        <item name="android:maxHeight">48dip</item>  
-    </style>  
+    </style>
+
+    <style name="RatingBarStar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:maxHeight">48dip</item>
+    </style>
 
 </resources>

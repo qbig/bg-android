@@ -69,6 +69,7 @@
     <string name="order_these">ORDER THESE?</string>
     <string name="sent_orders">SENT ORDERS:</string>
     <string name="tell_us">Tell Us</string>
+    <string name="str_okay">Okay</string>
 
     <item type="id" name="POSITION"/>
     <item type="id" name="SECTION"/>

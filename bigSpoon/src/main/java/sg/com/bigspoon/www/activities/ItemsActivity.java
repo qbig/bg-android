@@ -338,6 +338,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         //scrollToSentItems();
 						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
                         Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
+                        User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
                         i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
 					}
