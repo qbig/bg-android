@@ -4,10 +4,10 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,7 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -46,6 +46,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	public static boolean isPhotoMode = true;
 
 	private View mActionBarView;
+    private SearchView mSearchView;
 	private ImageButton toggleButton;
 	private ImageButton backToOutletList;
 	private ImageButton historyButton;
@@ -99,8 +100,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                                 public void onAnimationEnd(Animation animation) {
                                     try {
                                         getActionBarViewContainer().startAnimation(animFadeIn);
-                                        MenuActivity.this.mCategoriesTabBar.setDisplayShowHomeEnabled(false);
-                                        MenuActivity.this.mCategoriesTabBar.setDisplayShowTitleEnabled(false);
                                         MenuActivity.this.mActionBarView.setVisibility(View.GONE);
                                     } catch (NullPointerException npe) {
                                         Crashlytics.log(npe.getMessage());
@@ -121,8 +120,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     getActionBarViewContainer().startAnimation(animFadeIn);
-                                    mCategoriesTabBar.setDisplayShowHomeEnabled(true);
-                                    mCategoriesTabBar.setDisplayShowTitleEnabled(true);
                                     mActionBarView.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -202,10 +199,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
         try {
             setupActionButton();
-            setupBackToOutletButton();
-            setupHistoryButton();
-            setupToggleButton();
-            new Handler();
             return super.onCreateOptionsMenu(menu);
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
@@ -215,12 +208,20 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	}
 
 	private void setupActionButton() {
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar, null);
+		mActionBarView = getLayoutInflater().inflate(R.layout.menu_action_bar, null);
 		mCategoriesTabBar.setCustomView(mActionBarView);
-		mCategoriesTabBar.setIcon(R.drawable.dummy_icon);
-		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+		//mCategoriesTabBar.setIcon(android.R.color.transparent);
+		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
         title.setText(strElipsize(User.getInstance(this).currentOutlet.name, 20));
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchView =
+                (SearchView) mActionBarView.findViewById(R.id.menu_search_view);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
 	}
 
     private String strElipsize(String str, int lengthLimit) {
@@ -260,32 +261,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 adapter.notifyDataSetChanged();
             }
         });
-	}
-
-	private void setupBackToOutletButton() {
-		backToOutletList = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
-		backToOutletList.setImageResource(R.drawable.home_with_arrow);
-		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.CENTER_VERTICAL);
-		backToOutletList.setLayoutParams(params);
-		backToOutletList.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		backToOutletList.setPadding(-2, 0, 0, 0);
-
-		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.home_with_arrow_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.home_with_arrow));
-		backToOutletList.setImageDrawable(states);
-
-		backToOutletList.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-			}
-		});
 	}
 
     private void setupCategoryTabs() {
