@@ -8,6 +8,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
@@ -32,14 +34,22 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuAdapter;
+import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
+import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+
 
 public class MenuActivity extends ActionBarActivity implements TabListener {
 
@@ -233,8 +243,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onQueryTextChange(String query) {
-
-                //loadHistory(query);
+                Toast.makeText(MenuActivity.this, "Text Changed", Toast.LENGTH_SHORT).show();
+                searchDishAndLoadResult(query);
 
                 return true;
 
@@ -242,9 +252,43 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(MenuActivity.this, "Text Submitted", Toast.LENGTH_SHORT).show();
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(MenuActivity.this,
+                        MenuSearchRecentSuggestionsProvider.AUTHORITY, MenuSearchRecentSuggestionsProvider.MODE);
+                suggestions.saveRecentQuery(query, null);
+                mSearchView.clearFocus();
                 return true;
             }
 
+        });
+
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MenuActivity.this, "Search Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Toast.makeText(MenuActivity.this, "Suggestion selected", Toast.LENGTH_SHORT).show();
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                String feedName = cursor.getString(1);
+                mSearchView.setQuery(feedName, false);
+                mSearchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Toast.makeText(MenuActivity.this, "Suggestions Clicked", Toast.LENGTH_SHORT).show();
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                String feedName = cursor.getString(1);
+                mSearchView.setQuery(feedName, false);
+                mSearchView.clearFocus();
+                return true;
+            }
         });
 
     }
@@ -360,17 +404,51 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     }
 
     private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            // search through dishlist and list suggestions
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, "Searching for " + query, Toast.LENGTH_LONG).show();
 
-            //save query
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                    MenuSearchRecentSuggestionsProvider.AUTHORITY, MenuSearchRecentSuggestionsProvider.MODE);
-            suggestions.saveRecentQuery(query, null);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            mSearchView.setQuery(query, false);
+            Toast.makeText(this, "Intent Searching", Toast.LENGTH_LONG).show();
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())){
             // search dish (filtering dish)
+            Toast.makeText(this, "Intent Viewing", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void searchDishAndLoadResult(final String query) {
+        // Cursor
+        String[] columns = new String[] { "_id", "text" };
+        Object[] temp = new Object[] { 0, "default" };
+
+        MatrixCursor cursor = new MatrixCursor(columns);
+
+        Arrays.sort(User.getInstance(this).currentOutlet.dishes, new Comparator<DishModel>() {
+            @Override
+            public int compare(final DishModel lhs, DishModel rhs) {
+
+                final boolean lhsStartMatch = lhs.name.toLowerCase().contains(query);
+                final boolean rhsStartMatch = rhs.name.toLowerCase().contains(query);
+                if (query.length() <= 10 ) {
+                    if (lhsStartMatch && !rhsStartMatch) return -1;
+                    else if (!lhsStartMatch && rhsStartMatch) return 1;
+                }
+
+                final int levValueLeft = StringUtils.getLevenshteinDistance(query, lhs.name.toLowerCase());
+                final int levValueRight = StringUtils.getLevenshteinDistance(query, rhs.name.toLowerCase());
+                if (levValueLeft < levValueRight) return -1;
+                else if (levValueLeft > levValueRight) return 1;
+                return 0;
+            }
+        });
+
+        for(int i = 0; i < User.getInstance(this).currentOutlet.dishes.length; i++) {
+
+            temp[0] = i;
+            temp[1] = User.getInstance(this).currentOutlet.dishes[i].name;
+            cursor.addRow(temp);
+
+        }
+
+        mSearchView.setSuggestionsAdapter(new MenuSearchSuggestionAdapter(this, cursor, User.getInstance(this).currentOutlet.dishes));
     }
 }
