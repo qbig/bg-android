@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.SearchRecentSuggestions;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -43,7 +42,6 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuAdapter;
 import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
 import sg.com.bigspoon.www.data.DishModel;
-import sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -245,7 +243,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             public boolean onQueryTextChange(String query) {
                 Toast.makeText(MenuActivity.this, "Text Changed", Toast.LENGTH_SHORT).show();
                 searchDishAndLoadResult(query);
-
                 return true;
 
             }
@@ -253,9 +250,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(MenuActivity.this, "Text Submitted", Toast.LENGTH_SHORT).show();
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(MenuActivity.this,
-                        MenuSearchRecentSuggestionsProvider.AUTHORITY, MenuSearchRecentSuggestionsProvider.MODE);
-                suggestions.saveRecentQuery(query, null);
                 mSearchView.clearFocus();
                 return true;
             }

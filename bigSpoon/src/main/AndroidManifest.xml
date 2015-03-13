@@ -159,9 +159,6 @@
             </intent-filter>  
         </receiver>
 
-        <provider android:name="sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider"
-            android:authorities="sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider" />
-
     <meta-data android:name="com.crashlytics.ApiKey" android:value="5e0d63d5b12c89cf3ff015e07958d5a94a75722a"/>
     </application>
 
