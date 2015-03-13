@@ -90,12 +90,14 @@
             android:name=".activities.MenuActivity"
             android:label="@string/title_activity_menu_list"
             android:screenOrientation="portrait"
-            android:theme="@style/MenuActivityActionBarTheme" >
+            android:theme="@style/MenuActivityActionBarTheme"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
 
@@ -157,7 +159,8 @@
             </intent-filter>  
         </receiver>
 
-    
+        <provider android:name="sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider"
+            android:authorities="sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider" />
 
     <meta-data android:name="com.crashlytics.ApiKey" android:value="5e0d63d5b12c89cf3ff015e07958d5a94a75722a"/>
     </application>

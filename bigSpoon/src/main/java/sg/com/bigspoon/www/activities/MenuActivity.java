@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SearchRecentSuggestions;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -25,12 +26,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuAdapter;
+import sg.com.bigspoon.www.data.MenuSearchRecentSuggestionsProvider;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -220,9 +224,30 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         mSearchView =
                 (SearchView) mActionBarView.findViewById(R.id.menu_search_view);
         mSearchView.setIconifiedByDefault(false);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setQueryRefinementEnabled(true);
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-	}
+        mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+
+                //loadHistory(query);
+
+                return true;
+
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+        });
+
+    }
 
     private String strElipsize(String str, int lengthLimit) {
         if (str.length() <= lengthLimit) {
@@ -327,4 +352,25 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 			}
 		}
 	}
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // search through dishlist and list suggestions
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, "Searching for " + query, Toast.LENGTH_LONG).show();
+
+            //save query
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    MenuSearchRecentSuggestionsProvider.AUTHORITY, MenuSearchRecentSuggestionsProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())){
+            // search dish (filtering dish)
+        }
+    }
 }

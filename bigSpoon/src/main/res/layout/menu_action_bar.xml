@@ -45,6 +45,7 @@
     <SearchView
         android:id="@+id/menu_search_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"></SearchView>
+        android:layout_height="fill_parent"
+        android:textAppearance="@style/FontProxiRegular"></SearchView>
 
 </RelativeLayout>
