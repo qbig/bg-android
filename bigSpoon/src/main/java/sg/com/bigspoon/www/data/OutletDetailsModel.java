@@ -88,6 +88,48 @@ public class OutletDetailsModel {
 		
 		return null;
 	}
+
+    public DishModel getDishWithName(String dishName) {
+        for (int i = 0, len = dishes.length; i < len; i++ ){
+            if (dishes[i].name.equals(dishName)) {
+                return dishes[i];
+            }
+        }
+
+        return null;
+    }
 	
-	
+	public CategoryModel getCategoryForDishWithId(int dishId) {
+        final DishModel dish = getDishWithId(dishId);
+        if (dish == null) return null;
+
+        for (int i = 0; i < categoriesDetails.length; i ++){
+            if (dish.categories[0].id == categoriesDetails[i].id){
+                return categoriesDetails[i];
+            }
+        }
+
+        return null;
+    }
+
+    public int getCategoryIdForDishWithId(int dishId) {
+        final CategoryModel category = getCategoryForDishWithId(dishId);
+        if (category == null) return -1;
+        else return category.id;
+    }
+
+    public int getCategoryPositionForCategoryWithId(int categoryId){
+        for(int i = 0; i < categoriesOrder.length; i++){
+            if (categoriesOrder[i].categoryId == categoryId){
+                return categoriesOrder[i].position;
+            }
+        }
+
+        return -1;
+    }
+
+    public int getCategoryPositionWithDishId(int dishId){
+        final int categoryId = getCategoryIdForDishWithId(dishId);
+        return getCategoryPositionForCategoryWithId(categoryId);
+    }
 }

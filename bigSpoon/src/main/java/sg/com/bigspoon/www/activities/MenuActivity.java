@@ -265,10 +265,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
-                //TODO scrolling to selected Item
-                //  mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
-                //  listview.setSelection(position);
-
                 return true;
             }
 
@@ -279,6 +275,16 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
+                //TODO scrolling to selected Item
+                //  mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+                //  listview.setSelection(position);
+                DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(feedName);
+                mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
+                mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+                adapter.mCurrentSelectedCategoryTabIndex = mCategoryPosition;
+                adapter.updateFilteredList();
+                adapter.notifyDataSetChanged();
+                listview.setSelection(adapter.getDishPositionInFilteredList(searchedDish.id));
                 return true;
             }
         });

@@ -93,7 +93,16 @@ public class MenuAdapter extends BaseAdapter {
 			}
 		}
 	};
-	
+
+    public int getDishPositionInFilteredList(int dishID) {
+        for (int i = 0; i < mFilteredDishes.size(); i ++) {
+            if (dishID == mFilteredDishes.get(i).id){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 	public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
 		super();
 		this.mOutletInfo = outletInfo;
