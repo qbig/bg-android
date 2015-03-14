@@ -275,9 +275,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
-                //TODO scrolling to selected Item
-                //  mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
-                //  listview.setSelection(position);
+                //TODO 1. highlight first item
+
                 DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(feedName);
                 mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
                 mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
@@ -415,24 +414,24 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
     private void searchDishAndLoadResult(final String query) {
         // Cursor
-        String[] columns = new String[] { "_id", "text" };
-        Object[] temp = new Object[] { 0, "default" };
-
+        final String[] columns = new String[] { "_id", "text" };
+        final Object[] temp = new Object[] { 0, "default" };
+        final String queryLow = query.toLowerCase();
         MatrixCursor cursor = new MatrixCursor(columns);
 
         Arrays.sort(User.getInstance(this).currentOutlet.dishes, new Comparator<DishModel>() {
             @Override
             public int compare(final DishModel lhs, DishModel rhs) {
 
-                final boolean lhsStartMatch = lhs.name.toLowerCase().contains(query);
-                final boolean rhsStartMatch = rhs.name.toLowerCase().contains(query);
+                final boolean lhsStartMatch = lhs.name.toLowerCase().contains(queryLow);
+                final boolean rhsStartMatch = rhs.name.toLowerCase().contains(queryLow);
                 if (query.length() <= 10 ) {
                     if (lhsStartMatch && !rhsStartMatch) return -1;
                     else if (!lhsStartMatch && rhsStartMatch) return 1;
                 }
 
-                final int levValueLeft = StringUtils.getLevenshteinDistance(query, lhs.name.toLowerCase());
-                final int levValueRight = StringUtils.getLevenshteinDistance(query, rhs.name.toLowerCase());
+                final int levValueLeft = StringUtils.getLevenshteinDistance(queryLow, lhs.name.toLowerCase());
+                final int levValueRight = StringUtils.getLevenshteinDistance(queryLow, rhs.name.toLowerCase());
                 if (levValueLeft < levValueRight) return -1;
                 else if (levValueLeft > levValueRight) return 1;
                 return 0;
