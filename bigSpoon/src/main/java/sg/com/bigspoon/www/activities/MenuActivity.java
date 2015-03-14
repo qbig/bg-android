@@ -251,16 +251,10 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(MenuActivity.this, "Text Submitted", Toast.LENGTH_SHORT).show();
                 mSearchView.clearFocus();
+                //TODO add a new Category with result here
                 return true;
             }
 
-        });
-
-        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MenuActivity.this, "Search Clicked", Toast.LENGTH_SHORT).show();
-            }
         });
 
         mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -271,6 +265,10 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
+                //TODO scrolling to selected Item
+                //  mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+                //  listview.setSelection(position);
+
                 return true;
             }
 

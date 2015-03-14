@@ -122,6 +122,8 @@ public class MenuAdapter extends BaseAdapter {
 	}
 
 	public void updateFilteredList() {
+        //TODO dup code to clean up (Seen also in MenuActivity)
+
 		mFilteredDishes = new ArrayList<DishModel>();
 		if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0) {
 			return;
@@ -284,7 +286,7 @@ public class MenuAdapter extends BaseAdapter {
         messageView.setGravity(Gravity.CENTER);
         // messageView.setHeight(140);
         messageView.setTextSize(17);
-
+        //TODO refactor naming ...
         Button bq1 = alert.getButton(DialogInterface.BUTTON1);
         bq1.setTextColor(Color.parseColor("#117AFE"));
         bq1.setTypeface(null, Typeface.BOLD);
@@ -403,14 +405,14 @@ public class MenuAdapter extends BaseAdapter {
 				photoViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
 				photoViewHolder.textItemPrice.bringToFront();
 				photoViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
-				photoViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				photoViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
 				convertView.setTag(photoViewHolder);
 
-				photoViewHolder.imageButton.setOnClickListener(mOrderDishButtonOnClickListener);
+				photoViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
 				photoViewHolder.imageView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						photoViewHolder.imageButton.performClick();
+						photoViewHolder.imageAddButton.performClick();
 					}
 				});
 			} else {
@@ -436,12 +438,12 @@ public class MenuAdapter extends BaseAdapter {
 			photoViewHolder.textItemName.setText(currentDish.name);
 			photoViewHolder.textItemDesc.setText(currentDish.description);
 			photoViewHolder.textItemPrice.setText(currentDish.price + "");
-			photoViewHolder.imageButton.setTag(position);
+			photoViewHolder.imageAddButton.setTag(position);
 			if (currentDish.isDummyDish()) {
-				photoViewHolder.imageButton.setVisibility(View.GONE);
+				photoViewHolder.imageAddButton.setVisibility(View.GONE);
 				photoViewHolder.textItemPrice.setVisibility(View.GONE);
 			} else {
-				photoViewHolder.imageButton.setVisibility(View.VISIBLE);
+				photoViewHolder.imageAddButton.setVisibility(View.VISIBLE);
 				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 
@@ -456,10 +458,10 @@ public class MenuAdapter extends BaseAdapter {
 				textViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
 				textViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
 				textViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.textitemdesc);
-				textViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				textViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
 				convertView.setTag(textViewHolder);
 
-				textViewHolder.imageButton.setOnClickListener(mOrderDishButtonOnClickListener);
+				textViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
 			} else {
 				textViewHolder = (ListTextItemViewHolder) convertView.getTag();
 			}
@@ -467,12 +469,12 @@ public class MenuAdapter extends BaseAdapter {
 			textViewHolder.textItemName.setText(currentDish.name);
 			textViewHolder.textItemDesc.setText(currentDish.description);
 			textViewHolder.textItemPrice.setText(currentDish.price + "");
-			textViewHolder.imageButton.setTag(position);
+			textViewHolder.imageAddButton.setTag(position);
 			if (currentDish.isDummyDish()) {
-				textViewHolder.imageButton.setVisibility(View.GONE);
+				textViewHolder.imageAddButton.setVisibility(View.GONE);
 				textViewHolder.textItemPrice.setVisibility(View.GONE);
 			} else {
-				textViewHolder.imageButton.setVisibility(View.VISIBLE);
+				textViewHolder.imageAddButton.setVisibility(View.VISIBLE);
 				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 
@@ -483,11 +485,11 @@ public class MenuAdapter extends BaseAdapter {
 	class ListPhotoItemViewHolder {
 		ImageView imageView, overlay;
 		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageButton;
+		ImageButton imageAddButton;
 	}
 
 	class ListTextItemViewHolder {
 		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageButton;
+		ImageButton imageAddButton;
 	}
 }
