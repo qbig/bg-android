@@ -32,7 +32,7 @@ public class MenuSearchSuggestionAdapter extends CursorAdapter {
         holder.itemPrice.setText(dishes[cursor.getPosition()].price + "");
 
         if (cursor.getPosition() == 0) {
-            holder.itemLayout.setBackgroundColor(context.getResources().getColor(R.color.BigSpoonOrange));
+            holder.itemLayout.setBackgroundColor(context.getResources().getColor(R.color.BigSpoonLightOrange));
         } else {
             holder.itemLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
