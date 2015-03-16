@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,7 +25,9 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -234,6 +237,23 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryRefinementEnabled(true);
+        // mag icon left : android:id/search_mag_icon
+        // voice icon right : android:id/search_voice_btn
+        // cross right : android:id/search_close_btn
+        // go right : android:id/search_go_btn
+        final ImageView magIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_mag_icon", null, null));
+        magIcon.setImageResource(R.drawable.magnifier_icon_30);
+        final ImageView voiceIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_voice_btn", null, null));
+        voiceIcon.setImageResource(R.drawable.abc_ic_voice_search_api_mtrl_alpha);
+        final ImageView closeIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_close_btn", null, null));
+        closeIcon.setImageResource(R.drawable.close_icon_white_20);
+        final ImageView goIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_go_btn", null, null));
+        goIcon.setImageResource(R.drawable.abc_ic_go_search_api_mtrl_alpha);
+
+        final EditText searchField = (EditText)mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
+        searchField.setHintTextColor(Color.LTGRAY);
+        searchField.setTextColor(Color.WHITE);
+
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
