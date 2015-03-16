@@ -21,10 +21,12 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,7 +34,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -56,7 +57,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
 	ActionBar mCategoriesTabBar;
 	public ListView listview;
-
+    private EditText mSearchField;
 	MenuAdapter adapter;
 	public static boolean isPhotoMode = true;
 
@@ -250,9 +251,9 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         final ImageView goIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_go_btn", null, null));
         goIcon.setImageResource(R.drawable.abc_ic_go_search_api_mtrl_alpha);
 
-        final EditText searchField = (EditText)mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
-        searchField.setHintTextColor(Color.LTGRAY);
-        searchField.setTextColor(Color.WHITE);
+        mSearchField = (EditText)mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
+        mSearchField.setHintTextColor(Color.LTGRAY);
+        mSearchField.setTextColor(Color.WHITE);
 
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
@@ -261,7 +262,14 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                Toast.makeText(MenuActivity.this, "Text Changed", Toast.LENGTH_SHORT).show();
+                mSearchField.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSearchField.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(mSearchField, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
                 searchDishAndLoadResult(query);
                 return true;
 
@@ -269,9 +277,9 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MenuActivity.this, "Text Submitted", Toast.LENGTH_SHORT).show();
                 mSearchView.clearFocus();
-                //TODO add a new Category with result here
+                final String firstSuggestionString = ((Cursor) ((CursorAdapter) mSearchView.getSuggestionsAdapter()).getItem(0)).getString(1);
+                displayDish(firstSuggestionString);
                 return true;
             }
 
@@ -280,7 +288,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
-                Toast.makeText(MenuActivity.this, "Suggestion selected", Toast.LENGTH_SHORT).show();
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
@@ -290,24 +297,26 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onSuggestionClick(int position) {
-                Toast.makeText(MenuActivity.this, "Suggestions Clicked", Toast.LENGTH_SHORT).show();
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
-                //TODO 1. highlight first item
+                displayDish(feedName);
 
-                DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(feedName);
-                mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
-                mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
-                adapter.mCurrentSelectedCategoryTabIndex = mCategoryPosition;
-                adapter.updateFilteredList();
-                adapter.notifyDataSetChanged();
-                listview.setSelection(adapter.getDishPositionInFilteredList(searchedDish.id));
                 return true;
             }
         });
 
+    }
+
+    private void displayDish(String name){
+        DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(name);
+        mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
+        mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+        adapter.mCurrentSelectedCategoryTabIndex = mCategoryPosition;
+        adapter.updateFilteredList();
+        adapter.notifyDataSetChanged();
+        listview.setSelection(adapter.getDishPositionInFilteredList(searchedDish.id));
     }
 
     private String strElipsize(String str, int lengthLimit) {
@@ -421,14 +430,9 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     }
 
     private void handleIntent(Intent intent) {
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             mSearchView.setQuery(query, false);
-            Toast.makeText(this, "Intent Searching", Toast.LENGTH_LONG).show();
-        } else if (Intent.ACTION_VIEW.equals(intent.getAction())){
-            // search dish (filtering dish)
-            Toast.makeText(this, "Intent Viewing", Toast.LENGTH_LONG).show();
         }
     }
 
