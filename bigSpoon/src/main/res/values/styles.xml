@@ -133,6 +133,7 @@
         <item name="android:background">@color/BigSpoonOrange</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
+        <item name="android:textColorHint">@color/white</item>
     </style>
   
     <!-- ActionBar title text -->  

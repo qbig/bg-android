@@ -226,8 +226,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		mActionBarView = getLayoutInflater().inflate(R.layout.menu_action_bar, null);
 		mCategoriesTabBar.setCustomView(mActionBarView);
 		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-        title.setText(strElipsize(User.getInstance(this).currentOutlet.name, 20));
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -249,7 +247,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         final ImageView goIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_go_btn", null, null));
         goIcon.setImageResource(R.drawable.abc_ic_go_search_api_mtrl_alpha);
 
-        mSearchField = (EditText)mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
+        mSearchField = (EditText) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
         mSearchField.setTextColor(this.getResources().getColor(R.color.BigSpoonLightGray));
         mSearchField.setTextAppearance(this, R.style.FontProxiRegular);
         mSearchField.setTextSize(15);
@@ -305,7 +303,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 return true;
             }
         });
-
+        mSearchField.setHint(R.string.dish_search_hint);
+        mSearchField.setHintTextColor(getResources().getColor(R.color.light_gray));
     }
 
     private void displayDish(String name){
