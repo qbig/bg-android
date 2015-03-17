@@ -31,6 +31,8 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	private OutletDetailsModel outletDetails;
 	private String outletIcon;
 	private Drawable mRestaurantIconDrawable;
+    private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
+
 	public CategoriesAdapter(Context context, final OutletDetailsModel outletDetails, String outletIcon) {
 		super(context, R.layout.category_row, R.id.category_name, outletDetails.categoriesDetails);
 		this.context = context;
@@ -58,7 +60,12 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	private String getPhotoUrl(int categoryId) {
 		for (int i = 0, len = outletDetails.dishes.length; i < len; i++) {
 			if (outletDetails.dishes[i].categories[0].id == categoryId) {
-				return outletDetails.dishes[i].photo.thumbnail;
+                if (outletDetails.dishes[i].photo.thumbnail.contains(DEFAULT_DISH_PHOTO_URL)) {
+                    return "media/" + this.outletDetails.defaultDishPhoto;
+                } else {
+                    return outletDetails.dishes[i].photo.thumbnail;
+                }
+
 			}
 		}
 		return null;
