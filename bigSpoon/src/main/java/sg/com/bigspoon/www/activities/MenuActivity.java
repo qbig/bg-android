@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -226,7 +225,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	private void setupActionButton() {
 		mActionBarView = getLayoutInflater().inflate(R.layout.menu_action_bar, null);
 		mCategoriesTabBar.setCustomView(mActionBarView);
-		//mCategoriesTabBar.setIcon(android.R.color.transparent);
 		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
         title.setText(strElipsize(User.getInstance(this).currentOutlet.name, 20));
@@ -252,8 +250,9 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         goIcon.setImageResource(R.drawable.abc_ic_go_search_api_mtrl_alpha);
 
         mSearchField = (EditText)mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
-        mSearchField.setHintTextColor(Color.LTGRAY);
-        mSearchField.setTextColor(Color.WHITE);
+        mSearchField.setTextColor(this.getResources().getColor(R.color.BigSpoonLightGray));
+        mSearchField.setTextAppearance(this, R.style.FontProxiRegular);
+        mSearchField.setTextSize(15);
 
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));

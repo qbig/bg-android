@@ -11,6 +11,7 @@
     <color name="BigSpoonDarkBlue">#27AB9E</color>
     <color name="BigSpoonGray">#565656</color>
     <color name="BigSpoonLightGray">#EDEDED</color>
+    <color name="LightHintTextGray">#FDFDFD</color>
     <color name="BigSpoonPink">#F76463</color>
     <color name="BigSpoonBloodRed">#CC0104</color>
 </resources>
