@@ -234,10 +234,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryRefinementEnabled(true);
-        // mag icon left : android:id/search_mag_icon
-        // voice icon right : android:id/search_voice_btn
-        // cross right : android:id/search_close_btn
-        // go right : android:id/search_go_btn
+
         final ImageView magIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_mag_icon", null, null));
         magIcon.setImageResource(R.drawable.magnifier_icon_30);
         final ImageView voiceIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_voice_btn", null, null));
@@ -285,6 +282,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
+                User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
@@ -294,6 +292,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
             @Override
             public boolean onSuggestionClick(int position) {
+                User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
                 mSearchView.setQuery(feedName, false);
@@ -301,6 +300,15 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 displayDish(feedName);
 
                 return true;
+            }
+        });
+
+        mSearchField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    User.getInstance(MenuActivity.this).mMixpanel.track("Dish Search Start", null);
+                }
             }
         });
         mSearchField.setHint(R.string.dish_search_hint);
@@ -406,6 +414,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		updateOrderedDishCounter();
 	}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        User.getInstance(MenuActivity.this).mMixpanel.flush();
+    }
+
 	public View getActionBarView() {
 		final Window window = getWindow();
 		final View v = window.getDecorView();
@@ -430,6 +444,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            User.getInstance(MenuActivity.this).mMixpanel.track("Search Go Pressed", null);
             mSearchView.setQuery(query, false);
         }
     }

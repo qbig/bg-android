@@ -248,6 +248,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mMessageReceiver);
+        User.getInstance(ItemsActivity.this).mMixpanel.flush();
 	}
 
 	protected void updateDisplay() {
@@ -310,7 +311,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void performSendOrderRequest() {
-
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", null);
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
@@ -861,6 +862,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	private void billPopup() {
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Show Bill Popup(Items)", null);
 		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		alert2.setMessage("Would you like your bill?");
 		alert2.setView(null);
@@ -874,6 +876,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				if (User.getInstance(ItemsActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0){
+                    User.getInstance(ItemsActivity.this).mMixpanel.track("Ask Bills(Items)", null);
 					performBillRequest();
 					Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
 					startActivity(i);
@@ -903,6 +906,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void waitorPopup() {
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Show Waiter Popup(Items)", null);
 		final EditText inputWaitor = new EditText(this);
 		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
 		alertWaitor.setTitle("Call For Service");
@@ -917,6 +921,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
+                User.getInstance(ItemsActivity.this).mMixpanel.track("Ask Waiters(Items)", null);
 				User.getInstance(ItemsActivity.this).requestForWaiter(inputWaitor.getText().toString());
 			}
 		});
@@ -1106,7 +1111,6 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void performBillRequest() {
-
 		Ion.with(this).load(BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(User.getInstance(ItemsActivity.this).getTableId()).asJsonObject()

@@ -1,16 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.BILL_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.User;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,6 +28,18 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class ActionBarActivity extends FragmentActivity {
 	ActionBar actionBar;
@@ -166,6 +167,7 @@ public class ActionBarActivity extends FragmentActivity {
 
 	@SuppressWarnings("deprecation")
 	private void billPopup() {
+        User.getInstance(ActionBarActivity.this).mMixpanel.track("Show Bill Popup(Menu)", null);
 		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		alert2.setMessage("Would you like your bill?");
 		alert2.setView(null);
@@ -179,6 +181,7 @@ public class ActionBarActivity extends FragmentActivity {
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				if (User.getInstance(ActionBarActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0){
+                    User.getInstance(ActionBarActivity.this).mMixpanel.track("Ask Bills(Menu)", null);
 					performBillRequest();
 					Intent i = new Intent(ActionBarActivity.this,
 							UserReviewActivity.class);
@@ -211,6 +214,7 @@ public class ActionBarActivity extends FragmentActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void waitorPopup() {
+        User.getInstance(ActionBarActivity.this).mMixpanel.track("Show Waiter Popup(Menu)", null);
 		final EditText inputWaitor = new EditText(this);
 		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
 		alertWaitor.setTitle("Call For Service");
@@ -224,7 +228,7 @@ public class ActionBarActivity extends FragmentActivity {
 		});
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				//
+                User.getInstance(ActionBarActivity.this).mMixpanel.track("Ask Waiters(Menu)", null);
 				User.getInstance(ActionBarActivity.this).requestForWaiter(
 						inputWaitor.getText().toString());
 			}
