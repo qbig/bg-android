@@ -1,14 +1,5 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
@@ -24,6 +15,15 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 
 public class BGLocationService extends Service implements GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
@@ -92,7 +92,7 @@ public class BGLocationService extends Service implements GooglePlayServicesClie
 	@Override
 	public void onLocationChanged(Location location) {
 		if (location != null) {
-			Log.e(TAG, "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: "
+			Log.i(TAG, "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: "
 					+ location.getAccuracy());
 			
 			broadcastUpdatedLocation(location);

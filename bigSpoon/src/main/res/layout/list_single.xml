@@ -28,8 +28,8 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="14sp"
                 android:textSize="20dp"
-                android:textColor="@color/text_dark_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textColor="@color/BigSpoonGray"
+                android:textAppearance="@style/FontProxiBold"/>
 
             <TextView
                 android:id="@+id/address"
@@ -37,31 +37,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:paddingTop="5sp"
-                android:textSize="13dp"
+                android:textSize="15dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
-            <TextView
-                android:id="@+id/contact"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingTop="5sp"
-                android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
-
-            <TextView
-                android:id="@+id/desc"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
-                android:maxLines="3"
-                android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:paddingTop="5sp"
-                android:textAppearance="@style/FontSegoeUILight"/>
 
             <TextView
                 android:id="@+id/coming"
@@ -73,7 +52,8 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_dark_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textStyle="bold"
+                android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>
 

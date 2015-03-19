@@ -19,6 +19,7 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ModifierListViewAdapter;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
@@ -36,6 +37,10 @@ public class ModifierActivity extends Activity {
 	private ActionBar mActionBar;
 	private View mActionBarView;
 	private TextView mTitle;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

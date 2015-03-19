@@ -78,7 +78,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
 		try {
 			LocationLibrary.initialiseLibrary(getBaseContext(), "sg.com.bigspoon.www");
 		} catch (UnsupportedOperationException ex) {
@@ -111,7 +111,11 @@ public class BigSpoon extends Application implements Foreground.Listener {
 			}
 		}
 
-        CalligraphyConfig.initDefault("fonts/segoeui.ttf", R.attr.fontPath);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/ProximaNovaSemibold.otf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 	}
 
 	@Override

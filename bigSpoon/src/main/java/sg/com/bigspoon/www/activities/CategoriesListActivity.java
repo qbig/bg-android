@@ -2,6 +2,7 @@ package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import sg.com.bigspoon.www.adapters.CategoriesAdapter;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
@@ -42,6 +44,21 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 	ListView catrgoriesList;
 	private ActionBar mActionBar;
 	private View mActionBarView;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (User.getInstance(this).shouldShowRemidnerPopup) {
+            startActivity(new Intent(this, ImageDialog.class));
+            User.getInstance(this).shouldShowRemidnerPopup = false;
+        }
+
+    }
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

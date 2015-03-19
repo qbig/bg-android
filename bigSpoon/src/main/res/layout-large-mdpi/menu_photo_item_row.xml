@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
     android:paddingTop="4dp" >
 
     <ImageView
@@ -29,7 +27,7 @@
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         android:paddingRight="15dp"
-        android:src="@drawable/red_add_bt" />
+        android:src="@drawable/orange_add_bt" />
 
     <TextView
         android:id="@+id/itemdesc"
@@ -41,7 +39,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="0dp"
         android:textColor="@color/white"
-        android:textAppearance="@style/FontSegoeUISemiLight"
+        android:textAppearance="@style/FontProxiRegular"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
         android:textSize="11sp" />
@@ -59,7 +57,8 @@
         android:textColor="@color/white"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
-        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textAppearance="@style/FontProxiSemiBold"
+        android:textStyle="bold"
         android:textSize="16sp"
         />
 
@@ -78,7 +77,8 @@
         android:textColor="@color/white"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
-        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textAppearance="@style/FontProxiSemiBold"
+        android:textStyle="bold"
         android:textSize="13sp"
         />
 

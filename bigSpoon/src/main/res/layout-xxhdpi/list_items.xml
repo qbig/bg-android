@@ -7,6 +7,7 @@
     android:orientation="horizontal"
     android:paddingBottom="10dp"
     android:paddingTop="10dp"
+    android:textColor="@color/text_dark_gray"
     >
 
     <TextView
@@ -48,9 +49,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
-        android:gravity="right"
+        android:layout_gravity="end"
         android:lines="1"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
+        android:textColor="@color/text_dark_gray"
         />
 
 </LinearLayout>

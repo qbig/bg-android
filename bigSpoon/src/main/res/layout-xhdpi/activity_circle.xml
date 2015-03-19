@@ -13,10 +13,12 @@
     <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
         android:padding="10dip"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_width="fill_parent"
         android:visibility="visible"
-        android:background="@drawable/intro_bottom"
+        android:fillColor="@color/white"
+        android:strokeColor="@color/white"
+        android:background="@color/BigSpoonOrange"
         />
     
 </LinearLayout>

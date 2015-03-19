@@ -74,6 +74,7 @@ import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
@@ -151,6 +152,10 @@ public class ItemsActivity extends ExpandableListActivity {
 
     private Handler handler;
 
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -185,7 +190,7 @@ public class ItemsActivity extends ExpandableListActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 280));
+            ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 310));
             }
         });
     }
@@ -195,22 +200,22 @@ public class ItemsActivity extends ExpandableListActivity {
 		final String serviceChargeLabelString = "Service Charge(" + (int) (mCurrentOutlet.serviceChargeRate * 100) + "%)";
 		final String GSTChargeLabelString = "GST (" + (int) (mCurrentOutlet.gstRate * 100) + "%) :";
 		
-		mCurrentSubTotalValue = (TextView) findViewById(R.id.textView2);
-		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.textView3);
-		mCurrentServiceChargeValue = (TextView) findViewById(R.id.textView4);
-		mCurrentGSTLabel = (TextView) findViewById(R.id.textView5);
-		mCurrentGSTValue = (TextView) findViewById(R.id.textView6);
-		mCurrentTotalValue = (TextView) findViewById(R.id.textView8);
+		mCurrentSubTotalValue = (TextView) findViewById(R.id.currentSubTotalValue);
+		mCurrentServiceChargeLabel = (TextView) findViewById(R.id.currentServiceChargeLabel);
+		mCurrentServiceChargeValue = (TextView) findViewById(R.id.currentServiceChargeValue);
+		mCurrentGSTLabel = (TextView) findViewById(R.id.currentGSTLabel);
+		mCurrentGSTValue = (TextView) findViewById(R.id.currentGSTValue);
+		mCurrentTotalValue = (TextView) findViewById(R.id.currentTotalValue);
 		
 		mCurrentServiceChargeLabel.setText(serviceChargeLabelString);
 		mCurrentGSTLabel.setText(GSTChargeLabelString);
 		
-		mOrderredSubTotalValue = (TextView) findViewById(R.id.textView10);
-		mOrderredServiceChargeLabel = (TextView) findViewById(R.id.textView11);
-		mOrderredServiceChargeValue = (TextView) findViewById(R.id.textView12);
-		mOrderredGSTLabel = (TextView) findViewById(R.id.textView13);
-		mOrderredGSTValue = (TextView) findViewById(R.id.textView14);
-		mOrderredTotalValue = (TextView) findViewById(R.id.textView16);
+		mOrderredSubTotalValue = (TextView) findViewById(R.id.sentSubTotalValue);
+		mOrderredServiceChargeLabel = (TextView) findViewById(R.id.sentServiceChargeLabel);
+		mOrderredServiceChargeValue = (TextView) findViewById(R.id.sentServiceChargeValue);
+		mOrderredGSTLabel = (TextView) findViewById(R.id.sentGSTLabel);
+		mOrderredGSTValue = (TextView) findViewById(R.id.sentGSTValue);
+		mOrderredTotalValue = (TextView) findViewById(R.id.sentTotalValue);
 		
 		mOrderredGSTLabel.setText(GSTChargeLabelString);
 		mOrderredServiceChargeLabel.setText(serviceChargeLabelString);
@@ -243,6 +248,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mMessageReceiver);
+        User.getInstance(ItemsActivity.this).mMixpanel.flush();
 	}
 
 	protected void updateDisplay() {
@@ -261,7 +267,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupPlaceOrderButton() {
-		mPlaceOrder = (Button) findViewById(R.id.button2);
+		mPlaceOrder = (Button) findViewById(R.id.submit_button);
 		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -305,7 +311,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void performSendOrderRequest() {
-
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", null);
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
@@ -330,8 +336,12 @@ public class ItemsActivity extends ExpandableListActivity {
 							
 							return;
 						}
-                        scrollToSentItems();
+                        //scrollToSentItems();
 						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
+                        User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
+                        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
 					}
 				});
 	}
@@ -517,7 +527,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupAddNoteButton() {
-		mAddNote = (Button) findViewById(R.id.button1);
+		mAddNote = (Button) findViewById(R.id.cancel_button);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -541,11 +551,17 @@ public class ItemsActivity extends ExpandableListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		mActionBar = getActionBar();
-		mActionBar.setDisplayShowHomeEnabled(false);
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
-		mActionBar.setCustomView(mActionBarView);
-		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		try {
+            mActionBar = getActionBar();
+            mActionBar.setDisplayShowHomeEnabled(false);
+            mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+            mActionBar.setCustomView(mActionBarView);
+            mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            finish();
+            return false;
+        }
 		
 		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
 		title.setText(User.getInstance(this).currentOutlet.name);
@@ -840,13 +856,13 @@ public class ItemsActivity extends ExpandableListActivity {
 		bq1.setTextSize(19);
 		Button bq2 = alert.getButton(DialogInterface.BUTTON2);
 		bq2.setTextColor(Color.parseColor("#117AFE"));
-		// bq2.setTypeface(null, Typeface.BOLD);
 		bq2.setTextSize(19);
 
 	}
 
 	@SuppressWarnings("deprecation")
 	private void billPopup() {
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Show Bill Popup(Items)", null);
 		final AlertDialog alert2 = new AlertDialog.Builder(this).create();
 		alert2.setMessage("Would you like your bill?");
 		alert2.setView(null);
@@ -860,6 +876,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alert2.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				if (User.getInstance(ItemsActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0){
+                    User.getInstance(ItemsActivity.this).mMixpanel.track("Ask Bills(Items)", null);
 					performBillRequest();
 					Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
 					startActivity(i);
@@ -889,6 +906,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	@SuppressWarnings("deprecation")
 	protected void waitorPopup() {
+        User.getInstance(ItemsActivity.this).mMixpanel.track("Show Waiter Popup(Items)", null);
 		final EditText inputWaitor = new EditText(this);
 		final AlertDialog alertWaitor = new AlertDialog.Builder(this).create();
 		alertWaitor.setTitle("Call For Service");
@@ -903,6 +921,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				//
+                User.getInstance(ItemsActivity.this).mMixpanel.track("Ask Waiters(Items)", null);
 				User.getInstance(ItemsActivity.this).requestForWaiter(inputWaitor.getText().toString());
 			}
 		});
@@ -1092,7 +1111,6 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void performBillRequest() {
-
 		Ion.with(this).load(BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(User.getInstance(ItemsActivity.this).getTableId()).asJsonObject()

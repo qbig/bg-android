@@ -17,7 +17,7 @@
             tools:context=".ItemsActivity">
 
             <CheckedTextView
-                android:id="@+id/neworder"
+                android:id="@+id/new_order"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -26,9 +26,9 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
-                android:textColor="@color/BigSpoonDarkBlue"
+                android:textColor="@color/text_dark_gray"
                 android:background="@color/BigSpoonLightGray"
-                android:textAppearance="@style/FontSegoeUISemiBold"
+                android:textAppearance="@style/FontProxiRegular"
                 android:gravity="left"
                 android:textSize="18sp" />
 
@@ -36,15 +36,19 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/neworder"
+                android:layout_below="@+id/new_order"
                 android:layout_marginTop="15dp"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10.0sp"
                 android:fadingEdge="none"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:groupIndicator="@android:color/transparent"></ExpandableListView>
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_below="@android:id/list"
@@ -55,26 +59,28 @@
                 android:paddingRight="5dp"
                 android:text="Add Notes"
                 android:textColor="@color/text_dark_gray"
-                android:textAppearance="@style/FontSegoeUILight"
+                android:textAppearance="@style/FontProxiRegular"
                 android:textSize="16sp"
                 />
 
             <TableLayout
-                android:id="@+id/tableLayout2"
+                android:id="@+id/currentOrderTable"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/button1"
+                android:layout_below="@+id/cancel_button"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:stretchColumns="0,1">
 
                 <TableRow
-                    android:id="@+id/tableRow1"
+                    android:id="@+id/rowSubTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/button1"
+                    android:layout_below="@+id/cancel_button"
                     android:layout_centerHorizontal="true">
 
                     <TextView
@@ -83,16 +89,20 @@
                         android:layout_height="wrap_content"
                         android:text="Subtotal :"
                         android:textSize="15sp"
-                        android:textAppearance="@style/FontSegoeUISemiBold" />
+                        android:textColor="@color/text_dark_gray"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiSemiBold" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/currentSubTotalValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
                         android:textSize="15sp"
-                        android:textAppearance="@style/FontSegoeUISemiBold" />
+                        android:textColor="@color/text_dark_gray"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiSemiBold" />
                 </TableRow>
 
                 <TableRow
@@ -101,17 +111,19 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/currentServiceChargeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Charge(0%)"
+                        android:textColor="@color/text_dark_gray"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/currentServiceChargeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:textColor="@color/text_dark_gray"
                         android:text="$0.00" />
                 </TableRow>
 
@@ -121,23 +133,26 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/currentGSTLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_dark_gray"
                         android:text="GST (0%) :" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/currentGSTValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:textColor="@color/text_dark_gray"
                         android:text="$0.00" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/tableRow4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <TextView
                         android:id="@+id/textView7"
@@ -145,50 +160,58 @@
                         android:layout_height="wrap_content"
                         android:text="Total :"
                         android:textSize="20sp"
-                        android:textAppearance="@style/FontSegoeUIBold" />
+                        android:textColor="@color/BigSpoonOrange"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiBold"
+                        android:paddingLeft="100dp"
+                        />
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/currentTotalValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
                         android:textSize="20sp"
-                        android:textAppearance="@style/FontSegoeUIBold" />
+                        android:textColor="@color/BigSpoonOrange"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiBold"
+                        android:paddingRight="100dp"/>
                 </TableRow>
             </TableLayout>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/submit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tableLayout2"
+                android:layout_below="@+id/currentOrderTable"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
-                android:background="@color/BigSpoonPink"
+                android:background="@color/BigSpoonLightOrange"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:layout_marginBottom="35dp"
                 android:text="Send to Kitchen"
                 android:textColor="@color/white"
-                android:textAppearance="@style/FontSegoeUISemiBold"
+                android:textAppearance="@style/FontProxiSemiBold"
                 android:textSize="18sp" />
 
             <CheckedTextView
-                android:id="@+id/ordereditems"
+                android:id="@+id/orderedItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/button2"
+                android:layout_below="@+id/submit_button"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:text="@string/sent_orders"
                 android:paddingTop="20dp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
-                android:textColor="@color/BigSpoonDarkBlue"
+                android:textColor="@color/text_dark_gray"
                 android:background="@color/BigSpoonLightGray"
-                android:textAppearance="@style/FontSegoeUISemiBold"
+                android:textAppearance="@style/FontProxiRegular"
                 android:gravity="left"
                 android:textSize="18sp" />
 
@@ -196,11 +219,11 @@
                 android:id="@+id/listOfOrderPlaced"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ordereditems"
+                android:layout_below="@+id/orderedItems"
                 android:layout_marginTop="15dp"></ListView>
 
             <TableLayout
-                android:id="@+id/tableLayout3"
+                android:id="@+id/sentOrderTable"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
@@ -208,6 +231,8 @@
                 android:layout_below="@+id/listOfOrderPlaced"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:stretchColumns="0,1">
 
                 <TableRow
@@ -217,101 +242,117 @@
                     android:layout_centerHorizontal="true">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/sentRowSubTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subtotal :"
                         android:textSize="15sp"
-                        android:textAppearance="@style/FontSegoeUISemiBold" />
+                        android:textColor="@color/text_dark_gray"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiSemiBold" />
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/sentSubTotalValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
                         android:textSize="15sp"
-                        android:textAppearance="@style/FontSegoeUISemiBold" />
+                        android:textColor="@color/text_dark_gray"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiSemiBold" />
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/tableRow6"
+                    android:id="@+id/sentRowServiceCharge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/sentServiceChargeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Charge(0%)"
+                        android:textColor="@color/text_dark_gray"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/sentServiceChargeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:textColor="@color/text_dark_gray"
                         android:text="$0.00" />
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/tableRow7"
+                    android:id="@+id/sentRowGST"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/sentGSTLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_dark_gray"
                         android:text="GST (0%) :" />
 
                     <TextView
-                        android:id="@+id/textView14"
+                        android:id="@+id/sentGSTValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:textColor="@color/text_dark_gray"
                         android:text="$0.00" />
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/tableRow8"
+                    android:id="@+id/sentRowTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView15"
+                        android:id="@+id/sentTotalLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total :"
                         android:textSize="20sp"
-                        android:textAppearance="@style/FontSegoeUIBold" />
+                        android:textColor="@color/BigSpoonOrange"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiBold"
+                        android:paddingLeft="100dp"
+                        />
 
                     <TextView
-                        android:id="@+id/textView16"
+                        android:id="@+id/sentTotalValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
                         android:textSize="20sp"
-                        android:textAppearance="@style/FontSegoeUIBold" />
+                        android:textColor="@color/BigSpoonOrange"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/FontProxiBold"
+                        android:paddingRight="100dp"/>
                 </TableRow>
             </TableLayout>
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/disclaimerLabel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:layout_below="@+id/tableLayout3"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_below="@+id/sentOrderTable"
                 android:layout_marginTop="10dp"
                 android:text="Note that there may be discrepancies between BigSpoon and the actual bill."
+                android:textColor="@color/text_dark_gray"
                 android:textSize="11sp" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="400dp"
-                android:layout_below="@+id/textView17"
+                android:layout_below="@+id/disclaimerLabel"
                 android:background="#ffffff"
                 android:gravity="center_horizontal" />
         </RelativeLayout>
@@ -320,9 +361,9 @@
     <GridView
         android:id="@+id/gv_action_menu"
         android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/botton_action_bar"
+        android:background="@drawable/bottom_action_bar"
         android:horizontalSpacing="2dp"
         android:listSelector="@android:color/transparent"
         android:numColumns="3"

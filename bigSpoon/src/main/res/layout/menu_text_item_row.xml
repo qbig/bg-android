@@ -12,13 +12,14 @@
 
     <ImageButton
         android:id="@+id/addbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="28dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:paddingRight="10dp"
-        android:src="@drawable/add_btn_with_circle"
-        android:background="@android:color/transparent" 
+        android:src="@drawable/orange_add_bt"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
        />
 
     <TextView
@@ -29,7 +30,9 @@
         android:layout_alignBottom="@+id/textitemname"
         android:layout_toLeftOf="@+id/addbutton"
         android:layout_marginRight="3dp"
-        android:text="TextView" 
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark_gray"
         />
 
     <TextView
@@ -42,8 +45,10 @@
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/textitemprice"
         android:text="TextView"
-        android:textAppearance="@style/FontSegoeUISemiBold"
-        android:textSize="22sp"/>
+        android:textAppearance="@style/FontProxiSemiBold"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark_gray"
+        android:textSize="19sp"/>
 
     <TextView
         android:id="@+id/textitemdesc"
@@ -52,10 +57,10 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textitemname"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:text="TextView"
-        android:textColor="@color/text_light_gray"
-        android:textAppearance="@style/FontSegoeUILight"
+        android:textColor="@color/text_dark_gray"
+        android:textAppearance="@style/FontProxiRegular"
         android:textSize="13sp"
         />
 

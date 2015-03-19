@@ -4,9 +4,12 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.StateListDrawable;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,33 +20,48 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuAdapter;
+import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
+import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+
 
 public class MenuActivity extends ActionBarActivity implements TabListener {
 
 	ActionBar mCategoriesTabBar;
 	public ListView listview;
-
+    private EditText mSearchField;
 	MenuAdapter adapter;
 	public static boolean isPhotoMode = true;
 
 	private View mActionBarView;
+    private SearchView mSearchView;
 	private ImageButton toggleButton;
 	private ImageButton backToOutletList;
 	private ImageButton historyButton;
@@ -53,7 +71,11 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	private Handler mHandler;
 	private boolean shouldShowTabs;
 
-	@Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
@@ -91,10 +113,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
-                                    getActionBarViewContainer().startAnimation(animFadeIn);
-                                    mCategoriesTabBar.setDisplayShowHomeEnabled(false);
-                                    mCategoriesTabBar.setDisplayShowTitleEnabled(false);
-                                    mActionBarView.setVisibility(View.GONE);
+                                    try {
+                                        getActionBarViewContainer().startAnimation(animFadeIn);
+                                        MenuActivity.this.mActionBarView.setVisibility(View.GONE);
+                                    } catch (NullPointerException npe) {
+                                        Crashlytics.log(npe.getMessage());
+                                    }
                                 }
                             });
                             getActionBarViewContainer().startAnimation(animFadeOut);
@@ -111,8 +135,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     getActionBarViewContainer().startAnimation(animFadeIn);
-                                    mCategoriesTabBar.setDisplayShowHomeEnabled(true);
-                                    mCategoriesTabBar.setDisplayShowTitleEnabled(true);
                                     mActionBarView.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -190,23 +212,118 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		setupActionButton();
-		setupBackToOutletButton();
-		setupHistoryButton();
-		setupToggleButton();
-		new Handler();
-		return super.onCreateOptionsMenu(menu);
+        try {
+            setupActionButton();
+            return super.onCreateOptionsMenu(menu);
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            finish();
+            return  false;
+        }
 	}
 
 	private void setupActionButton() {
-		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar, null);
+		mActionBarView = getLayoutInflater().inflate(R.layout.menu_action_bar, null);
 		mCategoriesTabBar.setCustomView(mActionBarView);
-		mCategoriesTabBar.setIcon(R.drawable.dummy_icon);
-		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
-		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-        title.setText(strElipsize(User.getInstance(this).currentOutlet.name, 20));
-	}
+		mCategoriesTabBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchView =
+                (SearchView) mActionBarView.findViewById(R.id.menu_search_view);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setQueryRefinementEnabled(true);
+
+        final ImageView magIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_mag_icon", null, null));
+        magIcon.setImageResource(R.drawable.magnifier_icon_30);
+        final ImageView voiceIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_voice_btn", null, null));
+        voiceIcon.setImageResource(R.drawable.abc_ic_voice_search_api_mtrl_alpha);
+        final ImageView closeIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_close_btn", null, null));
+        closeIcon.setImageResource(R.drawable.close_icon_white_20);
+        final ImageView goIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_go_btn", null, null));
+        goIcon.setImageResource(R.drawable.abc_ic_go_search_api_mtrl_alpha);
+
+        mSearchField = (EditText) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_src_text", null, null));
+        mSearchField.setTextColor(this.getResources().getColor(R.color.BigSpoonLightGray));
+        mSearchField.setTextAppearance(this, R.style.FontProxiRegular);
+        mSearchField.setTextSize(15);
+
+        mSearchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                mSearchField.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSearchField.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(mSearchField, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+                searchDishAndLoadResult(query);
+                return true;
+
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mSearchView.clearFocus();
+                final String firstSuggestionString = ((Cursor) ((CursorAdapter) mSearchView.getSuggestionsAdapter()).getItem(0)).getString(1);
+                displayDish(firstSuggestionString);
+                return true;
+            }
+
+        });
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                String feedName = cursor.getString(1);
+                mSearchView.setQuery(feedName, false);
+                mSearchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                String feedName = cursor.getString(1);
+                mSearchView.setQuery(feedName, false);
+                mSearchView.clearFocus();
+                displayDish(feedName);
+
+                return true;
+            }
+        });
+
+        mSearchField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    User.getInstance(MenuActivity.this).mMixpanel.track("Dish Search Start", null);
+                }
+            }
+        });
+        mSearchField.setHint(R.string.dish_search_hint);
+        mSearchField.setHintTextColor(getResources().getColor(R.color.light_gray));
+    }
+
+    private void displayDish(String name){
+        DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(name);
+        mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
+        mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+        adapter.mCurrentSelectedCategoryTabIndex = mCategoryPosition;
+        adapter.updateFilteredList();
+        adapter.notifyDataSetChanged();
+        listview.setSelection(adapter.getDishPositionInFilteredList(searchedDish.id));
+    }
 
     private String strElipsize(String str, int lengthLimit) {
         if (str.length() <= lengthLimit) {
@@ -245,32 +362,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 adapter.notifyDataSetChanged();
             }
         });
-	}
-
-	private void setupBackToOutletButton() {
-		backToOutletList = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
-		backToOutletList.setImageResource(R.drawable.home_with_arrow);
-		final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.CENTER_VERTICAL);
-		backToOutletList.setLayoutParams(params);
-		backToOutletList.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		backToOutletList.setPadding(-2, 0, 0, 0);
-
-		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.home_with_arrow_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.home_with_arrow));
-		backToOutletList.setImageDrawable(states);
-
-		backToOutletList.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-			}
-		});
 	}
 
     private void setupCategoryTabs() {
@@ -323,6 +414,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		updateOrderedDishCounter();
 	}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        User.getInstance(MenuActivity.this).mMixpanel.flush();
+    }
+
 	public View getActionBarView() {
 		final Window window = getWindow();
 		final View v = window.getDecorView();
@@ -337,4 +434,55 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 			}
 		}
 	}
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            User.getInstance(MenuActivity.this).mMixpanel.track("Search Go Pressed", null);
+            mSearchView.setQuery(query, false);
+        }
+    }
+
+    private void searchDishAndLoadResult(final String query) {
+        // Cursor
+        final String[] columns = new String[] { "_id", "text" };
+        final Object[] temp = new Object[] { 0, "default" };
+        final String queryLow = query.toLowerCase();
+        MatrixCursor cursor = new MatrixCursor(columns);
+
+        Arrays.sort(User.getInstance(this).currentOutlet.dishes, new Comparator<DishModel>() {
+            @Override
+            public int compare(final DishModel lhs, DishModel rhs) {
+
+                final boolean lhsStartMatch = lhs.name.toLowerCase().contains(queryLow);
+                final boolean rhsStartMatch = rhs.name.toLowerCase().contains(queryLow);
+                if (query.length() <= 10 ) {
+                    if (lhsStartMatch && !rhsStartMatch) return -1;
+                    else if (!lhsStartMatch && rhsStartMatch) return 1;
+                }
+
+                final int levValueLeft = StringUtils.getLevenshteinDistance(queryLow, lhs.name.toLowerCase());
+                final int levValueRight = StringUtils.getLevenshteinDistance(queryLow, rhs.name.toLowerCase());
+                if (levValueLeft < levValueRight) return -1;
+                else if (levValueLeft > levValueRight) return 1;
+                return 0;
+            }
+        });
+
+        for(int i = 0; i < User.getInstance(this).currentOutlet.dishes.length; i++) {
+
+            temp[0] = i;
+            temp[1] = User.getInstance(this).currentOutlet.dishes[i].name;
+            cursor.addRow(temp);
+
+        }
+
+        mSearchView.setSuggestionsAdapter(new MenuSearchSuggestionAdapter(this, cursor, User.getInstance(this).currentOutlet.dishes));
+    }
 }

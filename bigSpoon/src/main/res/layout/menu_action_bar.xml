@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textSize="92sp" >
+
+    <ImageButton
+        android:id="@+id/order_history"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/white_gear"
+        android:onClick="toggleMenu"
+        android:layout_alignParentLeft="true"
+        android:paddingRight="10dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/toggleButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/order_history"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/title"
+        style="?android:attr/tabWidgetStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/outlet_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_title_indicator_text_size"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/toggleButton"
+        android:textAppearance="@style/FontProxiBold"
+        android:visibility="gone"
+        />
+    <SearchView
+        android:id="@+id/menu_search_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textAppearance="@style/FontProxiRegular"
+        android:textColorHint="@color/white"></SearchView>
+
+</RelativeLayout>

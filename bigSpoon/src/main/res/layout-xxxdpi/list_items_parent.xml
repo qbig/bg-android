@@ -43,7 +43,7 @@
             android:text="main title"
             android:textSize="12sp"
             android:textColor="@color/BigSpoonPink"
-            android:textAppearance="@style/FontSegoeUISemiLight"/>
+            android:textAppearance="@style/FontProxiRegular"/>
 
         <TextView
             android:id="@+id/subTitle"
@@ -62,6 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_weight="0.5"
+        android:textColor="@color/text_dark_gray"
         android:paddingTop="12dp" />
 
 </LinearLayout>

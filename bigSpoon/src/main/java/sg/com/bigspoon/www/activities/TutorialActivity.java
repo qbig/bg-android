@@ -1,13 +1,14 @@
 package sg.com.bigspoon.www.activities;
 
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.TutorialFragmentAdapter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.TutorialFragmentAdapter;
 
 public class TutorialActivity extends FragmentActivity {
 
@@ -30,8 +31,6 @@ public class TutorialActivity extends FragmentActivity {
 
 		final float density = getResources().getDisplayMetrics().density;
 		indicator.setRadius(4 * density);
-		indicator.setFillColor(0xFF888888);
-		indicator.setStrokeColor(0x21000000);
 		indicator.setStrokeWidth(2 * density);
 	}
 

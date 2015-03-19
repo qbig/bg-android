@@ -9,7 +9,7 @@
         <ImageView
             android:id="@+id/img"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="130dp"
             android:layout_weight="1"
             android:gravity="left"
             android:padding="5dp"
@@ -27,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:paddingTop="18sp"
-                android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold" />
+                android:textSize="15dp"
+                android:textColor="@color/BigSpoonGray"
+                android:textAppearance="@style/FontProxiBold" />
 
             <TextView
                 android:id="@+id/address"
@@ -39,28 +39,8 @@
                 android:paddingTop="18sp"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
+                android:textAppearance="@style/FontProxiRegular"/>
 
-            <TextView
-                android:id="@+id/contact"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingTop="18sp"
-                android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight"/>
-
-            <TextView
-                android:id="@+id/desc"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
-                android:maxLines="3"
-                android:textSize="13dp"
-                android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUILight" />
 
             <TextView
                 android:id="@+id/coming"
@@ -72,7 +52,8 @@
                 android:text="@string/coming_soon"
                 android:textSize="13dp"
                 android:textColor="@color/text_light_gray"
-                android:textAppearance="@style/FontSegoeUISemiBold"/>
+                android:textStyle="bold"
+                android:textAppearance="@style/FontProxiSemiBold"/>
         </LinearLayout>
     </TableRow>
 

@@ -172,7 +172,6 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
             Crashlytics.log(npe.getMessage());
             return 0;
         }
-
 	}
 
 	@Override

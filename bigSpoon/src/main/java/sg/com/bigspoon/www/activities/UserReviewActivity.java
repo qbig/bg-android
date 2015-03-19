@@ -1,22 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
-import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.RATING_URL;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.adapters.CustomListOfUserReview;
-import sg.com.bigspoon.www.data.Constants;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,11 +19,33 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.adapters.CustomListOfUserReview;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.RATING_URL;
+
 public class UserReviewActivity extends Activity {
 
 	ListView list;
 	public static float[] ratingsArray;
 	private SharedPreferences loginPrefs;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +54,13 @@ public class UserReviewActivity extends Activity {
 		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
 		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.getPastOrder().mItems.size()];
 
-		Button cancel = (Button) findViewById(R.id.button1);
-		Button submit = (Button) findViewById(R.id.button2);
+		Button cancel = (Button) findViewById(R.id.cancel_button);
+		Button submit = (Button) findViewById(R.id.submit_button);
 
 		cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
-				User.getInstance(UserReviewActivity.this).tableId = -1;
+				//User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
@@ -71,7 +78,7 @@ public class UserReviewActivity extends Activity {
 				}
 
 				User.getInstance(UserReviewActivity.this).currentSession.closeCurrentSession();
-				User.getInstance(UserReviewActivity.this).tableId = -1;
+				//User.getInstance(UserReviewActivity.this).tableId = -1;
 				Intent i = new Intent(UserReviewActivity.this, OutletListActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);

@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,15 +25,22 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,14 +49,18 @@ import java.util.Comparator;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class MenuAdapter extends BaseAdapter {
 
@@ -79,7 +93,16 @@ public class MenuAdapter extends BaseAdapter {
 			}
 		}
 	};
-	
+
+    public int getDishPositionInFilteredList(int dishID) {
+        for (int i = 0; i < mFilteredDishes.size(); i ++) {
+            if (dishID == mFilteredDishes.get(i).id){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 	public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
 		super();
 		this.mOutletInfo = outletInfo;
@@ -98,10 +121,18 @@ public class MenuAdapter extends BaseAdapter {
 		this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
 		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
 		initAddDishButtonListener();
-		updateFilteredList();
+        try {
+            updateFilteredList();
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            ((Activity) mContext).finish();
+        }
+
 	}
 
 	public void updateFilteredList() {
+        //TODO dup code to clean up (Seen also in MenuActivity)
+
 		mFilteredDishes = new ArrayList<DishModel>();
 		if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0) {
 			return;
@@ -177,7 +208,11 @@ public class MenuAdapter extends BaseAdapter {
 								}
 								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 									mSuperActivityToast.show();
+                                    if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1  && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                                        MenuAdapter.this.showClearOrderPopup();
+                                    }
 								}
+
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
 							}							
@@ -187,15 +222,18 @@ public class MenuAdapter extends BaseAdapter {
 
 					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
 					final View parent = (View) view.getParent().getParent().getParent();
-					TextView cornertext;
-					cornertext = (TextView) parent.findViewById(R.id.corner);
+					TextView cornertext = (TextView) parent.findViewById(R.id.corner);
 					cornertext.setVisibility(View.VISIBLE);
 					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
 							.getTotalQuantity()));
 					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
 					cornertext.startAnimation(a);
+
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 						mSuperActivityToast.show();
+                        if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                            MenuAdapter.this.showClearOrderPopup();
+                        }
 					}
 
 					if (MenuActivity.isPhotoMode) {
@@ -207,6 +245,66 @@ public class MenuAdapter extends BaseAdapter {
 			}
 		};
 	}
+
+    @SuppressWarnings("deprecation")
+    private void showClearOrderPopup() {
+        final AlertDialog alert = new AlertDialog.Builder(mContext).create();
+        alert.setTitle("Just Arrived?");
+        alert.setMessage(
+                "We found an existing order. If it belongs " +
+                "to you, tap continue. Otherwise tap Start new session.");
+        alert.setView(null);
+        alert.setButton2("Start new session", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                JsonObject tableInfo = new JsonObject();
+                tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
+                User.getInstance(mContext).currentSession.clearPastOrder();
+                Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+                        .setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
+                        .setJsonObjectBody(tableInfo)
+                        .asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            if (Constants.LOG) {
+                                Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
+                            } else {
+                                final JSONObject info = new JSONObject();
+                                try {
+                                    info.put("error", e.toString());
+                                } catch (JSONException e1) {
+                                    Crashlytics.logException(e1);
+                                }
+                                User.getInstance(mContext).mMixpanel.track("Error clearing orders",
+                                        info);
+                            }
+
+                            return;
+                        }
+                        Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+        alert.setButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {}
+        });
+        alert.show();
+        TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.CENTER);
+        // messageView.setHeight(140);
+        messageView.setTextSize(17);
+        //TODO refactor naming ...
+        Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+        bq1.setTextColor(Color.parseColor("#117AFE"));
+        bq1.setTypeface(null, Typeface.BOLD);
+        bq1.setTextSize(19);
+        Button bq2 = alert.getButton(DialogInterface.BUTTON2);
+        bq2.setTextColor(Color.parseColor("#117AFE"));
+        bq2.setTextSize(19);
+
+    }
 
 	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
 		View viewToCopy = (View) view.getParent();
@@ -316,14 +414,14 @@ public class MenuAdapter extends BaseAdapter {
 				photoViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
 				photoViewHolder.textItemPrice.bringToFront();
 				photoViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
-				photoViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				photoViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
 				convertView.setTag(photoViewHolder);
 
-				photoViewHolder.imageButton.setOnClickListener(mOrderDishButtonOnClickListener);
+				photoViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
 				photoViewHolder.imageView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						photoViewHolder.imageButton.performClick();
+						photoViewHolder.imageAddButton.performClick();
 					}
 				});
 			} else {
@@ -349,12 +447,12 @@ public class MenuAdapter extends BaseAdapter {
 			photoViewHolder.textItemName.setText(currentDish.name);
 			photoViewHolder.textItemDesc.setText(currentDish.description);
 			photoViewHolder.textItemPrice.setText(currentDish.price + "");
-			photoViewHolder.imageButton.setTag(position);
+			photoViewHolder.imageAddButton.setTag(position);
 			if (currentDish.isDummyDish()) {
-				photoViewHolder.imageButton.setVisibility(View.GONE);
+				photoViewHolder.imageAddButton.setVisibility(View.GONE);
 				photoViewHolder.textItemPrice.setVisibility(View.GONE);
 			} else {
-				photoViewHolder.imageButton.setVisibility(View.VISIBLE);
+				photoViewHolder.imageAddButton.setVisibility(View.VISIBLE);
 				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 
@@ -369,10 +467,10 @@ public class MenuAdapter extends BaseAdapter {
 				textViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
 				textViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
 				textViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.textitemdesc);
-				textViewHolder.imageButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+				textViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
 				convertView.setTag(textViewHolder);
 
-				textViewHolder.imageButton.setOnClickListener(mOrderDishButtonOnClickListener);
+				textViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
 			} else {
 				textViewHolder = (ListTextItemViewHolder) convertView.getTag();
 			}
@@ -380,12 +478,12 @@ public class MenuAdapter extends BaseAdapter {
 			textViewHolder.textItemName.setText(currentDish.name);
 			textViewHolder.textItemDesc.setText(currentDish.description);
 			textViewHolder.textItemPrice.setText(currentDish.price + "");
-			textViewHolder.imageButton.setTag(position);
+			textViewHolder.imageAddButton.setTag(position);
 			if (currentDish.isDummyDish()) {
-				textViewHolder.imageButton.setVisibility(View.GONE);
+				textViewHolder.imageAddButton.setVisibility(View.GONE);
 				textViewHolder.textItemPrice.setVisibility(View.GONE);
 			} else {
-				textViewHolder.imageButton.setVisibility(View.VISIBLE);
+				textViewHolder.imageAddButton.setVisibility(View.VISIBLE);
 				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
 			}
 
@@ -396,11 +494,11 @@ public class MenuAdapter extends BaseAdapter {
 	class ListPhotoItemViewHolder {
 		ImageView imageView, overlay;
 		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageButton;
+		ImageButton imageAddButton;
 	}
 
 	class ListTextItemViewHolder {
 		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageButton;
+		ImageButton imageAddButton;
 	}
 }

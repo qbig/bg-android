@@ -2,8 +2,8 @@ package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +18,7 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OrderHistoryDetailsAdapter;
 import sg.com.bigspoon.www.data.RetrievedOrder;
 import sg.com.bigspoon.www.data.User;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
 
@@ -31,6 +32,10 @@ public class
     private TextView detailsTitle;
     private TextView detailsDate;
 	private Button addToItemsButton;
+
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,38 +84,10 @@ public class
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		setupActionBar();
-		setupBackButton();
 		hideHistoryButton();
 
 		return super.onCreateOptionsMenu(menu);
 
-	}
-
-	private void setupBackButton() {
-		backButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
-		backButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		backButton.setPadding(22, 0, 0, 0);
-
-		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				getResources().getDrawable(R.drawable.settings_pressed));
-		states.addState(new int[] {},
-				getResources().getDrawable(R.drawable.settings));
-		backButton.setImageDrawable(states);
-
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (OrderHistoryDetailsActivity.this.isTaskRoot()) {
-					final Intent intent = new Intent(getApplicationContext(),
-							OutletListActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-				} else {
-					finish();
-				}
-			}
-		});
 	}
 
 	private void hideHistoryButton() {

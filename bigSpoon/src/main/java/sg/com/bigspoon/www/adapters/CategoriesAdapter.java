@@ -31,6 +31,8 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	private OutletDetailsModel outletDetails;
 	private String outletIcon;
 	private Drawable mRestaurantIconDrawable;
+    private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
+
 	public CategoriesAdapter(Context context, final OutletDetailsModel outletDetails, String outletIcon) {
 		super(context, R.layout.category_row, R.id.category_name, outletDetails.categoriesDetails);
 		this.context = context;
@@ -58,7 +60,12 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	private String getPhotoUrl(int categoryId) {
 		for (int i = 0, len = outletDetails.dishes.length; i < len; i++) {
 			if (outletDetails.dishes[i].categories[0].id == categoryId) {
-				return outletDetails.dishes[i].photo.thumbnail;
+                if (outletDetails.dishes[i].photo.thumbnail.contains(DEFAULT_DISH_PHOTO_URL)) {
+                    return "media/" + this.outletDetails.defaultDishPhoto;
+                } else {
+                    return outletDetails.dishes[i].photo.thumbnail;
+                }
+
 			}
 		}
 		return null;
@@ -99,9 +106,14 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			if (convertView == null) {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				row = inflater.inflate(R.layout.category_row_icon, parent, false);
+                row.setActivated(false);
 			}
 			
 			final ImageView iconView = (ImageView) row.findViewById(R.id.category_list_restaurant_icon);
+            final TextView contactText = (TextView) row.findViewById(R.id.phone_text);
+            contactText.setText(outletDetails.phoneNumber);
+            final TextView openHoursText = (TextView) row.findViewById(R.id.open_hours);
+            openHoursText.setText(outletDetails.operatingHours);
 			Ion.with(context).load(BASE_URL + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
 				
 				@Override

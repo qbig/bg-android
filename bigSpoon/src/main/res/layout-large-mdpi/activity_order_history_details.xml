@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/testingbg"
         android:textColor="@color/text_dark_gray"
-        android:textAppearance="@style/FontSegoeUISemiBold"
+        android:textAppearance="@style/FontProxiSemiBold"
         android:textSize="22sp" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/orderDate"
         android:textSize="15sp"
-        android:textAppearance="@style/FontSegoeUISemiLight"
+        android:textAppearance="@style/FontProxiSemiBold"
         android:textColor="@color/text_light_gray"/>
 
     <ListView
@@ -49,7 +49,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:background="@color/BigSpoonPink"
+        android:background="@color/BigSpoonLightOrange"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="Add to items list"
