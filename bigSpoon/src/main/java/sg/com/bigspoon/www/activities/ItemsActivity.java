@@ -14,7 +14,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.StateListDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +25,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -548,47 +548,62 @@ public class ItemsActivity extends ExpandableListActivity {
 		orderCounterText.startAnimation(a);
 	}
 
-	@Override
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MenuActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		try {
             mActionBar = getActionBar();
-            mActionBar.setDisplayShowHomeEnabled(false);
-            mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
-            mActionBar.setCustomView(mActionBarView);
-            mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setTitle("My Orders");
+//            mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
+//            mActionBar.setCustomView(mActionBarView);
+//            mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
             finish();
             return false;
         }
 		
-		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-		title.setText(User.getInstance(this).currentOutlet.name);
-
-		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
-		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-		mBackButton.setPadding(22, 0, 0, 0);
-		final StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
-		mBackButton.setImageDrawable(states);
-		mBackButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				finish();
-			}
-		});
-
-		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-		historyButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-				intent.putExtra("callingActivityName", "ItemsActivity");
-				startActivity(intent);
-			}
-		});
+//		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+//		title.setText(User.getInstance(this).currentOutlet.name);
+//
+//		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
+//		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+//		mBackButton.setPadding(22, 0, 0, 0);
+//		final StateListDrawable states = new StateListDrawable();
+//		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
+//		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
+//		mBackButton.setImageDrawable(states);
+//		mBackButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				finish();
+//			}
+//		});
+//
+//		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+//		historyButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+//				intent.putExtra("callingActivityName", "ItemsActivity");
+//				startActivity(intent);
+//			}
+//		});
 
 		return super.onCreateOptionsMenu(menu);
 	}

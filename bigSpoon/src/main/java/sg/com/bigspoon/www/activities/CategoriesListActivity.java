@@ -155,6 +155,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 	private void setupHistoryButton() {
 		ImageButton historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
+        historyButton.setVisibility(View.INVISIBLE);
 		historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -86,9 +86,9 @@ public class OrderHistoryListActivity extends Activity {
 			callingActivityName = extras.getString("callingActivityName");
 		}
 
-		initTopActionBar();
-		setupBackButton();
-		hideTopRightButton();
+//		initTopActionBar();
+//		setupBackButton();
+//		hideTopRightButton();
 		return super.onCreateOptionsMenu(menu);
 
 	}
