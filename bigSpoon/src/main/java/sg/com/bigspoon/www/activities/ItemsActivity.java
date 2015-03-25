@@ -540,12 +540,12 @@ public class ItemsActivity extends ExpandableListActivity {
 		if (User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity() != 0) {
 			orderCounterText.setVisibility(View.VISIBLE);
 			orderCounterText.setText(User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity() + "");
+            final Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+            orderCounterText.startAnimation(a);
 		} else {
+            orderCounterText.clearAnimation();
 			orderCounterText.setVisibility(View.GONE);
 		}
-		
-		final Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-		orderCounterText.startAnimation(a);
 	}
 
     @Override

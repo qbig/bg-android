@@ -199,7 +199,10 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		if (orderCount != 0) {
 			mOrderedDishCounterText.setVisibility(View.VISIBLE);
 			mOrderedDishCounterText.setText(String.valueOf(orderCount));
+            final Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+            mOrderedDishCounterText.startAnimation(a);
 		} else {
+            mOrderedDishCounterText.clearAnimation();
 			mOrderedDishCounterText.setVisibility(View.GONE);
 		}
 	}

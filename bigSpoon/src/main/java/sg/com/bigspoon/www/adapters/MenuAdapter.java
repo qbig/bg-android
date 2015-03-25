@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -109,13 +111,23 @@ public class MenuAdapter extends BaseAdapter {
 		this.mContext = context;
 		mSuperActivityToast = new SuperActivityToast((Activity)mContext,
                 SuperToast.Type.STANDARD);
-		mSuperActivityToast.setText("Order saved to 'Unsent Order'. Tab 'Orders' to view.");
+		mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
 		mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-		mSuperActivityToast.setAnimations(SuperToast.Animations.FLYIN);
-		mSuperActivityToast.setDuration(SuperToast.Duration.LONG);
+		mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
+		mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
 		mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
+        mSuperActivityToast.setOnClickWrapper(
+            new OnClickWrapper("superactivitytoast",
+                new SuperToast.OnClickListener() {
+                    @Override
+                    public void onClick(View view, Parcelable token) {
+                        mSuperActivityToast.dismiss();
+                    }
+                }
+            )
+        );
 		mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
-		
+
 		LocalBroadcastManager.getInstance(context).registerReceiver(mAfterModifierPopupReceiver,
 				new IntentFilter(NOTIF_MODIFIER_OK));
 		this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
@@ -201,6 +213,7 @@ public class MenuAdapter extends BaseAdapter {
 						@Override
 						public void run() {
 							try {
+                                updateOrderCountAndDisplay(view);
 								if (MenuActivity.isPhotoMode) {
 									animatePhotoItemToCorner(view, itemPosition, DURATION_LONG);
 								} else {
@@ -221,13 +234,7 @@ public class MenuAdapter extends BaseAdapter {
 				} else {
 
 					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
-					final View parent = (View) view.getParent().getParent().getParent();
-					TextView cornertext = (TextView) parent.findViewById(R.id.corner);
-					cornertext.setVisibility(View.VISIBLE);
-					cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
-							.getTotalQuantity()));
-					Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-					cornertext.startAnimation(a);
+                    updateOrderCountAndDisplay(view);
 
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 						mSuperActivityToast.show();
@@ -243,7 +250,17 @@ public class MenuAdapter extends BaseAdapter {
 					}
 				}
 			}
-		};
+
+            private void updateOrderCountAndDisplay(View viewClicked) {
+                final View parent = (View) viewClicked.getParent().getParent().getParent();
+                TextView cornertext = (TextView) parent.findViewById(R.id.corner);
+                cornertext.setVisibility(View.VISIBLE);
+                cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
+                        .getTotalQuantity()));
+                Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+                cornertext.startAnimation(a);
+            }
+        };
 	}
 
     @SuppressWarnings("deprecation")
