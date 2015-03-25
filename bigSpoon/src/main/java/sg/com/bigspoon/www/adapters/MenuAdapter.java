@@ -221,7 +221,11 @@ public class MenuAdapter extends BaseAdapter {
 								}
 								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
 									mSuperActivityToast.show();
-                                    if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1  && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                                    final int currentOrdercount = User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity();
+                                    if (User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0 &&
+                                            (currentOrdercount == 1 ||
+                                             currentOrdercount == 3 ||
+                                                    currentOrdercount == 6)){
                                         MenuAdapter.this.showClearOrderPopup();
                                     }
 								}
