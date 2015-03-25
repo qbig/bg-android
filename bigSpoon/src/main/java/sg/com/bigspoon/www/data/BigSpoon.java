@@ -34,6 +34,7 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 public class BigSpoon extends Application implements Foreground.Listener {
@@ -132,6 +133,8 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onBecameForeground() {
 		User.getInstance(getApplicationContext()).updateOrder();
+        int tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
+        User.getInstance(this).tableId = tableId;
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();

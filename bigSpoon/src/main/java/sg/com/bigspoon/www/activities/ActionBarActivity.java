@@ -40,6 +40,7 @@ import sg.com.bigspoon.www.data.User;
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
 public class ActionBarActivity extends FragmentActivity {
 	ActionBar actionBar;
@@ -284,7 +285,9 @@ public class ActionBarActivity extends FragmentActivity {
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
 						User.getInstance(ActionBarActivity.this).isForTakeAway = User
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
-
+                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+                        loginEditor.putInt(TABLE_ID, User.getInstance(ActionBarActivity.this).tableId);
+                        loginEditor.commit();
 					}
 				}
 				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
@@ -346,6 +349,9 @@ public class ActionBarActivity extends FragmentActivity {
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].id;
 						User.getInstance(ActionBarActivity.this).isForTakeAway = User
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
+                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+                        loginEditor.putInt(TABLE_ID, User.getInstance(ActionBarActivity.this).tableId);
+                        loginEditor.commit();
 					}
 				}
 				if (User.getInstance(ActionBarActivity.this).tableId == -1) {

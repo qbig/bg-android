@@ -83,5 +83,8 @@ public class Constants {
 	    
 	    // OUTLET LOCATION FILTER
 	    public static final double OUTLET_LOCATION_FILTER_DISTANCE = 100000;
+
+        // Table number
+        public static final String TABLE_ID = "tableId";
 	    
 }

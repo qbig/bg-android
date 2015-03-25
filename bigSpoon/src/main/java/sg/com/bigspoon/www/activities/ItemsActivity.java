@@ -83,6 +83,7 @@ import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
 public class ItemsActivity extends ExpandableListActivity {
 
@@ -987,6 +988,9 @@ public class ItemsActivity extends ExpandableListActivity {
 						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
 						mMixpanel.getPeople().setOnce("Type", "Restaurant");
 						mMixpanel.getPeople().increment("Orders Placed", 1);
+                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+                        loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
+                        loginEditor.commit();
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {
@@ -1049,6 +1053,9 @@ public class ItemsActivity extends ExpandableListActivity {
 							tableCode.toLowerCase())) {
 						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
 						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
+                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+                        loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
+                        loginEditor.commit();
 					}
 				}
 				if (User.getInstance(ItemsActivity.this).tableId == -1) {

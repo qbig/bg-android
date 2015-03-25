@@ -2,14 +2,21 @@ package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -37,6 +44,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
@@ -155,16 +163,59 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 	private void setupHistoryButton() {
 		ImageButton historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-        historyButton.setVisibility(View.INVISIBLE);
 		historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-                intent.putExtra("callingActivityName", "CategoriesListActivity");
-                startActivity(intent);
+                clearConfigPopup();
+//                Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
+//                intent.putExtra("callingActivityName", "CategoriesListActivity");
+//                startActivity(intent);
             }
         });
 	}
+
+    @SuppressWarnings("deprecation")
+    private void clearConfigPopup() {
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle("Staff?");
+        final EditText input = new EditText(this);
+        alert.setMessage(
+                "Pls key in password to reset.");
+        alert.setView(input, 10, 0, 10, 0);
+        alert.setButton2("Confirm", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String tableCode = input.getText().toString();
+                if (tableCode != null && tableCode.equals("1106")){
+                    //clear
+                    final SharedPreferences.Editor loginEditor = loginPreferences.edit();
+                    User.getInstance(CategoriesListActivity.this).tableId = -1;
+                    loginEditor.putInt(TABLE_ID, -1);
+                    loginEditor.commit();
+                    Toast.makeText(CategoriesListActivity.this, "Success", Toast.LENGTH_LONG);
+                } else {
+                    Toast.makeText(CategoriesListActivity.this, "Sry, wrong password", Toast.LENGTH_LONG);
+                }
+
+            }
+        });
+        alert.setButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {}
+        });
+        alert.show();
+        TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+        messageView.setGravity(Gravity.CENTER);
+        // messageView.setHeight(140);
+        messageView.setTextSize(17);
+        //TODO refactor naming ...
+        Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+        bq1.setTextColor(Color.parseColor("#117AFE"));
+        bq1.setTypeface(null, Typeface.BOLD);
+        bq1.setTextSize(19);
+        Button bq2 = alert.getButton(DialogInterface.BUTTON2);
+        bq2.setTextColor(Color.parseColor("#117AFE"));
+        bq2.setTextSize(19);
+
+    }
 
 	private void setupBackToOutletListButton() {
 		final ImageButton homeBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_back);
