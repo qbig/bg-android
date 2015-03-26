@@ -63,6 +63,8 @@
         android:layout_gravity="end"
         android:layout_weight="0.5"
         android:textColor="@color/text_dark_gray"
+        android:textAppearance="@style/FontProxiRegular"
+        android:paddingRight="10dp"
         android:paddingTop="12dp" />
 
 </LinearLayout>

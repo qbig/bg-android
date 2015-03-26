@@ -98,7 +98,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:text="$0.00"
+                        android:paddingRight="50dp"
+                        android:text="$0.0"
                         android:textSize="15sp"
                         android:textColor="@color/text_dark_gray"
                         android:textStyle="bold"
@@ -108,7 +109,8 @@
                 <TableRow
                     android:id="@+id/tableRow2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
 
                     <TextView
                         android:id="@+id/currentServiceChargeLabel"
@@ -123,14 +125,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:paddingRight="50dp"
                         android:textColor="@color/text_dark_gray"
-                        android:text="$0.00" />
+                        android:text="$0.0" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/tableRow3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
 
                     <TextView
                         android:id="@+id/currentGSTLabel"
@@ -144,14 +148,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:paddingRight="50dp"
                         android:textColor="@color/text_dark_gray"
-                        android:text="$0.00" />
+                        android:text="$0.0" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/tableRow4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     >
 
                     <TextView
@@ -171,7 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:text="$0.00"
+                        android:text="$0.0"
                         android:textSize="20sp"
                         android:textColor="@color/BigSpoonOrange"
                         android:textStyle="bold"
@@ -236,7 +242,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/orderedItems"
-                android:layout_marginTop="15dp"></ListView>
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"></ListView>
 
             <TableLayout
                 android:id="@+id/sentOrderTable"
@@ -249,7 +259,8 @@
                 android:layout_marginTop="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:stretchColumns="0,1">
+                android:stretchColumns="0,1"
+                >
 
                 <TableRow
                     android:id="@+id/tableRow5"
@@ -272,7 +283,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:text="$0.00"
+                        android:paddingRight="40dp"
+                        android:text="$0.0"
                         android:textSize="15sp"
                         android:textColor="@color/text_dark_gray"
                         android:textStyle="bold"
@@ -282,7 +294,8 @@
                 <TableRow
                     android:id="@+id/sentRowServiceCharge"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
 
                     <TextView
                         android:id="@+id/sentServiceChargeLabel"
@@ -297,14 +310,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:paddingRight="40dp"
                         android:textColor="@color/text_dark_gray"
-                        android:text="$0.00" />
+                        android:text="$0.0" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/sentRowGST"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
 
                     <TextView
                         android:id="@+id/sentGSTLabel"
@@ -318,14 +333,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
+                        android:paddingRight="40dp"
                         android:textColor="@color/text_dark_gray"
-                        android:text="$0.00" />
+                        android:text="$0.0" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/sentRowTotal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
 
                     <TextView
                         android:id="@+id/sentTotalLabel"
@@ -344,7 +361,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:text="$0.00"
+                        android:text="$0.0"
                         android:textSize="20sp"
                         android:textColor="@color/BigSpoonOrange"
                         android:textStyle="bold"
