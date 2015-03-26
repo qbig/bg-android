@@ -8,13 +8,14 @@
     <ImageView
         android:id="@+id/menuitem"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:scaleType="fitCenter" />
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        />
 
     <ImageView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="200dp"
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
