@@ -219,16 +219,12 @@ public class MenuAdapter extends BaseAdapter {
 								} else {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
 								}
-								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
-									mSuperActivityToast.show();
-                                    final int currentOrdercount = User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity();
-                                    if (User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0 &&
-                                            (currentOrdercount == 1 ||
-                                             currentOrdercount == 3 ||
-                                                    currentOrdercount == 6)){
+                                if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
+                                    mSuperActivityToast.show();
+                                    if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
                                         MenuAdapter.this.showClearOrderPopup();
                                     }
-								}
+                                }
 
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
@@ -240,7 +236,7 @@ public class MenuAdapter extends BaseAdapter {
 					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
                     updateOrderCountAndDisplay(view);
 
-					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 2) {
+					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
 						mSuperActivityToast.show();
                         if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
                             MenuAdapter.this.showClearOrderPopup();
