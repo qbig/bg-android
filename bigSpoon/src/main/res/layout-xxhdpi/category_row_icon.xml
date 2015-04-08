@@ -55,9 +55,11 @@
                     android:layout_margin="5dp"
                     />
                 <TextView android:id="@+id/open_hours"
+                    android:layout_width="120dp"
                     android:paddingTop="5dp"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="15dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
                     android:lineSpacingMultiplier="1.2"
                     android:gravity="top"
                     android:text="Monday-Sun\n10am-11:30pm\nMonday-Sun\n10am-11:30pm\n"
