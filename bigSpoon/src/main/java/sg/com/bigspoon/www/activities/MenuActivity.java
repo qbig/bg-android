@@ -385,7 +385,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         }
     }
 
-
     @Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 
