@@ -14,9 +14,10 @@ public final class R {
         public static int black=0x7f040000;
         public static int dark_gray=0x7f040001;
         public static int light_gray=0x7f040002;
-        public static int text_dark_gray=0x7f040003;
-        public static int text_light_gray=0x7f040004;
-        public static int white=0x7f040005;
+        public static int text_category_gray=0x7f040003;
+        public static int text_dark_gray=0x7f040004;
+        public static int text_light_gray=0x7f040005;
+        public static int white=0x7f040006;
     }
     public static final class dimen {
         public static int buttontoast_hover=0x7f050000;
