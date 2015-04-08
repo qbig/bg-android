@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www.activities;
 
+import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
@@ -29,6 +30,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -70,6 +72,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	private int mCategoryPosition;
 	private Handler mHandler;
 	private boolean shouldShowTabs;
+    private ImageView mMagIcon;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -95,69 +98,73 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		shouldShowTabs = false;
 		listview.setOnScrollListener(new OnScrollListener() {
 
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				final Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out);
-				final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
-				switch (scrollState) {
-				case OnScrollListener.SCROLL_STATE_IDLE:
-                    try {
-                        if (! shouldShowTabs && mActionBarView.getVisibility() == View.VISIBLE) {
-                            animFadeOut.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                final Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out);
+                final Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+                switch (scrollState) {
+                    case OnScrollListener.SCROLL_STATE_IDLE:
+                        try {
+                            if (!shouldShowTabs && mActionBarView.getVisibility() == View.VISIBLE) {
+                                animFadeOut.setAnimationListener(new AnimationListener() {
 
-                                @Override
-                                public void onAnimationStart(Animation animation) {}
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {}
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    try {
-                                        getActionBarViewContainer().startAnimation(animFadeIn);
-                                        MenuActivity.this.mActionBarView.setVisibility(View.GONE);
-                                    } catch (NullPointerException npe) {
-                                        Crashlytics.log(npe.getMessage());
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
                                     }
-                                }
-                            });
-                            getActionBarViewContainer().startAnimation(animFadeOut);
 
-                        } else if (shouldShowTabs && mActionBarView.getVisibility() == View.GONE){
-                            animFadeOut.setAnimationListener(new AnimationListener() {
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+                                    }
 
-                                @Override
-                                public void onAnimationStart(Animation animation) {}
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        try {
+                                            getActionBarViewContainer().startAnimation(animFadeIn);
+                                            MenuActivity.this.mActionBarView.setVisibility(View.GONE);
+                                        } catch (NullPointerException npe) {
+                                            Crashlytics.log(npe.getMessage());
+                                        }
+                                    }
+                                });
+                                getActionBarViewContainer().startAnimation(animFadeOut);
 
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {}
+                            } else if (shouldShowTabs && mActionBarView.getVisibility() == View.GONE) {
+                                animFadeOut.setAnimationListener(new AnimationListener() {
 
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    getActionBarViewContainer().startAnimation(animFadeIn);
-                                    mActionBarView.setVisibility(View.VISIBLE);
-                                }
-                            });
-                            getActionBarViewContainer().startAnimation(animFadeOut);
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
+                                    }
 
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        getActionBarViewContainer().startAnimation(animFadeIn);
+                                        mActionBarView.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                                getActionBarViewContainer().startAnimation(animFadeOut);
+
+                            }
+                        } catch (NullPointerException npe) {
+                            Crashlytics.log(npe.getMessage());
                         }
-                    } catch (NullPointerException npe) {
-                        Crashlytics.log(npe.getMessage());
-                    }
 
-					break;
-				}
-			}
+                        break;
+                }
+            }
 
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (firstVisibleItem == 0) {
-					shouldShowTabs = true;
-				} else {
-					shouldShowTabs = false;
-				}
-			}
-		});
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    shouldShowTabs = true;
+                } else {
+                    shouldShowTabs = false;
+                }
+            }
+        });
 	}
 
 	private void setupListView() {
@@ -176,15 +183,15 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				isPhotoMode = true;
-				getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon_new);
-				adapter.notifyDataSetChanged();
-				listview.setSelection(position);
-			}
-		});
+                isPhotoMode = true;
+                getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon_new);
+                adapter.notifyDataSetChanged();
+                listview.setSelection(position);
+            }
+        });
 
 	}
 
@@ -234,12 +241,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView =
                 (SearchView) mActionBarView.findViewById(R.id.menu_search_view);
-        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setIconifiedByDefault(true);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryRefinementEnabled(true);
 
-        final ImageView magIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_mag_icon", null, null));
-        magIcon.setImageResource(R.drawable.magnifier_icon_30);
+        mMagIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_mag_icon", null, null));
+        mMagIcon.setImageResource(R.drawable.magnifier_icon_30);
         final ImageView voiceIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_voice_btn", null, null));
         voiceIcon.setImageResource(R.drawable.abc_ic_voice_search_api_mtrl_alpha);
         final ImageView closeIcon = (ImageView) mSearchView.findViewById(this.getResources().getIdentifier("android:id/search_close_btn", null, null));
@@ -316,6 +323,10 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         });
         mSearchField.setHint(R.string.dish_search_hint);
         mSearchField.setHintTextColor(getResources().getColor(R.color.light_gray));
+        int searchBarId = mSearchView.getContext().getResources().getIdentifier("android:id/search_bar", null, null);
+        LinearLayout searchBar = (LinearLayout) mSearchView.findViewById(searchBarId);
+        searchBar.setLayoutTransition(new LayoutTransition());
+
     }
 
     private void displayDish(String name){
@@ -414,7 +425,17 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		super.onResume();
 		loadMenu();
 		updateOrderedDishCounter();
-	}
+        try {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MenuActivity.this.mMagIcon.performClick();
+                    MenuActivity.this.mSearchView.setIconified(false);
+                }
+            }, 500);
+
+        } catch (Exception e) {}
+    }
 
     @Override
     protected void onDestroy() {

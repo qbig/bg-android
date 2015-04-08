@@ -229,12 +229,24 @@ public class ActionBarActivity extends FragmentActivity {
 		});
 		alertWaitor.setButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-                User.getInstance(ActionBarActivity.this).mMixpanel.track("Ask Waiters(Menu)", null);
+				User.getInstance(ActionBarActivity.this).mMixpanel.track("Ask Waiters(Menu)", null);
 				User.getInstance(ActionBarActivity.this).requestForWaiter(
 						inputWaitor.getText().toString());
 			}
 		});
+		alertWaitor.setOnShowListener(new DialogInterface.OnShowListener() {
+			@Override
+			public void onShow(DialogInterface dialog) {
+				final int msgId = alertWaitor.getContext().getResources()
+						.getIdentifier("android:id/message", null, null);
+				TextView msgView = (TextView) alertWaitor.findViewById(msgId);
+				msgView.setTextSize(16);
+			}
+		});
+
 		alertWaitor.show();
+
+
 		final int alertTitle = alertWaitor.getContext().getResources()
 				.getIdentifier("alertTitle", "id", "android");
 		TextView titleView = (TextView) alertWaitor.findViewById(alertTitle);

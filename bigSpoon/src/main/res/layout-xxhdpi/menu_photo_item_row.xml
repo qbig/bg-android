@@ -20,7 +20,7 @@
 
     <ImageButton
         android:id="@+id/addbutton"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="28dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="15dp"
@@ -39,7 +39,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="0dp"
         android:textColor="@color/white"
-        android:textAppearance="@style/FontProxiRegular"
+        android:textAppearance="@style/FontProxiSemiBold"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
         android:textSize="11sp" />
@@ -57,9 +57,9 @@
         android:textColor="@color/white"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
-        android:textAppearance="@style/FontProxiSemiBold"
+        android:textAppearance="@style/FontProxiBold"
         android:textStyle="bold"
-        android:textSize="16sp"
+        android:textSize="17sp"
         />
 
     <TextView
@@ -77,9 +77,9 @@
         android:textColor="@color/white"
         android:shadowRadius="5"
         android:shadowColor="@color/black"
-        android:textAppearance="@style/FontProxiSemiBold"
+        android:textAppearance="@style/FontProxiBold"
         android:textStyle="bold"
-        android:textSize="13sp"
+        android:textSize="16sp"
         />
 
 </RelativeLayout>
