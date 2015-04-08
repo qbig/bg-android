@@ -528,7 +528,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void setupAddNoteButton() {
-		mAddNote = (Button) findViewById(R.id.cancel_button);
+		mAddNote = (Button) findViewById(R.id.add_note_btn);
 		mAddNote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

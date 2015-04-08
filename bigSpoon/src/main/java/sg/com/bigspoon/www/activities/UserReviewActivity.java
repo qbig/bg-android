@@ -54,7 +54,7 @@ public class UserReviewActivity extends Activity {
 		loginPrefs = getSharedPreferences(PREFS_NAME, 0);
 		UserReviewActivity.ratingsArray = new float[User.getInstance(this).currentSession.getPastOrder().mItems.size()];
 
-		Button cancel = (Button) findViewById(R.id.cancel_button);
+		Button cancel = (Button) findViewById(R.id.add_note_btn);
 		Button submit = (Button) findViewById(R.id.submit_button);
 
 		cancel.setOnClickListener(new View.OnClickListener() {

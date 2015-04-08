@@ -68,7 +68,7 @@
     <string name="have_suggestion">Have a suggestion?</string>
     <string name="order_these">ORDER THESE?</string>
     <string name="sent_orders">SENT ORDERS:</string>
-    <string name="sent_orders_hint">( Not yours? Just add your dish and select \'Start New Session\'. )</string>
+    <string name="sent_orders_hint">( Not your order? Just add a new dish and select \'Start New Session\'. )</string>
     <string name="tell_us">Tell Us</string>
     <string name="str_okay">Okay</string>
     <string name="dish_search_hint">I am craving for...</string>

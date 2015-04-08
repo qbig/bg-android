@@ -16,7 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
         android:gravity="center_horizontal"
-        android:textColor="@color/text_dark_gray"
+        android:textColor="@color/text_item_gray"
+        android:textSize="15sp"
+        android:textAppearance="@style/FontProxiRegular"
         android:text="1" />
 
     <LinearLayout
@@ -33,7 +35,8 @@
             android:minLines="2"
             android:paddingLeft="0dp"
             android:text="testName"
-            android:textColor="@color/text_dark_gray"
+            android:textColor="@color/text_item_gray"
+            android:textAppearance="@style/FontProxiRegular"
             android:textSize="12sp" />
 
         <TextView
@@ -56,7 +59,9 @@
         android:layout_gravity="end"
         android:lines="1"
         android:layout_weight="0.5"
-        android:textColor="@color/text_dark_gray"
+        android:textColor="@color/text_item_gray"
+        android:textSize="15sp"
+        android:textAppearance="@style/FontProxiRegular"
         />
 
 </LinearLayout>

@@ -97,7 +97,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/cancel_button"
+            android:id="@+id/add_note_btn"
             android:layout_width="120sp"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"

@@ -4,9 +4,11 @@
     <eat-comment/>
     <color name="black">#000000</color>
     <color name="dark_gray">#333333</color>
+    <color name="item_current_order_gray">#B8B8B8</color>
     <color name="light_gray">#AFFFFFFF</color>
     <color name="text_category_gray">#555555</color>
     <color name="text_dark_gray">#888888</color>
+    <color name="text_item_gray">#B8B8B8</color>
     <color name="text_light_gray">#AAAAAA</color>
     <color name="white">#FFFFFF</color>
     <!-- From: file:/Users/qiaoliang89/Documents/BigSpoonAndroid/supertoasts/src/main/res/values/dimen.xml -->

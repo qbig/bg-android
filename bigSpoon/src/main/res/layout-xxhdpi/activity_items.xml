@@ -43,12 +43,12 @@
                 android:fadingEdge="none"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:groupIndicator="@android:color/transparent"></ExpandableListView>
 
             <Button
-                android:id="@+id/cancel_button"
+                android:id="@+id/add_note_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_below="@android:id/list"
@@ -69,7 +69,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/cancel_button"
+                android:layout_below="@+id/add_note_btn"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:paddingLeft="15dp"
@@ -80,7 +80,7 @@
                     android:id="@+id/rowSubTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/cancel_button"
+                    android:layout_below="@+id/add_note_btn"
                     android:layout_centerHorizontal="true">
 
                     <TextView
@@ -88,8 +88,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subtotal :"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/AddNoteHintColor"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold" />
 
@@ -99,8 +99,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/AddNoteHintColor"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold" />
                 </TableRow>
@@ -115,15 +115,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Charge(0%)"
-                        android:textColor="@color/text_dark_gray"
-                        android:textSize="15sp" />
+                        android:textColor="@color/AddNoteHintColor"
+                        android:textSize="12sp"
+                        android:textAppearance="@style/FontProxiRegular" />
 
                     <TextView
                         android:id="@+id/currentServiceChargeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:textColor="@color/text_dark_gray"
+                        android:textColor="@color/AddNoteHintColor"
+                        android:textSize="12sp"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="$0.00" />
                 </TableRow>
 
@@ -136,7 +139,9 @@
                         android:id="@+id/currentGSTLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_dark_gray"
+                        android:textColor="@color/AddNoteHintColor"
+                        android:textSize="12sp"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="GST (0%) :" />
 
                     <TextView
@@ -144,7 +149,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:textColor="@color/text_dark_gray"
+                        android:textColor="@color/AddNoteHintColor"
+                        android:textSize="12sp"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="$0.00" />
                 </TableRow>
 
@@ -262,8 +269,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subtotal :"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold" />
 
@@ -273,8 +280,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="$0.00"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold" />
                 </TableRow>
@@ -289,15 +296,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Charge(0%)"
-                        android:textColor="@color/text_dark_gray"
-                        android:textSize="15sp" />
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
+                        android:textAppearance="@style/FontProxiRegular"/>
 
                     <TextView
                         android:id="@+id/sentServiceChargeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="$0.00" />
                 </TableRow>
 
@@ -310,7 +320,9 @@
                         android:id="@+id/sentGSTLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="GST (0%) :" />
 
                     <TextView
@@ -318,7 +330,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:textColor="@color/text_dark_gray"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_item_gray"
+                        android:textAppearance="@style/FontProxiRegular"
                         android:text="$0.00" />
                 </TableRow>
 
@@ -335,7 +349,7 @@
                         android:textSize="20sp"
                         android:textColor="@color/BigSpoonOrange"
                         android:textStyle="bold"
-                        android:textAppearance="@style/FontProxiBold"
+                        android:textAppearance="@style/FontProxiSemiBold"
                         android:paddingLeft="100dp"
                         />
 
@@ -348,7 +362,7 @@
                         android:textSize="20sp"
                         android:textColor="@color/BigSpoonOrange"
                         android:textStyle="bold"
-                        android:textAppearance="@style/FontProxiBold"
+                        android:textAppearance="@style/FontProxiSemiBold"
                         android:paddingRight="100dp"/>
                 </TableRow>
             </TableLayout>

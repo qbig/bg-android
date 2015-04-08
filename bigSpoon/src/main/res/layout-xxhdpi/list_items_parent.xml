@@ -18,7 +18,9 @@
         android:gravity="center"
         android:text="00"
         android:textStyle="bold"
-        android:textColor="@color/BigSpoonPink"/>
+        android:textSize="17sp"
+        android:textAppearance="@style/FontProxiRegular"
+        android:textColor="@color/BigSpoonLightOrange"/>
 
     <ImageButton
         android:id="@+id/imgPlus"
@@ -41,8 +43,8 @@
             android:gravity="center|left"
             android:minLines="3"
             android:text="main title"
-            android:textSize="12sp"
-            android:textColor="@color/BigSpoonPink"
+            android:textSize="14sp"
+            android:textColor="@color/BigSpoonLightOrange"
             android:textAppearance="@style/FontProxiRegular"/>
 
         <TextView
@@ -60,11 +62,13 @@
         android:id="@+id/descriptionitemPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
         android:layout_weight="0.5"
         android:textColor="@color/text_dark_gray"
         android:textAppearance="@style/FontProxiRegular"
         android:paddingRight="10dp"
-        android:paddingTop="12dp" />
+        android:paddingTop="12dp"
+        android:layout_gravity="center_vertical|end"
+        android:maxLines="1"
+        android:textSize="13sp"/>
 
 </LinearLayout>
