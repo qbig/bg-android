@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -71,7 +72,10 @@ public class MenuAdapter extends BaseAdapter {
 	public int mCurrentSelectedCategoryTabIndex;
 	private View.OnClickListener mOrderDishButtonOnClickListener;
 	private ArrayList<DishModel> mFilteredDishes;
+	private int currentRetryCount = 0;
+	private Handler handler;
 
+	private static final int SEND_RETRY_NUM = 3;
 	private static final String ION_LOGGING_MENU_LIST = "ion-menu-list";
 	private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
 	private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
@@ -109,6 +113,7 @@ public class MenuAdapter extends BaseAdapter {
 		super();
 		this.mOutletInfo = outletInfo;
 		this.mContext = context;
+		this.handler = new Handler(context.getMainLooper());
 		mSuperActivityToast = new SuperActivityToast((Activity)mContext,
                 SuperToast.Type.STANDARD);
 		mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
@@ -273,36 +278,7 @@ public class MenuAdapter extends BaseAdapter {
         alert.setView(null);
         alert.setButton2("Start new session", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                JsonObject tableInfo = new JsonObject();
-                tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
-                User.getInstance(mContext).currentSession.clearPastOrder();
-                Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
-                        .setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
-                        .setJsonObjectBody(tableInfo)
-                        .asJsonObject().setCallback(new FutureCallback<JsonObject>() {
-
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) {
-                            if (Constants.LOG) {
-                                Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
-                            } else {
-                                final JSONObject info = new JSONObject();
-                                try {
-                                    info.put("error", e.toString());
-									Crashlytics.logException(e);
-                                } catch (JSONException e1) {
-                                    Crashlytics.logException(e1);
-                                }
-                                User.getInstance(mContext).mMixpanel.track("Error clearing orders",
-                                        info);
-                            }
-
-                            return;
-                        }
-                        Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
-                    }
-                });
+				clearPastOrder();
             }
         });
         alert.setButton("Continue", new DialogInterface.OnClickListener() {
@@ -323,6 +299,54 @@ public class MenuAdapter extends BaseAdapter {
         bq2.setTextSize(19);
 
     }
+
+	private void clearPastOrder(){
+		JsonObject tableInfo = new JsonObject();
+		tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
+		User.getInstance(mContext).currentSession.clearPastOrder();
+		Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(tableInfo)
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+					final String errorMsg = e.toString();
+					if (MenuAdapter.this.currentRetryCount < SEND_RETRY_NUM) {
+						MenuAdapter.this.currentRetryCount++;
+						MenuAdapter.this.handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								MenuAdapter.this.clearPastOrder();
+							}
+						}, 1000);
+						return;
+					} else {
+						MenuAdapter.this.currentRetryCount = 0;
+					}
+
+					if (Constants.LOG) {
+						Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
+					} else {
+						final JSONObject info = new JSONObject();
+						try {
+							info.put("error", errorMsg);
+							Crashlytics.logException(e);
+						} catch (JSONException e1) {
+							Crashlytics.logException(e1);
+						}
+						User.getInstance(mContext).mMixpanel.track("Error clearing orders",
+								info);
+					}
+
+					return;
+				}
+				Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
 
 	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
 		View viewToCopy = (View) view.getParent();
