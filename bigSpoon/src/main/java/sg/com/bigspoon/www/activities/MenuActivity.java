@@ -241,7 +241,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView =
                 (SearchView) mActionBarView.findViewById(R.id.menu_search_view);
-        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryRefinementEnabled(true);
 
@@ -425,16 +425,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		super.onResume();
 		loadMenu();
 		updateOrderedDishCounter();
-        try {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MenuActivity.this.mMagIcon.performClick();
-                    MenuActivity.this.mSearchView.setIconified(false);
-                }
-            }, 500);
-
-        } catch (Exception e) {}
     }
 
     @Override
