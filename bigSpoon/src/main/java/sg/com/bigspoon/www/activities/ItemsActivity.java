@@ -103,12 +103,14 @@ public class ItemsActivity extends ExpandableListActivity {
 	private ListView mPastOrderList;
 	private PastOrdersAdapter mPastOrderAdapter;
 	private SharedPreferences loginPreferences;
+	private int currentRetryCount = 0;
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
 	public static final int BILL = 3;
 	public static final int PLACE_ORDER = 4;
 	public static final int TAKE_AWAY = 5;
 	public static final int MODIFIER_TEXT_WIDTH = 600;
+	private static final int SEND_RETRY_NUM = 3;
 	static EditText textTime;
 	private MixpanelAPI mMixpanel;
 	
@@ -233,7 +235,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		mOrderredSubTotalValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice()));
 		mOrderredServiceChargeValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
 		mOrderredGSTValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
-		mOrderredTotalValue.setText("$" + String.format("%.2f",  session.getPastOrder().getTotalPrice() + session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		mOrderredTotalValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() + session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getPastOrder().getTotalPrice() * mCurrentOutlet.gstRate));
 	}
 
 	@Override
@@ -322,12 +324,25 @@ public class ItemsActivity extends ExpandableListActivity {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
 						if (e != null) {
+							final String errorMsg = e.toString();
+							if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM && errorMsg != null && errorMsg.contains("bigspoon.biz")) {
+								ItemsActivity.this.currentRetryCount++;
+								ItemsActivity.this.handler.postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										ItemsActivity.this.performSendOrderRequest();
+									}
+								}, 500);
+								return;
+							} else {
+								ItemsActivity.this.currentRetryCount = 0;
+							}
 							if (Constants.LOG) {
 								Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
 							} else {
 								final JSONObject info = new JSONObject();
 								try {
-									info.put("error", e.toString());
+									info.put("error", errorMsg);
 									Crashlytics.logException(e);
 								} catch (JSONException e1) {
 									Crashlytics.logException(e1);
@@ -335,9 +350,19 @@ public class ItemsActivity extends ExpandableListActivity {
 								User.getInstance(ItemsActivity.this).mMixpanel.track("Error sending orders",
 										info);
 							}
-							
+							// show popup for manual ordering
+							ItemsActivity.this.showManualPopup();
 							return;
 						}
+
+						User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
+								.getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
+						User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
+						User.getInstance(ItemsActivity.this).isContainDessert = false;
+						Toast.makeText(getApplicationContext(),
+								"Your order has been sent. Our food is prepared with love, thank you for being patient.",
+								Toast.LENGTH_LONG).show();
+						updateDisplay();
                         //scrollToSentItems();
 						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
                         Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
@@ -427,14 +452,6 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				performSendOrderRequest();
-				User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
-						.getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
-				User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
-				User.getInstance(ItemsActivity.this).isContainDessert = false;
-				Toast.makeText(getApplicationContext(),
-						"Your order has been sent. Our food is prepared with love, thank you for being patient.",
-						Toast.LENGTH_LONG).show();
-				updateDisplay();
 			}
 		});
 
@@ -881,6 +898,30 @@ public class ItemsActivity extends ExpandableListActivity {
 		bq2.setTextSize(19);
 
 	}
+
+	@SuppressWarnings("deprecation")
+	private void showManualPopup() {
+		final AlertDialog alert = new AlertDialog.Builder(this).create();
+		alert.setTitle("Network is sllloowww :(");
+		alert.setMessage("Sorry. Please try again or order from our friendly staffs.");
+		alert.setButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Serve dessert later";
+				showOrderDetailsPopup();
+			}
+		});
+		alert.show();
+		TextView messageView = (TextView) alert.findViewById(android.R.id.message);
+		messageView.setGravity(Gravity.CENTER);
+		// messageView.setHeight(140);
+		messageView.setTextSize(17);
+
+		Button bq1 = alert.getButton(DialogInterface.BUTTON1);
+		bq1.setTextColor(Color.parseColor("#117AFE"));
+		bq1.setTypeface(null, Typeface.BOLD);
+		bq1.setTextSize(19);
+	}
+
 
 	@SuppressWarnings("deprecation")
 	private void billPopup() {
