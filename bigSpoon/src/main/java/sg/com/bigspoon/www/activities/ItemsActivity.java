@@ -366,10 +366,15 @@ public class ItemsActivity extends ExpandableListActivity {
 		int padding_15dp = (int) (15 * scale + 0.5f);
 		int padding_25dp = (int) (25 * scale + 0.5f);
 		int padding_35dp = (int) (35 * scale + 0.5f);
-
+		final int orderCount = User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size();
 		params.setMargins(0, 0, 0, padding_10dp);
 		textTitle.setLayoutParams(params);
-		textTitle.setText("New Order");
+		if (orderCount == 1) {
+			textTitle.setText("New Order: " + orderCount + " item :)");
+		} else {
+			textTitle.setText("New Order: " + orderCount + " items :)");
+		}
+
 		textTitle.setTextSize(19);
 		textTitle.setTextColor(getResources().getColor(android.R.color.black));
 		textTitle.setTypeface(null, Typeface.BOLD);
