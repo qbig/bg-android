@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -481,7 +482,9 @@ public class ActionBarActivity extends FragmentActivity {
 								final JSONObject info = new JSONObject();
 								try {
 									info.put("error", e.toString());
+									Crashlytics.logException(e);
 								} catch (JSONException e1) {
+									Crashlytics.logException(e1);
 									e1.printStackTrace();
 								}
 								User.getInstance(ActionBarActivity.this).mMixpanel.track("Error requesting bills", info);

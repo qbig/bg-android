@@ -290,6 +290,7 @@ public class MenuAdapter extends BaseAdapter {
                                 final JSONObject info = new JSONObject();
                                 try {
                                     info.put("error", e.toString());
+									Crashlytics.logException(e);
                                 } catch (JSONException e1) {
                                     Crashlytics.logException(e1);
                                 }

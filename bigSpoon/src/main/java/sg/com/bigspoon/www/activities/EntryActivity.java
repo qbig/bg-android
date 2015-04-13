@@ -126,6 +126,7 @@ public class EntryActivity extends Activity {
 										errorJson.put(email, e.toString());
 										User.getInstance(EntryActivity.this).mMixpanel
 												.registerSuperPropertiesOnce(errorJson);
+										Crashlytics.logException(e);
 									} catch (JSONException e1) {
 										Crashlytics.logException(e1);
 									}
