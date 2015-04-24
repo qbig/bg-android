@@ -312,6 +312,27 @@ public class ItemsActivity extends ExpandableListActivity {
 		}
 
 	}
+	private void checkNewOrderDelivery() {
+
+		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
+		Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+					final String errorMsg = e.toString();
+					Toast.makeText(ItemsActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+					System.out.println(errorMsg);
+					return;
+				}
+				if(result != null) {
+					System.out.println(result.toString());
+				}
+			}
+		});
+	}
 
 	private void performSendOrderRequest() {
         User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", null);
@@ -355,6 +376,36 @@ public class ItemsActivity extends ExpandableListActivity {
 							return;
 						}
 
+						checkNewOrderDelivery();
+						// TODO:
+						// put all post delivery action into checkNew and
+						// only perform those, if successfully delivered
+						// examples of failed cases
+//						{
+//							"id": 1861,
+//								"dinerInfo": {
+//							"id": 124,
+//									"diner_name": "Jay Teo Jun Kai",
+//									"diner_visits": 335,
+//									"diner_total_spend": "8471.60",
+//									"diner_average_spend": "25.29",
+//									"diner_avatar_url": "https://graph.facebook.com/teojunkai/picture?type=small"
+//						},
+//							"meal_start_time": 1429868770000,
+//								"meal_table_name": "1",
+//								"note": "",
+//								"promotion_note": "$1.00 off, customer 1/3",
+//								"status": 1,
+//								"orders": [
+//
+//							]
+//						}
+//
+//						{
+//							"error": "Not found"
+//						}
+						// retry if failed
+						// show popup to users and log to mixpanel if retry is ALSO failed, check wifi also here ?
 						User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
 								.getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
 						User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
