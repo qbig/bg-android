@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -46,6 +47,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -154,6 +156,7 @@ public class ItemsActivity extends ExpandableListActivity {
     private ScrollView scrollView;
 
     private Handler handler;
+	private ProgressBar progressBar;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -170,6 +173,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
+		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
         try {
             updateOrderedDishCounter();
             setupExpandableCurrentOrdersListView();
@@ -344,7 +348,9 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				logError("Error checking delivery", e, result);
-				if (result != null && (result.has("error")||(result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
+				if (result != null && result.has("out_of_stock")){
+					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
+				} else if (result != null && (result.has("error")||(result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
 						@Override
 						public void run() {
@@ -353,6 +359,8 @@ public class ItemsActivity extends ExpandableListActivity {
 						}
 					}, 500);
 				} else {
+					ItemsActivity.this.progressBar.setVisibility(View.GONE);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					handleOrderDidGetSent();
 				}
 			}
@@ -377,8 +385,10 @@ public class ItemsActivity extends ExpandableListActivity {
 							checkNewOrderDelivery();
 						} else {
 							// stop retrying and show popup
+							ItemsActivity.this.progressBar.setVisibility(View.GONE);
+							getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 							ItemsActivity.this.currentRetryCount = 0;
-							ItemsActivity.this.showManualPopup();
+							ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
 						}
 					}
 				});
@@ -479,6 +489,10 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
+				ItemsActivity.this.progressBar.setVisibility(View.VISIBLE);
+				Toast.makeText(ItemsActivity.this, "Sending...", Toast.LENGTH_LONG).show();
+				getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+						WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 				performSendOrderRequest();
 			}
 		});
@@ -928,10 +942,10 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void showManualPopup() {
+	private void showManualPopup(String title, String msg) {
 		final AlertDialog alert = new AlertDialog.Builder(this).create();
-		alert.setTitle("Network is sllloowww :(");
-		alert.setMessage("Please try again or order from our friendly staffs.");
+		alert.setTitle(title);
+		alert.setMessage(msg);
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Serve dessert later";

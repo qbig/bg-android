@@ -209,7 +209,15 @@
                 android:textColor="@color/white"
                 android:textAppearance="@style/FontProxiSemiBold"
                 android:textSize="20sp" />
-
+            <ProgressBar
+                android:id="@+id/progressBarMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="false"
+                android:layout_marginTop="125dp"
+                android:indeterminate="true"
+                android:visibility="invisible" />
             <CheckedTextView
                 android:id="@+id/orderedItems"
                 android:layout_width="match_parent"
