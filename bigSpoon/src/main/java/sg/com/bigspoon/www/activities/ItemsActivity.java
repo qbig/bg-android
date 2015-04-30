@@ -287,7 +287,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				} else {
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						checkIfContainDessert();
-						if (User.getInstance(ItemsActivity.this).tableId == -1) {
+						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = PLACE_ORDER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -369,11 +369,19 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void performSendOrderRequest() {
 
-        User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", null);
+
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
+		final JsonObject requestBody = currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId);
+		JSONObject orderInfo = new JSONObject();
+		try {
+			orderInfo.put("order details", requestBody.toString());
+		} catch (JSONException e1) {
+			Crashlytics.logException(e1);
+		}
+		User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", orderInfo);
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
-				.setJsonObjectBody(currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId))
+				.setJsonObjectBody(requestBody)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
 					@Override
@@ -739,7 +747,7 @@ public class ItemsActivity extends ExpandableListActivity {
 //					break;
 				case 0:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).tableId == -1) {
+						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -753,7 +761,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					break;
 				case 1:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						if (User.getInstance(ItemsActivity.this).tableId == -1) {
+						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
@@ -1082,7 +1090,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         loginEditor.commit();
 					}
 				}
-				if (User.getInstance(ItemsActivity.this).tableId == -1) {
+				if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					if (User.getInstance(ItemsActivity.this).isForTakeAway) {
@@ -1147,7 +1155,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         loginEditor.commit();
 					}
 				}
-				if (User.getInstance(ItemsActivity.this).tableId == -1) {
+				if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);

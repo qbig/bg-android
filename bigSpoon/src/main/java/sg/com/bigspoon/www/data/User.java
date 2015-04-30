@@ -187,26 +187,26 @@ public class User {
 				.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
-					@Override
-					public void onCompleted(Exception e, JsonObject result) {
-						if (e != null) {
-							if (Constants.LOG) {
-								Toast.makeText(mContext, "Error sending request", Toast.LENGTH_LONG).show();
-							} else {
-								final JSONObject info = new JSONObject();
-								try {
-									info.put("error", e.toString());
-								} catch (JSONException e1) {
-									e1.printStackTrace();
-								}
-								User.getInstance(mContext).mMixpanel.track("Error sending request", info);
-							}
-
-							return;
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+					if (Constants.LOG) {
+						Toast.makeText(mContext, "Error sending request", Toast.LENGTH_LONG).show();
+					} else {
+						final JSONObject info = new JSONObject();
+						try {
+							info.put("error", e.toString());
+						} catch (JSONException e1) {
+							e1.printStackTrace();
 						}
-						Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
+						User.getInstance(mContext).mMixpanel.track("Error sending request", info);
 					}
-				});
+
+					return;
+				}
+				Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	public void requestForWater(String waterInfo) {
@@ -215,6 +215,10 @@ public class User {
 
 	public void requestForWaiter(String waiterServiceInfo) {
 		requestWithType(FOR_WAITER, waiterServiceInfo);
+	}
+
+	public boolean isTableValidForCurrentOutlet() {
+		return currentOutlet.hasTable(tableId);
 	}
 
 }

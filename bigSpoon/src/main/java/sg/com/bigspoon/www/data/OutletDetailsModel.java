@@ -132,4 +132,13 @@ public class OutletDetailsModel {
         final int categoryId = getCategoryIdForDishWithId(dishId);
         return getCategoryPositionForCategoryWithId(categoryId);
     }
+
+	public boolean hasTable(int tabletId) {
+		for (TableModel table : this.tables){
+			if (table.id == tabletId && tabletId != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

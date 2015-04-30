@@ -98,7 +98,7 @@ public class ActionBarActivity extends FragmentActivity {
 				case 0:
 					if (User.getInstance(ActionBarActivity.this)
 							.checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
+						if (! User.getInstance(ActionBarActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = WAITER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -113,7 +113,7 @@ public class ActionBarActivity extends FragmentActivity {
 				case 1:
 					if (User.getInstance(ActionBarActivity.this)
 							.checkLocation()) {
-						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
+						if (! User.getInstance(ActionBarActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = BILL;
 							setUpTablePopup(requestCode);
 						} else {
@@ -303,7 +303,7 @@ public class ActionBarActivity extends FragmentActivity {
                         loginEditor.commit();
 					}
 				}
-				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
+				if (! User.getInstance(ActionBarActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
@@ -367,7 +367,7 @@ public class ActionBarActivity extends FragmentActivity {
                         loginEditor.commit();
 					}
 				}
-				if (User.getInstance(ActionBarActivity.this).tableId == -1) {
+				if (! User.getInstance(ActionBarActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {
 					onTablePopupResult(requestCode);
