@@ -287,7 +287,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				} else {
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						checkIfContainDessert();
-						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
+						if (!User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 							int requestCode = PLACE_ORDER;
 							setUpTablePopup(requestCode);
 						} else {
@@ -384,22 +384,22 @@ public class ItemsActivity extends ExpandableListActivity {
 				.setJsonObjectBody(requestBody)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
-					@Override
-					public void onCompleted(Exception e, JsonObject result) {
-						logError("Error sending orders", e, result);
-						if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
-							ItemsActivity.this.currentRetryCount++;
-							// check delivery, retry 3 times if failed
-							checkNewOrderDelivery();
-						} else {
-							// stop retrying and show popup
-							ItemsActivity.this.progressBar.setVisibility(View.GONE);
-							getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-							ItemsActivity.this.currentRetryCount = 0;
-							ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
-						}
-					}
-				});
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				logError("Error sending orders", e, result);
+				if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+					ItemsActivity.this.currentRetryCount++;
+					// check delivery, retry 3 times if failed
+					checkNewOrderDelivery();
+				} else {
+					// stop retrying and show popup
+					ItemsActivity.this.progressBar.setVisibility(View.GONE);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+					ItemsActivity.this.currentRetryCount = 0;
+					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
+				}
+			}
+		});
 	}
 
 	private void handleOrderDidGetSent() {
@@ -497,11 +497,16 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				ItemsActivity.this.progressBar.setVisibility(View.VISIBLE);
-				Toast.makeText(ItemsActivity.this, "Sending...", Toast.LENGTH_LONG).show();
-				getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-						WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-				performSendOrderRequest();
+				if (User.getInstance(ItemsActivity.this).wifiIsConnected()){
+					ItemsActivity.this.progressBar.setVisibility(View.VISIBLE);
+					Toast.makeText(ItemsActivity.this, "Sending...", Toast.LENGTH_LONG).show();
+					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+							WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+					performSendOrderRequest();
+				} else {
+					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
+				}
+
 			}
 		});
 
