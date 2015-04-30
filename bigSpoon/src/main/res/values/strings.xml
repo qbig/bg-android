@@ -72,8 +72,9 @@
     <string name="tell_us">Tell Us</string>
     <string name="str_okay">Okay</string>
     <string name="dish_search_hint">I am craving for...</string>
+ <string name="afterOrderSentText">Your order has been sent. Our food is prepared with love, thank you for being patient.</string>
 
-    <item type="id" name="POSITION"/>
+ <item type="id" name="POSITION"/>
     <item type="id" name="SECTION"/>
     <item type="id" name="ITEM_NAME"/>
     <item type="id" name="HOLDER"/>

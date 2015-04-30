@@ -312,29 +312,55 @@ public class ItemsActivity extends ExpandableListActivity {
 		}
 
 	}
-	private void checkNewOrderDelivery() {
 
-		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
+	private void logError(String msg, Exception e, JsonObject result) {
+		if (e != null) {
+			final String errorMsg = e.toString();
+			if (Constants.LOG) {
+				Toast.makeText(ItemsActivity.this, msg, Toast.LENGTH_LONG).show();
+			} else {
+				final JSONObject info = new JSONObject();
+				try {
+					info.put("error", errorMsg);
+					Crashlytics.logException(e);
+				} catch (JSONException e1) {
+					Crashlytics.logException(e1);
+				}
+				User.getInstance(ItemsActivity.this).mMixpanel.track(msg,
+						info);
+			}
+			System.out.println(errorMsg);
+		}
+		if(result != null) {
+			System.out.println(result.toString());
+		}
+	}
+
+	private void checkNewOrderDelivery() {
 		Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
-				if (e != null) {
-					final String errorMsg = e.toString();
-					Toast.makeText(ItemsActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-					System.out.println(errorMsg);
-					return;
-				}
-				if(result != null) {
-					System.out.println(result.toString());
+				logError("Error checking delivery", e, result);
+				if (result != null && (result.has("error")||(result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
+					ItemsActivity.this.handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							// retry
+							ItemsActivity.this.performSendOrderRequest();
+						}
+					}, 500);
+				} else {
+					handleOrderDidGetSent();
 				}
 			}
 		});
 	}
 
 	private void performSendOrderRequest() {
+
         User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", null);
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
@@ -344,84 +370,35 @@ public class ItemsActivity extends ExpandableListActivity {
 
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
-						if (e != null) {
-							final String errorMsg = e.toString();
-							if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM && errorMsg != null && errorMsg.contains("bigspoon.biz")) {
-								ItemsActivity.this.currentRetryCount++;
-								ItemsActivity.this.handler.postDelayed(new Runnable() {
-									@Override
-									public void run() {
-										ItemsActivity.this.performSendOrderRequest();
-									}
-								}, 500);
-								return;
-							} else {
-								ItemsActivity.this.currentRetryCount = 0;
-							}
-							if (Constants.LOG) {
-								Toast.makeText(ItemsActivity.this, "Error sending orders", Toast.LENGTH_LONG).show();
-							} else {
-								final JSONObject info = new JSONObject();
-								try {
-									info.put("error", errorMsg);
-									Crashlytics.logException(e);
-								} catch (JSONException e1) {
-									Crashlytics.logException(e1);
-								}
-								User.getInstance(ItemsActivity.this).mMixpanel.track("Error sending orders",
-										info);
-							}
-							// show popup for manual ordering
+						logError("Error sending orders", e, result);
+						if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+							ItemsActivity.this.currentRetryCount++;
+							// check delivery, retry 3 times if failed
+							checkNewOrderDelivery();
+						} else {
+							// stop retrying and show popup
+							ItemsActivity.this.currentRetryCount = 0;
 							ItemsActivity.this.showManualPopup();
-							return;
 						}
-
-						checkNewOrderDelivery();
-						// TODO:
-						// put all post delivery action into checkNew and
-						// only perform those, if successfully delivered
-						// examples of failed cases
-//						{
-//							"id": 1861,
-//								"dinerInfo": {
-//							"id": 124,
-//									"diner_name": "Jay Teo Jun Kai",
-//									"diner_visits": 335,
-//									"diner_total_spend": "8471.60",
-//									"diner_average_spend": "25.29",
-//									"diner_avatar_url": "https://graph.facebook.com/teojunkai/picture?type=small"
-//						},
-//							"meal_start_time": 1429868770000,
-//								"meal_table_name": "1",
-//								"note": "",
-//								"promotion_note": "$1.00 off, customer 1/3",
-//								"status": 1,
-//								"orders": [
-//
-//							]
-//						}
-//
-//						{
-//							"error": "Not found"
-//						}
-						// retry if failed
-						// show popup to users and log to mixpanel if retry is ALSO failed, check wifi also here ?
-						User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
-								.getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
-						User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
-						User.getInstance(ItemsActivity.this).isContainDessert = false;
-						Toast.makeText(getApplicationContext(),
-								"Your order has been sent. Our food is prepared with love, thank you for being patient.",
-								Toast.LENGTH_LONG).show();
-						updateDisplay();
-                        //scrollToSentItems();
-						Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
-                        User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
-                        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
 					}
 				});
+	}
+
+	private void handleOrderDidGetSent() {
+		User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
+                .getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
+		User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
+		User.getInstance(ItemsActivity.this).isContainDessert = false;
+		Toast.makeText(getApplicationContext(),
+				getString(R.string.afterOrderSentText),
+				Toast.LENGTH_LONG).show();
+		updateDisplay();
+		//scrollToSentItems();
+		Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
+		Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
+		User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
+		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
 	}
 
 	private void showOrderDetailsPopup() {
@@ -954,7 +931,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void showManualPopup() {
 		final AlertDialog alert = new AlertDialog.Builder(this).create();
 		alert.setTitle("Network is sllloowww :(");
-		alert.setMessage("Sorry. Please try again or order from our friendly staffs.");
+		alert.setMessage("Please try again or order from our friendly staffs.");
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mGeneralNote = "Serve dessert later";
@@ -1238,24 +1215,13 @@ public class ItemsActivity extends ExpandableListActivity {
 
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
+
 						if (e != null) {
-							if (Constants.LOG) {
-								Toast.makeText(ItemsActivity.this, "Error requesting bills", Toast.LENGTH_LONG).show();
-							} else {
-								final JSONObject info = new JSONObject();
-								try {
-									info.put("error", e.toString());
-									Crashlytics.logException(e);
-								} catch (JSONException e1) {
-									Crashlytics.logException(e1);
-								}
-								User.getInstance(ItemsActivity.this).mMixpanel.track("Error requesting bills",
-										info);
-							}
-							
-							return;
+							logError("Error requesting bills", e, result);
+							Toast.makeText(ItemsActivity.this, "Network is burned in the stove >.< Try again or approach our friendly staffs:)", Toast.LENGTH_LONG).show();
+						} else {
+							Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 						}
-						Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 					}
 				});
 	}
