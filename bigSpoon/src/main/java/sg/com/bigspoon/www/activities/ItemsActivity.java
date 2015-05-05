@@ -407,9 +407,6 @@ public class ItemsActivity extends ExpandableListActivity {
                 .getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
 		User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
 		User.getInstance(ItemsActivity.this).isContainDessert = false;
-		Toast.makeText(getApplicationContext(),
-				getString(R.string.afterOrderSentText),
-				Toast.LENGTH_LONG).show();
 		updateDisplay();
 		//scrollToSentItems();
 		Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
