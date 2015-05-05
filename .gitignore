@@ -24,6 +24,7 @@
 *.dex
 *.bin
 *.lock
+*.aar
 # Logs and databases #
 ######################
 *.log
