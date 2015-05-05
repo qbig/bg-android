@@ -164,7 +164,9 @@ public class MenuAdapter extends BaseAdapter {
 		Collections.sort(mFilteredDishes, new Comparator<DishModel>() {
 			@Override
 			public int compare(DishModel lhs, DishModel rhs) {
-				return lhs.pos - rhs.pos;
+				int sortIndexLeft = lhs.pos > lhs.positionIndex ? lhs.pos : lhs.positionIndex;
+				int sortIndexRight = rhs.pos > rhs.positionIndex ? rhs.pos : rhs.positionIndex;
+				return sortIndexLeft - sortIndexRight;
 			}
 		});
 	}

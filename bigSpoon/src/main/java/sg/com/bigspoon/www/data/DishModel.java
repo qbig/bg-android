@@ -1,10 +1,10 @@
 package sg.com.bigspoon.www.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.google.gson.annotations.SerializedName;
 
 public class DishModel {
 	public static class Photo {
@@ -29,6 +29,9 @@ public class DishModel {
 
 	public String name;
 	public int pos;
+
+	@SerializedName("position_index")
+	public int positionIndex;
 
 	@SerializedName("desc")
 	public String description;

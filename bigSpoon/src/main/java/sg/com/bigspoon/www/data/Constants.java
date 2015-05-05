@@ -20,7 +20,7 @@ public class Constants {
 //	    public static final String DISH_CATEGORY_URL =  "http://54.251.209.132/api/v1/categories";
 //	    public static final String ORDER_HISTORY_URL =  "http://54.251.209.132/api/v1/mealhistory";
 //	    public static final String SOCKET_URL =  "54.251.209.132";
-
+//
 
 	    public static final String BASE_URL =  "http://bigspoon.biz/"; // public static final String BASE_URL =  "http://54.255.0.38/";
 	    public static final String USER_SIGNUP =  "http://bigspoon.biz/api/v1/user";

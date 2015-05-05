@@ -11,6 +11,6 @@
         android:layout_marginTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src = "@drawable/reminder_popup"/>
+        android:src = "@drawable/reminder_popup_greendot"/>
 
 </FrameLayout>

@@ -195,11 +195,11 @@ public class ItemsActivity extends ExpandableListActivity {
 
     private final void scrollToSentItems(){
         new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-            ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 310));
-            }
-        });
+			@Override
+			public void run() {
+				ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 310));
+			}
+		});
     }
 
     private void setupPriceLabels() {
@@ -348,9 +348,9 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				logError("Error checking delivery", e, result);
-				if (result != null && result.has("out_of_stock")){
+				if (result != null && result.has("out_of_stock")) {
 					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
-				} else if (result != null && (result.has("error")||(result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
+				} else if (result != null && (result.has("error") || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
 						@Override
 						public void run() {
@@ -790,12 +790,10 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
-		case WATER:
+		case WAITER:
 			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
-				Intent j = new Intent(ItemsActivity.this, WaterServiceActivity.class);
-				j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(j);
-			} else {
+				waitorPopup();
+			}  else {
 				AlertDialog alertLocationFail = new AlertDialog.Builder(ItemsActivity.this).create();
 				alertLocationFail.setMessage(User.getInstance(this).currentOutlet.waterText);
 				alertLocationFail.setView(null);
@@ -805,10 +803,6 @@ public class ItemsActivity extends ExpandableListActivity {
 				});
 				alertLocationFail.show();
 			}
-			
-			break;
-		case WAITER:
-			waitorPopup();
 			break;
 		case BILL:
 			billPopup();
@@ -1246,7 +1240,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						if (e != null) {
 							logError("Error requesting bills", e, result);
 							Toast.makeText(ItemsActivity.this, "Network is burned in the stove >.< Try again or approach our friendly staffs:)", Toast.LENGTH_LONG).show();
-						} else {
+						} else if (mCurrentOutlet.isBillEnabled){
 							Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 						}
 					}

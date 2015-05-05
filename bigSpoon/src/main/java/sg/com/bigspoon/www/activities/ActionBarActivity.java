@@ -79,22 +79,6 @@ public class ActionBarActivity extends FragmentActivity {
 					long arg3) {
 				Intent i = null;
 				switch (position) {
-//				case 0:
-//					if (User.getInstance(ActionBarActivity.this)
-//							.checkLocation()) {
-//						if (User.getInstance(ActionBarActivity.this).tableId == -1) {
-//							int requestCode = WATER;
-//							setUpTablePopup(requestCode);
-//						} else {
-//							int requestCode = WATER;
-//							onTablePopupResult(requestCode);
-//						}
-//					} else {
-//						setUpLocationFailPopup();
-//						User.getInstance(ActionBarActivity.this).tableId = -1;
-//					}
-//					break;
-
 				case 0:
 					if (User.getInstance(ActionBarActivity.this)
 							.checkLocation()) {
@@ -139,26 +123,19 @@ public class ActionBarActivity extends FragmentActivity {
 
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
-		case WATER:
-			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
-				Intent j = new Intent(ActionBarActivity.this,
-						WaterServiceActivity.class);
-				j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(j);
-			} else {
-				AlertDialog alertLocationFail = new AlertDialog.Builder(this).create();
-				alertLocationFail.setMessage(User.getInstance(this).currentOutlet.waterText);
-				alertLocationFail.setView(null);
-				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-					}
-				});
-				alertLocationFail.show();
-			}
-			
-			break;
 		case WAITER:
-			waitorPopup();
+				if (User.getInstance(this).currentOutlet.isWaterEnabled) {
+					waitorPopup();
+				}  else {
+					AlertDialog alertLocationFail = new AlertDialog.Builder(ActionBarActivity.this).create();
+					alertLocationFail.setMessage(User.getInstance(this).currentOutlet.waterText);
+					alertLocationFail.setView(null);
+					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+						}
+					});
+					alertLocationFail.show();
+				}
 			break;
 		case BILL:
 			billPopup();
@@ -491,7 +468,9 @@ public class ActionBarActivity extends FragmentActivity {
 							
 							return;
 						}
-						Toast.makeText(ActionBarActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
+						if (User.getInstance(ActionBarActivity.this).currentOutlet.isBillEnabled){
+							Toast.makeText(ActionBarActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
+						}
 					}
 				});
 	}
