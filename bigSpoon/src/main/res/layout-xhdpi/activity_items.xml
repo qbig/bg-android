@@ -259,8 +259,8 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"></ListView>
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"></ListView>
 
             <TableLayout
                 android:id="@+id/sentOrderTable"
