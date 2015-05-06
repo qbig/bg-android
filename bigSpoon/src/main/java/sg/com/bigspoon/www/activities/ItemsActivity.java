@@ -84,6 +84,7 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
@@ -369,7 +370,6 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private void performSendOrderRequest() {
 
-
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		final JsonObject requestBody = currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId);
 		JSONObject orderInfo = new JSONObject();
@@ -414,6 +414,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
 		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
+		User.getInstance(ItemsActivity.this).scheduleClearPastOrders(mCurrentOutlet.clearPastOrdersInterval);
 	}
 
 	private void showOrderDetailsPopup() {
@@ -1083,6 +1084,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						mMixpanel.getPeople().increment("Orders Placed", 1);
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
+						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
                         loginEditor.commit();
 					}
 				}
@@ -1148,6 +1150,7 @@ public class ItemsActivity extends ExpandableListActivity {
 						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
+						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
                         loginEditor.commit();
 					}
 				}

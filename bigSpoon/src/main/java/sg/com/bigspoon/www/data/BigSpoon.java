@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
+import sg.com.bigspoon.www.activities.OutletListActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
@@ -33,6 +34,7 @@ import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
@@ -132,13 +134,19 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	// Foreground Callback
 	@Override
 	public void onBecameForeground() {
-		User.getInstance(getApplicationContext()).updateOrder();
-        int tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
+		//User.getInstance(getApplicationContext()).updateOrder();
+        final int tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
+		final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
         User.getInstance(this).tableId = tableId;
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();
 		LocationLibrary.startAlarmAndListener(this);
+		if (outletId != -1 && User.getInstance(this).shouldGoToOutlet){
+			Intent intent = new Intent(this, OutletListActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			this.startActivity(intent);
+		}
 	}
 
 	// Foreground Callback
@@ -147,6 +155,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		this.stopService(new Intent(this, BGLocationService.class));
 		SocketIOManager.getInstance(this).disconnect();
 		LocationLibrary.stopAlarmAndListener(this);
+		User.getInstance(this).setScheduledFutureGoToOutlet();
 	}
 
 	public void checkLocationEnabledByForce() {

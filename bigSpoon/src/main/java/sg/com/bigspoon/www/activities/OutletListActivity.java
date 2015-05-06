@@ -114,16 +114,16 @@ public class OutletListActivity extends Activity {
 		final StateListDrawable states = new StateListDrawable();
 		states.addState(new int[] { android.R.attr.state_pressed },
 				getResources().getDrawable(R.drawable.white_menu_icon_pressed));
-		states.addState(new int[] {}, getResources().getDrawable(R.drawable.white_menu_icon));
+		states.addState(new int[]{}, getResources().getDrawable(R.drawable.white_menu_icon));
 		logoutButton.setImageDrawable(states);
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
-                final String previousEmail = loginPreferences.getString(LOGIN_INFO_EMAIL, "");
+				final String previousEmail = loginPreferences.getString(LOGIN_INFO_EMAIL, "");
 				loginPrefsEditor.clear();
-                loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
-                loginPrefsEditor.putString(LOGIN_INFO_EMAIL, previousEmail);
+				loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
+				loginPrefsEditor.putString(LOGIN_INFO_EMAIL, previousEmail);
 				loginPrefsEditor.commit();
 
 				Session session = Session.getActiveSession();
@@ -177,6 +177,7 @@ public class OutletListActivity extends Activity {
 		super.onResume();
         LocationLibrary.forceLocationUpdate(this);
 		updateListData();
+		navigateToPresetOutletIfNecessary();
 	}
 
 	@Override
@@ -193,80 +194,111 @@ public class OutletListActivity extends Activity {
 		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
-					@Override
-					public void onCompleted(Exception e, List<OutletModel> result) {
-						if (e != null) {
-							if (Constants.LOG) {
-								Toast.makeText(OutletListActivity.this, "Error loading outlets", Toast.LENGTH_LONG)
-										.show();
-							} else {
-								final JSONObject info = new JSONObject();
-								try {
-									info.put("error", e.toString());
-								} catch (JSONException e1) {
-									e1.printStackTrace();
-								}
-								User.getInstance(OutletListActivity.this).mMixpanel
-										.track("Error loading outlets", info);
-							}
-
-							return;
+			@Override
+			public void onCompleted(Exception e, List<OutletModel> result) {
+				if (e != null) {
+					if (Constants.LOG) {
+						Toast.makeText(OutletListActivity.this, "Error loading outlets", Toast.LENGTH_LONG)
+								.show();
+					} else {
+						final JSONObject info = new JSONObject();
+						try {
+							info.put("error", e.toString());
+						} catch (JSONException e1) {
+							e1.printStackTrace();
 						}
-						progressBar.setVisibility(View.GONE);
-						outlets = result;
-						updateListData();
-						list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-							@Override
-							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-								outletSelected = outlets.get(position);
-								if (outletSelected.isActive) {
-									Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
-									intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-									intent.putExtra(OUTLET_ID, outletSelected.outletID);
-
-									final Editor loginPrefEditor = loginPreferences.edit();
-									loginPrefEditor.putInt(OUTLET_ID, outletSelected.outletID);
-									loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
-									loginPrefEditor.commit();
-									final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
-									if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
-										User.getInstance(getApplicationContext()).currentSession.swithToOulet(outletSelected.name);
-									}
-									OutletListActivity.this.startActivity(intent);
-								} else {
-									showComingSoonDialog();
-								}
-							}
-
-							@SuppressWarnings("deprecation")
-							private void showComingSoonDialog() {
-								AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
-								alertDialog.setMessage("The restaurant is coming soon.");
-
-								alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog, int which) {
-
-									}
-								});
-
-								alertDialog.show();
-
-								// Change the style of the button text and
-								// message
-								TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
-								messageView.setGravity(Gravity.CENTER);
-								messageView.setHeight(140);
-								messageView.setTextSize(17);
-								Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
-								okButton.setTextColor(Color.parseColor("#117AFE"));
-								okButton.setTypeface(null, Typeface.BOLD);
-								okButton.setTextSize(19);
-							}
-						});
+						User.getInstance(OutletListActivity.this).mMixpanel
+								.track("Error loading outlets", info);
 					}
 
+					return;
+				}
+				progressBar.setVisibility(View.GONE);
+				outlets = result;
+				updateListData();
+				list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						outletSelected = outlets.get(position);
+						if (outletSelected.isActive) {
+							Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							intent.putExtra(OUTLET_ID, outletSelected.outletID);
+
+							final Editor loginPrefEditor = loginPreferences.edit();
+							loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
+							loginPrefEditor.commit();
+							final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
+							if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
+								User.getInstance(getApplicationContext()).currentSession.swithToOulet(outletSelected.name);
+							}
+							OutletListActivity.this.startActivity(intent);
+						} else {
+							showComingSoonDialog();
+						}
+					}
+
+					@SuppressWarnings("deprecation")
+					private void showComingSoonDialog() {
+						AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
+						alertDialog.setMessage("The restaurant is coming soon.");
+
+						alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+
+							}
+						});
+
+						alertDialog.show();
+
+						// Change the style of the button text and
+						// message
+						TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
+						messageView.setGravity(Gravity.CENTER);
+						messageView.setHeight(140);
+						messageView.setTextSize(17);
+						Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
+						okButton.setTextColor(Color.parseColor("#117AFE"));
+						okButton.setTypeface(null, Typeface.BOLD);
+						okButton.setTextSize(19);
+					}
 				});
+			}
+
+		});
+
+	}
+
+	private void navigateToPresetOutletIfNecessary() {
+		final int presetOutletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
+		final OutletModel presetOutlet = getOutletWithId(presetOutletId);
+		if (presetOutletId != -1 && presetOutlet != null && User.getInstance(this).shouldGoToOutlet){
+			Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra(OUTLET_ID, presetOutlet.outletID);
+
+			final Editor loginPrefEditor = loginPreferences.edit();
+			loginPrefEditor.putString(OUTLET_ICON, presetOutlet.restaurant.icon.thumbnail);
+			loginPrefEditor.commit();
+			final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
+			if (currentOutlet != null && presetOutlet.outletID != currentOutlet.outletID) {
+				User.getInstance(getApplicationContext()).currentSession.swithToOulet(presetOutlet.name);
+			}
+			OutletListActivity.this.startActivity(intent);
+			this.startActivity(intent);
+			User.getInstance(this).shouldGoToOutlet = false;
+		}
+	}
+	private OutletModel getOutletWithId(int outletId){
+		if (outlets!=null){
+			for (OutletModel outlet: outlets){
+				if (outlet.outletID == outletId){
+					return outlet;
+				}
+			}
+		}
+		return null;
 	}
 
 	private void updateListData() {

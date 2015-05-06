@@ -190,7 +190,8 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
                     //clear
                     final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                     User.getInstance(CategoriesListActivity.this).tableId = -1;
-                    loginEditor.putInt(TABLE_ID, -1);
+                    loginEditor.remove(TABLE_ID);
+					loginEditor.remove(OUTLET_ID);
                     loginEditor.commit();
                     Toast.makeText(CategoriesListActivity.this, "Success", Toast.LENGTH_LONG);
                 } else {

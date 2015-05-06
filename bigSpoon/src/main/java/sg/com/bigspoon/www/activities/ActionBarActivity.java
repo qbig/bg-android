@@ -42,6 +42,7 @@ import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 
 public class ActionBarActivity extends FragmentActivity {
 	ActionBar actionBar;
@@ -277,6 +278,7 @@ public class ActionBarActivity extends FragmentActivity {
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ActionBarActivity.this).tableId);
+						loginEditor.putInt(OUTLET_ID, User.getInstance(ActionBarActivity.this).currentOutlet.outletID);
                         loginEditor.commit();
 					}
 				}
@@ -341,6 +343,7 @@ public class ActionBarActivity extends FragmentActivity {
 								.getInstance(ActionBarActivity.this).currentOutlet.tables[k].isForTakeAway;
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ActionBarActivity.this).tableId);
+						loginEditor.putInt(OUTLET_ID, User.getInstance(ActionBarActivity.this).currentOutlet.outletID);
                         loginEditor.commit();
 					}
 				}

@@ -60,7 +60,10 @@ public class OutletDetailsModel {
 	
 	@SerializedName("ask_for_bill_enabled")
 	public boolean isBillEnabled;
-	
+
+	@SerializedName("clear_sent_orders_interval")
+	public int clearPastOrdersInterval;
+
 	public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json){
 		 final Gson gson = new Gson();
          final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);

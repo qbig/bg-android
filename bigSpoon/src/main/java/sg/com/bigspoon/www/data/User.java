@@ -21,6 +21,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
@@ -44,6 +48,10 @@ public class User {
 	public boolean isForTakeAway = false;
 	public MixpanelAPI mMixpanel;
     public boolean shouldShowRemidnerPopup = false;
+	public boolean shouldGoToOutlet = false;
+	private ScheduledFuture scheduledFutureClearPastOrders;
+	private ScheduledFuture scheduledFutureGoToOutlet;
+
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());
@@ -207,6 +215,42 @@ public class User {
 				Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
 			}
 		});
+	}
+
+	public void scheduleClearPastOrders(int delay) {
+
+		final ScheduledExecutorService scheduler =
+				Executors.newSingleThreadScheduledExecutor();
+
+		if (scheduledFutureClearPastOrders != null) {
+			scheduledFutureClearPastOrders.cancel(true);
+		}
+
+		scheduledFutureClearPastOrders= scheduler.schedule(
+				new Runnable() {
+					public void run() {
+						if (currentSession != null) {
+							currentSession.clearPastOrder();
+						}
+					}
+				}, delay, TimeUnit.SECONDS);
+	}
+
+	public void setScheduledFutureGoToOutlet() {
+
+		final ScheduledExecutorService scheduler =
+				Executors.newSingleThreadScheduledExecutor();
+
+		if (scheduledFutureGoToOutlet != null) {
+			scheduledFutureGoToOutlet.cancel(true);
+		}
+
+		scheduledFutureGoToOutlet= scheduler.schedule(
+				new Runnable() {
+					public void run() {
+						shouldGoToOutlet = true;
+					}
+				}, 10, TimeUnit.MINUTES);
 	}
 
 	public void requestForWater(String waterInfo) {
