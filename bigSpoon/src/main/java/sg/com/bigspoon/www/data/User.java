@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
@@ -43,14 +45,15 @@ public class User {
 	public boolean isfindTableCode = false;
 	private static int FOR_WATER = 0;
 	private static int FOR_WAITER = 1;
+	private static int SEND_RETRY_NUM = 3;
+	private int currentRetryCount = 0;
 	public int tableId = -1;
 	public boolean isContainDessert = false;
 	public boolean isForTakeAway = false;
 	public MixpanelAPI mMixpanel;
     public boolean shouldShowRemidnerPopup = false;
-	public boolean shouldGoToOutlet = false;
+	public boolean shouldGoToOutlet = true;
 	private ScheduledFuture scheduledFutureClearPastOrders;
-	private ScheduledFuture scheduledFutureGoToOutlet;
 
 
 	private User(Context context) {
@@ -217,6 +220,49 @@ public class User {
 		});
 	}
 
+	public void clearPastOrder(){
+		JsonObject tableInfo = new JsonObject();
+		tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
+		User.getInstance(mContext).currentSession.clearPastOrder();
+		Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+				.setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.setJsonObjectBody(tableInfo)
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+			@Override
+			public void onCompleted(Exception e, JsonObject result) {
+				if (e != null) {
+					final String errorMsg = e.toString();
+					if (User.this.currentRetryCount < SEND_RETRY_NUM) {
+						User.this.currentRetryCount++;
+						User.this.clearPastOrder();
+						return;
+					} else {
+						User.this.currentRetryCount = 0;
+					}
+
+					if (Constants.LOG) {
+						Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
+					} else {
+						final JSONObject info = new JSONObject();
+						try {
+							info.put("error", errorMsg);
+							Crashlytics.logException(e);
+						} catch (JSONException e1) {
+							Crashlytics.logException(e1);
+						}
+						User.getInstance(mContext).mMixpanel.track("Error clearing orders",
+								info);
+					}
+
+					return;
+				}
+				User.this.currentRetryCount = 0;
+				Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
 	public void scheduleClearPastOrders(int delay) {
 
 		final ScheduledExecutorService scheduler =
@@ -230,27 +276,10 @@ public class User {
 				new Runnable() {
 					public void run() {
 						if (currentSession != null) {
-							currentSession.clearPastOrder();
+							User.this.clearPastOrder();
 						}
 					}
 				}, delay, TimeUnit.SECONDS);
-	}
-
-	public void setScheduledFutureGoToOutlet() {
-
-		final ScheduledExecutorService scheduler =
-				Executors.newSingleThreadScheduledExecutor();
-
-		if (scheduledFutureGoToOutlet != null) {
-			scheduledFutureGoToOutlet.cancel(true);
-		}
-
-		scheduledFutureGoToOutlet= scheduler.schedule(
-				new Runnable() {
-					public void run() {
-						shouldGoToOutlet = true;
-					}
-				}, 10, TimeUnit.MINUTES);
 	}
 
 	public void requestForWater(String waterInfo) {

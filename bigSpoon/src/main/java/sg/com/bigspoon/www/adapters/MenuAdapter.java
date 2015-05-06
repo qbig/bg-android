@@ -280,7 +280,7 @@ public class MenuAdapter extends BaseAdapter {
         alert.setView(null);
         alert.setButton2("Start new session", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-				clearPastOrder();
+				User.getInstance(mContext).clearPastOrder();
             }
         });
         alert.setButton("Continue", new DialogInterface.OnClickListener() {
@@ -302,52 +302,7 @@ public class MenuAdapter extends BaseAdapter {
 
     }
 
-	private void clearPastOrder(){
-		JsonObject tableInfo = new JsonObject();
-		tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
-		User.getInstance(mContext).currentSession.clearPastOrder();
-		Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
-				.setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
-				.setJsonObjectBody(tableInfo)
-				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
-			@Override
-			public void onCompleted(Exception e, JsonObject result) {
-				if (e != null) {
-					final String errorMsg = e.toString();
-					if (MenuAdapter.this.currentRetryCount < SEND_RETRY_NUM) {
-						MenuAdapter.this.currentRetryCount++;
-						MenuAdapter.this.handler.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								MenuAdapter.this.clearPastOrder();
-							}
-						}, 1000);
-						return;
-					} else {
-						MenuAdapter.this.currentRetryCount = 0;
-					}
-
-					if (Constants.LOG) {
-						Toast.makeText(mContext, "Error clearing orders", Toast.LENGTH_LONG).show();
-					} else {
-						final JSONObject info = new JSONObject();
-						try {
-							info.put("error", errorMsg);
-							Crashlytics.logException(e);
-						} catch (JSONException e1) {
-							Crashlytics.logException(e1);
-						}
-						User.getInstance(mContext).mMixpanel.track("Error clearing orders",
-								info);
-					}
-
-					return;
-				}
-				Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
-			}
-		});
-	}
 
 
 	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {

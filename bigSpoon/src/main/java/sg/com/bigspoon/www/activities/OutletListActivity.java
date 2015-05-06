@@ -83,7 +83,7 @@ public class OutletListActivity extends Activity {
 			updateListData();
 		}
 	};
-
+	private ProgressBar progressBar;
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -175,9 +175,11 @@ public class OutletListActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (User.getInstance(this).shouldGoToOutlet){
+			loadOutlets();
+		}
         LocationLibrary.forceLocationUpdate(this);
 		updateListData();
-		navigateToPresetOutletIfNecessary();
 	}
 
 	@Override
@@ -185,12 +187,14 @@ public class OutletListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_outlet_list);
 		list = (ListView) findViewById(R.id.outlet_list);
-		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.VISIBLE);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
-
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
+	}
+
+	private void loadOutlets(){
 		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
@@ -264,10 +268,10 @@ public class OutletListActivity extends Activity {
 						okButton.setTextSize(19);
 					}
 				});
+				OutletListActivity.this.navigateToPresetOutletIfNecessary();
 			}
 
 		});
-
 	}
 
 	private void navigateToPresetOutletIfNecessary() {

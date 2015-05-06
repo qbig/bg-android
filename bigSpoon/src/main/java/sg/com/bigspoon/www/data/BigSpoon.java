@@ -135,14 +135,13 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onBecameForeground() {
 		//User.getInstance(getApplicationContext()).updateOrder();
-        final int tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
-		final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
-        User.getInstance(this).tableId = tableId;
+        User.getInstance(this).tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();
 		LocationLibrary.startAlarmAndListener(this);
-		if (outletId != -1 && User.getInstance(this).shouldGoToOutlet){
+		final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
+		if (outletId != -1){
 			Intent intent = new Intent(this, OutletListActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			this.startActivity(intent);
@@ -155,7 +154,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		this.stopService(new Intent(this, BGLocationService.class));
 		SocketIOManager.getInstance(this).disconnect();
 		LocationLibrary.stopAlarmAndListener(this);
-		User.getInstance(this).setScheduledFutureGoToOutlet();
+		User.getInstance(this).shouldGoToOutlet = true;
 	}
 
 	public void checkLocationEnabledByForce() {
