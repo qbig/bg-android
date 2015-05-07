@@ -205,7 +205,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:layout_marginBottom="35dp"
-                android:text="Send to Kitchen"
+                android:text="Send to Cashier"
                 android:textColor="@color/white"
                 android:textAppearance="@style/FontProxiSemiBold"
                 android:textSize="20sp" />

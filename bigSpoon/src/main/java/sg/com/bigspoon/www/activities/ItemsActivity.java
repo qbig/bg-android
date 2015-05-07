@@ -493,7 +493,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			}
 		});
-		alertbuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+		alertbuilder.setPositiveButton("Pay Next", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				if (User.getInstance(ItemsActivity.this).wifiIsConnected()){
 					ItemsActivity.this.progressBar.setVisibility(View.VISIBLE);
