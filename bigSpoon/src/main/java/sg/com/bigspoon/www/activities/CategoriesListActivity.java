@@ -44,6 +44,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
@@ -52,7 +53,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 	ListView catrgoriesList;
 	private ActionBar mActionBar;
 	private View mActionBarView;
-
+	private boolean shouldShowSteps = false;
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
@@ -61,9 +62,12 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
     protected void onResume() {
         super.onResume();
         if (User.getInstance(this).shouldShowRemidnerPopup) {
-            startActivity(new Intent(this, ImageDialog.class));
+            startActivity(new Intent(this, ImageDialogAfterSent.class));
             User.getInstance(this).shouldShowRemidnerPopup = false;
-        }
+        } else if (shouldShowSteps) {
+			startActivity(new Intent(this, ImageDialogSteps.class));
+			shouldShowSteps = false;
+		}
 
     }
 
@@ -79,6 +83,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_CATEGORY_LIST, Log.DEBUG);
 		final Intent intent = getIntent();
 		final int outletId = intent.getIntExtra(OUTLET_ID, loginPreferences.getInt(OUTLET_ID, -1));
+		shouldShowSteps = intent.getBooleanExtra(SHOULD_SHOW_STEPS_REMINDER, false);
 		final String outletIcon = loginPreferences.getString(OUTLET_ICON, null);
 		if (outletId == -1 || outletIcon == null) {
 			final Intent intentBackToOutlets = new Intent(this, OutletListActivity.class);

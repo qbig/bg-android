@@ -4,29 +4,29 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import sg.com.bigspoon.www.R;
 
 /**
- * Created by qiaoliang89 on 11/3/15.
+ * Created by qiaoliang89 on 7/5/15.
  */
-public class ImageDialog extends Activity {
+
+public class ImageDialogSteps extends Activity {
 
     private ImageView mDialog;
     private android.os.Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_dialog_layout);
+        setContentView(R.layout.image_dialog_steps);
         handler = new Handler();
         mDialog = (ImageView)findViewById(R.id.popup_image);
         mDialog.setClickable(true);
-        mDialog.setOnClickListener(new OnClickListener() {
+        mDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageDialog.this.handler.postDelayed(new Runnable() {
+                ImageDialogSteps.this.handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         finish();

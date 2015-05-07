@@ -51,6 +51,8 @@ public class Constants {
 	    
 	    //KEY
 	    public static final String OUTLET_ID = "outletID";
+		public static final String IMAGE_ID = "imageId";
+		public static final String SHOULD_SHOW_STEPS_REMINDER = "shouldShowSteps";
 	    public static final String OUTLET_ICON = "outletICon";
 	    public static final String POS_FOR_CLICKED_CATEGORY = "startposition";
 	    public static final String SELECTED_HISTORY_ITEM_POSITION = "selectedHisotryItemPosition";

@@ -58,6 +58,7 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
@@ -281,7 +282,7 @@ public class OutletListActivity extends Activity {
 			Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra(OUTLET_ID, presetOutlet.outletID);
-
+			intent.putExtra(SHOULD_SHOW_STEPS_REMINDER, true);
 			final Editor loginPrefEditor = loginPreferences.edit();
 			loginPrefEditor.putString(OUTLET_ICON, presetOutlet.restaurant.icon.thumbnail);
 			loginPrefEditor.commit();

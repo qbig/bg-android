@@ -143,7 +143,11 @@
             android:name="sg.com.bigspoon.www.activities.ExpandableViewUtil"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name="sg.com.bigspoon.www.activities.ImageDialog"
+        <activity android:name=".activities.ImageDialogAfterSent"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activities.ImageDialogSteps"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
