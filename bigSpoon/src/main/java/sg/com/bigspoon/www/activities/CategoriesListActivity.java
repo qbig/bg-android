@@ -63,10 +63,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
     protected void onResume() {
         super.onResume();
 		final String authToken = loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, null);
-		if (authToken == null || authToken.length() == 0) {
-			User.getInstance(this).mMixpanel.track("Token Empty!", new JSONObject());
-			User.getInstance(this).updateLoginToken();
-		}
+		User.getInstance(this).verifyLoginToken();
 
         if (User.getInstance(this).shouldShowRemidnerPopup) {
             startActivity(new Intent(this, ImageDialogAfterSent.class));

@@ -391,7 +391,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		final JsonObject requestBody = currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId);
 		final JSONObject orderInfo = new JSONObject();
 		final String authToken = "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "");
-		if (authToken == null || authToken.length() == 0){
+		if (authToken.equals("Token ")){
 			User.getInstance(this).updateLoginToken();
 		}
 		try {
@@ -410,7 +410,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			public void onCompleted(Exception e, JsonObject result) {
 				log("sending orders", e, result);
 				if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
-					User.getInstance(ItemsActivity.this).mMixpanel.track("Checking Orders: Try." +
+					User.getInstance(ItemsActivity.this).mMixpanel.track("Check Orders: Try." +
 							ItemsActivity.this.currentRetryCount, orderInfo);
 					ItemsActivity.this.currentRetryCount++;
 					// check delivery, retry 3 times if failed
