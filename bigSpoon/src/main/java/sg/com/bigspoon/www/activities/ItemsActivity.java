@@ -716,6 +716,7 @@ public class ItemsActivity extends ExpandableListActivity {
         if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 0){
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NOTIF_ORDER_UPDATE));
         }
+		User.getInstance(this).verifyLoginToken();
 	}
 
 	public class ListViewHeightUtil {

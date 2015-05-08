@@ -291,6 +291,13 @@ public class User {
 				}, delay, TimeUnit.SECONDS);
 	}
 
+	public void verifyLoginToken() {
+		final String token = loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, null);
+		if (token == null || token.length() ==0){
+			updateLoginToken();
+		}
+	}
+
 	public void updateLoginToken() {
 		final JsonObject json = new JsonObject();
 		final String email = generateEmail();
