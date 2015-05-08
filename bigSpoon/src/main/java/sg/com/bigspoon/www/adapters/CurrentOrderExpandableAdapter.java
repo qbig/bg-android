@@ -11,19 +11,14 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.ItemsActivity;
-import sg.com.bigspoon.www.activities.ModifierActivity;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.User;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 
 public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
@@ -102,9 +97,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 					.getModifierDetailsTextAtIndex(groupPosition));
 		}
 
-		ImageButton minusButton = (ImageButton) convertView.findViewById(R.id.imgMinus);
-		ImageButton plusButton = (ImageButton) convertView.findViewById(R.id.imgPlus);
-		minusButton.setOnClickListener(new OnClickListener() {
+		final OnClickListener removeDishListener = new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (User.getInstance(mContext).currentSession.getCurrentOrder().getQuantityOfDishByIndex(groupPosition) > 0) {
@@ -117,30 +110,10 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 			}
-		});
-
-		plusButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (dish.quantity <= 0) {
-					Toast.makeText(mContext, "This is dish is out of stock", Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				if (dish.customizable) {
-					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
-					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, dish.id);
-					((ItemsActivity) mContext).startActivity(intentForModifier);
-				} else {
-					User.getInstance(mContext).currentSession.getCurrentOrder().incrementDishAtIndex(groupPosition);
-
-					notifyDataSetChanged();
-					Intent intent = new Intent(NOTIF_ORDER_UPDATE);
-					LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-				}
-			}
-		});
-
+		};
+		TextView minusButton = (TextView) convertView.findViewById(R.id.imgMinus);
+		minusButton.setOnClickListener(removeDishListener);
+		numberView.setOnClickListener(removeDishListener);
 		return convertView;
 	}
 
