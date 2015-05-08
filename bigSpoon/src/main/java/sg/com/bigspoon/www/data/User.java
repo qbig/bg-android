@@ -17,6 +17,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,10 +30,16 @@ import java.util.concurrent.TimeUnit;
 
 import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AVATAR_URL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
+import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
 
 public class User {
 	private static User sInstance;
@@ -41,6 +48,7 @@ public class User {
 	public DiningSession currentSession;
 	public List<RetrievedOrder> diningHistory;
 	private SharedPreferences loginPrefs;
+	private SharedPreferences.Editor loginPrefsEditor;
 	public Location currentLocation;
 	public boolean isfindTableCode = false;
 	private static int FOR_WATER = 0;
@@ -59,6 +67,7 @@ public class User {
 	private User(Context context) {
 		setContext(context.getApplicationContext());
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
+		loginPrefsEditor = loginPrefs.edit();
 	}
 	
 	public void startSession(String currentOutletName) {
@@ -280,6 +289,67 @@ public class User {
 						}
 					}
 				}, delay, TimeUnit.SECONDS);
+	}
+
+	public void updateLoginToken() {
+		final JsonObject json = new JsonObject();
+		final String email = generateEmail();
+		json.addProperty("email", email);
+		json.addProperty("password", "bigspoon");
+		Ion.with(mContext).load(USER_LOGIN)
+				.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
+				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if (e != null) {
+							if (Constants.LOG) {
+								Toast.makeText(mContext, "Error during login",
+										Toast.LENGTH_LONG).show();
+							} else {
+								final JSONObject errorJson = new JSONObject();
+								try {
+									errorJson.put(email, e.toString());
+									User.getInstance(mContext).mMixpanel
+											.registerSuperPropertiesOnce(errorJson);
+								} catch (JSONException e1) {
+									e1.printStackTrace();
+								}
+							}
+							return;
+						}
+						try {
+							final String email = result.get(LOGIN_INFO_EMAIL).getAsString();
+							final String lastName = result.get(LOGIN_INFO_LAST_NAME).getAsString();
+							final String firstName = result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+							final String authToken = result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+							final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+
+							loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
+							loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+							loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+							loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+							loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+							loginPrefsEditor.commit();
+						} catch (NullPointerException nullException) {
+							Crashlytics.logException(nullException);
+						}
+
+					}
+				});
+	}
+
+	private String generateEmail() {
+		String email = loginPrefs.getString(LOGIN_INFO_EMAIL, null);
+		if (email == null) {
+			String outletPrefix = loginPrefs.getString(OUTLET_NAME, null);
+			if (outletPrefix != null){
+				return outletPrefix + RandomStringUtils.randomAlphanumeric(3);
+			}
+		} else {
+			return email;
+		}
+
+		return RandomStringUtils.randomAlphanumeric(8);
 	}
 
 	public void requestForWater(String waterInfo) {

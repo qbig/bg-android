@@ -85,6 +85,7 @@ import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 
@@ -389,14 +390,19 @@ public class ItemsActivity extends ExpandableListActivity {
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		final JsonObject requestBody = currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId);
 		final JSONObject orderInfo = new JSONObject();
+		final String authToken = "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "");
+		if (authToken == null || authToken.length() == 0){
+			User.getInstance(this).updateLoginToken();
+		}
 		try {
 			orderInfo.put("order details", requestBody.toString());
+			orderInfo.put("auto token", authToken);
 		} catch (JSONException e1) {
 			Crashlytics.logException(e1);
 		}
 		User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", orderInfo);
 		Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
-				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
+				.setHeader("Authorization", authToken)
 				.setJsonObjectBody(requestBody)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
@@ -1103,6 +1109,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
 						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
+						loginEditor.putString(OUTLET_NAME, User.getInstance(ItemsActivity.this).currentOutlet.name);
                         loginEditor.commit();
 					}
 				}
@@ -1169,6 +1176,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         final SharedPreferences.Editor loginEditor = loginPreferences.edit();
                         loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
 						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
+						loginEditor.putString(OUTLET_NAME, User.getInstance(ItemsActivity.this).currentOutlet.name);
                         loginEditor.commit();
 					}
 				}

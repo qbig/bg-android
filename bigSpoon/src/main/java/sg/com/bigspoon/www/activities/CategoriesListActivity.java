@@ -46,6 +46,7 @@ import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
@@ -61,6 +62,12 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
     @Override
     protected void onResume() {
         super.onResume();
+		final String authToken = loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, null);
+		if (authToken == null || authToken.length() == 0) {
+			User.getInstance(this).mMixpanel.track("Token Empty!", new JSONObject());
+			User.getInstance(this).updateLoginToken();
+		}
+
         if (User.getInstance(this).shouldShowRemidnerPopup) {
             startActivity(new Intent(this, ImageDialogAfterSent.class));
             User.getInstance(this).shouldShowRemidnerPopup = false;
@@ -197,6 +204,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
                     User.getInstance(CategoriesListActivity.this).tableId = -1;
                     loginEditor.remove(TABLE_ID);
 					loginEditor.remove(OUTLET_ID);
+					loginEditor.remove(OUTLET_NAME);
                     loginEditor.commit();
                     Toast.makeText(CategoriesListActivity.this, "Success", Toast.LENGTH_LONG);
                 } else {
