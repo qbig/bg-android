@@ -114,7 +114,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int PLACE_ORDER = 4;
 	public static final int TAKE_AWAY = 5;
 	public static final int MODIFIER_TEXT_WIDTH = 600;
-	private static final int SEND_RETRY_NUM = 3;
+	private static final int SEND_RETRY_NUM = 6;
 	static EditText textTime;
 	private MixpanelAPI mMixpanel;
 	
