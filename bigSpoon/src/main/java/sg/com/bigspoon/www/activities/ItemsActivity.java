@@ -318,11 +318,11 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	}
 
-	private void logError(String msg, Exception e, JsonObject result) {
+	private void log(String msg, Exception e, JsonObject result) {
 		if (e != null) {
 			final String errorMsg = e.toString();
 			if (Constants.LOG) {
-				Toast.makeText(ItemsActivity.this, msg, Toast.LENGTH_LONG).show();
+				Toast.makeText(ItemsActivity.this, errorMsg, Toast.LENGTH_LONG).show();
 			} else {
 				final JSONObject info = new JSONObject();
 				try {
@@ -331,13 +331,28 @@ public class ItemsActivity extends ExpandableListActivity {
 				} catch (JSONException e1) {
 					Crashlytics.logException(e1);
 				}
-				User.getInstance(ItemsActivity.this).mMixpanel.track(msg,
+				User.getInstance(ItemsActivity.this).mMixpanel.track("Error "+msg,
 						info);
 			}
 			System.out.println(errorMsg);
 		}
+
 		if(result != null) {
-			System.out.println(result.toString());
+			final String resultMsg = result.toString();
+			if (Constants.LOG) {
+				Toast.makeText(ItemsActivity.this, resultMsg, Toast.LENGTH_LONG).show();
+			} else {
+				final JSONObject info = new JSONObject();
+				try {
+					info.put("result", resultMsg);
+					Crashlytics.logException(e);
+				} catch (JSONException e1) {
+					Crashlytics.logException(e1);
+				}
+				User.getInstance(ItemsActivity.this).mMixpanel.track(msg,
+						info);
+			}
+			System.out.println(resultMsg);
 		}
 	}
 
@@ -348,10 +363,15 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
-				logError("Error checking delivery", e, result);
+				log("checking delivery", e, result);
 				if (result != null && result.has("out_of_stock")) {
 					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
-				} else if (result != null && (result.has("error") || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))) {
+				} else if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
+					ItemsActivity.this.progressBar.setVisibility(View.GONE);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+					handleOrderDidGetSent();
+				} else {
+					// if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
 						@Override
 						public void run() {
@@ -359,10 +379,6 @@ public class ItemsActivity extends ExpandableListActivity {
 							ItemsActivity.this.performSendOrderRequest();
 						}
 					}, 500);
-				} else {
-					ItemsActivity.this.progressBar.setVisibility(View.GONE);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					handleOrderDidGetSent();
 				}
 			}
 		});
@@ -372,7 +388,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		final Order currentOrder = User.getInstance(this).currentSession.getCurrentOrder();
 		final JsonObject requestBody = currentOrder.getJsonOrders(User.getInstance(ItemsActivity.this).tableId);
-		JSONObject orderInfo = new JSONObject();
+		final JSONObject orderInfo = new JSONObject();
 		try {
 			orderInfo.put("order details", requestBody.toString());
 		} catch (JSONException e1) {
@@ -386,8 +402,10 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
-				logError("Error sending orders", e, result);
+				log("sending orders", e, result);
 				if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+					User.getInstance(ItemsActivity.this).mMixpanel.track("Checking Orders: Try." +
+							ItemsActivity.this.currentRetryCount, orderInfo);
 					ItemsActivity.this.currentRetryCount++;
 					// check delivery, retry 3 times if failed
 					checkNewOrderDelivery();
@@ -1238,8 +1256,8 @@ public class ItemsActivity extends ExpandableListActivity {
 					public void onCompleted(Exception e, JsonObject result) {
 
 						if (e != null) {
-							logError("Error requesting bills", e, result);
-							Toast.makeText(ItemsActivity.this, "Network is burned in the stove >.< Try again or approach our friendly staffs:)", Toast.LENGTH_LONG).show();
+							log("requesting bills", e, result);
+							Toast.makeText(ItemsActivity.this, "Network is sllloowww:( Try again or approach our friendly staffs:)", Toast.LENGTH_LONG).show();
 						} else if (mCurrentOutlet.isBillEnabled){
 							Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();
 						}
