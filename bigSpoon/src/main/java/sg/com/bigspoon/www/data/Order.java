@@ -1,12 +1,12 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 
 public class Order {
 	/*
@@ -31,6 +31,7 @@ public class Order {
 				newItem.modifierAnswer = dish.modifier.getAnswer();
 			}
 			mItems.add(newItem);
+			dish.quantity -= 1;
 		} else {
 			incrementDishWithId(dish.id);
 		}
@@ -42,6 +43,7 @@ public class Order {
 				if (item.dish.id == dish.id) {
 					if (item.quantity > 1) {
 						item.quantity--;
+						item.dish.quantity += 1;
 					} else {
 						mItems.remove(item);
 					}
@@ -131,25 +133,34 @@ public class Order {
 	}
 
 	public void incrementDishWithId(int dishID) {
-		getItemWithDishId(dishID).quantity++;
+		final OrderItem item = getItemWithDishId(dishID);
+		item.quantity++;
+		item.dish.quantity--;
 	}
 
 	public void decrementDishWithId(int dishID) {
-		getItemWithDishId(dishID).quantity--;
+		final OrderItem item = getItemWithDishId(dishID);
+		item.quantity--;
+		item.dish.quantity++;
 	}
 
 	public void incrementDishAtIndex(int dishIndex) {
-		mItems.get(dishIndex).quantity++;
+		final OrderItem item = mItems.get(dishIndex);
+		item.quantity++;
+		item.dish.quantity--;
 	}
 
 	public void decrementDishAtIndex(int dishIndex) {
-		if (mItems.get(dishIndex).quantity <= 0)
+		if (mItems.get(dishIndex).quantity <= 0){
 			mItems.get(dishIndex).quantity = 0;
-		else
+		} else {
 			mItems.get(dishIndex).quantity--;
+			mItems.get(dishIndex).dish.quantity += 1;
+		}
 	}
 
 	public void removeDishAtIndex(int dishIndex) {
+		mItems.get(dishIndex).dish.quantity += mItems.get(dishIndex).quantity;
 		mItems.remove(dishIndex);
 	}
 
@@ -182,6 +193,7 @@ public class Order {
 		for (OrderItem item : mItems) {
 			if (item.dish.name.equals(dishName)) {
 				item.quantity--;
+				item.dish.quantity++;
 			}
 		}
 	}

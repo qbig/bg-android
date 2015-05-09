@@ -32,18 +32,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.OnClickWrapper;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,18 +46,14 @@ import java.util.Comparator;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.activities.ModifierActivity;
-import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
-import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 
 public class MenuAdapter extends BaseAdapter {
 
@@ -207,7 +197,6 @@ public class MenuAdapter extends BaseAdapter {
 						}
 					});
 					alertLocationFail.show();
-
 					return;
 				}
 
