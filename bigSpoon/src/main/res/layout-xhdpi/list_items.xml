@@ -61,6 +61,8 @@
         android:textColor="@color/text_item_gray"
         android:textSize="15sp"
         android:textAppearance="@style/FontProxiRegular"
+        android:gravity="center"
+        android:textAlignment="gravity"
         />
 
 </LinearLayout>
