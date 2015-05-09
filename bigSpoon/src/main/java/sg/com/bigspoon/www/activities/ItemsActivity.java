@@ -365,9 +365,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				log("checking delivery", e, result);
-				if (result != null && result.has("out_of_stock")) {
-					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
-				} else if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
+				if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					handleOrderDidGetSent();
@@ -409,14 +407,19 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				log("sending orders", e, result);
-				if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+				if (result != null && result.has("out_of_stock")) {
+					// ITEMS OUT OF STOCK
+					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
+					ItemsActivity.this.progressBar.setVisibility(View.GONE);
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+				} else if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
 					User.getInstance(ItemsActivity.this).mMixpanel.track("Check Orders: Try." +
 							ItemsActivity.this.currentRetryCount, orderInfo);
 					ItemsActivity.this.currentRetryCount++;
-					// check delivery, retry 3 times if failed
+					// CHECK DELIVERY, retry 3 times if failed
 					checkNewOrderDelivery();
 				} else {
-					// stop retrying and show popup
+					// ALL FAILED: stop retrying and show popup
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					ItemsActivity.this.currentRetryCount = 0;
