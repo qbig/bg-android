@@ -442,6 +442,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
 		User.getInstance(ItemsActivity.this).scheduleClearPastOrders(mCurrentOutlet.clearPastOrdersInterval);
+		User.getInstance(ItemsActivity.this).prevOrderTime = System.currentTimeMillis();
 	}
 
 	private void showOrderDetailsPopup() {

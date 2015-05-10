@@ -42,11 +42,11 @@ import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
@@ -62,17 +62,24 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
     @Override
     protected void onResume() {
         super.onResume();
-		final String authToken = loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, null);
-		User.getInstance(this).verifyLoginToken();
+		final User user = User.getInstance(this);
+		user.verifyLoginToken();
 
-        if (User.getInstance(this).shouldShowRemidnerPopup) {
+        if (user.shouldShowRemidnerPopup) {
             startActivity(new Intent(this, ImageDialogAfterSent.class));
-            User.getInstance(this).shouldShowRemidnerPopup = false;
+			user.shouldShowRemidnerPopup = false;
         } else if (shouldShowSteps) {
 			startActivity(new Intent(this, ImageDialogSteps.class));
 			shouldShowSteps = false;
 		}
 
+		if (user.prevOrderTime != -1){
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - user.prevOrderTime > user.currentOutlet.clearPastOrdersInterval * 1000){
+				user.clearPastOrder();
+				user.prevOrderTime = -1;
+			}
+		}
     }
 
 

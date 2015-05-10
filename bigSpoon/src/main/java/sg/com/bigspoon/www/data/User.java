@@ -70,6 +70,7 @@ public class User {
     public boolean shouldShowRemidnerPopup = false;
 	public boolean shouldGoToOutlet = true;
 	private ScheduledFuture scheduledFutureClearPastOrders;
+	public long prevOrderTime = -1;
 
 
 	private User(Context context) {
