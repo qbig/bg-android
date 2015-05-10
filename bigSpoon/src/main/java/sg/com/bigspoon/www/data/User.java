@@ -282,7 +282,7 @@ public class User {
 
 	public void showUndoDishPopup() {
 		SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext, SuperToast.Type.BUTTON);
-		superActivityToast.setDuration(SuperToast.Duration.SHORT);
+		superActivityToast.setDuration(SuperToast.Duration.VERY_SHORT);
 		superActivityToast.setText("Saved to 'Unsent Order'.");
 		superActivityToast.setTextColor(Color.WHITE);
 		superActivityToast.setBackground(SuperToast.Background.ORANGE);
