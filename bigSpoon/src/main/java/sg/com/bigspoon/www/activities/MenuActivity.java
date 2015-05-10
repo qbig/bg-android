@@ -6,13 +6,16 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -51,6 +54,7 @@ import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 
@@ -78,6 +82,13 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    private BroadcastReceiver mUpdateCornerCounterReceiver= new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MenuActivity.this.updateOrderedDishCounter();
+        }
+    };
+
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,6 +103,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         }
 
 		setupHideCategoriesTabsEvent();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateCornerCounterReceiver,
+                new IntentFilter(NOTIF_UNDO_ORDER));
 	}
 
 	private void setupHideCategoriesTabsEvent() {
@@ -431,6 +444,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     protected void onDestroy() {
         super.onDestroy();
         User.getInstance(MenuActivity.this).mMixpanel.flush();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mUpdateCornerCounterReceiver);
     }
 
 	public View getActionBarView() {

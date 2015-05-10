@@ -216,12 +216,12 @@ public class MenuAdapter extends BaseAdapter {
 									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
 								}
                                 if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
-                                    mSuperActivityToast.show();
+                                    //mSuperActivityToast.show();
                                     if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
                                         MenuAdapter.this.showClearOrderPopup();
                                     }
                                 }
-
+								User.getInstance(mContext).showUndoDishPopup();
 							} catch (Exception e) {
 								Crashlytics.log(e.toString());
 							}							
@@ -230,10 +230,11 @@ public class MenuAdapter extends BaseAdapter {
 				} else {
 
 					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
+					User.getInstance(mContext).showUndoDishPopup();
                     updateOrderCountAndDisplay(view);
 
 					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
-						mSuperActivityToast.show();
+						//mSuperActivityToast.show();
                         if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
                             MenuAdapter.this.showClearOrderPopup();
                         }

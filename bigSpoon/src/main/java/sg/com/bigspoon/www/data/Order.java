@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 
@@ -17,12 +18,15 @@ public class Order {
 
 	public String mGeneralNote = null;
 	public ArrayList<OrderItem> mItems;
-
+	public boolean canPop = false;
+	private Stack st;
 	public Order() {
 		mItems = new ArrayList<OrderItem>();
+		st = new Stack();
 	}
 
 	public void addDish(DishModel dish) {
+		canPop = true;
 		if (!containDishWithId(dish.id) || dish.customizable) {
 			final OrderItem newItem = new OrderItem();
 			newItem.dish = dish;
@@ -31,9 +35,29 @@ public class Order {
 				newItem.modifierAnswer = dish.modifier.getAnswer();
 			}
 			mItems.add(newItem);
+			st.push(newItem);
 			dish.quantity -= 1;
 		} else {
 			incrementDishWithId(dish.id);
+			st.push(new Integer(dish.id));
+		}
+	}
+
+	public void clearCache() {
+		canPop = false;
+		st = new Stack();
+	}
+
+	public void pop(){
+		if (canPop && !st.isEmpty()) {
+			Object prev = st.pop();
+			if (prev instanceof Integer) {
+				decrementDishWithId(((Integer) prev).intValue());
+			} else {
+				final int lastInd = mItems.size() - 1;
+				mItems.get(lastInd).dish.quantity ++;
+				mItems.remove(lastInd);
+			}
 		}
 	}
 

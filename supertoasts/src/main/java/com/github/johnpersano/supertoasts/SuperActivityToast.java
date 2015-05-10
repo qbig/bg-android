@@ -759,6 +759,7 @@ public class SuperActivityToast {
                     .getResources().getDrawable(buttonIcon), null, null, null);
 
             mButton.setText(buttonText);
+            mButton.setTextColor(Color.WHITE);
 
         }
 
