@@ -87,6 +87,9 @@ public class SuperActivityToast {
     private View mDividerView;
     private ViewGroup mViewGroup;
     private View mToastView;
+    private int mGravity = Gravity.BOTTOM | Gravity.CENTER;
+    private int mXOffset = 0;
+    private int mYOffset = 0;
 
     /**
      * Instantiates a new {@value #TAG}.
@@ -298,6 +301,26 @@ public class SuperActivityToast {
      * is dismissed.
      */
     public void show() {
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(mRootLayout.getLayoutParams());
+
+        layoutParams.gravity = mGravity;
+
+        if ((mGravity & Gravity.TOP) == Gravity.TOP) {
+            layoutParams.topMargin += mYOffset;
+        }
+        if ((mGravity & Gravity.BOTTOM) == Gravity.BOTTOM) {
+            layoutParams.bottomMargin += mYOffset;
+        }
+
+        if ((mGravity & Gravity.LEFT) == Gravity.LEFT) {
+            layoutParams.leftMargin += mXOffset;
+        }
+        if ((mGravity & Gravity.RIGHT) == Gravity.RIGHT) {
+            layoutParams.rightMargin += mXOffset;
+        }
+
+        mRootLayout.setLayoutParams(layoutParams);
 
         ManagerSuperActivityToast.getInstance().add(this);
 
@@ -535,6 +558,21 @@ public class SuperActivityToast {
     public int getBackground() {
 
         return this.mBackground;
+
+    }
+
+    /**
+     +     * Sets the gravity of the {@value #TAG} along with x and y offsets.
+     +     *
+     +     * @param gravity {@link android.view.Gravity} int
+     +     * @param xOffset int
+     +     * @param yOffset int
+     +     */
+    public void setGravity(int gravity, int xOffset, int yOffset) {
+
+        this.mGravity = gravity;
+        this.mXOffset = xOffset;
+        this.mYOffset = yOffset;
 
     }
 
@@ -1462,11 +1500,14 @@ public class SuperActivityToast {
         superActivityToast.setIcon(referenceHolder.mIcon, referenceHolder.mIconPosition);
         superActivityToast.setBackground(referenceHolder.mBackground);
         superActivityToast.setTouchToDismiss(referenceHolder.mIsTouchDismissible);
+        superActivityToast.setGravity(referenceHolder.mGravity, referenceHolder.mXOffset, referenceHolder.mYOffset);
 
         /* Do not use show animation on recreation of {@value #TAG} that was previously showing */
         if (position == 1) {
 
             superActivityToast.setShowImmediate(true);
+            /* Make sure the button cannot be clicked multiple times */
+            mButton.setClickable(false);
 
         }
 
@@ -1547,6 +1588,9 @@ public class SuperActivityToast {
         String mClickListenerTag;
         String mDismissListenerTag;
         Type mType;
+        int mGravity;
+        int mXOffset;
+        int mYOffset;
 
         public ReferenceHolder(SuperActivityToast superActivityToast) {
 
@@ -1582,7 +1626,9 @@ public class SuperActivityToast {
             mIsIndeterminate = superActivityToast.isIndeterminate();
             mBackground = superActivityToast.getBackground();
             mIsTouchDismissible = superActivityToast.isTouchDismissible();
-
+            mGravity = superActivityToast.mGravity;
+            mXOffset = superActivityToast.mXOffset;
+            mYOffset = superActivityToast.mYOffset;
         }
 
         public ReferenceHolder(Parcel parcel) {
@@ -1621,6 +1667,9 @@ public class SuperActivityToast {
             mIsIndeterminate = parcel.readByte() != 0;
             mBackground = parcel.readInt();
             mIsTouchDismissible = parcel.readByte() != 0;
+            mGravity = parcel.readInt();
+            mXOffset = parcel.readInt();
+            mYOffset = parcel.readInt();
 
         }
 
@@ -1666,6 +1715,9 @@ public class SuperActivityToast {
             parcel.writeByte((byte) (mIsIndeterminate ? 1 : 0));
             parcel.writeInt(mBackground);
             parcel.writeByte((byte) (mIsTouchDismissible ? 1 : 0));
+            parcel.writeInt(mGravity);
+            parcel.writeInt(mXOffset);
+            parcel.writeInt(mYOffset);
 
         }
 

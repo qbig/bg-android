@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -288,6 +289,7 @@ public class User {
 		superActivityToast.setTextColor(Color.WHITE);
 		superActivityToast.setBackground(SuperToast.Background.ORANGE);
 		superActivityToast.setButtonIcon(SuperToast.Icon.Light.UNDO, "UNDO");
+		superActivityToast.setGravity(Gravity.BOTTOM, 50, 100);
 		superActivityToast.setOnClickWrapper(
 			new OnClickWrapper("superactivitytoast",
 				new SuperToast.OnClickListener() {
