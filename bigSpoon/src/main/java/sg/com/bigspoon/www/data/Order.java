@@ -43,7 +43,7 @@ public class Order {
 		}
 	}
 
-	public void clearCache() {
+	public void clearUndoCache() {
 		canPop = false;
 		st = new Stack();
 	}

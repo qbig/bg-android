@@ -29,6 +29,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -72,12 +73,13 @@ public class User {
 	public boolean shouldGoToOutlet = true;
 	private ScheduledFuture scheduledFutureClearPastOrders;
 	public long prevOrderTime = -1;
-
+	private ArrayList<SuperActivityToast> undoToastList;
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPrefs.edit();
+		undoToastList = new ArrayList<SuperActivityToast>();
 	}
 	
 	public void startSession(String currentOutletName) {
@@ -291,18 +293,26 @@ public class User {
 		superActivityToast.setButtonIcon(SuperToast.Icon.Light.UNDO, "UNDO");
 		superActivityToast.setGravity(Gravity.BOTTOM, 50, 100);
 		superActivityToast.setOnClickWrapper(
-			new OnClickWrapper("superactivitytoast",
-				new SuperToast.OnClickListener() {
-					@Override
-					public void onClick(View view, Parcelable token) {
-						User.getInstance(mContext).currentSession.getCurrentOrder().pop();
-						Intent intent = new Intent(NOTIF_UNDO_ORDER);
-						LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-					}
-				}
-			)
+				new OnClickWrapper("superactivitytoast",
+						new SuperToast.OnClickListener() {
+							@Override
+							public void onClick(View view, Parcelable token) {
+								User.getInstance(mContext).currentSession.getCurrentOrder().pop();
+								Intent intent = new Intent(NOTIF_UNDO_ORDER);
+								LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+							}
+						}
+				)
 		);
 		superActivityToast.show();
+		this.undoToastList.add(superActivityToast);
+	}
+
+	public void clearUndoPopup() {
+		for(SuperActivityToast toast : this.undoToastList){
+			toast.dismiss();
+		}
+		this.undoToastList = new ArrayList<SuperActivityToast>();
 	}
 
 	public void scheduleClearPastOrders(int delay) {
