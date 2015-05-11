@@ -276,7 +276,7 @@ public class User {
 					return;
 				}
 				User.this.currentRetryCount = 0;
-				Toast.makeText(mContext, "Cleared", Toast.LENGTH_LONG).show();
+				System.out.println("Cleared");
 			}
 		});
 	}
