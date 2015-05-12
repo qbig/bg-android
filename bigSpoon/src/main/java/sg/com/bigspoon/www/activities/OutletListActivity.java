@@ -315,9 +315,16 @@ public class OutletListActivity extends Activity {
 					it.remove();
 				}
 			}
+			final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
 			Collections.sort(outlets, new Comparator<OutletModel>() {
 				@Override
 				public int compare(OutletModel lhs, OutletModel rhs) {
+					if (lhs.outletID == outletId) {
+						return -1;
+					}
+					if (rhs.outletID == outletId) {
+						return 1;
+					}
 					final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;
 					final Location locationForLhs = new Location("lhs");
 					locationForLhs.setLatitude(lhs.lat);
