@@ -41,6 +41,7 @@ import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 public class BigSpoon extends Application implements Foreground.Listener {
 	final Handler mHandler = new Handler();
+	private boolean onStart = true;
 	private MixpanelAPI mMixpanel;
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override
@@ -135,17 +136,28 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	@Override
 	public void onBecameForeground() {
 		//User.getInstance(getApplicationContext()).updateOrder();
-        User.getInstance(this).tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
+		final User user = User.getInstance(this);
+        user.tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();
 		LocationLibrary.startAlarmAndListener(this);
 		final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
+		final int delay = onStart ? 5000 : 0;
 		if (outletId != -1){
-			Intent intent = new Intent(this, OutletListActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			this.startActivity(intent);
+			// fix on app start, popup gets dismissed.
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (user.shouldGoToOutlet) {
+						Intent intent = new Intent(BigSpoon.this, OutletListActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						BigSpoon.this.startActivity(intent);
+					}
+				}
+			}, delay);
 		}
+		onStart = false; // only delay on app start.
 	}
 
 	// Foreground Callback

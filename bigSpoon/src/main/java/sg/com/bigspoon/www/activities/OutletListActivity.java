@@ -54,14 +54,12 @@ import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.LIST_OUTLETS;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ICON;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
-import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 
 public class OutletListActivity extends Activity {
 	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
@@ -120,12 +118,6 @@ public class OutletListActivity extends Activity {
 		logoutButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
-				final String previousEmail = loginPreferences.getString(LOGIN_INFO_EMAIL, "");
-				loginPrefsEditor.clear();
-				loginPrefsEditor.putBoolean(TUTORIAL_SET, true);
-				loginPrefsEditor.putString(LOGIN_INFO_EMAIL, previousEmail);
-				loginPrefsEditor.commit();
 
 				Session session = Session.getActiveSession();
 				if (session != null && !session.isClosed()) {
