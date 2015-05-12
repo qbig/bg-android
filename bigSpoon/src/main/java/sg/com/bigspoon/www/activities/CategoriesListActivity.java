@@ -273,12 +273,15 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (position == 0) {
-			return;
-		}
+
 		Intent i = new Intent(getApplicationContext(), MenuActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		i.putExtra(POS_FOR_CLICKED_CATEGORY, position - 1);
+		if (position == 0) {
+			i.putExtra(POS_FOR_CLICKED_CATEGORY, position);
+		} else {
+			i.putExtra(POS_FOR_CLICKED_CATEGORY, position - 1);
+		}
+
 		startActivity(i);
 	}
 }
