@@ -111,9 +111,11 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 			}
 		};
+
 		TextView minusButton = (TextView) convertView.findViewById(R.id.imgMinus);
 		minusButton.setOnClickListener(removeDishListener);
 		numberView.setOnClickListener(removeDishListener);
+		convertView.setOnClickListener(removeDishListener);
 		return convertView;
 	}
 
