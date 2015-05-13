@@ -674,41 +674,11 @@ public class ItemsActivity extends ExpandableListActivity {
             mActionBar = getActionBar();
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setTitle("My Orders");
-//            mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_items_activity, null);
-//            mActionBar.setCustomView(mActionBarView);
-//            mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
             finish();
             return false;
         }
-		
-//		final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-//		title.setText(User.getInstance(this).currentOutlet.name);
-//
-//		mBackButton = (ImageButton) mActionBarView.findViewById(R.id.btn_menu);
-//		mBackButton.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
-//		mBackButton.setPadding(22, 0, 0, 0);
-//		final StateListDrawable states = new StateListDrawable();
-//		states.addState(new int[] { android.R.attr.state_pressed }, getResources().getDrawable(R.drawable.menu_pressed));
-//		states.addState(new int[] {}, getResources().getDrawable(R.drawable.menu));
-//		mBackButton.setImageDrawable(states);
-//		mBackButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				finish();
-//			}
-//		});
-//
-//		historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-//		historyButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-//				intent.putExtra("callingActivityName", "ItemsActivity");
-//				startActivity(intent);
-//			}
-//		});
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -763,20 +733,7 @@ public class ItemsActivity extends ExpandableListActivity {
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
 				Intent i = null;
 				switch (position) {
-//				case 0:
-//					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-//						if (User.getInstance(ItemsActivity.this).tableId == -1) {
-//							int requestCode = WATER;
-//							setUpTablePopup(requestCode);
-//						} else {
-//							int requestCode = WATER;
-//							onTablePopupResult(requestCode);
-//						}
-//					} else {
-//						setUpLocationFailPopup();
-//						User.getInstance(ItemsActivity.this).tableId = -1;
-//					}
-//					break;
+
 				case 0:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
@@ -806,9 +763,6 @@ public class ItemsActivity extends ExpandableListActivity {
 					}
 					break;
 				case 2:
-					// i = new Intent(ctx, ItemsActivity.class);
-					// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					// startActivity(i);
 					break;
 				}
 			}
