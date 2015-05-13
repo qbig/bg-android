@@ -7,7 +7,7 @@
     >
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/addNoteTextField"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"

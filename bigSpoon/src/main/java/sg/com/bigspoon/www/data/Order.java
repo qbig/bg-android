@@ -189,8 +189,14 @@ public class Order {
 	}
 
 	public String getModifierDetailsTextAtIndex(int dishIndex) {
-		mItems.get(dishIndex).dish.modifier.setAnswer(mItems.get(dishIndex).modifierAnswer);
-		return mItems.get(dishIndex).dish.modifier.getDetailsTextForDisplay();
+		if (mItems.get(dishIndex).dish.customizable) {
+			mItems.get(dishIndex).dish.modifier.setAnswer(mItems.get(dishIndex).modifierAnswer);
+			return mItems.get(dishIndex).dish.modifier.getDetailsTextForDisplay();
+		} else {
+			return "";
+		}
+
+
 	}
 
 	public double getModifierPriceChangeAtIndex(int dishIndex) {

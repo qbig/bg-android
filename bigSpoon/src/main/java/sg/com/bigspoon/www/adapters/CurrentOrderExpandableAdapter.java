@@ -15,10 +15,16 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.apache.commons.lang3.StringUtils;
+
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.ItemsActivity;
 import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.OrderItem;
 import sg.com.bigspoon.www.data.User;
 
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ITEM_REMOVE_CLICK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 
 public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
@@ -44,7 +50,8 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.list_items_child, null);
 		}
-		final EditText addNoteField = (EditText) convertView.findViewById(R.id.editText1);
+		convertView.setVisibility(View.VISIBLE);
+		final EditText addNoteField = (EditText) convertView.findViewById(R.id.addNoteTextField);
 		addNoteField.setTag(groupPosition);
 
 		addNoteField.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).note);
@@ -70,7 +77,6 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.list_items_parent, null);
 		}
-
 		final TextView numberView = (TextView) convertView.findViewById(R.id.quantitytxt);
 		final TextView itemdescView = (TextView) convertView.findViewById(R.id.descriptiontxt);
 		final TextView priceView = (TextView) convertView.findViewById(R.id.descriptionitemPrice);
@@ -90,32 +96,51 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
 		modifierSubTitle.setVisibility(View.GONE);
-
-		if (User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).dish.customizable) {
+		final OrderItem currentItem = User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition);
+		if (currentItem.dish.customizable || (currentItem.note != null && !currentItem.note.isEmpty())) {
 			modifierSubTitle.setVisibility(View.VISIBLE);
-			modifierSubTitle.setText(User.getInstance(mContext).currentSession.getCurrentOrder()
-					.getModifierDetailsTextAtIndex(groupPosition));
+			String text = "";
+
+			if (currentItem.dish.customizable){
+				text += User.getInstance(mContext).currentSession.getCurrentOrder()
+						.getModifierDetailsTextAtIndex(groupPosition);
+			}
+			if (StringUtils.isNotEmpty(currentItem.note)){
+				if (StringUtils.isEmpty(text)) {
+					text = currentItem.note;
+				} else {
+					text += ("\n" + currentItem.note);
+				}
+			}
+			modifierSubTitle.setText(text);
 		}
 
 		final OnClickListener removeDishListener = new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (User.getInstance(mContext).currentSession.getCurrentOrder().getQuantityOfDishByIndex(groupPosition) > 0) {
-					User.getInstance(mContext).currentSession.getCurrentOrder().decrementDishAtIndex(groupPosition);
-				}
-				if (User.getInstance(mContext).currentSession.getCurrentOrder().getQuantityOfDishByIndex(groupPosition) == 0) {
-					User.getInstance(mContext).currentSession.getCurrentOrder().removeDishAtIndex(groupPosition);
-				}
-				notifyDataSetChanged();
-				Intent intent = new Intent(NOTIF_ORDER_UPDATE);
-				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+				LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(NOTIF_ITEM_REMOVE_CLICK));
+				((ItemsActivity)mContext).handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						final Order currentOrder = User.getInstance(mContext).currentSession.getCurrentOrder();
+						if (currentOrder.getQuantityOfDishByIndex(groupPosition) > 0) {
+							currentOrder.decrementDishAtIndex(groupPosition);
+						}
+						if (currentOrder.getQuantityOfDishByIndex(groupPosition) == 0) {
+							currentOrder.removeDishAtIndex(groupPosition);
+						}
+
+						LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(NOTIF_ORDER_UPDATE));
+						notifyDataSetChanged();
+					}
+				}, 100);
 			}
 		};
 
 		TextView minusButton = (TextView) convertView.findViewById(R.id.imgMinus);
 		minusButton.setOnClickListener(removeDishListener);
 		numberView.setOnClickListener(removeDishListener);
-		convertView.setOnClickListener(removeDishListener);
+
 		return convertView;
 	}
 
@@ -136,7 +161,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		return null;
+		return User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition);
 	}
 
 	@Override

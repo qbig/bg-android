@@ -30,9 +30,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnScrollChangedListener;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -43,7 +45,6 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -88,7 +89,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
-
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ITEM_REMOVE_CLICK;
 public class ItemsActivity extends ExpandableListActivity {
 
 	private static final String ION_LOGGING_ITEM_ACTIVITY = "ion-item-activity";
@@ -101,13 +102,11 @@ public class ItemsActivity extends ExpandableListActivity {
 	private CurrentOrderExpandableAdapter mCurrentOrderAdapter;
 	private Button mPlaceOrder;
 	private ActionBar mActionBar;
-	private View mActionBarView;
-	private ImageButton mBackButton;
-	private ImageButton historyButton;
 	private ListView mPastOrderList;
 	private PastOrdersAdapter mPastOrderAdapter;
 	private SharedPreferences loginPreferences;
 	private int currentRetryCount = 0;
+	private int scrollYPos = 0;
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
 	public static final int BILL = 3;
@@ -117,7 +116,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	private static final int SEND_RETRY_NUM = 6;
 	static EditText textTime;
 	private MixpanelAPI mMixpanel;
-	
+
 	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -126,6 +125,16 @@ public class ItemsActivity extends ExpandableListActivity {
             if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 0){
                 ItemsActivity.this.scrollToSentItems();
             }
+		}
+	};
+
+	private BroadcastReceiver mRemoveClicked = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("receiver", "Got broadcast " + NOTIF_ITEM_REMOVE_CLICK);
+			if (isExpanded) {
+				toggleAddNoteState();
+			}
 		}
 	};
 
@@ -157,7 +166,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
     private ScrollView scrollView;
 
-    private Handler handler;
+    public Handler handler;
 	private ProgressBar progressBar;
 
     protected void attachBaseContext(Context newBase) {
@@ -175,6 +184,18 @@ public class ItemsActivity extends ExpandableListActivity {
 		setContentView(R.layout.activity_items);
 		orderCounterText = (TextView) findViewById(R.id.corner);
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
+		scrollYPos = scrollView.getScrollY();
+		scrollView.getViewTreeObserver().addOnScrollChangedListener(new OnScrollChangedListener() {
+
+			@Override
+			public void onScrollChanged() {
+				final int y = scrollView.getScrollY();
+				if (scrollYPos != y) {
+					scrollYPos = y;
+					ItemsActivity.this.dismissKeyboard();
+				}
+			}
+		});
 		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
         try {
             updateOrderedDishCounter();
@@ -187,12 +208,19 @@ public class ItemsActivity extends ExpandableListActivity {
 
             LocalBroadcastManager.getInstance(this)
                     .registerReceiver(mMessageReceiver, new IntentFilter(NOTIF_ORDER_UPDATE));
+			LocalBroadcastManager.getInstance(this)
+					.registerReceiver(mRemoveClicked, new IntentFilter(NOTIF_ITEM_REMOVE_CLICK));
             new ListViewHeightUtil().setListViewHeightBasedOnChildren(mExpandableList, 0);
             new ListViewHeightUtil().setListViewHeightBasedOnChildren(mPastOrderList, 0);
         } catch (NullPointerException e) {
             Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
             finish();
         }
+	}
+
+	private void dismissKeyboard() {
+		final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 	}
 
     private final void scrollToSentItems(){
@@ -257,6 +285,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mMessageReceiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRemoveClicked);
         User.getInstance(ItemsActivity.this).mMixpanel.flush();
 	}
 
@@ -621,13 +650,14 @@ public class ItemsActivity extends ExpandableListActivity {
 		if (!isExpanded) {
 			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
 				mExpandableList.expandGroup(i, true);
-				isExpanded = true;
 			}
+			isExpanded = true;
 		} else {
 			for (int i = 0; i < User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.size(); i++) {
 				mExpandableList.collapseGroup(i);
-				isExpanded = false;
 			}
+			isExpanded = false;
+			dismissKeyboard();
 		}
 	}
 

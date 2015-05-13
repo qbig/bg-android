@@ -76,7 +76,7 @@ public class Constants {
 	    public static final String NOTIF_LOCATION_KEY = "location-extra";
 	    public static final String NOTIF_MODIFIER_OK = "modifierSelectOk";
 		public static final String NOTIF_UNDO_ORDER = "undoOrder";
-	    
+		public static final String NOTIF_ITEM_REMOVE_CLICK = "removeClick";
 	    public static final String NOTIF_TO_START_LOCATION_SERVICE = "start-location";
 	    
 	    // REQUEST CODE
