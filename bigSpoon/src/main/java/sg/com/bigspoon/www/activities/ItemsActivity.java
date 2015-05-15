@@ -703,7 +703,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		try {
             mActionBar = getActionBar();
             mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setTitle("My Orders");
+            mActionBar.setTitle("Back to Menu");
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
             finish();
