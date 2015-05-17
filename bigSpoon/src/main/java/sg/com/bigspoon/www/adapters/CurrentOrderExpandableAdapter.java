@@ -95,7 +95,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		}
 
 		TextView modifierSubTitle = (TextView) convertView.findViewById(R.id.subTitle);
-		modifierSubTitle.setVisibility(View.GONE);
+		//modifierSubTitle.setVisibility(View.GONE);
 		final OrderItem currentItem = User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition);
 		if (currentItem.dish.customizable || (currentItem.note != null && !currentItem.note.isEmpty())) {
 			modifierSubTitle.setVisibility(View.VISIBLE);
@@ -113,7 +113,10 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 				}
 			}
 			modifierSubTitle.setText(text);
+		} else {
+			modifierSubTitle.setText("");
 		}
+
 
 		final OnClickListener removeDishListener = new OnClickListener() {
 			@Override

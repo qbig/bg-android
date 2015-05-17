@@ -48,7 +48,7 @@
             android:text="subtitle"
             android:textSize="10sp"
             android:textColor="@color/text_dark_gray"
-            android:visibility="gone"
+            android:visibility="visible"
             />
     </LinearLayout>
     <TextView

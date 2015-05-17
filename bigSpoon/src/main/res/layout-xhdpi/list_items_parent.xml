@@ -33,11 +33,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:text="REMOVE"
+            android:text="CANCEL"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:textSize="12sp"
-            android:textColor="@color/text_dark_gray"
+            android:textColor="@color/BigSpoonBloodRed"
             android:textAppearance="@style/FontProxiSemiBold"/>
     </LinearLayout>
 

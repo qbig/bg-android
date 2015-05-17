@@ -12,15 +12,21 @@ public class ExpandableViewUtil {
 		if (listAdapter == null) {
 			return;
 		}
-		View listItem = listAdapter.getChildView(groupPosition, 0, true, null,
+		final View childViewItem = listAdapter.getChildView(groupPosition, 0, true, null,
 				listView);
-		listItem.measure(0, 0);
+		final View groupViewItem = listAdapter.getGroupView(groupPosition, true, null,
+				listView);
+		childViewItem.measure(0, 0);
+		groupViewItem.measure(0, 0);
 		int appendHeight = 0;
 		for (int i = 0; i < listAdapter.getChildrenCount(groupPosition); i++) {
-			appendHeight += listItem.getMeasuredHeight();
+			appendHeight += childViewItem.getMeasuredHeight();
 		}
 		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height += appendHeight;
+		if (groupPosition == 0){
+			params.height = 0;
+		}
+		params.height += (groupViewItem.getMeasuredHeight() + appendHeight + 6);
 		listView.setLayoutParams(params);
 	}
 	
@@ -30,16 +36,15 @@ public class ExpandableViewUtil {
 		if (listAdapter == null) {
 			return;
 		}
-		View listItem = listAdapter.getChildView(groupPosition, 0, true, null,
-				listView);
-		listItem.measure(0, 0);
-		int appendHeight = 0;
-		for (int i = 0; i < listAdapter.getChildrenCount(groupPosition); i++) {
-			appendHeight += listItem.getMeasuredHeight();
-		}
 
+		final View groupViewItem = listAdapter.getGroupView(groupPosition, true, null,
+				listView);
+		groupViewItem.measure(0, 0);
 		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height -= appendHeight;
+		if (groupPosition == 0){
+			params.height = 10;
+		}
+		params.height += (groupViewItem.getMeasuredHeight() + 6);
 		listView.setLayoutParams(params);
 	}
 }

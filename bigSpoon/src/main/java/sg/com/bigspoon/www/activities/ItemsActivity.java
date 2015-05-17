@@ -635,12 +635,14 @@ public class ItemsActivity extends ExpandableListActivity {
 		mExpandableList.setOnGroupExpandListener(new OnGroupExpandListener() {
 			@Override
 			public void onGroupExpand(int groupPosition) {
+				mCurrentOrderAdapter.notifyDataSetChanged();
 				ExpandableViewUtil.setExpandedListViewHeightBasedOnChildren(mExpandableList, groupPosition);
 			}
 		});
 		mExpandableList.setOnGroupCollapseListener(new OnGroupCollapseListener() {
 			@Override
-			public void onGroupCollapse(int groupPosition) {
+			public void onGroupCollapse(final int groupPosition) {
+				mCurrentOrderAdapter.notifyDataSetChanged();
 				ExpandableViewUtil.setCollapseListViewHeightBasedOnChildren(mExpandableList, groupPosition);
 			}
 		});
@@ -793,6 +795,12 @@ public class ItemsActivity extends ExpandableListActivity {
 					}
 					break;
 				case 2:
+					new Handler().post(new Runnable() {
+						@Override
+						public void run() {
+							ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 0));
+						}
+					});
 					break;
 				}
 			}

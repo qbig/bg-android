@@ -16,6 +16,7 @@
         android:hint="@string/add_note"
         android:paddingLeft="10dp"
         android:singleLine="true"
+        android:lines="1"
         android:textColorHint="@color/AddNoteHintColor"
         android:inputType="text"
         android:imeOptions="actionDone"
