@@ -1,10 +1,11 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.LinkedHashMap;
 
-import com.google.gson.annotations.SerializedName;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_COUNTER;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 
 public class ModifierSection {
 	/*
@@ -13,6 +14,7 @@ public class ModifierSection {
 	 * Modifier -- ModifierSection -- -- ModifierItem (Map)
 	 */
 	public double threshold;
+	public int thresholdCount;
 	public String itemTitle;
 	public String type;
 	public String itemTitleDescription;
@@ -39,18 +41,43 @@ public class ModifierSection {
 		}
 	}
 
+	public void setDefaultAnswerForCount() {
+		if (type != null && type.equals(MODIFIER_SECTION_TYPE_COUNTER) && !items.isEmpty() && thresholdCount != 0) {
+			for (String itemName : this.items.keySet()){
+				if (this.itemSequences != null && this.itemSequences.get(itemName).intValue() == 0) {
+					answers.put(itemName, thresholdCount);
+					return;
+				}
+			}
+
+			answers.put(items.keySet().iterator().next(), thresholdCount);
+		}
+	}
+
+	public int getCount() {
+		int sectionCount = 0;
+		for (String itemNameKey : answers.keySet()) {
+			sectionCount += answers.get(itemNameKey);
+		}
+		return sectionCount;
+	}
+
+	public boolean canAdd() {
+		return thresholdCount == 0 || getCount() < thresholdCount;
+	}
+
 	public double getSum() {
 
-		double result = 0;
+		double sectionCostSum = 0;
 		for (String itemNameKey : answers.keySet()) {
-			result += answers.get(itemNameKey) * items.get(itemNameKey);
+			sectionCostSum += answers.get(itemNameKey) * items.get(itemNameKey);
 		}
 
-		if (result < 0) {
-			return result;
+		if (sectionCostSum < 0) {
+			return sectionCostSum;
 		} else {
-			result -= this.threshold;
-			return result > 0 ? result : 0;
+			sectionCostSum -= this.threshold;
+			return sectionCostSum > 0 ? sectionCostSum : 0;
 		}
 
 	}

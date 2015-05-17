@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -38,7 +39,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	public ModifierListViewAdapter(Context context, Modifer model) {
 		super();
 		mContext = context;
-		model.initRadio();
+		model.init();
 		mModifierModel = model;
 		inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mScale = context.getResources().getDisplayMetrics().density;
@@ -204,12 +205,16 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 		plusButton.setBackgroundResource(R.drawable.add_btn_with_circle);
 		plusButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				final String itemName = (String) v.getTag(R.id.ITEM_NAME);
-				final TextView counterView = (TextView) v.getTag(R.id.COUNTER_DISPLAY);
-				final int value = Integer.parseInt(counterView.getText().toString()) + 1;
 				final int section = ((Integer) v.getTag(R.id.SECTION)).intValue();
-				mModifierModel.sections[section].answers.put(itemName, value);
-				counterView.setText(String.valueOf(value));
+				if (mModifierModel.sections[section].canAdd()){
+					final String itemName = (String) v.getTag(R.id.ITEM_NAME);
+					final TextView counterView = (TextView) v.getTag(R.id.COUNTER_DISPLAY);
+					final int value = Integer.parseInt(counterView.getText().toString()) + 1;
+					mModifierModel.sections[section].answers.put(itemName, value);
+					counterView.setText(String.valueOf(value));
+				} else {
+					Toast.makeText(mContext, "You could choose " + mModifierModel.sections[section].thresholdCount, Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}

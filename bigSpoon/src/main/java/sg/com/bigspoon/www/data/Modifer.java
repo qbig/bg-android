@@ -1,9 +1,9 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_SECTION_TYPE_RADIO;
 
 public class Modifer {
 	/*
@@ -31,10 +31,11 @@ public class Modifer {
 		return result;
 	}
 
-	public void initRadio() {
+	public void init() {
 		if (!inited) {
 			for (int i = 0, len = sections.length; i < len; i++) {
 				sections[i].setDefaultAnswerForRadio();
+				sections[i].setDefaultAnswerForCount();
 			}
 			inited = true;
 		}
