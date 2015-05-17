@@ -32,7 +32,6 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 	private LayoutInflater inflater;
 	private Context mContext;
 
-	// constructor
 	public CurrentOrderExpandableAdapter(Context context) {
 		this.mContext = context;
 	}
@@ -41,8 +40,6 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		this.inflater = inflater;
 	}
 
-	// method getChildView is called automatically for each child view.
-	// Implement this method as per your requirement
 	@Override
 	public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView,
 			ViewGroup parent) {
@@ -70,8 +67,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 		return convertView;
 	}
 
-	// method getGroupView is called automatically for each parent item
-	// Implement this method as per your requirement
+
 	@Override
 	public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 		if (convertView == null) {
