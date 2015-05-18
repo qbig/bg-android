@@ -62,7 +62,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 
-public class OutletListActivity extends Activity {
+public class OutletListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
 	private SharedPreferences loginPreferences;
 	public static List<OutletModel> outlets;
@@ -187,6 +187,7 @@ public class OutletListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_outlet_list);
 		list = (ListView) findViewById(R.id.outlet_list);
+		list.setOnItemClickListener(this);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
@@ -220,57 +221,8 @@ public class OutletListActivity extends Activity {
 				progressBar.setVisibility(View.GONE);
 				outlets = result;
 				updateListData();
-				list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						outletSelected = outlets.get(position);
-						if (outletSelected.isActive) {
-							Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							intent.putExtra(OUTLET_ID, outletSelected.outletID);
-
-							final Editor loginPrefEditor = loginPreferences.edit();
-							loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
-							loginPrefEditor.commit();
-							final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
-							if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
-								User.getInstance(getApplicationContext()).currentSession.swithToOulet(outletSelected.name);
-							}
-							OutletListActivity.this.startActivity(intent);
-						} else {
-							showComingSoonDialog();
-						}
-					}
-
-					@SuppressWarnings("deprecation")
-					private void showComingSoonDialog() {
-						AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
-						alertDialog.setMessage("The restaurant is coming soon.");
-
-						alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-
-							}
-						});
-
-						alertDialog.show();
-
-						// Change the style of the button text and
-						// message
-						TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
-						messageView.setGravity(Gravity.CENTER);
-						messageView.setHeight(140);
-						messageView.setTextSize(17);
-						Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
-						okButton.setTextColor(Color.parseColor("#117AFE"));
-						okButton.setTypeface(null, Typeface.BOLD);
-						okButton.setTextSize(19);
-					}
-				});
 				OutletListActivity.this.navigateToPresetOutletIfNecessary();
 			}
-
 		});
 	}
 
@@ -374,6 +326,53 @@ public class OutletListActivity extends Activity {
 				doubleBackToExitPressedOnce = false;
 			}
 		}, 2000);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if(outlets == null) return ;
+		outletSelected = outlets.get(position);
+		if (outletSelected.isActive) {
+			Intent intent = new Intent(OutletListActivity.this, CategoriesListActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra(OUTLET_ID, outletSelected.outletID);
+
+			final Editor loginPrefEditor = loginPreferences.edit();
+			loginPrefEditor.putString(OUTLET_ICON, outletSelected.restaurant.icon.thumbnail);
+			loginPrefEditor.commit();
+			final OutletDetailsModel currentOutlet = User.getInstance(getApplicationContext()).currentOutlet;
+			if (currentOutlet != null && outletSelected.outletID != currentOutlet.outletID) {
+				User.getInstance(getApplicationContext()).currentSession.swithToOulet(outletSelected.name);
+			}
+			OutletListActivity.this.startActivity(intent);
+		} else {
+			showComingSoonDialog();
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void showComingSoonDialog() {
+		AlertDialog alertDialog = new AlertDialog.Builder(OutletListActivity.this).create();
+		alertDialog.setMessage("The restaurant is coming soon.");
+
+		alertDialog.setButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+
+		alertDialog.show();
+
+		// Change the style of the button text and
+		// message
+		TextView messageView = (TextView) alertDialog.findViewById(android.R.id.message);
+		messageView.setGravity(Gravity.CENTER);
+		messageView.setHeight(140);
+		messageView.setTextSize(17);
+		Button okButton = alertDialog.getButton(DialogInterface.BUTTON1);
+		okButton.setTextColor(Color.parseColor("#117AFE"));
+		okButton.setTypeface(null, Typeface.BOLD);
+		okButton.setTextSize(19);
 	}
 
 }
