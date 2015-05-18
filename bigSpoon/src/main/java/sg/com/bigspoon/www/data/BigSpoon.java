@@ -41,7 +41,7 @@ import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 
 public class BigSpoon extends Application implements Foreground.Listener {
 	final Handler mHandler = new Handler();
-	private boolean onStart = true;
+	public boolean onStart = true;
 	private MixpanelAPI mMixpanel;
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override

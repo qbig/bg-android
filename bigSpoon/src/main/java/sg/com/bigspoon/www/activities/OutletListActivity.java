@@ -47,6 +47,7 @@ import java.util.List;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OutletListAdapter;
+import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.OutletModel;
@@ -176,18 +177,24 @@ public class OutletListActivity extends Activity {
 	}
 
 	@Override
+	protected  void onPause() {
+		super.onPause();
+		progressBar.setVisibility(View.GONE);
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_outlet_list);
 		list = (ListView) findViewById(R.id.outlet_list);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.VISIBLE);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 	}
 
 	private void loadOutlets(){
+		progressBar.setVisibility(View.VISIBLE);
 		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
@@ -299,10 +306,10 @@ public class OutletListActivity extends Activity {
 	}
 
 	private void updateListData() {
+		progressBar.setVisibility(View.GONE);
 		if (outlets == null) {
 			return;
 		}
-		
 		if (User.getInstance(getApplicationContext()).currentLocation != null) {
 			final Iterator<OutletModel> it = outlets.iterator();
 			final Location currentLocation = User.getInstance(getApplicationContext()).currentLocation;
@@ -353,6 +360,7 @@ public class OutletListActivity extends Activity {
 	public void onBackPressed() {
 		if (doubleBackToExitPressedOnce || !this.isTaskRoot()) {
 			super.onBackPressed();
+			((BigSpoon)getApplicationContext()).onStart = true;
 			return;
 		}
 
