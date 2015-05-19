@@ -158,6 +158,8 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private TextView mOrderredTotalValue;
 
+	private TextView mSentOrderHintText;
+
 	private TextView mCurrentGSTValue;
 
 	private TextView mOrderredGSTValue;
@@ -182,6 +184,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		mMixpanel = MixpanelAPI.getInstance(ItemsActivity.this, MIXPANEL_TOKEN);
 		handler = new Handler();
 		setContentView(R.layout.activity_items);
+		mSentOrderHintText = (TextView) findViewById(R.id.orderedItemsHint);
+		mSentOrderHintText.setText("( Orders will be cleared every " + (mCurrentOutlet.clearPastOrdersInterval/60) + " minutes )");
 		orderCounterText = (TextView) findViewById(R.id.corner);
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
 		scrollYPos = scrollView.getScrollY();
