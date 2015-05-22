@@ -79,7 +79,7 @@ public class ActionBarActivity extends FragmentActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long arg3) {
-				Intent i = null;
+
 				switch (position) {
 				case 0:
 					if (User.getInstance(ActionBarActivity.this)
@@ -112,7 +112,7 @@ public class ActionBarActivity extends FragmentActivity {
 					}
 					break;
 				case 2:
-					i = new Intent(ctx, ItemsActivity.class);
+					Intent i = new Intent(ctx, ItemsActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					User.getInstance(ActionBarActivity.this).currentSession.getCurrentOrder().clearUndoCache();
 					User.getInstance(ActionBarActivity.this).clearUndoPopup();
@@ -142,7 +142,15 @@ public class ActionBarActivity extends FragmentActivity {
 				}
 			break;
 		case BILL:
-			billPopup();
+			if (User.getInstance(this).currentOutlet.isBillEnabled) {
+				billPopup();
+			} else {
+				Intent i = new Intent(this, ItemsActivity.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				User.getInstance(ActionBarActivity.this).currentSession.getCurrentOrder().clearUndoCache();
+				User.getInstance(ActionBarActivity.this).clearUndoPopup();
+				startActivity(i);
+			}
 			break;
 		}
 
@@ -169,9 +177,6 @@ public class ActionBarActivity extends FragmentActivity {
 					Intent i = new Intent(ActionBarActivity.this,
 							UserReviewActivity.class);
 					startActivity(i);
-					if (! User.getInstance(ActionBarActivity.this).currentOutlet.isBillEnabled) {
-						Toast.makeText(ActionBarActivity.this, User.getInstance(ActionBarActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
-					}
 				} else {
 					Toast.makeText(ActionBarActivity.this, "You haven't ordered anything yet :)", Toast.LENGTH_LONG).show();
 				}

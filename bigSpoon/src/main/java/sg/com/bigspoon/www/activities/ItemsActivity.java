@@ -773,11 +773,9 @@ public class ItemsActivity extends ExpandableListActivity {
 				case 0:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
-							int requestCode = WAITER;
-							setUpTablePopup(requestCode);
+							setUpTablePopup(WAITER);
 						} else {
-							int requestCode = WAITER;
-							onTablePopupResult(requestCode);
+							onTablePopupResult(WAITER);
 						}
 					} else {
 						setUpLocationFailPopup();
@@ -787,11 +785,9 @@ public class ItemsActivity extends ExpandableListActivity {
 				case 1:
 					if (User.getInstance(ItemsActivity.this).checkLocation()) {
 						if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
-							int requestCode = BILL;
-							setUpTablePopup(requestCode);
+							setUpTablePopup(BILL);
 						} else {
-							int requestCode = BILL;
-							onTablePopupResult(requestCode);
+							onTablePopupResult(BILL);
 						}
 					} else {
 						setUpLocationFailPopup();
@@ -828,7 +824,18 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 			break;
 		case BILL:
-			billPopup();
+			if (User.getInstance(this).currentOutlet.isBillEnabled) {
+				billPopup();
+			} else {
+				AlertDialog alertLocationFail = new AlertDialog.Builder(ItemsActivity.this).create();
+				alertLocationFail.setMessage(User.getInstance(this).currentOutlet.billText);
+				alertLocationFail.setView(null);
+				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				});
+				alertLocationFail.show();
+			}
 			break;
 		case PLACE_ORDER:
 			if (User.getInstance(ItemsActivity.this).isContainDessert) {
@@ -1015,9 +1022,6 @@ public class ItemsActivity extends ExpandableListActivity {
 					performBillRequest();
 					Intent i = new Intent(ItemsActivity.this, UserReviewActivity.class);
 					startActivity(i);
-					if (! User.getInstance(ItemsActivity.this).currentOutlet.isBillEnabled) {
-						Toast.makeText(ItemsActivity.this, User.getInstance(ItemsActivity.this).currentOutlet.billText, Toast.LENGTH_LONG).show();
-					}
 				} else {
 					Toast.makeText(ItemsActivity.this, "You haven't ordered anything yet :)", Toast.LENGTH_LONG).show();
 				}
