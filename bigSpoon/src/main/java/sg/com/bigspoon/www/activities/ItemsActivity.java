@@ -83,13 +83,13 @@ import static sg.com.bigspoon.www.data.Constants.BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.DESSERT_CATEGORY_ID;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ITEM_REMOVE_CLICK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ITEM_REMOVE_CLICK;
 public class ItemsActivity extends ExpandableListActivity {
 
 	private static final String ION_LOGGING_ITEM_ACTIVITY = "ion-item-activity";
@@ -148,6 +148,8 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	private TextView mCurrentTotalValue;
 
+	private TextView mCurrentTotalValueBottom;
+
 	private TextView mOrderredSubTotalValue;
 
 	private TextView mOrderredServiceChargeLabel;
@@ -185,7 +187,14 @@ public class ItemsActivity extends ExpandableListActivity {
 		handler = new Handler();
 		setContentView(R.layout.activity_items);
 		mSentOrderHintText = (TextView) findViewById(R.id.orderedItemsHint);
-		mSentOrderHintText.setText("( Orders will be cleared every " + (mCurrentOutlet.clearPastOrdersInterval/60) + " minutes )");
+		if (User.getInstance(ItemsActivity.this).prevOrderTime != -1){
+			final int lastOrderMinAgo = (int)((System.currentTimeMillis() - User.getInstance(ItemsActivity.this).prevOrderTime) /(1000*60));
+			mSentOrderHintText.setText("( Ordered "+lastOrderMinAgo+" minutes ago. Will be cleared in "+(mCurrentOutlet.clearPastOrdersInterval/60 - lastOrderMinAgo)+" minutes )");
+		} else {
+			mSentOrderHintText.setText("( Orders will be cleared in "+(mCurrentOutlet.clearPastOrdersInterval/60)+" minutes )");
+		}
+
+
 		orderCounterText = (TextView) findViewById(R.id.corner);
         scrollView = (ScrollView) findViewById(R.id.item_scroll_view);
 		scrollYPos = scrollView.getScrollY();
@@ -231,7 +240,7 @@ public class ItemsActivity extends ExpandableListActivity {
         new Handler().post(new Runnable() {
 			@Override
 			public void run() {
-				ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 310));
+				ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 200));
 			}
 		});
     }
@@ -247,6 +256,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		mCurrentGSTLabel = (TextView) findViewById(R.id.currentGSTLabel);
 		mCurrentGSTValue = (TextView) findViewById(R.id.currentGSTValue);
 		mCurrentTotalValue = (TextView) findViewById(R.id.currentTotalValue);
+		mCurrentTotalValueBottom = (TextView) findViewById(R.id.currentTotalValueBottom);
 		
 		mCurrentServiceChargeLabel.setText(serviceChargeLabelString);
 		mCurrentGSTLabel.setText(GSTChargeLabelString);
@@ -268,7 +278,9 @@ public class ItemsActivity extends ExpandableListActivity {
 		mCurrentSubTotalValue.setText("$" + String.format("%.2f", session.getCurrentOrder().getTotalPrice()));
 		mCurrentServiceChargeValue.setText("$" + String.format("%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));
 		mCurrentGSTValue.setText(String.format("$" + "%.2f", session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
-		mCurrentTotalValue.setText(String.format("$" + "%.2f", session.getCurrentOrder().getTotalPrice() + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate));
+		final String currentTotal = String.format("$" + "%.2f", session.getCurrentOrder().getTotalPrice() + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate + session.getCurrentOrder().getTotalPrice() * mCurrentOutlet.gstRate);
+		mCurrentTotalValue.setText(currentTotal);
+		mCurrentTotalValueBottom.setText(currentTotal);
 		
 		mOrderredSubTotalValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice()));
 		mOrderredServiceChargeValue.setText("$" + String.format("%.2f", session.getPastOrder().getTotalPrice() * mCurrentOutlet.serviceChargeRate));

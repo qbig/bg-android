@@ -193,23 +193,6 @@
                 </TableRow>
             </TableLayout>
 
-            <Button
-                android:id="@+id/submit_button"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/currentOrderTable"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:background="@color/BigSpoonLightOrange"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_marginBottom="35dp"
-                android:text="Send to Cashier"
-                android:textColor="@color/white"
-                android:textAppearance="@style/FontProxiSemiBold"
-                android:textSize="20sp" />
             <ProgressBar
                 android:id="@+id/progressBarMain"
                 android:layout_width="wrap_content"
@@ -223,7 +206,7 @@
                 android:id="@+id/orderedItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/submit_button"
+                android:layout_below="@+id/currentOrderTable"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:text="@string/sent_orders"
@@ -372,7 +355,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total :"
                         android:textSize="20sp"
-                        android:textColor="@color/BigSpoonOrange"
+                        android:textColor="@color/text_item_gray"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold"
                         android:layout_marginLeft="85dp"
@@ -385,7 +368,7 @@
                         android:gravity="right"
                         android:text="$0.0"
                         android:textSize="20sp"
-                        android:textColor="@color/BigSpoonOrange"
+                        android:textColor="@color/text_item_gray"
                         android:textStyle="bold"
                         android:textAppearance="@style/FontProxiSemiBold"
                         android:layout_marginRight="100dp"/>
@@ -412,6 +395,61 @@
                 android:gravity="center_horizontal" />
         </RelativeLayout>
     </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/gv_action_menu"
+        android:background="@color/BigSpoonLightGray">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:textAppearance="@style/FontProxiSemiBold"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textColor="@color/text_item_gray"
+                android:textSize="18sp"
+                android:text="Total:"/>
+            <TextView
+                android:id="@+id/currentTotalValueBottom"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textAppearance="@style/FontProxiSemiBold"
+                android:textColor="@color/BigSpoonLightOrange"
+                android:textSize="18sp"
+                android:text="$24.5"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/sendbutton"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Send to Cashier"
+            android:textColor="@color/white"
+            android:textAppearance="@style/FontProxiSemiBold"
+            android:textSize="20sp" />
+    </LinearLayout>
+
 
     <GridView
         android:id="@+id/gv_action_menu"

@@ -67,7 +67,7 @@
     <string name="email_login_hint_text">Email</string>
     <string name="have_suggestion">Have a suggestion?</string>
     <string name="order_these">ORDER THESE?</string>
-    <string name="sent_orders">SENT ORDERS:</string>
+    <string name="sent_orders">ORDER HISTORY</string>
     <string name="sent_orders_hint">( Orders will be cleared every 20 minutes )</string>
     <string name="tell_us">Tell Us</string>
     <string name="str_okay">Okay</string>
