@@ -199,7 +199,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	}
 
 	private void setupPlusButton(final ImageButton plusButton) {
-		final FrameLayout.LayoutParams paramsForPlusButton = new FrameLayout.LayoutParams(PADDING_30DP, PADDING_30DP,
+		final FrameLayout.LayoutParams paramsForPlusButton = new FrameLayout.LayoutParams(PADDING_35DP, PADDING_35DP,
 				Gravity.CENTER | Gravity.RIGHT);
 		plusButton.setLayoutParams(paramsForPlusButton);
 		plusButton.setBackgroundResource(R.drawable.add_btn_with_circle);
@@ -220,7 +220,7 @@ public class ModifierListViewAdapter extends SectionedBaseAdapter {
 	}
 
 	private void setupMinusButton(final ImageButton minusButton) {
-		final FrameLayout.LayoutParams paramsForMinusButton = new FrameLayout.LayoutParams(PADDING_30DP, PADDING_30DP,
+		final FrameLayout.LayoutParams paramsForMinusButton = new FrameLayout.LayoutParams(PADDING_35DP, PADDING_35DP,
 				Gravity.CENTER | Gravity.LEFT);
 		minusButton.setLayoutParams(paramsForMinusButton);
 		minusButton.setBackgroundResource(R.drawable.btn_minus_with_circle);
