@@ -11,6 +11,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -136,9 +137,8 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			}
 		};
 
-		TextView minusButton = (TextView) convertView.findViewById(R.id.imgMinus);
-		minusButton.setOnClickListener(removeDishListener);
-		numberView.setOnClickListener(removeDishListener);
+		final LinearLayout cancelButton = (LinearLayout) convertView.findViewById(R.id.cancelButton);
+		cancelButton.setOnClickListener(removeDishListener);
 
 		return convertView;
 	}
