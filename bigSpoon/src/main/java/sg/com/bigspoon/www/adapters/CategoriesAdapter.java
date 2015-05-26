@@ -17,9 +17,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.CategoryModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -38,23 +35,6 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 		this.context = context;
 		this.outletDetails = outletDetails;
 		this.outletIcon = outletIcon;
-
-		Arrays.sort(outletDetails.categoriesDetails, new Comparator<CategoryModel>() {
-			public int compare(CategoryModel cat1, CategoryModel cat2) {
-				int cat1Index = 0;
-				int cat2Index = 0;
-				for (int i = 0, len = outletDetails.categoriesOrder.length; i < len; i++) {
-					if (outletDetails.categoriesOrder[i].categoryId == cat1.id) {
-						cat1Index = outletDetails.categoriesOrder[i].position;
-					}
-
-					if (outletDetails.categoriesOrder[i].categoryId == cat2.id) {
-						cat2Index = outletDetails.categoriesOrder[i].position;
-					}
-				}
-				return cat1Index - cat2Index;
-			}
-		});
 	}
 
 	private String getPhotoUrl(int categoryId) {

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -24,16 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.CategoriesAdapter;
-import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -51,10 +49,15 @@ import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
 	private static final String ION_LOGGING_CATEGORY_LIST = "ion-category-list";
+	private static final int MAX_TRY_COUNT = 3;
 	ListView catrgoriesList;
 	private ActionBar mActionBar;
 	private View mActionBarView;
 	private boolean shouldShowSteps = false;
+	private int loadCount = 0;
+	private Handler handler;
+	private ProgressBar mProgressBar;
+	private String mOutletIcon;
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
@@ -86,74 +89,98 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		handler = new Handler();
 		setContentView(R.layout.activity_categories_list);
-		final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.VISIBLE);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+		mProgressBar.setVisibility(View.VISIBLE);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 		catrgoriesList = (ListView) findViewById(R.id.category_list);
+		catrgoriesList.setOnItemClickListener(this);
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_CATEGORY_LIST, Log.DEBUG);
 		final Intent intent = getIntent();
 		final int outletId = intent.getIntExtra(OUTLET_ID, loginPreferences.getInt(OUTLET_ID, -1));
 		shouldShowSteps = intent.getBooleanExtra(SHOULD_SHOW_STEPS_REMINDER, false);
-		final String outletIcon = loginPreferences.getString(OUTLET_ICON, null);
-		if (outletId == -1 || outletIcon == null) {
+		mOutletIcon = loginPreferences.getString(OUTLET_ICON, null);
+		final User user = User.getInstance(this);
+		if (outletId == -1 || mOutletIcon == null) {
 			final Intent intentBackToOutlets = new Intent(this, OutletListActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intentBackToOutlets);
 		} else {
+			if (user.currentOutlet != null && user.currentOutlet.outletID == outletId){
+				CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
+						user.currentOutlet, mOutletIcon);
+				catrgoriesList.setAdapter(categoriesAdapter);
+				mProgressBar.setVisibility(View.GONE);
+				try {
+					final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+					title.setText(user.currentOutlet.name);
+				} catch (NullPointerException ne) {
+					Crashlytics.logException(ne);
+				}
+			}
+			loadOutletDetails(outletId, mOutletIcon);
+		}
 
-			Ion.with(this).load(LIST_OUTLETS + "/" + outletId)
-					.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "xxx"))
-					.setHeader("Content-Type", "application/json; charset=utf-8").asJsonObject()
-					.setCallback(new FutureCallback<JsonObject>() {
-						@Override
-						public void onCompleted(Exception e, JsonObject result) {
-							if (e != null) {
-								if (Constants.LOG) {
-									Toast.makeText(CategoriesListActivity.this, "Error with category list loading",
-											Toast.LENGTH_LONG).show();
-								} else {
-									final JSONObject info = new JSONObject();
-									try {
-										info.put("error", e.toString());
-										Crashlytics.logException(e);
-									} catch (JSONException e1) {
-										Crashlytics.logException(e1);
-									}
-									User.getInstance(CategoriesListActivity.this).mMixpanel.track(
-											"Error with category list loading", info);
-								}
-								return;
-							}
-							progressBar.setVisibility(View.GONE);
 
+	}
+
+	private void loadOutletDetails(final int outletId, final String outletIcon) {
+		Ion.with(this).load(LIST_OUTLETS + "/" + outletId)
+				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "xxx"))
+				.setHeader("Content-Type", "application/json; charset=utf-8").asJsonObject()
+				.setCallback(new FutureCallback<JsonObject>() {
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						final User user = User.getInstance(getApplicationContext());
+						user.logRemote("loading categories", e, result);
+						if (result != null) {
 							final OutletDetailsModel outletDetails = OutletDetailsModel
 									.getInstanceFromJsonObject(result);
-							final User user = User.getInstance(getApplicationContext());
-							
+							outletDetails.sortOrder();
 							if (user.currentSession == null){
 								user.startSession(outletDetails.name);
 							}
-							
 							user.currentSession.getCurrentOrder(outletDetails.name);
+							if (user.currentOutlet == null || user.currentOutlet.outletID != outletId) {
+								CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
+										outletDetails, mOutletIcon);
+								catrgoriesList.setAdapter(categoriesAdapter);
+							}
+
 							user.currentOutlet = outletDetails;
+							mProgressBar.setVisibility(View.GONE);
 
 							try {
 								final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
-								title.setText(outletDetails.name);
+								title.setText(user.currentOutlet.name);
 							} catch (NullPointerException ne) {
 								Crashlytics.logException(ne);
 							}
 
-							CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
-									outletDetails, outletIcon);
-							catrgoriesList.setAdapter(categoriesAdapter);
+						} else if (user.currentOutlet == null) {
+							if (loadCount < MAX_TRY_COUNT){
+								loadCount++;
+								handler.postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										loadOutletDetails(outletId, outletIcon);
+									}
+								}, 1000);
+							} else {
+								loadCount = 0;
+								if (user.wifiIsConnected()){
+									user.mMixpanel.track("Categories loading failed, WIFI Connected", null);
+								} else {
+									user.mMixpanel.track("Categories loading failed, WIFI Disconnected", null);
+								}
+								mProgressBar.setVisibility(View.GONE);
+								SuperToast.create(getApplicationContext(), "Sorry:( The network is messed up. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+								finish();
+							}
 						}
-					});
-		}
-
-		catrgoriesList.setOnItemClickListener(this);
-
+					}
+				});
 	}
 
 	@Override

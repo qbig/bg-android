@@ -72,7 +72,6 @@ import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
 import sg.com.bigspoon.www.common.Util.Util;
-import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -364,44 +363,6 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	}
 
-	private void log(String msg, Exception e, JsonObject result) {
-		if (e != null) {
-			final String errorMsg = e.toString();
-			if (Constants.LOG) {
-				Toast.makeText(ItemsActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-			} else {
-				final JSONObject info = new JSONObject();
-				try {
-					info.put("error", errorMsg);
-					Crashlytics.logException(e);
-				} catch (JSONException e1) {
-					Crashlytics.logException(e1);
-				}
-				User.getInstance(ItemsActivity.this).mMixpanel.track("Error "+msg,
-						info);
-			}
-			System.out.println(errorMsg);
-		}
-
-		if(result != null) {
-			final String resultMsg = result.toString();
-			if (Constants.LOG) {
-				Toast.makeText(ItemsActivity.this, resultMsg, Toast.LENGTH_LONG).show();
-			} else {
-				final JSONObject info = new JSONObject();
-				try {
-					info.put("result", resultMsg);
-					Crashlytics.logException(e);
-				} catch (JSONException e1) {
-					Crashlytics.logException(e1);
-				}
-				User.getInstance(ItemsActivity.this).mMixpanel.track(msg,
-						info);
-			}
-			System.out.println(resultMsg);
-		}
-	}
-
 	private void checkNewOrderDelivery() {
 		Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
@@ -409,7 +370,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
-				log("checking delivery", e, result);
+				User.getInstance(getApplicationContext()).logRemote("checking delivery", e, result);
 				if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -451,14 +412,15 @@ public class ItemsActivity extends ExpandableListActivity {
 
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
-				log("sending orders", e, result);
+				final User user = User.getInstance(getApplicationContext());
+				user.logRemote("sending orders", e, result);
 				if (result != null && result.has("out_of_stock")) {
 					// ITEMS OUT OF STOCK
 					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 				} else if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
-					User.getInstance(ItemsActivity.this).mMixpanel.track("Check Orders: Try." +
+					user.mMixpanel.track("Check Orders: Try." +
 							ItemsActivity.this.currentRetryCount, orderInfo);
 					ItemsActivity.this.currentRetryCount++;
 					// CHECK DELIVERY, retry 3 times if failed
@@ -1281,7 +1243,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					public void onCompleted(Exception e, JsonObject result) {
 
 						if (e != null) {
-							log("requesting bills", e, result);
+							User.getInstance(getApplicationContext()).logRemote("requesting bills", e, result);
 							Toast.makeText(ItemsActivity.this, "Network is sllloowww:( Try again or approach our friendly staffs:)", Toast.LENGTH_LONG).show();
 						} else if (mCurrentOutlet.isBillEnabled){
 							Toast.makeText(ItemsActivity.this, "Request for bill is submitted, the waiter will be right with you.", Toast.LENGTH_LONG).show();

@@ -415,4 +415,42 @@ public class User {
 		return currentOutlet.hasTable(tableId);
 	}
 
+
+	public void logRemote(String msg, Exception e, JsonObject result) {
+		if (e != null) {
+			final String errorMsg = e.toString();
+			if (Constants.LOG) {
+				Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
+			} else {
+				final JSONObject info = new JSONObject();
+				try {
+					info.put("error", errorMsg);
+					Crashlytics.logException(e);
+				} catch (JSONException e1) {
+					Crashlytics.logException(e1);
+				}
+				User.getInstance(mContext).mMixpanel.track("Error "+msg,
+						info);
+			}
+			System.out.println(errorMsg);
+		}
+
+		if(result != null) {
+			final String resultMsg = result.toString();
+			if (Constants.LOG) {
+				Toast.makeText(mContext, resultMsg, Toast.LENGTH_LONG).show();
+			} else {
+				final JSONObject info = new JSONObject();
+				try {
+					info.put("result", resultMsg);
+					Crashlytics.logException(e);
+				} catch (JSONException e1) {
+					Crashlytics.logException(e1);
+				}
+				User.getInstance(mContext).mMixpanel.track(msg,
+						info);
+			}
+			System.out.println(resultMsg);
+		}
+	}
 }

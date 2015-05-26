@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class OutletDetailsModel {
 	public DishModel[] dishes;
 	public CategoryModel[] categoriesDetails;
@@ -143,5 +146,24 @@ public class OutletDetailsModel {
 			}
 		}
 		return false;
+	}
+
+	public void sortOrder() {
+		Arrays.sort(categoriesDetails, new Comparator<CategoryModel>() {
+			public int compare(CategoryModel cat1, CategoryModel cat2) {
+				int cat1Index = 0;
+				int cat2Index = 0;
+				for (int i = 0, len = categoriesOrder.length; i < len; i++) {
+					if (categoriesOrder[i].categoryId == cat1.id) {
+						cat1Index = categoriesOrder[i].position;
+					}
+
+					if (categoriesOrder[i].categoryId == cat2.id) {
+						cat2Index = categoriesOrder[i].position;
+					}
+				}
+				return cat1Index - cat2Index;
+			}
+		});
 	}
 }
