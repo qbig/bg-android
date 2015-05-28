@@ -50,3 +50,4 @@ bigSpoon/build/*
 /build
 bigSpoon/src/main/assets/crashlytics-build.properties
 *bigSpoon/src/main/assets/crashlytics-build.properties
+*/build/*
