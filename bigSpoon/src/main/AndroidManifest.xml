@@ -105,7 +105,11 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activities.BrandActivity"
+            android:label="BrandActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
             android:label="@string/title_activity_order_history"

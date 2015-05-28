@@ -1,6 +1,7 @@
 package sg.com.bigspoon.www.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -10,18 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.BrandActivity;
+import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.data.CategoryModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	Context context;
@@ -45,7 +51,6 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
                 } else {
                     return outletDetails.dishes[i].photo.thumbnail;
                 }
-
 			}
 		}
 		return null;
@@ -90,6 +95,15 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			}
 			
 			final ImageView iconView = (ImageView) row.findViewById(R.id.category_list_restaurant_icon);
+			iconView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(context, MenuActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
+					context.startActivity(i);
+				}
+			});
             final TextView contactText = (TextView) row.findViewById(R.id.phone_text);
             contactText.setText(outletDetails.phoneNumber);
             final TextView openHoursText = (TextView) row.findViewById(R.id.open_hours);
@@ -102,6 +116,18 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 						// hack to copy a drawable
 						mRestaurantIconDrawable = new BitmapDrawable(CategoriesAdapter.this.context.getResources(), CategoriesAdapter.this.drawableToBitmap(arg1.getDrawable()));
 					}
+				}
+			});
+			final Button brandButton = (Button) row.findViewById(R.id.brand_btn);
+			brandButton.setText(outletDetails.name + " Story");
+			brandButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+					Intent i = new Intent(context, BrandActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
+					context.startActivity(i);
 				}
 			});
 			return row;
