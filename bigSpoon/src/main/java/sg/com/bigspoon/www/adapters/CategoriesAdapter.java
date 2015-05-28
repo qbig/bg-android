@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -123,7 +122,6 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			brandButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(context, BrandActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
