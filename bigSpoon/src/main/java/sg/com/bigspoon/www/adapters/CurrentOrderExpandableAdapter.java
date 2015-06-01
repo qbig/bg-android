@@ -137,8 +137,8 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			}
 		};
 
-		final LinearLayout cancelButton = (LinearLayout) convertView.findViewById(R.id.cancelButton);
-		cancelButton.setOnClickListener(removeDishListener);
+		final LinearLayout cancelButtonLayout = (LinearLayout) convertView.findViewById(R.id.cancelButton);
+		cancelButtonLayout.setOnClickListener(removeDishListener);
 
 		return convertView;
 	}
