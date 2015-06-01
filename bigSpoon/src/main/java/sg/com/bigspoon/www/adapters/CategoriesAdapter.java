@@ -20,7 +20,7 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
 
 import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.BrandActivity;
+import sg.com.bigspoon.www.activities.BrandStoryListsActivity;
 import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.data.CategoryModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -108,7 +108,7 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
             final TextView openHoursText = (TextView) row.findViewById(R.id.open_hours);
             openHoursText.setText(outletDetails.operatingHours);
 			Ion.with(context).load(BASE_URL + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
-				
+
 				@Override
 				public void onCompleted(Exception arg0, ImageView arg1) {
 					if (arg0 == null && arg1 != null && arg1.getDrawable() != null) {
@@ -122,7 +122,7 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			brandButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent i = new Intent(context, BrandActivity.class);
+					Intent i = new Intent(context, BrandStoryListsActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
 					context.startActivity(i);

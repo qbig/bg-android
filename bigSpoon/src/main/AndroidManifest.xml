@@ -110,6 +110,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme" >
         </activity>
+        <activity android:name=".activities.BrandStoryListsActivity"
+            android:label="BrandStoryListsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme" >
+        </activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
             android:label="@string/title_activity_order_history"
