@@ -443,7 +443,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				}
 			}
 		});
-        // timeout = 5 seconds
+        // timeout = 2.5 seconds
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -466,7 +466,7 @@ public class ItemsActivity extends ExpandableListActivity {
                     ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
                 }
             }
-        }, 5000);
+        }, 2500);
 	}
 
 	private void handleOrderDidGetSent() {
