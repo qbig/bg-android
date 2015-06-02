@@ -18,21 +18,20 @@
   ~  *****************************************************************************
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!-- You can customize this layout.
+     You need to have in your layout a `CardView` with the ID `list_cardId` -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
 
-    <it.gmariotti.cardslib.library.view.CardListView
+    <it.gmariotti.cardslib.library.view.CardViewNative
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list_cardId"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        style="@style/native_list_external"
-        card:list_card_layout_resourceID="@layout/material_list_card_layout"
-        android:id="@+id/card_list_base"/>
+        android:layout_height="wrap_content"
+        style="@style/native_list_card.base"
+        card:card_layout_resourceID="@layout/material_largeimage_text_card"/>
 
-
-
-</RelativeLayout>
+</LinearLayout>
+    <!-- From: file:/home/gabriele/Lavoro/Android/AndroidStudioProjects/wrks/cardslib/library-core/src/main/res/layout/native_list_card_layout.xml -->

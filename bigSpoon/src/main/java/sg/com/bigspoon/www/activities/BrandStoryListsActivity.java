@@ -1,9 +1,9 @@
 package sg.com.bigspoon.www.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,29 +14,34 @@ import it.gmariotti.cardslib.library.cards.actions.TextSupplementalAction;
 import it.gmariotti.cardslib.library.cards.material.MaterialLargeImageCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.view.CardListView;
 import sg.com.bigspoon.www.R;
-
+import sg.com.bigspoon.www.data.User;
+import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 /**
  * Created by qiaoliang89 on 1/6/15.
  */
 public class BrandStoryListsActivity extends Activity {
     private CardListView mListView;
+    private ArrayList<CardInfo> data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_list);
         mListView = (CardListView) findViewById(R.id.card_list_base);
+        initData();
         initCards();
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(true);
+        setTitle(User.getInstance(this).currentOutlet.name + " Story");
     }
 
     private void initCards() {
 
         ArrayList<Card> cards = new ArrayList<Card>();
-        for (int i=0;i<200;i++){
-            cards.add(getCard());
+        for (int i=0; i<4 ;i++){
+            cards.add(getCard(i));
         }
 
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(BrandStoryListsActivity.this, cards);
@@ -46,25 +51,17 @@ public class BrandStoryListsActivity extends Activity {
         }
     }
 
-    private MaterialLargeImageCard getCard() {
+    private MaterialLargeImageCard getCard(int num) {
 
         ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
-
-        // Set supplemental actions
-        TextSupplementalAction t1 = new TextSupplementalAction(BrandStoryListsActivity.this, R.id.text1);
-        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                Toast.makeText(BrandStoryListsActivity.this," Click on Text SHARE ",Toast.LENGTH_SHORT).show();
-            }
-        });
-        actions.add(t1);
-
+        final CardInfo info = this.data.get(num);
         TextSupplementalAction t2 = new TextSupplementalAction(BrandStoryListsActivity.this, R.id.text2);
         t2.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
             @Override
             public void onClick(Card card, View view) {
-                Toast.makeText(BrandStoryListsActivity.this," Click on Text LEARN ",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
+                i.putExtra(STORY_LINK, info.link);
+                BrandStoryListsActivity.this.startActivity(i);
             }
         });
         actions.add(t2);
@@ -72,10 +69,10 @@ public class BrandStoryListsActivity extends Activity {
         //Create a Card, set the title over the image and set the thumbnail
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(BrandStoryListsActivity.this)
-                        .setTextOverImage("Italian Beaches")
-                        .setTitle("This is my favorite local beach")
-                        .setSubTitle("A wonderful place")
-                        .useDrawableId(R.drawable.biglogo)
+                        .setTextOverImage(info.imageText)
+                        .setTitle(info.title)
+                        .setSubTitle(info.subtitle)
+                        .useDrawableId(info.drawableId)
                         .setupSupplementalActions(R.layout.material_card_action, actions)
                         .build();
 
@@ -88,46 +85,30 @@ public class BrandStoryListsActivity extends Activity {
         return card;
     }
 
-    public class CardExample extends Card{
+    private void initData(){
+        this.data = new ArrayList<CardInfo>();
+        this.data.add(new CardInfo(null, "Title is kind of long. But Okay.", "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_1biglogo, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
+        this.data.add(new CardInfo("Our Story", null, "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_food, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
+        this.data.add(new CardInfo("Our Story", "Title is kind of long. But Okay.", null, R.drawable.rsz_yh_justin, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
+        this.data.add(new CardInfo("Our Story", "Title is kind of long. But Okay.", "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_photo_wall, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
+    }
 
-        protected String mTitleHeader;
-        protected String mTitleMain;
-
-        public CardExample(Context context,String titleHeader,String titleMain) {
-            super(context, R.layout.carddemo_example_inner_content);
-            this.mTitleHeader=titleHeader;
-            this.mTitleMain=titleMain;
-            init();
+    class CardInfo {
+        String imageText;
+        String title;
+        String subtitle;
+        int drawableId;
+        String link;
+        CardInfo(String imageText,
+                String title,
+                String subtitle,
+                int drawableId,
+                String link) {
+            this.imageText = imageText;
+            this.title = title;
+            this.subtitle = subtitle;
+            this.drawableId = drawableId;
+            this.link = link;
         }
-
-        private void init(){
-
-            //Create a CardHeader
-            CardHeader header = new CardHeader(BrandStoryListsActivity.this);
-
-            //Set the header title
-            header.setTitle(mTitleHeader);
-
-            //Add a popup menu. This method set OverFlow button to visible
-            header.setPopupMenu(R.menu.select_action_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-                @Override
-                public void onMenuItemClick(BaseCard card, MenuItem item) {
-                    Toast.makeText(BrandStoryListsActivity.this, "Click on card menu" + mTitleHeader + " item=" + item.getTitle(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            addCardHeader(header);
-
-            //Add ClickListener
-            setOnClickListener(new OnCardClickListener() {
-                @Override
-                public void onClick(Card card, View view) {
-                    Toast.makeText(getContext(), "Click Listener card=" + mTitleHeader, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            //Set the card inner text
-            setTitle(mTitleMain);
-        }
-
     }
 }

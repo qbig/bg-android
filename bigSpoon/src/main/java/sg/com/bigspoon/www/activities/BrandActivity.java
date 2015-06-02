@@ -1,6 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +15,9 @@ import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkView;
 
 import sg.com.bigspoon.www.R;
+
+import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
+
 /**
  * Created by qiaoliang89 on 28/5/15.
  */
@@ -43,6 +47,8 @@ public class BrandActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Intent intent = getIntent();
+        final String link = intent.getStringExtra(STORY_LINK);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.brand_activity_layout);
         handler = new Handler();
@@ -56,7 +62,10 @@ public class BrandActivity extends Activity {
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
         mWebView = (XWalkView) findViewById(R.id.brand_webview);
-        mWebView.load("http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square", null);
+        if (link == null) {
+            finish();
+        }
+        mWebView.load(link, null);
         mWebView.clearCache(true);
         mWebView.setResourceClient(new MyResourceClient(mWebView));
         XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
