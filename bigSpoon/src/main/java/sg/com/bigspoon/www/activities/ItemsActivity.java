@@ -106,6 +106,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	private PastOrdersAdapter mPastOrderAdapter;
 	private SharedPreferences loginPreferences;
 	private boolean deliveryChecked;
+    private boolean checkingDelivery;
 	private int currentRetryCount = 0;
 	private int scrollYPos = 0;
 	public static final int WATER = 1;
@@ -188,6 +189,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		mMixpanel = MixpanelAPI.getInstance(ItemsActivity.this, MIXPANEL_TOKEN);
 		handler = new Handler();
 		deliveryChecked = false;
+        checkingDelivery = false;
 		setContentView(R.layout.activity_items);
 		mSentOrderHintText = (TextView) findViewById(R.id.orderedItemsHint);
 		if (User.getInstance(ItemsActivity.this).prevOrderTime != -1){
@@ -368,7 +370,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	}
 
-	private void checkNewOrderDelivery() {
+	private synchronized void checkNewOrderDelivery() {
 		Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
@@ -384,13 +386,14 @@ public class ItemsActivity extends ExpandableListActivity {
 				} else {
 					// if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							// retry
-							ItemsActivity.this.performSendOrderRequest();
-						}
+                        @Override
+                        public void run() {
+                            // retry
+                            ItemsActivity.this.performSendOrderRequest();
+                        }
 					}, 500);
 				}
+                checkingDelivery = false;
 			}
 		});
 	}
@@ -425,49 +428,42 @@ public class ItemsActivity extends ExpandableListActivity {
 					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-				} else if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
-                    if (deliveryChecked) {
-                        return;
-                    }
-                    user.mMixpanel.track("Check Orders: Try." +
-                            ItemsActivity.this.currentRetryCount, orderInfo);
-                    ItemsActivity.this.currentRetryCount++;
-                    // CHECK DELIVERY, retry SEND_RETRY_NUM times if failed
-                    checkNewOrderDelivery();
 				} else {
-					// ALL FAILED: stop retrying and show popup
-					ItemsActivity.this.progressBar.setVisibility(View.GONE);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					ItemsActivity.this.currentRetryCount = 0;
-					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
-				}
+					checkSentOrderDeliveryAndRetry(orderInfo);
+                }
 			}
 		});
         // timeout = 2.5 seconds
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (deliveryChecked) {
-                    return;
-                }
+				checkSentOrderDeliveryAndRetry(orderInfo);
                 sendOrderFuture.cancel();
-                if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
-                    user.mMixpanel.track("DELAY happened", orderInfo);
-                    user.mMixpanel.track("Check Orders: Try." +
-                            ItemsActivity.this.currentRetryCount, orderInfo);
-                    ItemsActivity.this.currentRetryCount++;
-                    // CHECK DELIVERY, retry SEND_RETRY_NUM times if failed
-                    checkNewOrderDelivery();
-                } else {
-                    // ALL FAILED: stop retrying and show popup
-                    ItemsActivity.this.progressBar.setVisibility(View.GONE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    ItemsActivity.this.currentRetryCount = 0;
-                    ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
-                }
+                user.mMixpanel.track("DELAY happened", orderInfo);
+
             }
         }, 2500);
 	}
+
+    private  synchronized void checkSentOrderDeliveryAndRetry(JSONObject orderInfo) {
+        if (checkingDelivery || deliveryChecked) {
+            return;
+        }
+        checkingDelivery = true;
+        if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+            User.getInstance(ItemsActivity.this).mMixpanel.track("Check Orders: Try." +
+                    ItemsActivity.this.currentRetryCount, orderInfo);
+            ItemsActivity.this.currentRetryCount++;
+            // CHECK DELIVERY, retry SEND_RETRY_NUM times if failed
+            checkNewOrderDelivery();
+        } else {
+            // ALL FAILED: stop retrying and show popup
+            ItemsActivity.this.progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ItemsActivity.this.currentRetryCount = 0;
+            ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
+        }
+    }
 
 	private void handleOrderDidGetSent() {
 		User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
@@ -569,6 +565,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 							WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     deliveryChecked = false;
+                    checkingDelivery = false;
 					performSendOrderRequest();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
