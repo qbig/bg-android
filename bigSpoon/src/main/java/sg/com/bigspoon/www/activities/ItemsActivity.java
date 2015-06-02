@@ -424,6 +424,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 				user.logRemote("sending orders", e, result);
 				if (result != null && result.has("out_of_stock")) {
+                    deliveryChecked = true;
 					// ITEMS OUT OF STOCK
 					ItemsActivity.this.showManualPopup(result.get("out_of_stock").getAsString(), "Try other tasty options?");
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
@@ -437,10 +438,11 @@ public class ItemsActivity extends ExpandableListActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if (!checkingDelivery && !deliveryChecked) {
+                    sendOrderFuture.cancel();
+                    user.mMixpanel.track("DELAY happened", orderInfo);
+                }
 				checkSentOrderDeliveryAndRetry(orderInfo);
-                sendOrderFuture.cancel();
-                user.mMixpanel.track("DELAY happened", orderInfo);
-
             }
         }, 2500);
 	}
