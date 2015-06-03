@@ -243,11 +243,11 @@ public class ItemsActivity extends ExpandableListActivity {
 
     private final void scrollToSentItems(){
         new Handler().post(new Runnable() {
-			@Override
-			public void run() {
-				ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 200));
-			}
-		});
+            @Override
+            public void run() {
+                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 200));
+            }
+        });
     }
 
     private void setupPriceLabels() {
@@ -329,36 +329,36 @@ public class ItemsActivity extends ExpandableListActivity {
 	private void setupPlaceOrderButton() {
 		mPlaceOrder = (Button) findViewById(R.id.submit_button);
 		mPlaceOrder.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (isExpanded) {
-					toggleAddNoteState();
-				}
+            @Override
+            public void onClick(View view) {
+                if (isExpanded) {
+                    toggleAddNoteState();
+                }
 
-				if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.isEmpty()) {
-					showNoOrderPopup();
-				} else {
-					if (User.getInstance(ItemsActivity.this).checkLocation()) {
-						checkIfContainDessert();
-						if (!User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
-							int requestCode = PLACE_ORDER;
-							setUpTablePopup(requestCode);
-						} else {
-							if (User.getInstance(ItemsActivity.this).isForTakeAway) {
-								int requestCode = TAKE_AWAY;
-								onTablePopupResult(requestCode);
-							} else {
-								int requestCode = PLACE_ORDER;
-								onTablePopupResult(requestCode);
-							}
-						}
-					} else {
-						setUpLocationFailPopup();
-						User.getInstance(ItemsActivity.this).tableId = -1;
-					}
-				}
-			}
-		});
+                if (User.getInstance(ItemsActivity.this).currentSession.getCurrentOrder().mItems.isEmpty()) {
+                    showNoOrderPopup();
+                } else {
+                    if (User.getInstance(ItemsActivity.this).checkLocation()) {
+                        checkIfContainDessert();
+                        if (!User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
+                            int requestCode = PLACE_ORDER;
+                            setUpTablePopup(requestCode);
+                        } else {
+                            if (User.getInstance(ItemsActivity.this).isForTakeAway) {
+                                int requestCode = TAKE_AWAY;
+                                onTablePopupResult(requestCode);
+                            } else {
+                                int requestCode = PLACE_ORDER;
+                                onTablePopupResult(requestCode);
+                            }
+                        }
+                    } else {
+                        setUpLocationFailPopup();
+                        User.getInstance(ItemsActivity.this).tableId = -1;
+                    }
+                }
+            }
+        });
 	}
 
 	protected void checkIfContainDessert() {
@@ -378,6 +378,15 @@ public class ItemsActivity extends ExpandableListActivity {
 			@Override
 			public void onCompleted(Exception e, JsonObject result) {
 				User.getInstance(getApplicationContext()).logRemote("checking delivery", e, result);
+				if (e != null){
+                    ItemsActivity.this.handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ItemsActivity.this.checkNewOrderDelivery();
+                        }
+                    }, 10);
+                    return;
+                }
 				if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
 					ItemsActivity.this.progressBar.setVisibility(View.GONE);
                     deliveryChecked = true;
@@ -390,7 +399,7 @@ public class ItemsActivity extends ExpandableListActivity {
                         public void run() {
                             // retry
                             ItemsActivity.this.performSendOrderRequest();
-                        }
+						}
 					}, 500);
 				}
                 checkingDelivery = false;
@@ -442,7 +451,7 @@ public class ItemsActivity extends ExpandableListActivity {
                     sendOrderFuture.cancel();
                     user.mMixpanel.track("DELAY happened", orderInfo);
                 }
-				checkSentOrderDeliveryAndRetry(orderInfo);
+                checkSentOrderDeliveryAndRetry(orderInfo);
             }
         }, 2500);
 	}
