@@ -57,7 +57,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile files('libs/bugsense-3.6.1.jar')
     compile 'com.koushikdutta.ion:ion:2.+'
-    compile files('libs/littlefluffylocationlibrary_r15.jar')
+    compile files('libs/littlefluffylocationlibrary_r17.jar')
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.google.android.gms:play-services:6.1.11'
