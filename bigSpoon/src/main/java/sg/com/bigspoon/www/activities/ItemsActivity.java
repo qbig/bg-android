@@ -107,7 +107,8 @@ public class ItemsActivity extends ExpandableListActivity {
 	private SharedPreferences loginPreferences;
 	private boolean deliveryChecked;
     private boolean checkingDelivery;
-	private int currentRetryCount = 0;
+	private int currentOrderRetryCount = 0;
+    private int checkingRetryCount = 0;
 	private int scrollYPos = 0;
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
@@ -116,9 +117,11 @@ public class ItemsActivity extends ExpandableListActivity {
 	public static final int TAKE_AWAY = 5;
 	public static final int MODIFIER_TEXT_WIDTH = 600;
 	private static final int SEND_RETRY_NUM = 6;
+    private static final int CHECK_RETRY_NUM = 3;
 	static EditText textTime;
 	private MixpanelAPI mMixpanel;
     private Future<JsonObject> sendOrderFuture;
+	private Future<JsonObject> checkOrderFuture;
 
 	private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 		@Override
@@ -371,7 +374,26 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private synchronized void checkNewOrderDelivery() {
-		Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
+        // set timeout for checking call
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (checkingDelivery){
+                    if (checkingRetryCount < CHECK_RETRY_NUM) {
+                        checkingRetryCount++;
+                        checkOrderFuture.cancel();
+                        checkNewOrderDelivery();
+                        User.getInstance(ItemsActivity.this).mMixpanel.track("CHECKING Failed", null);
+                    } else {
+                        ItemsActivity.this.progressBar.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        checkingRetryCount = 0;
+                        ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
+                    }
+                }
+            }
+        }, 2000);
+		checkOrderFuture = Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
@@ -379,12 +401,6 @@ public class ItemsActivity extends ExpandableListActivity {
 			public void onCompleted(Exception e, JsonObject result) {
 				User.getInstance(getApplicationContext()).logRemote("checking delivery", e, result);
 				if (e != null){
-                    ItemsActivity.this.handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ItemsActivity.this.checkNewOrderDelivery();
-                        }
-                    }, 10);
                     return;
                 }
 				if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
@@ -449,7 +465,7 @@ public class ItemsActivity extends ExpandableListActivity {
             public void run() {
                 if (!checkingDelivery && !deliveryChecked) {
                     sendOrderFuture.cancel();
-                    user.mMixpanel.track("DELAY happened", orderInfo);
+                    user.mMixpanel.track("Send Order DELAY happened", orderInfo);
                 }
                 checkSentOrderDeliveryAndRetry(orderInfo);
             }
@@ -461,17 +477,17 @@ public class ItemsActivity extends ExpandableListActivity {
             return;
         }
         checkingDelivery = true;
-        if (ItemsActivity.this.currentRetryCount < SEND_RETRY_NUM) {
+        if (ItemsActivity.this.currentOrderRetryCount < SEND_RETRY_NUM) {
             User.getInstance(ItemsActivity.this).mMixpanel.track("Check Orders: Try." +
-                    ItemsActivity.this.currentRetryCount, orderInfo);
-            ItemsActivity.this.currentRetryCount++;
+                    ItemsActivity.this.currentOrderRetryCount, orderInfo);
+            ItemsActivity.this.currentOrderRetryCount++;
             // CHECK DELIVERY, retry SEND_RETRY_NUM times if failed
             checkNewOrderDelivery();
         } else {
             // ALL FAILED: stop retrying and show popup
             ItemsActivity.this.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ItemsActivity.this.currentRetryCount = 0;
+            ItemsActivity.this.currentOrderRetryCount = 0;
             ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
         }
     }
@@ -577,6 +593,8 @@ public class ItemsActivity extends ExpandableListActivity {
 							WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     deliveryChecked = false;
                     checkingDelivery = false;
+                    checkingRetryCount = 0;
+                    currentOrderRetryCount = 0;
 					performSendOrderRequest();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
