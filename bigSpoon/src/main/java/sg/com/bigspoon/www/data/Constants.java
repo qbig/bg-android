@@ -79,6 +79,7 @@ public class Constants {
 		public static final String NOTIF_UNDO_ORDER = "undoOrder";
 		public static final String NOTIF_ITEM_REMOVE_CLICK = "removeClick";
 	    public static final String NOTIF_TO_START_LOCATION_SERVICE = "start-location";
+		public static final String BRAND_WAKE_UP_SIGNAL = "brandSignal";
 	    
 	    // REQUEST CODE
 	    public static final int MODIFIER_POPUP_REQUEST = 999;

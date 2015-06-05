@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.User;
+
+import static sg.com.bigspoon.www.data.Constants.BRAND_WAKE_UP_SIGNAL;
 import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 /**
  * Created by qiaoliang89 on 1/6/15.
@@ -24,6 +28,7 @@ import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 public class BrandStoryListsActivity extends Activity {
     private CardListView mListView;
     private ArrayList<CardInfo> data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +40,17 @@ public class BrandStoryListsActivity extends Activity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(User.getInstance(this).currentOutlet.name + " Story");
+
+        if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
+            unlockScreen();
+        }
+    }
+
+    private void unlockScreen() {
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
     private void initCards() {

@@ -1,10 +1,12 @@
 package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ExpandableListActivity;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -76,6 +78,7 @@ import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
+import sg.com.bigspoon.www.services.BrandWakeUpTaskReceiver;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
@@ -171,6 +174,8 @@ public class ItemsActivity extends ExpandableListActivity {
 
     public Handler handler;
 	private ProgressBar progressBar;
+	private PendingIntent pendingIntent;
+	private AlarmManager manager;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -228,6 +233,9 @@ public class ItemsActivity extends ExpandableListActivity {
             Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
             finish();
         }
+
+		Intent alarmIntent = new Intent(this, BrandWakeUpTaskReceiver.class);
+		pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 	}
 
 	private void dismissKeyboard() {
@@ -243,6 +251,22 @@ public class ItemsActivity extends ExpandableListActivity {
 			}
 		});
     }
+
+
+	public void startAlarm() {
+		manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		int interval = 5000; // 5 seconds
+
+		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
+		Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+	}
+
+	public void cancelAlarm() {
+		if (manager != null) {
+			manager.cancel(pendingIntent);
+			Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+		}
+	}
 
     private void setupPriceLabels() {
 		
@@ -784,6 +808,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
 		case WAITER:
+            startAlarm();
 			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
 				waitorPopup();
 			}  else {

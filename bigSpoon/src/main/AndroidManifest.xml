@@ -169,6 +169,7 @@
             android:label="@string/service_name" >
         </service>
 		<service android:name="com.littlefluffytoys.littlefluffylocationlibrary.LocationBroadcastService" />
+        <receiver android:name="sg.com.bigspoon.www.services.BrandWakeUpTaskReceiver"></receiver>
         <receiver android:name="com.littlefluffytoys.littlefluffylocationlibrary.StartupBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />  
