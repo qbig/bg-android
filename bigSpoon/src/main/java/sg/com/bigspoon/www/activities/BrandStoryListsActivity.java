@@ -43,6 +43,9 @@ public class BrandStoryListsActivity extends Activity {
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
             unlockScreen();
+            Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
+            i.putExtra(STORY_LINK, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square");
+            BrandStoryListsActivity.this.startActivity(i);
         }
     }
 

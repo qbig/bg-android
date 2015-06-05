@@ -245,19 +245,20 @@ public class ItemsActivity extends ExpandableListActivity {
 
     private final void scrollToSentItems(){
         new Handler().post(new Runnable() {
-			@Override
-			public void run() {
-				ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 200));
-			}
-		});
+            @Override
+            public void run() {
+                ItemsActivity.this.scrollView.smoothScrollTo(0, (int) Util.pxFromDp(ItemsActivity.this, 200));
+            }
+        });
     }
 
 
 	public void startAlarm() {
 		manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		int interval = 10 * 60 * 1000; // 10 minutes
+		int interval = 5* 1000;//10 * 60 * 1000; // 10 minutes
 
-		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
+		//manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),interval, pendingIntent);
 		//Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
 	}
 
@@ -323,7 +324,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mMessageReceiver);
+                mMessageReceiver);
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRemoveClicked);
         User.getInstance(ItemsActivity.this).mMixpanel.flush();
 	}
@@ -392,25 +393,25 @@ public class ItemsActivity extends ExpandableListActivity {
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
-			@Override
-			public void onCompleted(Exception e, JsonObject result) {
-				User.getInstance(getApplicationContext()).logRemote("checking delivery", e, result);
-				if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)){
-					ItemsActivity.this.progressBar.setVisibility(View.GONE);
-					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-					handleOrderDidGetSent();
-				} else {
-					// if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
-					ItemsActivity.this.handler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							// retry
-							ItemsActivity.this.performSendOrderRequest();
-						}
-					}, 500);
-				}
-			}
-		});
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                User.getInstance(getApplicationContext()).logRemote("checking delivery", e, result);
+                if (result != null && (result.has("orders") && result.getAsJsonArray("orders").size() != 0)) {
+                    ItemsActivity.this.progressBar.setVisibility(View.GONE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    handleOrderDidGetSent();
+                } else {
+                    // if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
+                    ItemsActivity.this.handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // retry
+                            ItemsActivity.this.performSendOrderRequest();
+                        }
+                    }, 500);
+                }
+            }
+        });
 	}
 
 	private void performSendOrderRequest() {
