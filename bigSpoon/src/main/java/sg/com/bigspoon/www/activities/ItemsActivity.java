@@ -255,16 +255,16 @@ public class ItemsActivity extends ExpandableListActivity {
 
 	public void startAlarm() {
 		manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		int interval = 5000; // 5 seconds
+		int interval = 10 * 60 * 1000; // 10 minutes
 
 		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
-		Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
 	}
 
 	public void cancelAlarm() {
 		if (manager != null) {
 			manager.cancel(pendingIntent);
-			Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+		//	Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -560,6 +560,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 							WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					performSendOrderRequest();
+                    startAlarm();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
 				}
@@ -808,7 +809,6 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onTablePopupResult(int requestCode) {
 		switch (requestCode) {
 		case WAITER:
-            startAlarm();
 			if (User.getInstance(this).currentOutlet.isWaterEnabled) {
 				waitorPopup();
 			}  else {
