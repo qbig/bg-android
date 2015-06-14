@@ -83,6 +83,13 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 				user.prevOrderTime = -1;
 			}
 		}
+		if (user.prevActiveTime != -1){
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - user.prevActiveTime > 60 * 1000){
+                user.currentSession.clearCurrentOrder();
+                user.prevActiveTime= -1;
+            }
+        }
     }
 
 

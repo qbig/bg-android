@@ -73,6 +73,7 @@ public class User {
 	public boolean shouldGoToOutlet = true;
 	private ScheduledFuture scheduledFutureClearPastOrders;
 	public long prevOrderTime = -1;
+	public long prevActiveTime = -1;
 	private ArrayList<SuperActivityToast> undoToastList;
 
 	private User(Context context) {

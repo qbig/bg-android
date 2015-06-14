@@ -167,6 +167,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		SocketIOManager.getInstance(this).disconnect();
 		LocationLibrary.stopAlarmAndListener(this);
 		User.getInstance(this).shouldGoToOutlet = true;
+		User.getInstance(this).prevActiveTime= System.currentTimeMillis();
 	}
 
 	public void checkLocationEnabledByForce() {
