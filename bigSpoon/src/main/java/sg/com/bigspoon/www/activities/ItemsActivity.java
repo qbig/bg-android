@@ -109,6 +109,7 @@ public class ItemsActivity extends ExpandableListActivity {
     private boolean checkingDelivery;
 	private int currentOrderRetryCount = 0;
     private int checkingRetryCount = 0;
+	private boolean prevFailed = false;
 	private int scrollYPos = 0;
 	public static final int WATER = 1;
 	public static final int WAITER = 2;
@@ -408,6 +409,7 @@ public class ItemsActivity extends ExpandableListActivity {
                     deliveryChecked = true;
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					handleOrderDidGetSent();
+                    ItemsActivity.this.prevFailed = false;
 				} else {
 					// if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
@@ -439,6 +441,10 @@ public class ItemsActivity extends ExpandableListActivity {
 			Crashlytics.logException(e1);
 		}
 		User.getInstance(ItemsActivity.this).mMixpanel.track("Send Orders", orderInfo);
+        if (prevFailed) {
+            checkSentOrderDeliveryAndRetry(orderInfo);
+            prevFailed = false;
+        }
 		sendOrderFuture = Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", authToken)
 				.setJsonObjectBody(requestBody)
@@ -488,6 +494,7 @@ public class ItemsActivity extends ExpandableListActivity {
             ItemsActivity.this.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             ItemsActivity.this.currentOrderRetryCount = 0;
+            ItemsActivity.this.prevFailed = true;
             ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
         }
     }
