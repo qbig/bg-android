@@ -57,77 +57,101 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 
 public class MenuAdapter extends BaseAdapter {
 
-	private Context mContext;
-	private OutletDetailsModel mOutletInfo;
-	public int mCurrentSelectedCategoryTabIndex;
-	private View.OnClickListener mOrderDishButtonOnClickListener;
-	private ArrayList<DishModel> mFilteredDishes;
-	private int currentRetryCount = 0;
-	private Handler handler;
+    private Context mContext;
+    private OutletDetailsModel mOutletInfo;
+    public int mCurrentSelectedCategoryTabIndex;
+    private View.OnClickListener mOrderDishButtonOnClickListener;
+    private ArrayList<DishModel> mFilteredDishes;
+    private int currentRetryCount = 0;
+    private Handler handler;
+    private View mClickedViewToAnimate;
+    private int mClickedPos;
 
-	private static final int SEND_RETRY_NUM = 3;
-	private static final String ION_LOGGING_MENU_LIST = "ion-menu-list";
-	private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
-	private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
-	private static final int TYPE_PHOTO_ITEM = 0;
-	private static final int TYPE_TEXT_ITEM = 1;
-	private static final float PHOTO_ITEM_HEIGHT = 242;
-	private static final float TEXT_ITEM_HEIGHT = 142;
-	private static final float CORNER_POS_X = 610;
-	private static final float CORNER_POS_Y = 1160;
-	private static final long DURATION_LONG = 1000;
-	private static final long DURATION_SHORT = 500;
-	private Drawable outOfStockBackground;
-	private Runnable taskAfterModifierPopup;
-	private SuperActivityToast mSuperActivityToast;
-	
-	private BroadcastReceiver mAfterModifierPopupReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (taskAfterModifierPopup != null && mContext !=null){
-				((MenuActivity) mContext).runOnUiThread(taskAfterModifierPopup);
-			}
-		}
-	};
+    private static final int SEND_RETRY_NUM = 3;
+    private static final String ION_LOGGING_MENU_LIST = "ion-menu-list";
+    private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
+    private static final int MENU_LIST_VIEW_TYPE_COUNT_IS_2 = 2;
+    private static final int TYPE_PHOTO_ITEM = 0;
+    private static final int TYPE_TEXT_ITEM = 1;
+    private static final float PHOTO_ITEM_HEIGHT = 242;
+    private static final float TEXT_ITEM_HEIGHT = 142;
+    private static final float CORNER_POS_X = 610;
+    private static final float CORNER_POS_Y = 1160;
+    private static final long DURATION_LONG = 1000;
+    private static final long DURATION_SHORT = 500;
+    private Drawable outOfStockBackground;
+    private Runnable taskAfterModifierPopup;
+    private SuperActivityToast mSuperActivityToast;
+
+    private BroadcastReceiver mAfterModifierPopupReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mContext != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
+                ((MenuActivity) mContext).mHandler
+                        .postDelayed(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      try {
+                                          updateOrderCountAndDisplay(mClickedViewToAnimate);
+                                          if (MenuActivity.isPhotoMode) {
+                                              animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                                          } else {
+                                              animateTextItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                                          }
+
+                                          if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0) {
+                                              MenuAdapter.this.showClearOrderPopup();
+                                          }
+                                          User.getInstance(mContext).showUndoDishPopup();
+                                      } catch (Exception e) {
+                                          Crashlytics.log(e.toString());
+                                      }
+                                  }
+                              }, 100
+                        );
+            }
+        }
+
+    };
 
     public int getDishPositionInFilteredList(int dishID) {
-        for (int i = 0; i < mFilteredDishes.size(); i ++) {
-            if (dishID == mFilteredDishes.get(i).id){
+        for (int i = 0; i < mFilteredDishes.size(); i++) {
+            if (dishID == mFilteredDishes.get(i).id) {
                 return i;
             }
         }
         return -1;
     }
 
-	public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
-		super();
-		this.mOutletInfo = outletInfo;
-		this.mContext = context;
-		this.handler = new Handler(context.getMainLooper());
-		mSuperActivityToast = new SuperActivityToast((Activity)mContext,
+    public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
+        super();
+        this.mOutletInfo = outletInfo;
+        this.mContext = context;
+        this.handler = new Handler(context.getMainLooper());
+        mSuperActivityToast = new SuperActivityToast((Activity) mContext,
                 SuperToast.Type.STANDARD);
-		mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
-		mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-		mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
-		mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
-		mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
+        mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
+        mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
+        mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
+        mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
+        mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
         mSuperActivityToast.setOnClickWrapper(
-            new OnClickWrapper("superactivitytoast",
-                new SuperToast.OnClickListener() {
-                    @Override
-                    public void onClick(View view, Parcelable token) {
-                        mSuperActivityToast.dismiss();
-                    }
-                }
-            )
+                new OnClickWrapper("superactivitytoast",
+                        new SuperToast.OnClickListener() {
+                            @Override
+                            public void onClick(View view, Parcelable token) {
+                                mSuperActivityToast.dismiss();
+                            }
+                        }
+                )
         );
-		mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+        mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
 
-		LocalBroadcastManager.getInstance(context).registerReceiver(mAfterModifierPopupReceiver,
-				new IntentFilter(NOTIF_MODIFIER_OK));
-		this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
-		Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
-		initAddDishButtonListener();
+        LocalBroadcastManager.getInstance(context).registerReceiver(mAfterModifierPopupReceiver,
+                new IntentFilter(NOTIF_MODIFIER_OK));
+        this.outOfStockBackground = context.getResources().getDrawable(R.drawable.out_of_stock);
+        Ion.getDefault(context).configure().setLogging(ION_LOGGING_MENU_LIST, Log.DEBUG);
+        initAddDishButtonListener();
         try {
             updateFilteredList();
         } catch (NullPointerException npe) {
@@ -135,129 +159,112 @@ public class MenuAdapter extends BaseAdapter {
             ((Activity) mContext).finish();
         }
 
-	}
+    }
 
-	public void updateFilteredList() {
+    public void updateFilteredList() {
         //TODO dup code to clean up (Seen also in MenuActivity)
 
-		mFilteredDishes = new ArrayList<DishModel>();
-		if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0) {
-			return;
-		}
+        mFilteredDishes = new ArrayList<DishModel>();
+        if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0) {
+            return;
+        }
 
-		for (int i = 0, len = mOutletInfo.dishes.length; i < len; i++) {
-			if (mOutletInfo.dishes[i].categories[0].id == mOutletInfo.categoriesDetails[mCurrentSelectedCategoryTabIndex].id) {
-				mFilteredDishes.add(mOutletInfo.dishes[i]);
-			}
-		}
+        for (int i = 0, len = mOutletInfo.dishes.length; i < len; i++) {
+            if (mOutletInfo.dishes[i].categories[0].id == mOutletInfo.categoriesDetails[mCurrentSelectedCategoryTabIndex].id) {
+                mFilteredDishes.add(mOutletInfo.dishes[i]);
+            }
+        }
 
-		Collections.sort(mFilteredDishes, new Comparator<DishModel>() {
-			@Override
-			public int compare(DishModel lhs, DishModel rhs) {
-				int sortIndexLeft = lhs.pos > lhs.positionIndex ? lhs.pos : lhs.positionIndex;
-				int sortIndexRight = rhs.pos > rhs.positionIndex ? rhs.pos : rhs.positionIndex;
-				return sortIndexLeft - sortIndexRight;
-			}
-		});
-	}
+        Collections.sort(mFilteredDishes, new Comparator<DishModel>() {
+            @Override
+            public int compare(DishModel lhs, DishModel rhs) {
+                int sortIndexLeft = lhs.pos > lhs.positionIndex ? lhs.pos : lhs.positionIndex;
+                int sortIndexRight = rhs.pos > rhs.positionIndex ? rhs.pos : rhs.positionIndex;
+                return sortIndexLeft - sortIndexRight;
+            }
+        });
+    }
 
-	private void initAddDishButtonListener() {
-		mOrderDishButtonOnClickListener = new View.OnClickListener() {
+    private void initAddDishButtonListener() {
+        mOrderDishButtonOnClickListener = new View.OnClickListener() {
 
-			@Override
-			public void onClick(final View view) {
+            @Override
+            public void onClick(final View view) {
 
-				final Integer itemPosition = (Integer) view.getTag();
-				final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
-				mSuperActivityToast.dismiss();
-				if (!currentDish.isServedNow()) {
-					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
-					alertLocationFail.setTitle("Sorry");
-					alertLocationFail.setMessage("This dish is only available from " + currentDish.startTime + " to "
-							+ currentDish.endTime);
-					alertLocationFail.setView(null);
-					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
+                final Integer itemPosition = (Integer) view.getTag();
+                final DishModel currentDish = (DishModel) getItem(itemPosition.intValue());
+                mSuperActivityToast.dismiss();
+                if (!currentDish.isServedNow()) {
+                    AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
+                    alertLocationFail.setTitle("Sorry");
+                    alertLocationFail.setMessage("This dish is only available from " + currentDish.startTime + " to "
+                            + currentDish.endTime);
+                    alertLocationFail.setView(null);
+                    alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
 
-						}
-					});
-					alertLocationFail.show();
+                        }
+                    });
+                    alertLocationFail.show();
 
-					return;
-				}
+                    return;
+                }
 
-				if (currentDish.quantity == 0) {
-					AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
-					alertLocationFail.setTitle("Sorry");
-					alertLocationFail.setMessage("This is out of stock :(");
-					alertLocationFail.setView(null);
-					alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
+                if (currentDish.quantity == 0) {
+                    AlertDialog alertLocationFail = new AlertDialog.Builder(mContext).create();
+                    alertLocationFail.setTitle("Sorry");
+                    alertLocationFail.setMessage("This is out of stock :(");
+                    alertLocationFail.setView(null);
+                    alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
 
-						}
-					});
-					alertLocationFail.show();
-					return;
-				}
+                        }
+                    });
+                    alertLocationFail.show();
+                    return;
+                }
 
-				if (currentDish.customizable) {
-					final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
-					intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
-					((MenuActivity) mContext)
-							.startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
-					MenuAdapter.this.taskAfterModifierPopup = new Runnable() {
-						@Override
-						public void run() {
-							try {
-                                updateOrderCountAndDisplay(view);
-								if (MenuActivity.isPhotoMode) {
-									animatePhotoItemToCorner(view, itemPosition, DURATION_LONG);
-								} else {
-									animateTextItemToCorner(view, itemPosition, DURATION_LONG);
-								}
+                if (currentDish.customizable) {
+                    final Intent intentForModifier = new Intent(mContext, ModifierActivity.class);
+                    mClickedViewToAnimate = view;
+                    mClickedPos = itemPosition;
+                    intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, currentDish.id);
+                    ((MenuActivity) mContext)
+                            .startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
+                } else {
 
-								if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
-									MenuAdapter.this.showClearOrderPopup();
-								}
-
-								User.getInstance(mContext).showUndoDishPopup();
-							} catch (Exception e) {
-								Crashlytics.log(e.toString());
-							}							
-						}
-					};
-				} else {
-
-					User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
-					User.getInstance(mContext).showUndoDishPopup();
+                    User.getInstance(mContext).currentSession.getCurrentOrder().addDish(currentDish);
+                    User.getInstance(mContext).showUndoDishPopup();
                     updateOrderCountAndDisplay(view);
 
-					if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
-						//mSuperActivityToast.show();
-                        if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0){
+                    if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
+                        //mSuperActivityToast.show();
+                        if (User.getInstance(mContext).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(mContext).currentSession.getPastOrder().getTotalQuantity() != 0) {
                             MenuAdapter.this.showClearOrderPopup();
                         }
-					}
+                    }
 
-					if (MenuActivity.isPhotoMode) {
-						animatePhotoItemToCorner(view, itemPosition, DURATION_SHORT);
-					} else {
-						animateTextItemToCorner(view, itemPosition, DURATION_SHORT);
-					}
-				}
-			}
-
-            private void updateOrderCountAndDisplay(View viewClicked) {
-                final View parent = (View) viewClicked.getParent().getParent().getParent();
-                TextView cornertext = (TextView) parent.findViewById(R.id.corner);
-                cornertext.setVisibility(View.VISIBLE);
-                cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
-                        .getTotalQuantity()));
-                Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
-                cornertext.startAnimation(a);
+                    if (MenuActivity.isPhotoMode) {
+                        animatePhotoItemToCorner(view, itemPosition, DURATION_SHORT);
+                    } else {
+                        animateTextItemToCorner(view, itemPosition, DURATION_SHORT);
+                    }
+                }
             }
+
+
         };
-	}
+    }
+
+    private void updateOrderCountAndDisplay(View viewClicked) {
+        final View parent = (View) viewClicked.getParent().getParent().getParent();
+        TextView cornertext = (TextView) parent.findViewById(R.id.corner);
+        cornertext.setVisibility(View.VISIBLE);
+        cornertext.setText(String.valueOf(User.getInstance(mContext).currentSession.getCurrentOrder()
+                .getTotalQuantity()));
+        Animation a = AnimationUtils.loadAnimation(mContext, R.anim.scale_up);
+        cornertext.startAnimation(a);
+    }
 
     @SuppressWarnings("deprecation")
     private void showClearOrderPopup() {
@@ -265,15 +272,16 @@ public class MenuAdapter extends BaseAdapter {
         alert.setTitle("Just Arrived?");
         alert.setMessage(
                 "We found an existing order. If it belongs " +
-                "to you, tap continue. Otherwise tap Start new session.");
+                        "to you, tap continue. Otherwise tap Start new session.");
         alert.setView(null);
         alert.setButton2("Start new session", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-				User.getInstance(mContext).clearPastOrder();
+                User.getInstance(mContext).clearPastOrder();
             }
         });
         alert.setButton("Continue", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {}
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
         });
         alert.show();
         TextView messageView = (TextView) alert.findViewById(android.R.id.message);
@@ -292,201 +300,202 @@ public class MenuAdapter extends BaseAdapter {
     }
 
 
+    private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
+        View viewToCopy = (View) view.getParent();
 
+        ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewToCopy.getWidth(),
+                viewToCopy.getHeight());
+        viewToAnimate.setLayoutParams(params);
 
-	private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
-		View viewToCopy = (View) view.getParent();
+        viewToCopy.setDrawingCacheEnabled(true);
+        viewToCopy.buildDrawingCache(true);
+        Bitmap bm = Bitmap.createBitmap(viewToCopy.getDrawingCache());
+        viewToCopy.setDrawingCacheEnabled(false);
 
-		ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewToCopy.getWidth(),
-				viewToCopy.getHeight());
-		viewToAnimate.setLayoutParams(params);
+        viewToAnimate.setImageBitmap(bm);
+        ((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
+        MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
+    }
 
-		viewToCopy.setDrawingCacheEnabled(true);
-		viewToCopy.buildDrawingCache(true);
-		Bitmap bm = Bitmap.createBitmap(viewToCopy.getDrawingCache());
-		viewToCopy.setDrawingCacheEnabled(false);
+    private void animatePhotoItemToCorner(View view, final Integer itemPosition, long duration) {
+        ImageView imageViewToCopy = (ImageView) ((View) view.getParent()).findViewById(R.id.menuitem);
+        ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageViewToCopy.getWidth(),
+                imageViewToCopy.getHeight());
+        viewToAnimate.setLayoutParams(params);
+        viewToAnimate.setImageDrawable(imageViewToCopy.getDrawable());
+        ((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
+        MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
+    }
 
-		viewToAnimate.setImageBitmap(bm);
-		((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
-		MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
-	}
+    private void moveViewToScreenCorner(int position, final View start, long duration) {
+        int fromLoc[] = new int[2];
+        start.getLocationOnScreen(fromLoc);
+        float startX = fromLoc[0];
+        float startY = fromLoc[1];
+        position -= ((MenuActivity) mContext).listview.getFirstVisiblePosition();
+        startY += ((position - 1) * (MenuActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
 
-	private void animatePhotoItemToCorner(View view, final Integer itemPosition, long duration) {
-		ImageView imageViewToCopy = (ImageView) ((View) view.getParent()).findViewById(R.id.menuitem);
-		ImageView viewToAnimate = new ImageView(MenuAdapter.this.mContext);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageViewToCopy.getWidth(),
-				imageViewToCopy.getHeight());
-		viewToAnimate.setLayoutParams(params);
-		viewToAnimate.setImageDrawable(imageViewToCopy.getDrawable());
-		((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
-		MenuAdapter.this.moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
-	}
+        int toLoc[] = new int[2];
+        ((MenuActivity) mContext).listview.getLocationOnScreen(toLoc);
+        float destX = toLoc[0] + +((MenuActivity) mContext).listview.getWidth();
+        float destY = toLoc[1] + ((MenuActivity) mContext).listview.getHeight();
 
-	private void moveViewToScreenCorner(int position, final View start, long duration) {
-		int fromLoc[] = new int[2];
-		start.getLocationOnScreen(fromLoc);
-		float startX = fromLoc[0];
-		float startY = fromLoc[1];	
-		position -= ((MenuActivity) mContext).listview.getFirstVisiblePosition();
-		startY += ((position - 1) * (MenuActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
-		
-		int toLoc[] = new int[2];
-		((MenuActivity) mContext).listview.getLocationOnScreen(toLoc);
-		float destX = toLoc[0] + + ((MenuActivity) mContext).listview.getWidth();
-		float destY = toLoc[1] + ((MenuActivity) mContext).listview.getHeight();
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.setFillAfter(true);
+        animSet.setDuration(duration);
+        ScaleAnimation scale = new ScaleAnimation(1, 0, 1, 0);
+        animSet.addAnimation(scale);
 
-		AnimationSet animSet = new AnimationSet(true);
-		animSet.setFillAfter(true);
-		animSet.setDuration(duration);
-		ScaleAnimation scale = new ScaleAnimation(1, 0, 1, 0);
-		animSet.addAnimation(scale);
+        TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, startX, Animation.ABSOLUTE, destX,
+                Animation.ABSOLUTE, startY, Animation.ABSOLUTE, destY);
 
-		TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, startX, Animation.ABSOLUTE, destX,
-				Animation.ABSOLUTE, startY, Animation.ABSOLUTE, destY);
-		
-		animSet.addAnimation(translate);
-		animSet.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {}
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
-			
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				start.setVisibility(View.GONE);
-			}
-		});
-		
-		start.startAnimation(animSet);
-	}
+        animSet.addAnimation(translate);
+        animSet.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
 
-	@Override
-	public DishModel getItem(int position) {
-		return mFilteredDishes.get(position);
-	}
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                start.setVisibility(View.GONE);
+            }
+        });
 
-	@Override
-	public int getCount() {
-		return mFilteredDishes.size();
-	}
+        start.startAnimation(animSet);
+    }
 
-	@Override
-	public int getViewTypeCount() {
-		return MENU_LIST_VIEW_TYPE_COUNT_IS_2;
-	}
+    @Override
+    public DishModel getItem(int position) {
+        return mFilteredDishes.get(position);
+    }
 
-	@Override
-	public int getItemViewType(int position) {
-		return MenuActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
-		final DishModel currentDish = getItem(position);
+    @Override
+    public int getCount() {
+        return mFilteredDishes.size();
+    }
 
-		if (MenuActivity.isPhotoMode) {
-			final ListPhotoItemViewHolder photoViewHolder;
+    @Override
+    public int getViewTypeCount() {
+        return MENU_LIST_VIEW_TYPE_COUNT_IS_2;
+    }
 
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_photo_item_row, null);
-				photoViewHolder = new ListPhotoItemViewHolder();
-				photoViewHolder.imageView = (ImageView) convertView.findViewById(R.id.menuitem);
-				photoViewHolder.overlay = (ImageView) convertView.findViewById(R.id.overlay);
-				photoViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.itemdesc);
-				photoViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
-				photoViewHolder.textItemPrice.bringToFront();
-				photoViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
-				photoViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
-				convertView.setTag(photoViewHolder);
+    @Override
+    public int getItemViewType(int position) {
+        return MenuActivity.isPhotoMode ? TYPE_PHOTO_ITEM : TYPE_TEXT_ITEM;
+    }
 
-				photoViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
-				photoViewHolder.imageView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						photoViewHolder.imageAddButton.performClick();
-					}
-				});
-			} else {
-				photoViewHolder = (ListPhotoItemViewHolder) convertView.getTag();
-			}
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final DishModel currentDish = getItem(position);
 
-			if (currentDish.photo.thumbnailLarge.contains(DEFAULT_DISH_PHOTO_URL)) {
-				Ion.with(mContext).load(BASE_URL + "media/" + this.mOutletInfo.defaultDishPhoto)
-						.intoImageView(photoViewHolder.imageView);
-			} else {
-				Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
-						.intoImageView(photoViewHolder.imageView);
-			}
+        if (MenuActivity.isPhotoMode) {
+            final ListPhotoItemViewHolder photoViewHolder;
 
-			if (currentDish.quantity <= 0) {
-				photoViewHolder.overlay.setBackgroundDrawable(this.outOfStockBackground);
-				photoViewHolder.overlay.setVisibility(View.VISIBLE);
-			} else {
-				photoViewHolder.overlay.setBackgroundResource(0);
-				photoViewHolder.overlay.setVisibility(View.GONE);
-			}
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_photo_item_row, null);
+                photoViewHolder = new ListPhotoItemViewHolder();
+                photoViewHolder.imageView = (ImageView) convertView.findViewById(R.id.menuitem);
+                photoViewHolder.overlay = (ImageView) convertView.findViewById(R.id.overlay);
+                photoViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.itemdesc);
+                photoViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
+                photoViewHolder.textItemPrice.bringToFront();
+                photoViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
+                photoViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+                convertView.setTag(photoViewHolder);
 
-			photoViewHolder.textItemName.setText(currentDish.name);
-			photoViewHolder.textItemDesc.setText(currentDish.description);
-			photoViewHolder.textItemPrice.setText(currentDish.price + "");
-			photoViewHolder.imageAddButton.setTag(position);
-			if (currentDish.isDummyDish()) {
-				photoViewHolder.imageAddButton.setVisibility(View.GONE);
-				photoViewHolder.textItemPrice.setVisibility(View.GONE);
-			} else {
-				photoViewHolder.imageAddButton.setVisibility(View.VISIBLE);
-				photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
-			}
+                photoViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
+                photoViewHolder.imageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        photoViewHolder.imageAddButton.performClick();
+                    }
+                });
+            } else {
+                photoViewHolder = (ListPhotoItemViewHolder) convertView.getTag();
+            }
 
-			return convertView;
-		} else {
-			final ListTextItemViewHolder textViewHolder;
+            if (currentDish.photo.thumbnailLarge.contains(DEFAULT_DISH_PHOTO_URL)) {
+                Ion.with(mContext).load(BASE_URL + "media/" + this.mOutletInfo.defaultDishPhoto)
+                        .intoImageView(photoViewHolder.imageView);
+            } else {
+                Ion.with(mContext).load(BASE_URL + currentDish.photo.thumbnailLarge)
+                        .intoImageView(photoViewHolder.imageView);
+            }
 
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_text_item_row, null);
+            if (currentDish.quantity <= 0) {
+                photoViewHolder.overlay.setBackgroundDrawable(this.outOfStockBackground);
+                photoViewHolder.overlay.setVisibility(View.VISIBLE);
+            } else {
+                photoViewHolder.overlay.setBackgroundResource(0);
+                photoViewHolder.overlay.setVisibility(View.GONE);
+            }
 
-				textViewHolder = new ListTextItemViewHolder();
-				textViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
-				textViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
-				textViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.textitemdesc);
-				textViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
-				convertView.setTag(textViewHolder);
+            photoViewHolder.textItemName.setText(currentDish.name);
+            photoViewHolder.textItemDesc.setText(currentDish.description);
+            photoViewHolder.textItemPrice.setText(currentDish.price + "");
+            photoViewHolder.imageAddButton.setTag(position);
+            if (currentDish.isDummyDish()) {
+                photoViewHolder.imageAddButton.setVisibility(View.GONE);
+                photoViewHolder.textItemPrice.setVisibility(View.GONE);
+            } else {
+                photoViewHolder.imageAddButton.setVisibility(View.VISIBLE);
+                photoViewHolder.textItemPrice.setVisibility(View.VISIBLE);
+            }
 
-				textViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
-			} else {
-				textViewHolder = (ListTextItemViewHolder) convertView.getTag();
-			}
+            return convertView;
+        } else {
+            final ListTextItemViewHolder textViewHolder;
 
-			textViewHolder.textItemName.setText(currentDish.name);
-			textViewHolder.textItemDesc.setText(currentDish.description);
-			textViewHolder.textItemPrice.setText(currentDish.price + "");
-			textViewHolder.imageAddButton.setTag(position);
-			if (currentDish.isDummyDish()) {
-				textViewHolder.imageAddButton.setVisibility(View.GONE);
-				textViewHolder.textItemPrice.setVisibility(View.GONE);
-			} else {
-				textViewHolder.imageAddButton.setVisibility(View.VISIBLE);
-				textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
-			}
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.menu_text_item_row, null);
 
-			return convertView;
-		}
-	}
+                textViewHolder = new ListTextItemViewHolder();
+                textViewHolder.textItemPrice = (TextView) convertView.findViewById(R.id.textitemprice);
+                textViewHolder.textItemName = (TextView) convertView.findViewById(R.id.textitemname);
+                textViewHolder.textItemDesc = (TextView) convertView.findViewById(R.id.textitemdesc);
+                textViewHolder.imageAddButton = (ImageButton) convertView.findViewById(R.id.addbutton);
+                convertView.setTag(textViewHolder);
 
-	class ListPhotoItemViewHolder {
-		ImageView imageView, overlay;
-		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageAddButton;
-	}
+                textViewHolder.imageAddButton.setOnClickListener(mOrderDishButtonOnClickListener);
+            } else {
+                textViewHolder = (ListTextItemViewHolder) convertView.getTag();
+            }
 
-	class ListTextItemViewHolder {
-		TextView textItemPrice, textItemName, textItemDesc;
-		ImageButton imageAddButton;
-	}
+            textViewHolder.textItemName.setText(currentDish.name);
+            textViewHolder.textItemDesc.setText(currentDish.description);
+            textViewHolder.textItemPrice.setText(currentDish.price + "");
+            textViewHolder.imageAddButton.setTag(position);
+            if (currentDish.isDummyDish()) {
+                textViewHolder.imageAddButton.setVisibility(View.GONE);
+                textViewHolder.textItemPrice.setVisibility(View.GONE);
+            } else {
+                textViewHolder.imageAddButton.setVisibility(View.VISIBLE);
+                textViewHolder.textItemPrice.setVisibility(View.VISIBLE);
+            }
+
+            return convertView;
+        }
+    }
+
+    class ListPhotoItemViewHolder {
+        ImageView imageView, overlay;
+        TextView textItemPrice, textItemName, textItemDesc;
+        ImageButton imageAddButton;
+    }
+
+    class ListTextItemViewHolder {
+        TextView textItemPrice, textItemName, textItemDesc;
+        ImageButton imageAddButton;
+    }
 }

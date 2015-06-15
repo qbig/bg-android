@@ -54,6 +54,8 @@ import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
@@ -74,7 +76,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	private View bottomActionBar;
 	private TextView mOrderedDishCounterText;
 	private int mCategoryPosition;
-	private Handler mHandler;
+	public Handler mHandler;
 	private boolean shouldShowTabs;
     private ImageView mMagIcon;
 
@@ -94,6 +96,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_tabs);
 		setupBottomActionBar();
+        mHandler = new Handler();
         try {
             setupListView();
             setupCategoryTabs();
@@ -107,7 +110,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 new IntentFilter(NOTIF_UNDO_ORDER));
 	}
 
-	private void setupHideCategoriesTabsEvent() {
+    private void setupHideCategoriesTabsEvent() {
 		shouldShowTabs = false;
 		listview.setOnScrollListener(new OnScrollListener() {
 
@@ -455,10 +458,18 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 		return v.findViewById(resId);
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == MODIFIER_POPUP_REQUEST) {
-			if (resultCode == RESULT_OK) {
+			if (resultCode == MODIFIER_REULST_OK) {
 				updateOrderedDishCounter();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(NOTIF_MODIFIER_OK);
+                        LocalBroadcastManager.getInstance(MenuActivity.this).sendBroadcast(intent);
+                    }
+                }, 500);
 			}
 		}
 	}

@@ -62,7 +62,8 @@ public class Constants {
 	    public static final String MODIFIER_POPUP_DISH_ID = "ModifierDishId";
 	    
 	    //VALUE 
-	    public static final int DESSERT_CATEGORY_ID = 4;  
+	    public static final int DESSERT_CATEGORY_ID = 4;
+		public static final int MODIFIER_REULST_OK = 1;
 	    
 	    //BROADCAST MESSAGE KEY
 	    public static final String NOTIF_NEW_DISH_INFO_RETRIEVED = "RetrievedNewDishesAndTableInfo";

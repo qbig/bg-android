@@ -28,6 +28,7 @@ import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
+import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
 
 public class ModifierActivity extends Activity {
 
@@ -92,9 +93,8 @@ public class ModifierActivity extends Activity {
                     }
 
 				}
+                setResult(MODIFIER_REULST_OK);
 				finish();
-				Intent intent = new Intent(NOTIF_MODIFIER_OK);
-				LocalBroadcastManager.getInstance(ModifierActivity.this).sendBroadcast(intent);
 			}
 		});
 	}
