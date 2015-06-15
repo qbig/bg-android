@@ -49,7 +49,7 @@ public class CurrentOrderExpandableAdapter extends BaseExpandableListAdapter {
 			convertView = inflater.inflate(R.layout.list_items_child, null);
 		}
 		convertView.setVisibility(View.VISIBLE);
-		final EditText addNoteField = (EditText) convertView.findViewById(R.id.addNoteTextField);
+		final EditText addNoteField = (EditText) convertView.findViewById(R.id.add_note_textfield);
 		addNoteField.setTag(groupPosition);
 
 		addNoteField.setText(User.getInstance(mContext).currentSession.getCurrentOrder().mItems.get(groupPosition).note);

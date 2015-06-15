@@ -12,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.apache.commons.lang3.StringUtils;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.ModifierListViewAdapter;
 import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
@@ -37,6 +41,9 @@ public class ModifierActivity extends Activity {
 	private ActionBar mActionBar;
 	private View mActionBarView;
 	private TextView mTitle;
+	private EditText mNoteField;
+    private String mBackgroundColor;
+    private String mItemTextColor;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -48,10 +55,10 @@ public class ModifierActivity extends Activity {
 		if (extras != null) {
 			dishId = extras.getInt(MODIFIER_POPUP_DISH_ID);
 			mSelectedDish = User.getInstance(getApplicationContext()).currentOutlet.getDishWithId(dishId);
-			if (mSelectedDish == null || !mSelectedDish.customizable) {
+			if (mSelectedDish == null) {
 				finish();
 			}
-		} else {
+        } else {
 			finish();
 		}
 		super.onCreate(savedInstanceState);
@@ -59,8 +66,9 @@ public class ModifierActivity extends Activity {
 		uiSetup();
 		setupCancelButtonHandler();
 		setupOkButtonHandler();
-		setupModifierListViewAdapter();
-
+        if (mSelectedDish.customizable){
+            setupModifierListViewAdapter();
+        }
 	}
 
 	private void setupModifierListViewAdapter() {
@@ -73,7 +81,17 @@ public class ModifierActivity extends Activity {
 		mOkayButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				setResult(RESULT_OK);
-				User.getInstance(ModifierActivity.this).currentSession.getCurrentOrder().addDish(mSelectedDish);
+                final Order currentOrders = User.getInstance(ModifierActivity.this).currentSession.getCurrentOrder();
+				final int dishIndex = currentOrders.addDish(mSelectedDish);
+				final String note = mNoteField.getText().toString();
+				if (StringUtils.isNotEmpty(note)){
+                    if (StringUtils.isNotEmpty(currentOrders.mItems.get(dishIndex).note)) {
+                        currentOrders.mItems.get(dishIndex).note += ("\n" + note);
+                    } else {
+                        currentOrders.mItems.get(dishIndex).note = note;
+                    }
+
+				}
 				finish();
 				Intent intent = new Intent(NOTIF_MODIFIER_OK);
 				LocalBroadcastManager.getInstance(ModifierActivity.this).sendBroadcast(intent);
@@ -93,13 +111,23 @@ public class ModifierActivity extends Activity {
 
 	private void uiSetup() {
 		setContentView(R.layout.activity_modifier);
-		mModifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
-        mModifierListView.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
+        if (mSelectedDish.customizable) {
+            mBackgroundColor = mSelectedDish.modifier.backgroundColor.trim();
+            mItemTextColor = mSelectedDish.modifier.itemTextColor.trim();
+        } else {
+            mBackgroundColor = "#434751";
+            mItemTextColor = "#FFFFFF";
+        }
+
 		final LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mFooter = (LinearLayout) inflator.inflate(R.layout.modifier_footer, null);
-        mFooter.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
-		mModifierListView.addFooterView(mFooter);
-		mModifierListView.getRootView().setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
+        mNoteField = (EditText) mFooter.findViewById(R.id.add_note_textfield);
+        mModifierListView = (PinnedHeaderListView) findViewById(R.id.pinnedListView);
+        mModifierListView.addFooterView(mFooter);
+        mModifierListView.setBackgroundColor(Color.parseColor(mBackgroundColor));
+        mFooter.setBackgroundColor(Color.parseColor(mBackgroundColor));
+        mModifierListView.getRootView().setBackgroundColor(Color.parseColor(mBackgroundColor));
+
 	}
 
 	@Override
@@ -113,14 +141,14 @@ public class ModifierActivity extends Activity {
 	private void setTitleColor() {
 		mTitle = (TextView) mActionBarView.findViewById(R.id.title);
 		mTitle.setText(mSelectedDish.name);
-		mTitle.setTextColor(Color.parseColor(mSelectedDish.modifier.itemTextColor.trim()));
+		mTitle.setTextColor(Color.parseColor(mItemTextColor));
 	}
 
 	private void setupTopActionBar() {
 		mActionBar = getActionBar();
 		mActionBar.setDisplayShowHomeEnabled(false);
 		mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_modifier, null);
-        mActionBarView.setBackgroundColor(Color.parseColor(mSelectedDish.modifier.backgroundColor.trim()));
+        mActionBarView.setBackgroundColor(Color.parseColor(mBackgroundColor));
 		final LayoutParams layout = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		mActionBar.setCustomView(mActionBarView, layout);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);

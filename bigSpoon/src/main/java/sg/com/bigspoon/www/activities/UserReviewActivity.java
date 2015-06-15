@@ -150,7 +150,7 @@ public class UserReviewActivity extends Activity {
 	}
 
 	private void performFeedbackSubmission() {
-		final EditText feedbackTextFiled = (EditText) findViewById(R.id.addNoteTextField);
+		final EditText feedbackTextFiled = (EditText) findViewById(R.id.add_note_textfield);
 		if (feedbackTextFiled.getText().toString().isEmpty()) {
 			return;
 		}

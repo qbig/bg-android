@@ -31,14 +31,12 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +46,6 @@ import java.util.List;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.OutletListAdapter;
 import sg.com.bigspoon.www.data.BigSpoon;
-import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.OutletModel;
 import sg.com.bigspoon.www.data.User;
@@ -84,6 +81,9 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 		}
 	};
 	private ProgressBar progressBar;
+    private static int MAX_TRY_COUNT = 6;
+    private int loadCount = 0;
+    private Handler handler;
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -192,6 +192,7 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 		Ion.getDefault(this).configure().setLogging(ION_LOGGING_OUTLET_LIST, Log.DEBUG);
 		initFBSession(savedInstanceState);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
+        handler = new Handler();
 	}
 
 	private void loadOutlets(){
@@ -201,27 +202,35 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
 			@Override
 			public void onCompleted(Exception e, List<OutletModel> result) {
-				if (e != null) {
-					if (Constants.LOG) {
-						Toast.makeText(OutletListActivity.this, "Error loading outlets", Toast.LENGTH_LONG)
-								.show();
-					} else {
-						final JSONObject info = new JSONObject();
-						try {
-							info.put("error", e.toString());
-						} catch (JSONException e1) {
-							e1.printStackTrace();
-						}
-						User.getInstance(OutletListActivity.this).mMixpanel
-								.track("Error loading outlets", info);
-					}
-
-					return;
+				final User user = User.getInstance(getApplicationContext());
+				user.logRemote("loading outlets", e, null);
+				if (result != null) {
+					progressBar.setVisibility(View.GONE);
+                    loadCount = 0;
+					outlets = result;
+					updateListData();
+					OutletListActivity.this.navigateToPresetOutletIfNecessary();
+				} else {
+                    if (loadCount < MAX_TRY_COUNT){
+                        loadCount++;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadOutlets();
+                            }
+                        }, 1000);
+                    } else {
+                        loadCount = 0;
+                        if (user.wifiIsConnected()){
+                            user.mMixpanel.track("Outlets loading failed, WIFI Connected", null);
+                        } else {
+                            user.mMixpanel.track("Outlets loading failed, WIFI Disconnected", null);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                        SuperToast.create(getApplicationContext(), "Sorry:( The network is messed up. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+                        finish();
+                    }
 				}
-				progressBar.setVisibility(View.GONE);
-				outlets = result;
-				updateListData();
-				OutletListActivity.this.navigateToPresetOutletIfNecessary();
 			}
 		});
 	}

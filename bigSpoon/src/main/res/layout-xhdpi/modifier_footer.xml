@@ -3,62 +3,76 @@
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#434751"
-     >
+    android:background="#434751">
+
     <TableRow
-        android:id="@+id/tableRow"
+        android:id="@+id/tableRowNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:gravity="center" >
+        android:gravity="center">
 
-        <FrameLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" >
+        <EditText
+            android:id="@+id/add_note_textfield"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/feedback"
+            android:ems="8"
+            android:gravity="top"
+            android:hint="@string/add_note_pop"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:maxLines="2"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/black"></EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingLeft="4.0dip"
+            android:paddingTop="5.0dip"
+            android:paddingRight="4.0dip"
+            android:paddingBottom="1.0dip"
+            android:layout_width="fill_parent" android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/cancle"
-                android:layout_width="100dp"
-                android:layout_height="35dp"
-                android:layout_gravity="left"
-                android:layout_marginRight="40dp"
-                android:background="@android:color/black"
+                android:layout_width="0.0dip" android:layout_height="fill_parent"
                 android:text="Cancel"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:background="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.0" />
 
-        </FrameLayout>
-        
-   <FrameLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="0.0dip" android:layout_height="fill_parent"
+                android:text="Okay"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="#8BCC6F"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1.0" />
 
-   <Button
-       android:id="@+id/ok"
-       android:layout_width="100dp"
-       android:layout_height="35dp"
-       android:layout_marginLeft="40dp"
-       android:background="#8BCC6F"
-       android:text="Okay"
-       android:textColor="@color/white"
-       android:textStyle="bold" />
-
-    </FrameLayout>
-
+        </LinearLayout>
     </TableRow>
-    
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="match_parent"
-        android:layout_height="80dp">
-        <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:gravity="center_horizontal"
-        android:background="#00ffffff" />
-        
-    </TableRow>
+
 </TableLayout>

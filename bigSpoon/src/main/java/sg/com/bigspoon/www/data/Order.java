@@ -25,9 +25,10 @@ public class Order {
 		st = new Stack();
 	}
 
-	public void addDish(DishModel dish) {
+	public int addDish(DishModel dish) {
 		canPop = true;
-		if (!containDishWithId(dish.id) || dish.customizable) {
+        final int dishIndex = containDishWithId(dish.id);
+		if (dishIndex  == -1 || dish.customizable) {
 			final OrderItem newItem = new OrderItem();
 			newItem.dish = dish;
 			newItem.quantity = 1;
@@ -37,10 +38,12 @@ public class Order {
 			mItems.add(newItem);
 			st.push(newItem);
 			dish.quantity -= 1;
+			return mItems.size() - 1;
 		} else {
 			incrementDishWithId(dish.id);
 			st.push(new Integer(dish.id));
-		}
+            return dishIndex;
+        }
 	}
 
 	public void clearUndoCache() {
@@ -62,7 +65,7 @@ public class Order {
 	}
 
 	public void minusDish(DishModel dish) {
-		if (containDishWithId(dish.id)) {
+		if (containDishWithId(dish.id) != -1) {
 			for (OrderItem item : mItems) {
 				if (item.dish.id == dish.id) {
 					if (item.quantity > 1) {
@@ -148,7 +151,7 @@ public class Order {
 		for (OrderItem itemToMerge : newOrder.mItems) {
 			if (itemToMerge.dish.customizable) {
 				this.mItems.add(itemToMerge);
-			} else if (this.containDishWithId(itemToMerge.dish.id)) {
+			} else if (this.containDishWithId(itemToMerge.dish.id) != -1) {
 				getItemWithDishId(itemToMerge.dish.id).quantity += itemToMerge.quantity;
 			} else {
 				mItems.add(itemToMerge);
@@ -237,11 +240,11 @@ public class Order {
 		return false;
 	}
 
-	private boolean containDishWithId(int dishID) {
-		boolean result = false;
-		for (OrderItem item : mItems) {
-			if (item.dish.id == dishID) {
-				result = true;
+	private int containDishWithId(int dishID) {
+		int result = -1;
+		for (int i = 0; i < mItems.size(); i++) {
+			if (mItems.get(i).dish.id == dishID) {
+				result = i;
 				break;
 			}
 		}

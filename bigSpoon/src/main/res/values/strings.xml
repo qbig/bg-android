@@ -63,6 +63,7 @@
     <string name="error_dialog_button_text">OK</string>
     <string name="app_id">617139018336855</string> 
     <string name="add_note">Add notes (e.g. no peanuts)&#8230;</string>
+    <string name="add_note_pop">Add notes if any(e.g. no peanuts)&#8230;</string>
     <string name="i_am_hungry_eat_planet">I’m so hungry I could eat a planet. Yee Hah!</string>
     <string name="email_login_hint_text">Email</string>
     <string name="have_suggestion">Have a suggestion?</string>
