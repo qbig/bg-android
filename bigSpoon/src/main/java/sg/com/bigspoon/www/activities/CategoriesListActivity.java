@@ -49,7 +49,7 @@ import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
 	private static final String ION_LOGGING_CATEGORY_LIST = "ion-category-list";
-	private static final int MAX_TRY_COUNT = 3;
+	private static final int MAX_TRY_COUNT = 6;
 	ListView catrgoriesList;
 	private ActionBar mActionBar;
 	private View mActionBarView;
@@ -75,21 +75,25 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 			startActivity(new Intent(this, ImageDialogSteps.class));
 			shouldShowSteps = false;
 		}
-
-		if (user.prevOrderTime != -1){
-			long currentTime = System.currentTimeMillis();
-			if (currentTime - user.prevOrderTime > user.currentOutlet.clearPastOrdersInterval * 1000){
-				user.clearPastOrder();
-				user.prevOrderTime = -1;
+		try {
+			if (user.prevOrderTime != -1){
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - user.prevOrderTime > user.currentOutlet.clearPastOrdersInterval * 1000){
+					user.clearPastOrder();
+					user.prevOrderTime = -1;
+				}
 			}
+			if (user.prevActiveTime != -1){
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - user.prevActiveTime > 60 * 1000){
+					user.currentSession.clearCurrentOrder();
+					user.prevActiveTime= -1;
+				}
+			}
+		} catch (NullPointerException npe) {
+			Crashlytics.log(npe.toString());
 		}
-		if (user.prevActiveTime != -1){
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - user.prevActiveTime > 60 * 1000){
-                user.currentSession.clearCurrentOrder();
-                user.prevActiveTime= -1;
-            }
-        }
+
     }
 
 
@@ -139,6 +143,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 				.setCallback(new FutureCallback<JsonObject>() {
 					@Override
 					public void onCompleted(Exception e, JsonObject result) {
+						loadCount++;
 						final User user = User.getInstance(getApplicationContext());
 						user.logRemote("loading categories", e, result);
 						if (result != null) {
@@ -167,7 +172,6 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 
 						} else if (user.currentOutlet == null) {
 							if (loadCount < MAX_TRY_COUNT){
-								loadCount++;
 								handler.postDelayed(new Runnable() {
 									@Override
 									public void run() {
