@@ -186,7 +186,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 									user.mMixpanel.track("Categories loading failed, WIFI Disconnected", null);
 								}
 								mProgressBar.setVisibility(View.GONE);
-								SuperToast.create(getApplicationContext(), "Sorry:( The network is messed up. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+								SuperToast.create(getApplicationContext(), "Sorry:( Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
 								finish();
 							}
 						}
