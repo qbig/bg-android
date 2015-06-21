@@ -595,13 +595,6 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             textItemName = (TextView) itemView.findViewById(R.id.textitemname);
             imageAddButton = (ImageButton) itemView.findViewById(R.id.addbutton);
 
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    imageAddButton.performClick();
-                }
-            });
             itemView.setOnClickListener(this);
         }
 
