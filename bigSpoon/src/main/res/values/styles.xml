@@ -113,7 +113,7 @@
         <item name="android:fadingEdgeLength">8dp</item>
     </style>
 
-    <style name="MenuActivityActionBarTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="MenuActivityActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
@@ -129,7 +129,7 @@
     </style>
 
     <!-- ActionBar styles -->  
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">  
+    <style name="MyActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@color/BigSpoonOrange</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
