@@ -1,7 +1,7 @@
 package sg.com.bigspoon.www.activities;
 
 import android.animation.LayoutTransition;
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
@@ -23,10 +23,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +51,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,6 +59,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
@@ -64,6 +73,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
@@ -78,7 +88,6 @@ import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
-import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 
 public class MenuActivity extends ActionBarActivity implements TabListener {
@@ -108,6 +117,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     private static final float TEXT_ITEM_HEIGHT = 142;
     private static final long DURATION_LONG = 1000;
     private static final long DURATION_SHORT = 500;
+    private TextView mCornerText;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -122,20 +132,63 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.simple_tabs);
-		setupBottomActionBar();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.simple_tabs);
+        setupBottomActionBar();
         mHandler = new Handler();
         this.outOfStockBackground = getResources().getDrawable(R.drawable.out_of_stock);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tabanim_toolbar);
+        mCornerText = (TextView) findViewById(R.id.corner);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
+        setupViewPager(viewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                viewPager.setCurrentItem(tab.getPosition());
+
+                switch (tab.getPosition()) {
+                    case 0:
+                        showToast("One");
+                        break;
+                    case 1:
+                        showToast("Two");
+                        break;
+                    case 2:
+                        showToast("Three");
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
         try {
-            setupListView();
-            setupCategoryTabs();
-        } catch (NullPointerException npe){
+            //setupListView();
+            //setupCategoryTabs();
+        } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
             finish();
         }
 
-		setupHideCategoriesTabsEvent();
+        setupHideCategoriesTabsEvent();
         LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateCornerCounterReceiver,
                 new IntentFilter(NOTIF_UNDO_ORDER));
 
@@ -157,7 +210,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
                 )
         );
         mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+
 	}
+
+    void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
     private void setupHideCategoriesTabsEvent() {
 		shouldShowTabs = false;
@@ -232,14 +290,21 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 //        });
 	}
 
-	private void setupListView() {
-		listview = (RecyclerView) findViewById(R.id.list);
-		final LayoutInflater inflater = getLayoutInflater();
-        listview.setLayoutManager(new LinearLayoutManager(this));
-		//final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
-		//listview.addFooterView(footer, null, false);
+
+    private void setupViewPager(ViewPager viewPager) {
+        //listview = (RecyclerView) findViewById(R.id.list);
+        //final LayoutInflater inflater = getLayoutInflater();
+        //listview.setLayoutManager(new LinearLayoutManager(this));
+        //final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
+        //listview.addFooterView(footer, null, false);
+        final MenuTabPagerAdapter fragAdapter = new MenuTabPagerAdapter(getSupportFragmentManager());
+
         try {
-            adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet);
+            for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
+                MenuAdapter adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet, i);
+                fragAdapter.addFrag(new MenuTabFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter),User.getInstance(this).currentOutlet.categoriesDetails[i].name);
+            }
+            viewPager.setAdapter(fragAdapter);
         } catch (NullPointerException e) {
             Crashlytics.log("currentOutlet is null:" + e.getMessage());
             Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
@@ -247,8 +312,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             startActivity(intent);
         }
 
-		listview.setAdapter(adapter);
-//		listview.setOnItemClickListener(new OnItemClickListener() {
+//      listview.setAdapter(adapter);
+//      listview.setOnItemClickListener(new OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //
@@ -259,7 +324,36 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 //            }
 //        });
 
-	}
+    }
+
+//	private void setupListView() {
+//		listview = (RecyclerView) findViewById(R.id.list);
+//		final LayoutInflater inflater = getLayoutInflater();
+//        listview.setLayoutManager(new LinearLayoutManager(this));
+//		//final ViewGroup footer = (ViewGroup) inflater.inflate(R.layout.footer, listview, false);
+//		//listview.addFooterView(footer, null, false);
+//        try {
+//            adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet);
+//        } catch (NullPointerException e) {
+//            Crashlytics.log("currentOutlet is null:" + e.getMessage());
+//            Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//        }
+//
+//		listview.setAdapter(adapter);
+////		listview.setOnItemClickListener(new OnItemClickListener() {
+////            @Override
+////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////
+////                isPhotoMode = true;
+////                getActionBarView().findViewById(R.id.toggleButton).setBackgroundResource(R.drawable.list_icon_new);
+////                adapter.notifyDataSetChanged();
+////                listview.setSelection(position);
+////            }
+////        });
+//
+//	}
 
 	private void setupBottomActionBar() {
 		bottomActionBar = findViewById(R.id.gv_action_menu);
@@ -289,7 +383,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            setupActionButton();
+            //setupActionButton();
             return super.onCreateOptionsMenu(menu);
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
@@ -445,21 +539,22 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 	}
 
     private void setupCategoryTabs() {
-        mCategoryPosition = 0;
-        final Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
-        }
-        mCategoriesTabBar = getActionBar();
-        if (mCategoriesTabBar != null) {
-            mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-            for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
-                mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
-                        .setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
-            }
-            mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
-        }
+//        mCategoryPosition = 0;
+//        final Bundle extras = getIntent().getExtras();
+//        if (extras != null) {
+//            mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
+//        }
+//        mCategoriesTabBar = getSupportActionBar();
+//        if (mCategoriesTabBar != null) {
+//            mCategoriesTabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//
+//            for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
+//                mCategoriesTabBar.addTab(mCategoriesTabBar.newTab()
+//                        .setText(User.getInstance(this).currentOutlet.categoriesDetails[i].name).setTabListener(this));
+//            }
+//            mCategoriesTabBar.setSelectedNavigationItem(mCategoryPosition);
+//        }
     }
 
     @Override
@@ -701,13 +796,11 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
     }
 
     private void updateOrderCountAndDisplay(View viewClicked) {
-        final View parent = (View) viewClicked.getParent().getParent().getParent();
-        TextView cornertext = (TextView) parent.findViewById(R.id.corner);
-        cornertext.setVisibility(View.VISIBLE);
-        cornertext.setText(String.valueOf(User.getInstance(this).currentSession.getCurrentOrder()
+        mCornerText.setVisibility(View.VISIBLE);
+        mCornerText.setText(String.valueOf(User.getInstance(this).currentSession.getCurrentOrder()
                 .getTotalQuantity()));
         Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-        cornertext.startAnimation(a);
+        mCornerText.startAnimation(a);
     }
 
 
@@ -824,7 +917,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         private OutletDetailsModel mOutletInfo;
         public int mCurrentSelectedCategoryTabIndex;
         private View.OnClickListener mOrderDishButtonOnClickListener;
-        private ArrayList<DishModel> mFilteredDishes;
+        public ArrayList<DishModel> mFilteredDishes;
         private int currentRetryCount = 0;
         private Handler handler;
 
@@ -882,12 +975,12 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
             return -1;
         }
 
-        public MenuAdapter(Context context, final OutletDetailsModel outletInfo) {
+        public MenuAdapter(Context context, final OutletDetailsModel outletInfo, int forIndex) {
             super();
             this.mOutletInfo = outletInfo;
             this.mContext = context;
             this.handler = new Handler(context.getMainLooper());
-
+            this.mCurrentSelectedCategoryTabIndex = forIndex;
             LocalBroadcastManager.getInstance(context).registerReceiver(mAfterModifierPopupReceiver,
                     new IntentFilter(NOTIF_MODIFIER_OK));
 
@@ -1021,8 +1114,69 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
         @Override
         public void onBindViewHolder(ListPhotoItemViewHolder holder, int pos) {
-            DishModel dish= mFilteredDishes.get(pos);
+            DishModel dish = mFilteredDishes.get(pos);
             holder.bindDish(dish);
+        }
+    }
+
+
+    static class MenuTabPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public MenuTabPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+    static class MenuTabFragment extends Fragment {
+        MenuAdapter adapter;
+        ArrayList<DishModel> dishes;
+        String categoryName;
+
+        public MenuTabFragment() {
+        }
+
+        @SuppressLint("ValidFragment")
+        public MenuTabFragment(String categoryName, MenuAdapter adapter) {
+            this.categoryName = categoryName;
+            this.adapter = adapter;
+            this.dishes = adapter.mFilteredDishes;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.menu_tab_frag, container, false);
+
+            final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.menu_tab_frag_bg);
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.menu_tab_frag_scrollableview);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(adapter);
+
+            return view;
         }
     }
 }

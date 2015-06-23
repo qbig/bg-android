@@ -113,10 +113,11 @@
         <item name="android:fadingEdgeLength">8dp</item>
     </style>
 
-    <style name="MenuActivityActionBarTheme" parent="Theme.AppCompat.Light">
+    <style name="MenuActivityActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/MyActionBarNoTitle</item>
         <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="colorAccent">@color/white</item>
         <item name="android:showDividers">middle</item>
         <item name="android:fadingEdge">horizontal</item>
         <item name="android:fadingEdgeLength">8dp</item>

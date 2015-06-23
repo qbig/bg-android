@@ -1,6 +1,6 @@
 package sg.com.bigspoon.www.activities;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,9 +56,9 @@ public class ActionBarActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_action_bar);
-		actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(true);
+//		setContentView(R.layout.activity_action_bar);
+//		actionBar = getSupportActionBar();
+//		actionBar.setDisplayShowTitleEnabled(true);
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 	}
 
