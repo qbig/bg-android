@@ -679,9 +679,8 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         private DishModel mDish;
         private int mPosition;
 
-        public ListPhotoItemViewHolder(View itemView, int position) {
+        public ListPhotoItemViewHolder(View itemView) {
             super(itemView);
-            mPosition = position;
             imageView = (ImageView) itemView.findViewById(R.id.menuitem);
             overlay = (ImageView) itemView.findViewById(R.id.overlay);
             textItemDesc = (TextView) itemView.findViewById(R.id.itemdesc);
@@ -790,9 +789,11 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
         }
     }
 
-    private class ListTextItemViewHolder {
-        TextView textItemPrice, textItemName, textItemDesc;
-        ImageButton imageAddButton;
+    private class PlaceHolderViewHolder extends ListPhotoItemViewHolder {
+        View placeholderView;
+        public PlaceHolderViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
     private void updateOrderCountAndDisplay(View viewClicked) {
@@ -869,7 +870,7 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
     private void moveViewToScreenCorner(int position, final View start, long duration) {
         int fromLoc[] = new int[2];
-        LinearLayoutManager layoutManager = ((LinearLayoutManager)listview.getLayoutManager());
+        LinearLayoutManager layoutManager = (LinearLayoutManager) listview.getLayoutManager();
         int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
         start.getLocationOnScreen(fromLoc);
         float startX = fromLoc[0];
@@ -1102,19 +1103,39 @@ public class MenuActivity extends ActionBarActivity implements TabListener {
 
         @Override
         public int getItemCount() {
-            return mFilteredDishes.size();
+            return mFilteredDishes.size() + 1;
         }
 
         @Override
-        public ListPhotoItemViewHolder onCreateViewHolder(ViewGroup parent, int pos) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.menu_photo_item_row, parent, false);
-            return new ListPhotoItemViewHolder(view, pos);
+        public int getItemViewType(int position) {
+            if (position < mFilteredDishes.size()) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+
+        @Override
+        public ListPhotoItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            if (viewType == 0) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.menu_photo_item_row, parent, false);
+                return new ListPhotoItemViewHolder(view);
+            } else {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.menu_placeholder_layout, parent, false);
+                return new PlaceHolderViewHolder(view);
+            }
         }
 
         @Override
         public void onBindViewHolder(ListPhotoItemViewHolder holder, int pos) {
+            if (pos >= mFilteredDishes.size()) {
+                return;
+            }
             DishModel dish = mFilteredDishes.get(pos);
+            holder.mPosition = pos;
             holder.bindDish(dish);
         }
     }

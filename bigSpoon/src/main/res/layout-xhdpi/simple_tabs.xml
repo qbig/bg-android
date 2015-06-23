@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--android:id="@+id/parent_layout"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:layout_height="fill_parent"-->
-<!--android:orientation="vertical" >-->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tabanim_maincontent"
@@ -30,18 +25,11 @@
             android:layout_height="wrap_content" />
 
     </android.support.design.widget.AppBarLayout>
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/list"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_above="@id/gv_action_menu"/>-->
+
     <android.support.v4.view.ViewPager
         android:id="@+id/tabanim_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/gv_action_menu"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
@@ -72,5 +60,4 @@
         android:layout_marginBottom="33dp"
         android:background="@drawable/badge_circle"/>
 
-    <!--</RelativeLayout>-->
 </android.support.design.widget.CoordinatorLayout>

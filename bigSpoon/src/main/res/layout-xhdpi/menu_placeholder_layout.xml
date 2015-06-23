@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="105dp"
+    android:background="@color/white"
+    android:visibility="invisible"
+    android:paddingTop="1dp" >
+
+    <ImageView
+        android:id="@+id/menuitem"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        />
+
+    <ImageView
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/addbutton"
+        android:layout_width="80dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:paddingRight="15dp"
+        android:src="@drawable/orange_add_bt" />
+
+    <TextView
+        android:id="@+id/itemdesc"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/menuitem"
+        android:background="@drawable/text_background_gradient"
+        android:gravity="top"
+        android:paddingLeft="10dp"
+        android:paddingTop="0dp"
+        android:textColor="@color/white"
+        android:textAppearance="@style/FontProxiSemiBold"
+        android:shadowRadius="5"
+        android:shadowColor="@color/black"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/textitemprice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textitemname"
+        android:layout_alignTop="@+id/textitemname"
+        android:layout_marginTop="0dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="30dp"
+        android:textColor="@color/white"
+        android:shadowRadius="5"
+        android:shadowColor="@color/black"
+        android:textAppearance="@style/FontProxiBold"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        />
+
+    <TextView
+        android:id="@+id/textitemname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/itemdesc"
+        android:layout_alignLeft="@+id/itemdesc"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/text_background_gradient_light"
+        android:paddingLeft="10dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="30dp"
+        android:textColor="@color/white"
+        android:shadowRadius="5"
+        android:shadowColor="@color/black"
+        android:textAppearance="@style/FontProxiBold"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
+
+</RelativeLayout>
