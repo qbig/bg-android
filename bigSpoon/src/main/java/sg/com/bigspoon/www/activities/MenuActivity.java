@@ -72,6 +72,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Vector;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
@@ -161,11 +162,24 @@ public class MenuActivity extends ActionBarActivity{
     };
 
 
+    private DishModel[] filterInactiveDish(DishModel[] dishes) {
+        Vector dishList = new Vector();
+        for(int i = 0; i<dishes.length; i++){
+            if(dishes[i].isActive){
+                dishList.addElement(dishes[i]);
+            }
+        }
+        DishModel[] filteredDishes= new DishModel[dishList.size()];
+        dishList.copyInto(filteredDishes);
+        return filteredDishes;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_tabs);
         setupBottomActionBar();
+        User.getInstance(this).currentOutlet.dishes = filterInactiveDish(User.getInstance(this).currentOutlet.dishes);
         mHandler = new Handler();
         this.outOfStockBackground = getResources().getDrawable(R.drawable.out_of_stock);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.tabanim_toolbar);
@@ -332,7 +346,7 @@ public class MenuActivity extends ActionBarActivity{
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mSearchView.clearFocus();
-                final String firstSuggestionString = ((Cursor) ((android.support.v4.widget.CursorAdapter) mSearchView.getSuggestionsAdapter()).getItem(0)).getString(1);
+                final String firstSuggestionString = ((Cursor) mSearchView.getSuggestionsAdapter().getItem(0)).getString(1);
                 displayDish(firstSuggestionString);
                 return true;
             }
@@ -483,7 +497,6 @@ public class MenuActivity extends ActionBarActivity{
         final Object[] temp = new Object[]{0, "default"};
         final String queryLow = query.toLowerCase();
         MatrixCursor cursor = new MatrixCursor(columns);
-
         Arrays.sort(User.getInstance(this).currentOutlet.dishes, new Comparator<DishModel>() {
             @Override
             public int compare(final DishModel lhs, DishModel rhs) {
@@ -513,7 +526,6 @@ public class MenuActivity extends ActionBarActivity{
 
         mSearchView.setSuggestionsAdapter(new MenuSearchSuggestionAdapter(this, cursor, User.getInstance(this).currentOutlet.dishes));
     }
-
 
     private class ListPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView, overlay;
@@ -777,7 +789,7 @@ public class MenuActivity extends ActionBarActivity{
 
         public int getDishPositionInFilteredList(int dishID) {
             for (int i = 0; i < mFilteredDishes.size(); i++) {
-                if (dishID == mFilteredDishes.get(i).id) {
+                if (dishID == mFilteredDishes.get(i).id && mFilteredDishes.get(i).isActive) {
                     return i;
                 }
             }
