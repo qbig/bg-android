@@ -374,8 +374,6 @@ public class MenuActivity extends ActionBarActivity{
         });
         mSearchField.setHint(R.string.dish_search_hint);
         mSearchField.setHintTextColor(getResources().getColor(R.color.light_gray));
-//        final ImageView voiceIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_voice_btn);
-//        voiceIcon.setVisibility(View.GONE);
         LinearLayout searchBar = (LinearLayout) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
         searchBar.setLayoutTransition(new LayoutTransition());
     }
