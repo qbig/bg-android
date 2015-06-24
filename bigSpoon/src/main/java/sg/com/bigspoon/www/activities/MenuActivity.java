@@ -86,6 +86,7 @@ import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_REQUEST;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
+import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 
 public class MenuActivity extends ActionBarActivity{
@@ -200,7 +201,11 @@ public class MenuActivity extends ActionBarActivity{
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
+        }
+        mViewPager.setCurrentItem(mCategoryPosition);
         setupHideCategoriesTabsEvent();
         LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateCornerCounterReceiver,
                 new IntentFilter(NOTIF_UNDO_ORDER));
@@ -369,6 +374,8 @@ public class MenuActivity extends ActionBarActivity{
         });
         mSearchField.setHint(R.string.dish_search_hint);
         mSearchField.setHintTextColor(getResources().getColor(R.color.light_gray));
+//        final ImageView voiceIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_voice_btn);
+//        voiceIcon.setVisibility(View.GONE);
         LinearLayout searchBar = (LinearLayout) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
         searchBar.setLayoutTransition(new LayoutTransition());
     }
