@@ -227,7 +227,7 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
                             user.mMixpanel.track("Outlets loading failed, WIFI Disconnected", null);
                         }
                         progressBar.setVisibility(View.GONE);
-                        SuperToast.create(getApplicationContext(), "Sorry:( The network is messed up. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+                        SuperToast.create(getApplicationContext(), "Sorry:(. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
                         finish();
                     }
 				}
