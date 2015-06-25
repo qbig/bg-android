@@ -45,7 +45,6 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -101,7 +100,7 @@ public class MenuActivity extends ActionBarActivity{
     private static final long DURATION_SHORT = 500;
     private TextView mCornerText;
     private ViewPager mViewPager;
-    private MenuTabPagerAdapter mFragAdapter;
+    private MenuTabPagerFragmentAdapter mFragAdapter;
     public View mClickedViewToAnimate;
     public int mClickedPos;
 
@@ -238,7 +237,7 @@ public class MenuActivity extends ActionBarActivity{
 
     private void setupViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
-        mFragAdapter = new MenuTabPagerAdapter(getSupportFragmentManager());
+        mFragAdapter = new MenuTabPagerFragmentAdapter(getSupportFragmentManager());
 
         try {
             for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
@@ -692,7 +691,6 @@ public class MenuActivity extends ActionBarActivity{
         private Context mContext;
         private OutletDetailsModel mOutletInfo;
         public int mCurrentSelectedCategoryTabIndex;
-        private View.OnClickListener mOrderDishButtonOnClickListener;
         public ArrayList<DishModel> mFilteredDishes;
         private int currentRetryCount = 0;
         private Handler handler;
@@ -800,11 +798,11 @@ public class MenuActivity extends ActionBarActivity{
     }
 
 
-    static class MenuTabPagerAdapter extends FragmentPagerAdapter {
+    static class MenuTabPagerFragmentAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public MenuTabPagerAdapter(FragmentManager manager) {
+        public MenuTabPagerFragmentAdapter(FragmentManager manager) {
             super(manager);
         }
 
