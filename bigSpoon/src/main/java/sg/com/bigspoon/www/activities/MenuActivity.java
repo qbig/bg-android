@@ -452,6 +452,8 @@ public class MenuActivity extends ActionBarActivity{
         User.getInstance(MenuActivity.this).mMixpanel.flush();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mUpdateCornerCounterReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mAfterModifierPopupReceiver);
     }
 
     public View getActionBarView() {
