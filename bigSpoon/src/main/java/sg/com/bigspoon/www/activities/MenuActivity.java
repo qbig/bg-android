@@ -2,21 +2,16 @@ package sg.com.bigspoon.www.activities;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -41,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
@@ -57,7 +51,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
@@ -93,20 +86,14 @@ import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 public class MenuActivity extends ActionBarActivity{
 
     private EditText mSearchField;
-    public static boolean isPhotoMode = true;
-
-    private View mActionBarView;
     private android.support.v7.widget.SearchView mSearchView;
     private ImageButton toggleButton;
-    private ImageButton backToOutletList;
     private ImageButton historyButton;
     private View bottomActionBar;
     private TextView mOrderedDishCounterText;
     private int mCategoryPosition = 0;
     public Handler mHandler;
-    private boolean shouldShowTabs;
     private Drawable outOfStockBackground;
-    private ImageView mMagIcon;
     private SuperActivityToast mSuperActivityToast;
     private static final float PHOTO_ITEM_HEIGHT = 242;
     private static final float TEXT_ITEM_HEIGHT = 142;
@@ -140,11 +127,7 @@ public class MenuActivity extends ActionBarActivity{
                                          public void run() {
                                              try {
                                                  updateOrderCountAndDisplay();
-                                                 if (MenuActivity.isPhotoMode) {
-                                                     animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
-                                                 } else {
-                                                     animateTextItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
-                                                 }
+                                                 animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
 
                                                  if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
                                                      MenuActivity.this.showClearOrderPopup();
@@ -179,26 +162,45 @@ public class MenuActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_tabs);
         setupBottomActionBar();
+        setupToolbar();
+        setupViewPager();
+        setupTabs();
+        initSuperToast();
+
         User.getInstance(this).currentOutlet.dishes = filterInactiveDish(User.getInstance(this).currentOutlet.dishes);
         mHandler = new Handler();
         this.outOfStockBackground = getResources().getDrawable(R.drawable.out_of_stock);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.tabanim_toolbar);
         mCornerText = (TextView) findViewById(R.id.corner);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateCornerCounterReceiver,
+                new IntentFilter(NOTIF_UNDO_ORDER));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mAfterModifierPopupReceiver,
+                new IntentFilter(NOTIF_MODIFIER_OK));
+    }
 
-        mViewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
-        setupViewPager(mViewPager);
+    private void initSuperToast() {
+        mSuperActivityToast = new SuperActivityToast(this,
+                SuperToast.Type.STANDARD);
+        mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
+        mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
+        mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
+        mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
+        mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
+        mSuperActivityToast.setOnClickWrapper(
+                new OnClickWrapper("superactivitytoast",
+                        new SuperToast.OnClickListener() {
+                            @Override
+                            public void onClick(View view, Parcelable token) {
+                                mSuperActivityToast.dismiss();
+                            }
+                        }
+                )
+        );
+        mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
+    }
 
+    private void setupTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -220,43 +222,22 @@ public class MenuActivity extends ActionBarActivity{
             mCategoryPosition = extras.getInt(POS_FOR_CLICKED_CATEGORY, 0);
         }
         mViewPager.setCurrentItem(mCategoryPosition);
-        setupHideCategoriesTabsEvent();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateCornerCounterReceiver,
-                new IntentFilter(NOTIF_UNDO_ORDER));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mAfterModifierPopupReceiver,
-                new IntentFilter(NOTIF_MODIFIER_OK));
-        mSuperActivityToast = new SuperActivityToast(this,
-                SuperToast.Type.STANDARD);
-        mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
-        mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-        mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
-        mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
-        mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
-        mSuperActivityToast.setOnClickWrapper(
-                new OnClickWrapper("superactivitytoast",
-                        new SuperToast.OnClickListener() {
-                            @Override
-                            public void onClick(View view, Parcelable token) {
-                                mSuperActivityToast.dismiss();
-                            }
-                        }
-                )
-        );
-        mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
-
     }
 
-    void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    private void setupToolbar() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tabanim_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setupHideCategoriesTabsEvent() {
-        shouldShowTabs = false;
-    }
-
-
-    private void setupViewPager(ViewPager viewPager) {
-
+    private void setupViewPager() {
+        mViewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
         mFragAdapter = new MenuTabPagerAdapter(getSupportFragmentManager());
 
         try {
@@ -264,7 +245,7 @@ public class MenuActivity extends ActionBarActivity{
                 MenuAdapter adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet, i);
                 mFragAdapter.addFrag(new MenuTabFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter), User.getInstance(this).currentOutlet.categoriesDetails[i].name);
             }
-            viewPager.setAdapter(mFragAdapter);
+            mViewPager.setAdapter(mFragAdapter);
         } catch (NullPointerException e) {
             Crashlytics.log("currentOutlet is null:" + e.getMessage());
             Intent intent = new Intent(getApplicationContext(), CategoriesListActivity.class);
@@ -297,7 +278,7 @@ public class MenuActivity extends ActionBarActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            setupActionButton(menu);
+            setupSearchView(menu);
             return super.onCreateOptionsMenu(menu);
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
@@ -306,7 +287,7 @@ public class MenuActivity extends ActionBarActivity{
         }
     }
 
-    private void setupActionButton(Menu menu) {
+    private void setupSearchView(Menu menu) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -316,7 +297,6 @@ public class MenuActivity extends ActionBarActivity{
         if (mSearchView != null) {
             mSearchView.setSearchableInfo(searchManager.getSearchableInfo(MenuActivity.this.getComponentName()));
         }
-
 
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(true);
@@ -408,37 +388,6 @@ public class MenuActivity extends ActionBarActivity{
         }
     }
 
-    private void setupHistoryButton() {
-        historyButton = (ImageButton) mActionBarView.findViewById(R.id.order_history);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), OrderHistoryListActivity.class);
-                intent.putExtra("callingActivityName", "MenuPhotoListActivity");
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void setupToggleButton() {
-        toggleButton = (ImageButton) mActionBarView.findViewById(R.id.toggleButton);
-        toggleButton.setBackgroundResource(R.drawable.list_icon_new);
-        toggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (isPhotoMode == true) {
-                    isPhotoMode = false;
-                    view.setBackgroundResource(R.drawable.photo_icon_new);
-                } else {
-                    isPhotoMode = true;
-                    view.setBackgroundResource(R.drawable.list_icon_new);
-                }
-
-            }
-        });
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -454,13 +403,6 @@ public class MenuActivity extends ActionBarActivity{
                 mUpdateCornerCounterReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 mAfterModifierPopupReceiver);
-    }
-
-    public View getActionBarView() {
-        final Window window = getWindow();
-        final View v = window.getDecorView();
-        final int resId = getResources().getIdentifier("action_bar_container", "id", "android");
-        return v.findViewById(resId);
     }
 
     @Override
@@ -638,18 +580,12 @@ public class MenuActivity extends ActionBarActivity{
                     }
                 }
 
-                if (MenuActivity.isPhotoMode) {
-                    animatePhotoItemToCorner(v, mPosition, DURATION_SHORT);
-                } else {
-                    animateTextItemToCorner(v, mPosition, DURATION_SHORT);
-                }
+                animatePhotoItemToCorner(v, mPosition, DURATION_SHORT);
             }
         }
     }
 
     private class PlaceHolderViewHolder extends ListPhotoItemViewHolder {
-        View placeholderView;
-
         public PlaceHolderViewHolder(View itemView) {
             super(itemView);
         }
@@ -697,34 +633,13 @@ public class MenuActivity extends ActionBarActivity{
 
     }
 
-
-    private void animateTextItemToCorner(View view, final Integer itemPosition, long duration) {
-        View viewToCopy = (View) view.getParent();
-
-        ImageView viewToAnimate = new ImageView(this);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(viewToCopy.getWidth(),
-                viewToCopy.getHeight());
-        viewToAnimate.setLayoutParams(params);
-
-        viewToCopy.setDrawingCacheEnabled(true);
-        viewToCopy.buildDrawingCache(true);
-        Bitmap bm = Bitmap.createBitmap(viewToCopy.getDrawingCache());
-        viewToCopy.setDrawingCacheEnabled(false);
-
-        viewToAnimate.setImageBitmap(bm);
-        ((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
-        moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
-    }
-
     private void animatePhotoItemToCorner(View view, final Integer itemPosition, long duration) {
-        //ImageView imageViewToCopy = (ImageView) ((View) view.getParent()).findViewById(R.id.menuitem);
         ImageView imageViewToCopy = (ImageView) view.findViewById(R.id.menuitem);
         ImageView viewToAnimate = new ImageView(MenuActivity.this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageViewToCopy.getWidth(),
                 imageViewToCopy.getHeight());
         viewToAnimate.setLayoutParams(params);
         viewToAnimate.setImageDrawable(imageViewToCopy.getDrawable());
-        //((ViewGroup) view.getParent().getParent().getParent()).addView(viewToAnimate);
         ((ViewGroup) view.getParent().getParent()).addView(viewToAnimate);
         moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
     }
@@ -738,7 +653,7 @@ public class MenuActivity extends ActionBarActivity{
         float startX = fromLoc[0];
         float startY = fromLoc[1];
         position -= firstVisiblePosition;
-        startY += ((position - 1) * (MenuActivity.isPhotoMode ? PHOTO_ITEM_HEIGHT : TEXT_ITEM_HEIGHT));
+        startY += (position - 1) * PHOTO_ITEM_HEIGHT;
 
         int toLoc[] = new int[2];
         menuFrag.mRecyclerView.getLocationOnScreen(toLoc);
@@ -757,12 +672,10 @@ public class MenuActivity extends ActionBarActivity{
         animSet.addAnimation(translate);
         animSet.setAnimationListener(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -816,8 +729,6 @@ public class MenuActivity extends ActionBarActivity{
         }
 
         public void updateFilteredList() {
-            //TODO dup code to clean up (Seen also in MenuActivity)
-
             mFilteredDishes = new ArrayList<DishModel>();
             if (mOutletInfo.dishes == null || mOutletInfo.dishes.length == 0) {
                 return;
@@ -938,7 +849,6 @@ public class MenuActivity extends ActionBarActivity{
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.menu_tab_frag, container, false);
 
-            final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.menu_tab_frag_bg);
             mRecyclerView = (RecyclerView) view.findViewById(R.id.menu_tab_frag_scrollableview);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
             mRecyclerView.setHasFixedSize(true);
