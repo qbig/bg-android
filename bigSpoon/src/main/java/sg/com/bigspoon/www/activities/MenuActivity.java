@@ -86,8 +86,6 @@ public class MenuActivity extends ActionBarActivity{
 
     private EditText mSearchField;
     private android.support.v7.widget.SearchView mSearchView;
-    private ImageButton toggleButton;
-    private ImageButton historyButton;
     private View bottomActionBar;
     private TextView mOrderedDishCounterText;
     private int mCategoryPosition = 0;
@@ -95,7 +93,6 @@ public class MenuActivity extends ActionBarActivity{
     private Drawable outOfStockBackground;
     private SuperActivityToast mSuperActivityToast;
     private static final float PHOTO_ITEM_HEIGHT = 242;
-    private static final float TEXT_ITEM_HEIGHT = 142;
     private static final long DURATION_LONG = 1000;
     private static final long DURATION_SHORT = 500;
     private TextView mCornerText;
