@@ -82,7 +82,7 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 
 
-public class MenuActivity extends ActionBarActivity{
+public class MenuActivity extends ActionBarActivity {
 
     private EditText mSearchField;
     private android.support.v7.widget.SearchView mSearchView;
@@ -100,6 +100,7 @@ public class MenuActivity extends ActionBarActivity{
     private MenuTabPagerFragmentAdapter mFragAdapter;
     public View mClickedViewToAnimate;
     public int mClickedPos;
+    private boolean isAnimating;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -117,24 +118,17 @@ public class MenuActivity extends ActionBarActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             if (context != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
-                mHandler
-                        .postDelayed(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             try {
-                                                 updateOrderCountAndDisplay();
-                                                 animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                try {
+                    updateOrderCountAndDisplay();
+                    animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
 
-                                                 if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
-                                                     MenuActivity.this.showClearOrderPopup();
-                                                 }
-                                                 User.getInstance(MenuActivity.this).showUndoDishPopup();
-                                             } catch (Exception e) {
-                                                 Crashlytics.log(e.toString());
-                                             }
-                                         }
-                                     }, 100
-                        );
+                    if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
+                        MenuActivity.this.showClearOrderPopup();
+                    }
+                    User.getInstance(MenuActivity.this).showUndoDishPopup();
+                } catch (Exception e) {
+                    Crashlytics.log(e.toString());
+                }
             }
         }
 
@@ -143,12 +137,12 @@ public class MenuActivity extends ActionBarActivity{
 
     private DishModel[] filterInactiveDish(DishModel[] dishes) {
         Vector dishList = new Vector();
-        for(int i = 0; i<dishes.length; i++){
-            if(dishes[i].isActive){
+        for (int i = 0; i < dishes.length; i++) {
+            if (dishes[i].isActive) {
                 dishList.addElement(dishes[i]);
             }
         }
-        DishModel[] filteredDishes= new DishModel[dishList.size()];
+        DishModel[] filteredDishes = new DishModel[dishList.size()];
         dishList.copyInto(filteredDishes);
         return filteredDishes;
     }
@@ -406,13 +400,8 @@ public class MenuActivity extends ActionBarActivity{
         if (requestCode == MODIFIER_POPUP_REQUEST) {
             if (resultCode == MODIFIER_REULST_OK) {
                 updateOrderedDishCounter();
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(NOTIF_MODIFIER_OK);
-                        LocalBroadcastManager.getInstance(MenuActivity.this).sendBroadcast(intent);
-                    }
-                }, 500);
+                Intent intent = new Intent(NOTIF_MODIFIER_OK);
+                LocalBroadcastManager.getInstance(MenuActivity.this).sendBroadcast(intent);
             }
         }
     }
@@ -521,7 +510,7 @@ public class MenuActivity extends ActionBarActivity{
 
         @Override
         public void onClick(View v) {
-            if (mDish == null) {
+            if (mDish == null || isAnimating) {
                 return;
             }
 
@@ -668,14 +657,18 @@ public class MenuActivity extends ActionBarActivity{
         animSet.addAnimation(translate);
         animSet.setAnimationListener(new AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+                isAnimating = true;
+            }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 ((ViewGroup) start.getParent()).removeView(start);
+                isAnimating = false;
             }
         });
 
