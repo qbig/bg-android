@@ -1,6 +1,7 @@
 package sg.com.bigspoon.www.data;
 
 import android.app.Application;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
@@ -43,6 +45,22 @@ public class BigSpoon extends Application implements Foreground.Listener {
 	final Handler mHandler = new Handler();
 	public boolean onStart = true;
 	private MixpanelAPI mMixpanel;
+	private PowerManager.WakeLock fullWakeLock;
+	private PowerManager.WakeLock partialWakeLock;
+	protected void createWakeLocks(){
+		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		fullWakeLock = powerManager.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Loneworker - FULL WAKE LOCK");
+		partialWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Loneworker - PARTIAL WAKE LOCK");
+	}
+
+	public void wakeDevice() {
+		fullWakeLock.acquire();
+
+		KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+		KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+		keyguardLock.disableKeyguard();
+	}
+
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -120,6 +138,8 @@ public class BigSpoon extends Application implements Foreground.Listener {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+		createWakeLocks();
 	}
 
 	@Override
@@ -158,6 +178,12 @@ public class BigSpoon extends Application implements Foreground.Listener {
 			}, delay);
 		}
 		onStart = false; // only delay on app start.
+		if(fullWakeLock.isHeld()){
+			fullWakeLock.release();
+		}
+		if(partialWakeLock.isHeld()){
+			partialWakeLock.release();
+		}
 	}
 
 	// Foreground Callback
@@ -167,6 +193,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		SocketIOManager.getInstance(this).disconnect();
 		LocationLibrary.stopAlarmAndListener(this);
 		User.getInstance(this).shouldGoToOutlet = true;
+		partialWakeLock.acquire();
 	}
 
 	public void checkLocationEnabledByForce() {

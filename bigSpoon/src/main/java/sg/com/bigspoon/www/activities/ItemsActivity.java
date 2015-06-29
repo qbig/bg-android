@@ -257,8 +257,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 		int interval = 5* 1000;//10 * 60 * 1000; // 10 minutes
 
-		//manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),interval, pendingIntent);
+		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
+        //manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),interval, pendingIntent);
 		//Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
 	}
 
@@ -818,6 +818,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				alertLocationFail.setView(null);
 				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+						startAlarm();
 					}
 				});
 				alertLocationFail.show();

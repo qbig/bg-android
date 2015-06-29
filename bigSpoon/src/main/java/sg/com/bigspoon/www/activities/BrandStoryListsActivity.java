@@ -18,6 +18,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.BRAND_WAKE_UP_SIGNAL;
@@ -54,6 +55,7 @@ public class BrandStoryListsActivity extends Activity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        ((BigSpoon)getApplicationContext()).wakeDevice();
     }
 
     private void initCards() {
