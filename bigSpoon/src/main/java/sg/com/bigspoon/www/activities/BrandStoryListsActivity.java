@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -112,17 +111,19 @@ public class BrandStoryListsActivity extends Activity {
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(BrandStoryListsActivity.this)
                         //.setTextOverImage(info.imageText)
-                        .setTitle(info.name)
                         //.setSubTitle(info.subtitle)
+                        // .useDrawableId(R.id.)
+                        .setTitle(info.name)
                         .useDrawableUrl(Constants.BASE_URL + info.photo.thumbnailLarge)
-                        //.useDrawableId(R.id.)
                         .setupSupplementalActions(R.layout.material_card_action, actions)
                         .build();
 
         card.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card, View view) {
-                Toast.makeText(BrandStoryListsActivity.this," Click on ActionArea ",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
+                i.putExtra(STORY_LINK, info.url);
+                BrandStoryListsActivity.this.startActivity(i);
             }
         });
         return card;

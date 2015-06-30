@@ -43,9 +43,15 @@
         <!-- Main Content View -->
         <FrameLayout
             android:id="@+id/card_main_content_layout"
-            style="@style/card.native.material_large_image_content_outer_layout"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="52dp"
+            android:textAppearance="@style/FontProxiSemiBold"
+            android:textColor="@color/text_category_gray"
+            />
 
 
     </it.gmariotti.cardslib.library.view.ForegroundLinearLayout>
