@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,8 @@ import org.xwalk.core.XWalkView;
 
 import sg.com.bigspoon.www.R;
 
+import static sg.com.bigspoon.www.data.Constants.AUTO;
+import static sg.com.bigspoon.www.data.Constants.CLOSE_BRAND_STORY_SIGNAL;
 import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 
 /**
@@ -26,6 +29,7 @@ public class BrandActivity extends Activity {
     private ImageButton closeBtn;
     private ProgressBar spinner;
     private Handler handler;
+    private Runnable killTask;
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
             super(view);
@@ -70,6 +74,16 @@ public class BrandActivity extends Activity {
         if (link == null) {
             finish();
         }
+        if (intent.getBooleanExtra(AUTO, false)) {
+            killTask = new Runnable() {
+                @Override
+                public void run() {
+                    LocalBroadcastManager.getInstance(BrandActivity.this).sendBroadcast(new Intent(CLOSE_BRAND_STORY_SIGNAL));
+                    finish();
+                }
+            };
+            handler.postDelayed(killTask, 60 * 1000);
+        }
 
         mWebView.load(link, null);
         mWebView.setResourceClient(new MyResourceClient(mWebView));
@@ -77,6 +91,9 @@ public class BrandActivity extends Activity {
 
     @Override
     public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        if (killTask != null) {
+            handler.removeCallbacks(killTask);
+        }
         return super.onKeyDown(keyCode, event);
     }
 }

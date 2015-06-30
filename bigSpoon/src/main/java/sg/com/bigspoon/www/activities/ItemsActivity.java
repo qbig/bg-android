@@ -1,12 +1,10 @@
 package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ExpandableListActivity;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -78,7 +76,6 @@ import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
-import sg.com.bigspoon.www.services.BrandWakeUpTaskReceiver;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static sg.com.bigspoon.www.data.Constants.BILL_URL;
@@ -174,8 +171,6 @@ public class ItemsActivity extends ExpandableListActivity {
 
     public Handler handler;
 	private ProgressBar progressBar;
-	private PendingIntent pendingIntent;
-	private AlarmManager manager;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -233,9 +228,6 @@ public class ItemsActivity extends ExpandableListActivity {
             Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
             finish();
         }
-
-		Intent alarmIntent = new Intent(this, BrandWakeUpTaskReceiver.class);
-		pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 	}
 
 	private void dismissKeyboard() {
@@ -251,23 +243,6 @@ public class ItemsActivity extends ExpandableListActivity {
             }
         });
     }
-
-
-	public void startAlarm() {
-		manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		int interval = 5* 1000;//10 * 60 * 1000; // 10 minutes
-
-		manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, pendingIntent);
-        //manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),interval, pendingIntent);
-		//Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
-	}
-
-	public void cancelAlarm() {
-		if (manager != null) {
-			manager.cancel(pendingIntent);
-		//	Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
-		}
-	}
 
     private void setupPriceLabels() {
 		
@@ -561,7 +536,7 @@ public class ItemsActivity extends ExpandableListActivity {
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 							WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 					performSendOrderRequest();
-                    startAlarm();
+                    User.getInstance(ItemsActivity.this).startAlarm();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
 				}
@@ -818,7 +793,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				alertLocationFail.setView(null);
 				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						startAlarm();
+						User.getInstance(ItemsActivity.this).startAlarm();
 					}
 				});
 				alertLocationFail.show();

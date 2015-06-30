@@ -2,8 +2,13 @@ package sg.com.bigspoon.www.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,8 +30,11 @@ import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.StoryModel;
 import sg.com.bigspoon.www.data.User;
 
+import static sg.com.bigspoon.www.data.Constants.AUTO;
 import static sg.com.bigspoon.www.data.Constants.BRAND_WAKE_UP_SIGNAL;
+import static sg.com.bigspoon.www.data.Constants.CLOSE_BRAND_STORY_SIGNAL;
 import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
+
 /**
  * Created by qiaoliang89 on 1/6/15.
  */
@@ -34,11 +42,26 @@ public class BrandStoryListsActivity extends Activity {
     private CardListView mListView;
     private StoryModel[] storys;
     private Integer[] storySequence;
+    private android.os.Handler mHandler;
+
+    private BroadcastReceiver mCloseSignalReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            BrandStoryListsActivity.this.mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sleepScreen();
+                    BrandStoryListsActivity.this.finish();
+                }
+            }, 1000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_list);
+        mHandler = new Handler();
         mListView = (CardListView) findViewById(R.id.card_list_base);
         try {
             storys = User.getInstance(this).currentOutlet.storys;
@@ -56,8 +79,10 @@ public class BrandStoryListsActivity extends Activity {
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
             unlockScreen();
+            LocalBroadcastManager.getInstance(this).registerReceiver(mCloseSignalReceiver, new IntentFilter(CLOSE_BRAND_STORY_SIGNAL));
             Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
-            i.putExtra(STORY_LINK, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square");
+            i.putExtra(STORY_LINK, this.storys[getStory(storySequence[User.getInstance(this).storyDisplayCount])].url);
+            i.putExtra(AUTO, true);
             BrandStoryListsActivity.this.startActivity(i);
         }
     }
@@ -68,6 +93,14 @@ public class BrandStoryListsActivity extends Activity {
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         ((BigSpoon)getApplicationContext()).wakeDevice();
+    }
+
+    private void sleepScreen() {
+        Window window = this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        ((BigSpoon) getApplicationContext()).releaseWakeLock();
     }
 
     private int getStory(int id) {
@@ -128,4 +161,11 @@ public class BrandStoryListsActivity extends Activity {
         });
         return card;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mCloseSignalReceiver);
+    }
+
 }

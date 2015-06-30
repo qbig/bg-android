@@ -70,6 +70,9 @@ public class OutletDetailsModel {
     @SerializedName("clear_sent_orders_interval")
     public int clearPastOrdersInterval;
 
+    @SerializedName("story_display_interval")
+    public int storyDisplayInterval;
+
     public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json) {
         final Gson gson = new Gson();
         final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);
