@@ -9,94 +9,99 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class OutletDetailsModel {
-	public DishModel[] dishes;
-	public CategoryModel[] categoriesDetails;
-	public CategoryOrder[] categoriesOrder;
-	public TableModel[] tables;
-	
-	public int restaurant;
-	public String imgURL;
-	public String name;
-	public String address;
-	
-	@SerializedName("phone")
-	public String phoneNumber;
-	
-	@SerializedName("opening")
-	public String operatingHours;
-	
-	@SerializedName("default_dish_photo")
-	public String defaultDishPhoto;
-	
-	@SerializedName("discount")
-	public String promotionalText;
-	
-	@SerializedName("water_popup_text")
-	public String waterText;
-	
-	@SerializedName("bill_popup_text")
-	public String billText;
-	
-	@SerializedName("id")
-	public int outletID;
+    public DishModel[] dishes;
+    public CategoryModel[] categoriesDetails;
+    public CategoryOrder[] categoriesOrder;
+    public TableModel[] tables;
+    public StoryModel[] storys;
 
-	public double lat;
+    public int restaurant;
+    public String imgURL;
+    public String name;
+    public String address;
 
-	public double lng;
-	@SerializedName("gst")
-	public double gstRate;
-	
-	@SerializedName("scr")
-	public double serviceChargeRate;
-	
-	@SerializedName("location_diameter")
-	public double locationThreshold;
-	
-	@SerializedName("is_active")
-	public boolean isActive;
-	
-	@SerializedName("is_by_default_photo_menu")
-	public boolean isDefaultPhotoMenu;
-	
-	@SerializedName("request_for_water_enabled")
-	public boolean isWaterEnabled;
-	
-	@SerializedName("ask_for_bill_enabled")
-	public boolean isBillEnabled;
+    public Integer[] storySequence;
 
-	@SerializedName("clear_sent_orders_interval")
-	public int clearPastOrdersInterval;
+    @SerializedName("phone")
+    public String phoneNumber;
 
-	public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json){
-		 final Gson gson = new Gson();
-         final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);
-         outletDetails.tables = gson.fromJson(json.get("tables"), TableModel[].class);
-         outletDetails.categoriesDetails = gson.fromJson(json.get("categories"), CategoryModel[].class);
-         outletDetails.categoriesOrder = gson.fromJson(json.get("categories_order"), CategoryOrder[].class);
-         outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
-         final JsonParser parser = new JsonParser();
-         for(int i = 0, len = outletDetails.dishes.length; i < len; i++){
-        	 if (outletDetails.dishes[i].customizable){
-        		 JsonObject modifierJson = (JsonObject) parser.parse(outletDetails.dishes[i].modifierJsonString);
-        		 outletDetails.dishes[i].modifier = gson.fromJson(modifierJson, Modifer.class); 
-        	 }
-         }
-         
-         return outletDetails;
-	}
-	
-	public DishModel getDishWithId(int dishId) {
-		for (int i = 0, len = dishes.length; i < len; i++ ){
-			if (dishes[i].id == dishId) {
-				return dishes[i];
-			}
-		}
-		
-		return null;
-	}
+    @SerializedName("opening")
+    public String operatingHours;
+
+    @SerializedName("default_dish_photo")
+    public String defaultDishPhoto;
+
+    @SerializedName("discount")
+    public String promotionalText;
+
+    @SerializedName("water_popup_text")
+    public String waterText;
+
+    @SerializedName("bill_popup_text")
+    public String billText;
+
+    @SerializedName("id")
+    public int outletID;
+
+    public double lat;
+
+    public double lng;
+    @SerializedName("gst")
+    public double gstRate;
+
+    @SerializedName("scr")
+    public double serviceChargeRate;
+
+    @SerializedName("location_diameter")
+    public double locationThreshold;
+
+    @SerializedName("is_active")
+    public boolean isActive;
+
+    @SerializedName("is_by_default_photo_menu")
+    public boolean isDefaultPhotoMenu;
+
+    @SerializedName("request_for_water_enabled")
+    public boolean isWaterEnabled;
+
+    @SerializedName("ask_for_bill_enabled")
+    public boolean isBillEnabled;
+
+    @SerializedName("clear_sent_orders_interval")
+    public int clearPastOrdersInterval;
+
+    public static OutletDetailsModel getInstanceFromJsonObject(JsonObject json) {
+        final Gson gson = new Gson();
+        final OutletDetailsModel outletDetails = (OutletDetailsModel) gson.fromJson(json, OutletDetailsModel.class);
+        outletDetails.tables = gson.fromJson(json.get("tables"), TableModel[].class);
+        outletDetails.categoriesDetails = gson.fromJson(json.get("categories"), CategoryModel[].class);
+        outletDetails.categoriesOrder = gson.fromJson(json.get("categories_order"), CategoryOrder[].class);
+        outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
+
+        final JsonParser parser = new JsonParser();
+        outletDetails.storySequence = gson.fromJson(json.get("story_json_array").getAsString(), Integer[].class);
+        for (int i = 0, len = outletDetails.dishes.length; i < len; i++) {
+            if (outletDetails.dishes[i].customizable) {
+                JsonObject modifierJson = (JsonObject) parser.parse(outletDetails.dishes[i].modifierJsonString);
+                outletDetails.dishes[i].modifier = gson.fromJson(modifierJson, Modifer.class);
+            }
+        }
+
+        return outletDetails;
+    }
+
+    public DishModel getDishWithId(int dishId) {
+        for (int i = 0, len = dishes.length; i < len; i++) {
+            if (dishes[i].id == dishId) {
+                return dishes[i];
+            }
+        }
+
+        return null;
+    }
 
     public DishModel getDishWithName(String dishName) {
-        for (int i = 0, len = dishes.length; i < len; i++ ){
+        for (int i = 0, len = dishes.length; i < len; i++) {
             if (dishes[i].name.equals(dishName)) {
                 return dishes[i];
             }
@@ -104,13 +109,13 @@ public class OutletDetailsModel {
 
         return null;
     }
-	
-	public CategoryModel getCategoryForDishWithId(int dishId) {
+
+    public CategoryModel getCategoryForDishWithId(int dishId) {
         final DishModel dish = getDishWithId(dishId);
         if (dish == null) return null;
 
-        for (int i = 0; i < categoriesDetails.length; i ++){
-            if (dish.categories[0].id == categoriesDetails[i].id){
+        for (int i = 0; i < categoriesDetails.length; i++) {
+            if (dish.categories[0].id == categoriesDetails[i].id) {
                 return categoriesDetails[i];
             }
         }
@@ -124,9 +129,9 @@ public class OutletDetailsModel {
         else return category.id;
     }
 
-    public int getCategoryPositionForCategoryWithId(int categoryId){
-        for(int i = 0; i < categoriesOrder.length; i++){
-            if (categoriesOrder[i].categoryId == categoryId){
+    public int getCategoryPositionForCategoryWithId(int categoryId) {
+        for (int i = 0; i < categoriesOrder.length; i++) {
+            if (categoriesOrder[i].categoryId == categoryId) {
                 return categoriesOrder[i].position;
             }
         }
@@ -134,36 +139,36 @@ public class OutletDetailsModel {
         return -1;
     }
 
-    public int getCategoryPositionWithDishId(int dishId){
+    public int getCategoryPositionWithDishId(int dishId) {
         final int categoryId = getCategoryIdForDishWithId(dishId);
         return getCategoryPositionForCategoryWithId(categoryId);
     }
 
-	public boolean hasTable(int tabletId) {
-		for (TableModel table : this.tables){
-			if (table.id == tabletId && tabletId != -1) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean hasTable(int tabletId) {
+        for (TableModel table : this.tables) {
+            if (table.id == tabletId && tabletId != -1) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public void sortOrder() {
-		Arrays.sort(categoriesDetails, new Comparator<CategoryModel>() {
-			public int compare(CategoryModel cat1, CategoryModel cat2) {
-				int cat1Index = 0;
-				int cat2Index = 0;
-				for (int i = 0, len = categoriesOrder.length; i < len; i++) {
-					if (categoriesOrder[i].categoryId == cat1.id) {
-						cat1Index = categoriesOrder[i].position;
-					}
+    public void sortOrder() {
+        Arrays.sort(categoriesDetails, new Comparator<CategoryModel>() {
+            public int compare(CategoryModel cat1, CategoryModel cat2) {
+                int cat1Index = 0;
+                int cat2Index = 0;
+                for (int i = 0, len = categoriesOrder.length; i < len; i++) {
+                    if (categoriesOrder[i].categoryId == cat1.id) {
+                        cat1Index = categoriesOrder[i].position;
+                    }
 
-					if (categoriesOrder[i].categoryId == cat2.id) {
-						cat2Index = categoriesOrder[i].position;
-					}
-				}
-				return cat1Index - cat2Index;
-			}
-		});
-	}
+                    if (categoriesOrder[i].categoryId == cat2.id) {
+                        cat2Index = categoriesOrder[i].position;
+                    }
+                }
+                return cat1Index - cat2Index;
+            }
+        });
+    }
 }

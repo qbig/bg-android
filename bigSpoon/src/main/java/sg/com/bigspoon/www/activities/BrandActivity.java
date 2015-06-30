@@ -3,14 +3,13 @@ package sg.com.bigspoon.www.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.os.Handler;
 
-import org.xwalk.core.XWalkPreferences;
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkView;
 
@@ -61,14 +60,19 @@ public class BrandActivity extends Activity {
         });
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                spinner.setVisibility(View.GONE);
+            }
+        }, 5000);
         mWebView = (XWalkView) findViewById(R.id.brand_webview);
         if (link == null) {
             finish();
         }
+
         mWebView.load(link, null);
-        mWebView.clearCache(true);
         mWebView.setResourceClient(new MyResourceClient(mWebView));
-        XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
     }
 
     @Override

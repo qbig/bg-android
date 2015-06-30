@@ -4,10 +4,13 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,8 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.BigSpoon;
+import sg.com.bigspoon.www.data.Constants;
+import sg.com.bigspoon.www.data.StoryModel;
 import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.BRAND_WAKE_UP_SIGNAL;
@@ -28,14 +33,22 @@ import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
  */
 public class BrandStoryListsActivity extends Activity {
     private CardListView mListView;
-    private ArrayList<CardInfo> data;
+    private StoryModel[] storys;
+    private Integer[] storySequence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_list);
         mListView = (CardListView) findViewById(R.id.card_list_base);
-        initData();
+        try {
+            storys = User.getInstance(this).currentOutlet.storys;
+            storySequence = User.getInstance(this).currentOutlet.storySequence;
+        } catch (NullPointerException npe) {
+            Crashlytics.log(npe.getMessage());
+            Log.i(BrandStoryListsActivity.class.toString(), npe.getMessage());
+        }
+
         initCards();
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
@@ -58,11 +71,20 @@ public class BrandStoryListsActivity extends Activity {
         ((BigSpoon)getApplicationContext()).wakeDevice();
     }
 
+    private int getStory(int id) {
+        for (int i=0; i< storys.length ;i++){
+            if (storys[i].storyId == id) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     private void initCards() {
 
         ArrayList<Card> cards = new ArrayList<Card>();
-        for (int i=0; i<4 ;i++){
-            cards.add(getCard(i));
+        for (int i=0; i< storySequence.length; i++){
+            cards.add(getCard(getStory(storySequence[i])));
         }
 
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(BrandStoryListsActivity.this, cards);
@@ -75,25 +97,25 @@ public class BrandStoryListsActivity extends Activity {
     private MaterialLargeImageCard getCard(int num) {
 
         ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
-        final CardInfo info = this.data.get(num);
-        TextSupplementalAction t2 = new TextSupplementalAction(BrandStoryListsActivity.this, R.id.text2);
-        t2.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
+        final StoryModel info = this.storys[num];
+        TextSupplementalAction actionButton = new TextSupplementalAction(BrandStoryListsActivity.this, R.id.text2);
+        actionButton.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
             @Override
             public void onClick(Card card, View view) {
                 Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
-                i.putExtra(STORY_LINK, info.link);
+                i.putExtra(STORY_LINK, info.url);
                 BrandStoryListsActivity.this.startActivity(i);
             }
         });
-        actions.add(t2);
+        actions.add(actionButton);
 
-        //Create a Card, set the title over the image and set the thumbnail
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(BrandStoryListsActivity.this)
-                        .setTextOverImage(info.imageText)
-                        .setTitle(info.title)
-                        .setSubTitle(info.subtitle)
-                        .useDrawableId(info.drawableId)
+                        //.setTextOverImage(info.imageText)
+                        .setTitle(info.name)
+                        //.setSubTitle(info.subtitle)
+                        .useDrawableUrl(Constants.BASE_URL + info.photo.thumbnailLarge)
+                        //.useDrawableId(R.id.)
                         .setupSupplementalActions(R.layout.material_card_action, actions)
                         .build();
 
@@ -104,32 +126,5 @@ public class BrandStoryListsActivity extends Activity {
             }
         });
         return card;
-    }
-
-    private void initData(){
-        this.data = new ArrayList<CardInfo>();
-        this.data.add(new CardInfo(null, "Title is kind of long. But Okay.", "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_1biglogo, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
-        this.data.add(new CardInfo("Our Story", null, "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_food, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
-        this.data.add(new CardInfo("Our Story", "Title is kind of long. But Okay.", null, R.drawable.rsz_yh_justin, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
-        this.data.add(new CardInfo("Our Story", "Title is kind of long. But Okay.", "This is a SubTitle. Put Subtile here. A bit more text", R.drawable.rsz_photo_wall, "http://r.xiumi.us/stage/v3/29SuP/1031854?from=home_square"));
-    }
-
-    class CardInfo {
-        String imageText;
-        String title;
-        String subtitle;
-        int drawableId;
-        String link;
-        CardInfo(String imageText,
-                String title,
-                String subtitle,
-                int drawableId,
-                String link) {
-            this.imageText = imageText;
-            this.title = title;
-            this.subtitle = subtitle;
-            this.drawableId = drawableId;
-            this.link = link;
-        }
     }
 }
