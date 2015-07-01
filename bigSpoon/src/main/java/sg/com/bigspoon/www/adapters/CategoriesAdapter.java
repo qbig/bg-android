@@ -128,6 +128,9 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 					context.startActivity(i);
 				}
 			});
+			if (outletDetails.storys == null || outletDetails.storys.length == 0) {
+				brandButton.setVisibility(View.GONE);
+			}
 			return row;
 		} else {
 			final CategoryModel currentCategory = getItem(position - 1);
@@ -148,7 +151,7 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			}
 			
 			ionBuilder.intoImageView(image);
-			
+
 			categoryName.setText(currentCategory.name);
 			return row;
 		}		
