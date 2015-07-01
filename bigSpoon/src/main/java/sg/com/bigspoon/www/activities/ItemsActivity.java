@@ -310,7 +310,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mMessageReceiver);
+                mMessageReceiver);
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRemoveClicked);
         User.getInstance(ItemsActivity.this).mMixpanel.flush();
 	}
@@ -413,6 +413,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				} else {
 					// if (result == null || (result != null && result.has("error")) || (result.has("orders") && result.getAsJsonArray("orders").size() == 0))
 					ItemsActivity.this.handler.postDelayed(new Runnable() {
+
                         @Override
                         public void run() {
                             // retry
@@ -603,6 +604,7 @@ public class ItemsActivity extends ExpandableListActivity {
                     checkingRetryCount = 0;
                     currentOrderRetryCount = 0;
 					performSendOrderRequest();
+                    User.getInstance(ItemsActivity.this).startAlarm();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
 				}
@@ -749,6 +751,7 @@ public class ItemsActivity extends ExpandableListActivity {
 
 		try {
             mActionBar = getActionBar();
+            mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setTitle("Back to Menu");
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
@@ -858,6 +861,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				alertLocationFail.setView(null);
 				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+						User.getInstance(ItemsActivity.this).startAlarm();
 					}
 				});
 				alertLocationFail.show();

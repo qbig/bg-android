@@ -87,6 +87,7 @@ public class BrandStoryListsActivity extends Activity {
             User.getInstance(this).storyDisplayCount++;
             i.putExtra(AUTO, true);
             BrandStoryListsActivity.this.startActivity(i);
+            sleepScreen();
         }
     }
 
