@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="sg.com.bigspoon.www"
     android:installLocation="preferExternal"
     android:versionCode="33"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:versionName="1.155" >
+    android:versionName="1.155">
 
     <supports-screens
         android:anyDensity="true"
@@ -13,8 +13,12 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
-    <uses-feature android:name="android.hardware.location" android:required="true" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -23,15 +27,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
     <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+
     <application
-        tools:replace="android:theme"
         android:name=".data.BigSpoon"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:icon="@drawable/bigspoonmobileappiconwithname"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/Theme.AppCompat.Light"
-        >
+        tools:replace="android:theme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
@@ -43,15 +47,14 @@
             android:name="sg.com.bigspoon.www.activities.TutorialActivity"
             android:label="@string/title_activity_tutorial"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <activity
             android:name="sg.com.bigspoon.www.activities.LaunchActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,45 +64,53 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.OutletListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme" >
-        </activity>
+            android:theme="@style/CustomActionBarTheme"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ItemsActivity"
             android:label="@string/title_activity_items"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.EmailLoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         <!--<activity-->
-            <!--android:name="sg.com.bigspoon.www.activities.EntryActivity"-->
-            <!--android:label="@string/title_activity_entry"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar" >-->
+        <!--android:name="sg.com.bigspoon.www.activities.EntryActivity"-->
+        <!--android:label="@string/title_activity_entry"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@android:style/Theme.NoTitleBar" >-->
         <!--</activity>-->
         <!--<activity-->
-            <!--android:name="sg.com.bigspoon.www.activities.SignUpActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar" >-->
+        <!--android:name="sg.com.bigspoon.www.activities.SignUpActivity"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@android:style/Theme.NoTitleBar" >-->
         <!--</activity>-->
         <activity
             android:name="sg.com.bigspoon.www.activities.CategoriesListActivity"
             android:label="@string/title_activity_categories_list"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme" >
-        </activity>
+            android:theme="@style/CustomActionBarTheme"></activity>
+
+        <activity
+            android:name=".activities.BrandActivity"
+            android:label="BrandActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme"></activity>
+
+        <activity
+            android:name="sg.com.bigspoon.www.activities.BrandStoryListsActivity"
+            android:label="Brand Story"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme"></activity>
 
         <activity
             android:name=".activities.MenuActivity"
             android:label="@string/title_activity_menu_list"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/MenuActivityActionBarTheme"
-            android:launchMode="singleTop">
+            android:theme="@style/MenuActivityActionBarTheme">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -112,50 +123,46 @@
         <activity
             android:name="sg.com.bigspoon.www.activities.ActionBarActivity"
             android:label="@string/title_activity_order_history"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryDetailsActivity"
             android:label="@string/title_activity_order_history_details"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme" >
-        </activity>
+            android:theme="@style/CustomActionBarTheme"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.WaterServiceActivity"
             android:label="@string/title_activity_call_water_service"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Dialog" >
-        </activity>
+            android:theme="@android:style/Theme.Holo.Dialog"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.OrderHistoryListActivity"
             android:label="@string/title_activity_call_water_service"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme" >
-        </activity>
+            android:theme="@style/CustomActionBarTheme"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.UserReviewActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_user_review"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.ModifierActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_modifier"
-            android:theme="@style/CustomActionBarTheme">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomActionBarTheme"></activity>
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <activity android:name=".activities.ImageDialogAfterSent"
+        <activity
+            android:name=".activities.ImageDialogAfterSent"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <activity android:name=".activities.ImageDialogSteps"
+        <activity
+            android:name=".activities.ImageDialogSteps"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -163,16 +170,21 @@
         <service
             android:name="sg.com.bigspoon.www.data.BGLocationService"
             android:icon="@drawable/icon"
-            android:label="@string/service_name" >
-        </service>
-		<service android:name="com.littlefluffytoys.littlefluffylocationlibrary.LocationBroadcastService" />
-        <receiver android:name="com.littlefluffytoys.littlefluffylocationlibrary.StartupBroadcastReceiver" android:exported="true">
+            android:label="@string/service_name"></service>
+        <service android:name="com.littlefluffytoys.littlefluffylocationlibrary.LocationBroadcastService" />
+
+        <receiver android:name="sg.com.bigspoon.www.services.BrandWakeUpTaskReceiver"></receiver>
+        <receiver
+            android:name="com.littlefluffytoys.littlefluffylocationlibrary.StartupBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />  
-            </intent-filter>  
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
 
-    <meta-data android:name="com.crashlytics.ApiKey" android:value="5e0d63d5b12c89cf3ff015e07958d5a94a75722a"/>
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="5e0d63d5b12c89cf3ff015e07958d5a94a75722a" />
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package sg.com.bigspoon.www.data;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +11,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.view.View;
@@ -36,6 +39,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import sg.com.bigspoon.www.services.BrandWakeUpTaskReceiver;
 
 import static sg.com.bigspoon.www.data.Constants.CLEAR_BILL_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
@@ -75,6 +80,9 @@ public class User {
 	public long prevOrderTime = -1;
 	public long prevActiveTime = -1;
 	private ArrayList<SuperActivityToast> undoToastList;
+	private PendingIntent pendingIntent;
+	private AlarmManager manager;
+	public int storyDisplayCount = 0;
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());
@@ -453,5 +461,26 @@ public class User {
 			}
 			System.out.println(resultMsg);
 		}
+	}
+
+	public void startAlarm() {
+		this.cancelAlarm();
+		storyDisplayCount = 0;
+		mContext = mContext.getApplicationContext();
+		manager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+		int interval = User.getInstance(mContext).currentOutlet.storyDisplayInterval * 1000;
+		Intent alarmIntent = new Intent(mContext, BrandWakeUpTaskReceiver.class);
+		pendingIntent = PendingIntent.getBroadcast(mContext, 0, alarmIntent, 0);
+		manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, interval, pendingIntent);
+	}
+
+	public void cancelAlarm() {
+		if (manager != null) {
+			manager.cancel(pendingIntent);
+		}
+	}
+
+	public boolean shouldShowStory(){
+		return storyDisplayCount < currentOutlet.storySequence.length;
 	}
 }

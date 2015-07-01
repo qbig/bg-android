@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <org.xwalk.core.XWalkView
+        android:id="@+id/brand_webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ></org.xwalk.core.XWalkView>
+    <ImageButton
+        android:id="@+id/brand_close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close_icon_white_35"
+        android:layout_gravity="top|right"/>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLargeInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_centerHorizontal="true"
+        />
+</FrameLayout>

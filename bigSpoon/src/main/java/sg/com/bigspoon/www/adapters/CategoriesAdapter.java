@@ -20,6 +20,7 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.builder.ImageViewFutureBuilder;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.BrandStoryListsActivity;
 import sg.com.bigspoon.www.activities.MenuActivity;
 import sg.com.bigspoon.www.data.CategoryModel;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -119,12 +120,12 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			final Button brandButton = (Button) row.findViewById(R.id.brand_btn);
 			brandButton.setText(outletDetails.name + " Story");
 			brandButton.setOnClickListener(new View.OnClickListener() {
-				@Override 
+				@Override
 				public void onClick(View v) {
-//					Intent i = new Intent(context, BrandStoryListsActivity.class);
-//					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
-//					context.startActivity(i);
+					Intent i = new Intent(context, BrandStoryListsActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					i.putExtra(POS_FOR_CLICKED_CATEGORY, 0);
+					context.startActivity(i);
 				}
 			});
 			return row;
