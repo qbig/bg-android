@@ -51,6 +51,8 @@ public class Constants {
 	    
 	    //KEY
 	    public static final String OUTLET_ID = "outletID";
+		public static final String STORY_LINK = "storyLink";
+		public static final String AUTO = "auto";
 		public static final String OUTLET_NAME = "outletName";
 		public static final String IMAGE_ID = "imageId";
 		public static final String SHOULD_SHOW_STEPS_REMINDER = "shouldShowSteps";
@@ -79,6 +81,8 @@ public class Constants {
 		public static final String NOTIF_UNDO_ORDER = "undoOrder";
 		public static final String NOTIF_ITEM_REMOVE_CLICK = "removeClick";
 	    public static final String NOTIF_TO_START_LOCATION_SERVICE = "start-location";
+		public static final String BRAND_WAKE_UP_SIGNAL = "brandSignal";
+		public static final String CLOSE_BRAND_STORY_SIGNAL = "closeStory";
 	    
 	    // REQUEST CODE
 	    public static final int MODIFIER_POPUP_REQUEST = 999;
