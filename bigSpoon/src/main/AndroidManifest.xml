@@ -69,7 +69,7 @@
             android:name="sg.com.bigspoon.www.activities.ItemsActivity"
             android:label="@string/title_activity_items"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme"
+            android:theme="@style/CustomActionBarThemeNoIcon"
             android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name="sg.com.bigspoon.www.activities.EmailLoginActivity"
@@ -103,7 +103,7 @@
             android:name="sg.com.bigspoon.www.activities.BrandStoryListsActivity"
             android:label="Brand Story"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme"></activity>
+            android:theme="@style/CustomActionBarThemeNoIcon"></activity>
 
         <activity
             android:name=".activities.MenuActivity"

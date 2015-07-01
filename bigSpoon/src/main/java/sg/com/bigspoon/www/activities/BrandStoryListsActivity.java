@@ -1,6 +1,5 @@
 package sg.com.bigspoon.www.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -73,9 +73,6 @@ public class BrandStoryListsActivity extends Activity {
         }
 
         initCards();
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
         setTitle(User.getInstance(this).currentOutlet.name + " Story");
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
@@ -142,6 +139,16 @@ public class BrandStoryListsActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCloseSignalReceiver);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+               finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 
 }

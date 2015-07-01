@@ -1,5 +1,6 @@
 package sg.com.bigspoon.www.data;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -82,7 +83,12 @@ public class OutletDetailsModel {
         outletDetails.dishes = gson.fromJson(json.get("dishes"), DishModel[].class);
 
         final JsonParser parser = new JsonParser();
-        outletDetails.storySequence = gson.fromJson(json.get("story_json_array").getAsString(), Integer[].class);
+        try {
+            outletDetails.storySequence = gson.fromJson(json.get("story_json_array").getAsString(), Integer[].class);
+        } catch (Exception exp) {
+            Crashlytics.log(exp.toString());
+        }
+
         for (int i = 0, len = outletDetails.dishes.length; i < len; i++) {
             if (outletDetails.dishes[i].customizable) {
                 JsonObject modifierJson = (JsonObject) parser.parse(outletDetails.dishes[i].modifierJsonString);

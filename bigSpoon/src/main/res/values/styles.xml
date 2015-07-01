@@ -113,6 +113,15 @@
         <item name="android:fadingEdgeLength">8dp</item>
     </style>
 
+    <style name="CustomActionBarThemeNoIcon" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBarNoIcon</item>
+        <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:fadingEdgeLength">8dp</item>
+    </style>
+
     <style name="MenuActivityActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/MyActionBarNoTitle</item>
         <item name="android:actionBarTabTextStyle">@style/MyActionBarTabText</item>
@@ -135,6 +144,16 @@
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
         <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <style name="MyActionBarNoIcon" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/BigSpoonOrange</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:backgroundStacked">@color/BigSpoonOrange</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
     </style>
 
     <style name="MyActionBarNoTitle" parent="Theme.AppCompat.Light.NoActionBar">
