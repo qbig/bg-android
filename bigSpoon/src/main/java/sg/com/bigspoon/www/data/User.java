@@ -464,6 +464,9 @@ public class User {
 	}
 
 	public void startAlarm() {
+		if (currentOutlet.storys == null || currentOutlet.storys.length == 0) {
+			return;
+		}
 		this.cancelAlarm();
 		storyDisplayCount = 0;
 		mContext = mContext.getApplicationContext();
