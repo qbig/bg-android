@@ -464,7 +464,7 @@ public class MenuActivity extends ActionBarActivity {
         private DishModel mDish;
         private int mPosition;
 
-        public ListPhotoItemViewHolder(View itemView) {
+        public ListPhotoItemViewHolder(final View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.menuitem);
             overlay = (ImageView) itemView.findViewById(R.id.overlay);
@@ -473,7 +473,12 @@ public class MenuActivity extends ActionBarActivity {
             textItemPrice.bringToFront();
             textItemName = (TextView) itemView.findViewById(R.id.textitemname);
             imageAddButton = (ImageButton) itemView.findViewById(R.id.addbutton);
-
+            imageAddButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemView.performClick();
+                }
+            });
             itemView.setOnClickListener(this);
         }
 
