@@ -61,10 +61,6 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		keyguardLock.disableKeyguard();
 	}
 
-	public void releaseWakeLock() {
-		fullWakeLock.release();
-	}
-
 	private BroadcastReceiver mLocationUpdateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {

@@ -73,6 +73,7 @@ dependencies {
     }
     compile 'uk.co.chrisjenx:calligraphy:2.0.1'
     compile "org.apache.commons:commons-lang3:3.3.2"
+
     compile 'me.grantland:autofittextview:0.2.+'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

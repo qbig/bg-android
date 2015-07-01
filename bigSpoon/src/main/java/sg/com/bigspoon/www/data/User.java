@@ -465,6 +465,7 @@ public class User {
 	public void startAlarm() {
 		this.cancelAlarm();
 		storyDisplayCount = 0;
+		mContext = mContext.getApplicationContext();
 		manager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
 		int interval = User.getInstance(mContext).currentOutlet.storyDisplayInterval * 1000;
 		Intent alarmIntent = new Intent(mContext, BrandWakeUpTaskReceiver.class);

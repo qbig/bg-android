@@ -78,10 +78,15 @@ public class BrandStoryListsActivity extends Activity {
         setTitle(User.getInstance(this).currentOutlet.name + " Story");
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
+            if(! User.getInstance(this).shouldShowStory()) {
+                finish();
+                return;
+            }
             unlockScreen();
             LocalBroadcastManager.getInstance(this).registerReceiver(mCloseSignalReceiver, new IntentFilter(CLOSE_BRAND_STORY_SIGNAL));
             Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
             i.putExtra(STORY_LINK, this.storys[getStory(storySequence[User.getInstance(this).storyDisplayCount])].url);
+            User.getInstance(this).storyDisplayCount++;
             i.putExtra(AUTO, true);
             BrandStoryListsActivity.this.startActivity(i);
         }
@@ -100,7 +105,6 @@ public class BrandStoryListsActivity extends Activity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        ((BigSpoon) getApplicationContext()).releaseWakeLock();
     }
 
     private int getStory(int id) {
