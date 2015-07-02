@@ -6,18 +6,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkView;
 
 import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.common.Util.OnSwipeTouchListener;
 
 import static sg.com.bigspoon.www.data.Constants.AUTO;
 import static sg.com.bigspoon.www.data.Constants.CLOSE_BRAND_STORY_SIGNAL;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 
 /**
@@ -30,6 +35,10 @@ public class BrandActivity extends Activity {
     private ProgressBar spinner;
     private Handler handler;
     private Runnable killTask;
+    OnSwipeTouchListener onSwipeTouchListener;
+    private static String STORY_INTERACTION = "Story Interaction";
+    private MixpanelAPI mMixpanel;
+
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
             super(view);
@@ -54,6 +63,7 @@ public class BrandActivity extends Activity {
         final String link = intent.getStringExtra(STORY_LINK);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.brand_activity_layout);
+        mMixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
         handler = new Handler();
         closeBtn = (ImageButton) findViewById(R.id.brand_close_btn);
         closeBtn.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +97,27 @@ public class BrandActivity extends Activity {
 
         mWebView.load(link, null);
         mWebView.setResourceClient(new MyResourceClient(mWebView));
+        onSwipeTouchListener = new OnSwipeTouchListener(BrandActivity.this) {
+            public void onSwipeTop() {
+                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+            }
+            public void onSwipeRight() {
+                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+            }
+            public void onSwipeLeft() {
+                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+            }
+            public void onSwipeBottom() {
+                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+            }
+        };
+        mWebView.setOnTouchListener(onSwipeTouchListener);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        onSwipeTouchListener.gestureDetector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
