@@ -69,7 +69,6 @@ public class BrandStoryListsActivity extends Activity {
             storySequence = User.getInstance(this).currentOutlet.storySequence;
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
-            Log.i(BrandStoryListsActivity.class.toString(), npe.getMessage());
         }
 
         initCards();
