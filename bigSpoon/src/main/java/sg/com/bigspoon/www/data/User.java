@@ -55,6 +55,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.REQUEST_URL;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class User {
 	private static User sInstance;
@@ -170,7 +171,7 @@ public class User {
 		if (authToken == null) {
 			return;
 		}
-		Ion.with(mContext).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(mContext).load(getURL(ORDER_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + authToken).as(new TypeToken<RetrievedOrder>() {
 				}).setCallback(new FutureCallback<RetrievedOrder>() {
 					@Override
@@ -224,7 +225,7 @@ public class User {
 		json.addProperty("request_type", typeCode);
 		json.addProperty("note", note);
 
-		Ion.with(mContext).load(REQUEST_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(mContext).load(getURL(REQUEST_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
@@ -254,7 +255,7 @@ public class User {
 		JsonObject tableInfo = new JsonObject();
 		tableInfo.addProperty("table", Integer.valueOf(User.getInstance(mContext).tableId));
 		User.getInstance(mContext).currentSession.clearPastOrder();
-		Ion.with(mContext).load(CLEAR_BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(mContext).load(getURL(CLEAR_BILL_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + mContext.getSharedPreferences(PREFS_NAME, 0).getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(tableInfo)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
@@ -356,7 +357,7 @@ public class User {
 		final String email = generateEmail();
 		json.addProperty("email", email);
 		json.addProperty("password", "bigspoon");
-		Ion.with(mContext).load(USER_LOGIN)
+		Ion.with(mContext).load(getURL(USER_LOGIN))
 				.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 					@Override

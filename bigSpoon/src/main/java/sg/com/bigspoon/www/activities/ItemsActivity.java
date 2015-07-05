@@ -90,6 +90,8 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.getURL;
+
 public class ItemsActivity extends ExpandableListActivity {
 
 	private static final String ION_LOGGING_ITEM_ACTIVITY = "ion-item-activity";
@@ -394,7 +396,7 @@ public class ItemsActivity extends ExpandableListActivity {
                 }
             }
         }, 2000);
-		checkOrderFuture = Ion.with(this).load(ORDER_URL + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
+		checkOrderFuture = Ion.with(this).load(getURL(ORDER_URL) + "?new=1").setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
@@ -446,7 +448,7 @@ public class ItemsActivity extends ExpandableListActivity {
             checkSentOrderDeliveryAndRetry(orderInfo);
             prevFailed = false;
         }
-		sendOrderFuture = Ion.with(this).load(ORDER_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		sendOrderFuture = Ion.with(this).load(getURL(ORDER_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", authToken)
 				.setJsonObjectBody(requestBody)
 				.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
@@ -1304,7 +1306,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void performBillRequest() {
-		Ion.with(this).load(BILL_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(this).load(getURL(getURL(BILL_URL))).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(User.getInstance(ItemsActivity.this).getTableId()).asJsonObject()
 				.setCallback(new FutureCallback<JsonObject>() {

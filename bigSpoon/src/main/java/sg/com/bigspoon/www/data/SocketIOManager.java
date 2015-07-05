@@ -1,16 +1,5 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import static sg.com.bigspoon.www.data.Constants.PORT;
-import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.SOCKET_IO_TOKEN_BILL_CLOSED;
-import static sg.com.bigspoon.www.data.Constants.SOCKET_URL;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,6 +15,17 @@ import com.koushikdutta.async.http.socketio.ExceptionCallback;
 import com.koushikdutta.async.http.socketio.JSONCallback;
 import com.koushikdutta.async.http.socketio.ReconnectCallback;
 import com.koushikdutta.async.http.socketio.SocketIOClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
+import static sg.com.bigspoon.www.data.Constants.PORT;
+import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
+import static sg.com.bigspoon.www.data.Constants.SOCKET_IO_TOKEN_BILL_CLOSED;
+import static sg.com.bigspoon.www.data.Constants.SOCKET_URL;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class SocketIOManager {
 	private static SocketIOManager sInstance;
@@ -162,7 +162,7 @@ public class SocketIOManager {
 
 	private void connectToSocketIO(final ConnectCallback callback) {
 		try {
-			SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), "http://" + SOCKET_URL + ":" + PORT, callback);
+			SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), "http://" + getURL(SOCKET_URL) + ":" + PORT, callback);
 		} catch (NullPointerException npe) {
 			if (npe != null && npe.toString() != null)
 			Crashlytics.log(npe.toString());

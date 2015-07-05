@@ -21,6 +21,7 @@ import sg.com.bigspoon.www.data.StoryModel;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 /**
  * Created by qiaoliang89 on 1/7/15.
@@ -65,7 +66,7 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.Pers
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, final int i) {
         personViewHolder.title.setText(storys.get(i).name);
-        Ion.with(mContext).load(BASE_URL + storys.get(i).photo.thumbnailLarge).withBitmap().intoImageView(personViewHolder.photo);
+        Ion.with(mContext).load(getURL(BASE_URL) + storys.get(i).photo.thumbnailLarge).withBitmap().intoImageView(personViewHolder.photo);
         final String link = this.storys.get(i).url;
         personViewHolder.learnMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override

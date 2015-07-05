@@ -36,6 +36,7 @@ import static sg.com.bigspoon.www.data.Constants.FEEDBACK_URL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.RATING_URL;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class UserReviewActivity extends Activity {
 
@@ -121,7 +122,7 @@ public class UserReviewActivity extends Activity {
 			final Gson gson = new Gson();
 			JsonObject json = new JsonObject();
 			json.add("dishes", gson.toJsonTree(ratings));
-			Ion.with(this).load(RATING_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+			Ion.with(this).load(getURL(RATING_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 					.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
 					.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 
@@ -158,7 +159,7 @@ public class UserReviewActivity extends Activity {
 		JsonObject json = new JsonObject();
 		json.addProperty("outlet", User.getInstance(this).currentOutlet.outletID);
 		json.addProperty("feedback", feedbackTextFiled.getText().toString());
-		Ion.with(this).load(FEEDBACK_URL).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(this).load(getURL(FEEDBACK_URL)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader("Authorization", "Token " + loginPrefs.getString(LOGIN_INFO_AUTHTOKEN, ""))
 				.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 

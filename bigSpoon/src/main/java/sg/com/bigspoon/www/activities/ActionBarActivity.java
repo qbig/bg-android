@@ -44,6 +44,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class ActionBarActivity extends AppCompatActivity {
 	ActionBar actionBar;
@@ -450,7 +451,7 @@ public class ActionBarActivity extends AppCompatActivity {
 	private void performBillRequest() {
 
 		Ion.with(this)
-				.load(BILL_URL)
+				.load(getURL(BILL_URL))
 				.setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader(
 						"Authorization",

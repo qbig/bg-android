@@ -38,6 +38,7 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_AUTHTOKEN;
 import static sg.com.bigspoon.www.data.Constants.ORDER_HISTORY_URL;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SELECTED_HISTORY_ITEM_POSITION;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class OrderHistoryListActivity extends Activity {
 
@@ -168,7 +169,7 @@ public class OrderHistoryListActivity extends Activity {
 		loginPreferences = getSharedPreferences(PREFS_NAME, 0);
 
 		Ion.with(this)
-				.load(ORDER_HISTORY_URL)
+				.load(getURL(ORDER_HISTORY_URL))
 				.setHeader("Content-Type", "application/json; charset=utf-8")
 				.setHeader(
 						"Authorization",

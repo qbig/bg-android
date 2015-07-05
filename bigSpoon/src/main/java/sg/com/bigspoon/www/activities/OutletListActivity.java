@@ -58,6 +58,7 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_LOCATION_FILTER_DISTANCE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class OutletListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private static String ION_LOGGING_OUTLET_LIST = "ion-outlet-list";
@@ -197,7 +198,7 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 
 	private void loadOutlets(){
 		progressBar.setVisibility(View.VISIBLE);
-		Ion.with(this).load(LIST_OUTLETS).setHeader("Content-Type", "application/json; charset=utf-8")
+		Ion.with(this).load(getURL(LIST_OUTLETS)).setHeader("Content-Type", "application/json; charset=utf-8")
 				.as(new TypeToken<List<OutletModel>>() {
 				}).setCallback(new FutureCallback<List<OutletModel>>() {
 			@Override
@@ -206,29 +207,29 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 				user.logRemote("loading outlets", e, null);
 				if (result != null) {
 					progressBar.setVisibility(View.GONE);
-                    loadCount = 0;
+					loadCount = 0;
 					outlets = result;
 					updateListData();
 					OutletListActivity.this.navigateToPresetOutletIfNecessary();
 				} else {
-                    if (loadCount < MAX_TRY_COUNT){
-                        loadCount++;
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadOutlets();
-                            }
-                        }, 1000);
-                    } else {
-                        loadCount = 0;
-                        if (user.wifiIsConnected()){
-                            user.mMixpanel.track("Outlets loading failed, WIFI Connected", null);
-                        } else {
-                            user.mMixpanel.track("Outlets loading failed, WIFI Disconnected", null);
-                        }
-                        progressBar.setVisibility(View.GONE);
-                        SuperToast.create(getApplicationContext(), "Sorry:(. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
-                        finish();
+					if (loadCount < MAX_TRY_COUNT) {
+						loadCount++;
+						handler.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								loadOutlets();
+							}
+						}, 1000);
+					} else {
+						loadCount = 0;
+						if (user.wifiIsConnected()) {
+							user.mMixpanel.track("Outlets loading failed, WIFI Connected", null);
+						} else {
+							user.mMixpanel.track("Outlets loading failed, WIFI Disconnected", null);
+						}
+						progressBar.setVisibility(View.GONE);
+						SuperToast.create(getApplicationContext(), "Sorry:(. Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+						finish();
                     }
 				}
 			}

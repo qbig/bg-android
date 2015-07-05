@@ -16,6 +16,7 @@ import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.data.OutletModel;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class OutletListAdapter extends ArrayAdapter<OutletModel> {
 
@@ -45,7 +46,7 @@ public class OutletListAdapter extends ArrayAdapter<OutletModel> {
 		}
 
 		final ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-		Ion.with(imageView).load(BASE_URL + outlet.restaurant.icon.thumbnail);
+		Ion.with(imageView).load(getURL(BASE_URL) + outlet.restaurant.icon.thumbnail);
 		if (position == 0){
 			rowView.setBackgroundResource(R.drawable.outlet_item_border);
 		} else {

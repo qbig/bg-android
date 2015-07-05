@@ -27,6 +27,7 @@ import sg.com.bigspoon.www.data.OutletDetailsModel;
 
 import static sg.com.bigspoon.www.data.Constants.BASE_URL;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 	Context context;
@@ -107,7 +108,7 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
             contactText.setText(outletDetails.phoneNumber);
             final TextView openHoursText = (TextView) row.findViewById(R.id.open_hours);
             openHoursText.setText(outletDetails.operatingHours);
-			Ion.with(context).load(BASE_URL + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
+			Ion.with(context).load(getURL(BASE_URL) + outletIcon).withBitmap().intoImageView(iconView).setCallback(new FutureCallback<ImageView>() {
 
 				@Override
 				public void onCompleted(Exception arg0, ImageView arg1) {
@@ -145,9 +146,9 @@ public class CategoriesAdapter extends ArrayAdapter<CategoryModel> {
 			//Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).intoImageView(image);
 			ImageViewFutureBuilder ionBuilder;
 			if (mRestaurantIconDrawable != null ){
-				ionBuilder = Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).withBitmap().placeholder(mRestaurantIconDrawable);
+				ionBuilder = Ion.with(context).load(getURL(BASE_URL) + getPhotoUrl(currentCategory.id)).withBitmap().placeholder(mRestaurantIconDrawable);
 			} else {
-				ionBuilder = Ion.with(context).load(BASE_URL + getPhotoUrl(currentCategory.id)).withBitmap();
+				ionBuilder = Ion.with(context).load(getURL(BASE_URL) + getPhotoUrl(currentCategory.id)).withBitmap();
 			}
 			
 			ionBuilder.intoImageView(image);

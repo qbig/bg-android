@@ -44,6 +44,7 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN_WITH_FB;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class EntryActivity extends Activity {
 
@@ -112,63 +113,63 @@ public class EntryActivity extends Activity {
 			progressBar.setVisibility(View.VISIBLE);
 			final JsonObject json = new JsonObject();
 			json.addProperty("access_token", session.getAccessToken());
-			Ion.with(this).load(USER_LOGIN_WITH_FB).setHeader("Content-Type", "application/json; charset=utf-8")
+			Ion.with(this).load(getURL(USER_LOGIN_WITH_FB)).setHeader("Content-Type", "application/json; charset=utf-8")
 					.setJsonObjectBody(json).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
-						@Override
-						public void onCompleted(Exception e, JsonObject result) {
-							if (e != null || result == null) {
-								if (Constants.LOG) {
-									Toast.makeText(EntryActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
-								} else {
-									final JSONObject errorJson = new JSONObject();
-									try {
-										final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
-										errorJson.put(email, e.toString());
-										User.getInstance(EntryActivity.this).mMixpanel
-												.registerSuperPropertiesOnce(errorJson);
-										Crashlytics.logException(e);
-									} catch (JSONException e1) {
-										Crashlytics.logException(e1);
-									}
-								}
-								return;
-							}
-							
-							final String email = result.get(LOGIN_INFO_EMAIL) == null ? null : result.get(LOGIN_INFO_EMAIL).getAsString();
-							final String lastName = result.get(LOGIN_INFO_LAST_NAME) == null ? null : result.get(LOGIN_INFO_LAST_NAME).getAsString();
-							final String firstName = result.get(LOGIN_INFO_FIRST_NAME) == null ? null : result.get(LOGIN_INFO_FIRST_NAME).getAsString();
-							final String authToken = result.get(LOGIN_INFO_AUTHTOKEN) == null ? null : result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
-							final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL) == null ? null : result.get(LOGIN_INFO_AVATAR_URL).getAsString();
-							
+				@Override
+				public void onCompleted(Exception e, JsonObject result) {
+					if (e != null || result == null) {
+						if (Constants.LOG) {
+							Toast.makeText(EntryActivity.this, "Error login with FB", Toast.LENGTH_LONG).show();
+						} else {
+							final JSONObject errorJson = new JSONObject();
 							try {
-								loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
-								loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
-								loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
-								loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
-								loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
-								loginPrefsEditor.commit();
-							} catch (NullPointerException ne){
-								Crashlytics.logException(ne);
-							}
-
-							mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
-							JSONObject firstTime = new JSONObject();
-							try {
-								mMixpanel.alias(email, mMixpanel.getDistinctId());
-								mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
-								firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-								mMixpanel.registerSuperPropertiesOnce(firstTime);
-								mMixpanel.getPeople().increment(FB_LOGIN_COUNT, 1);
-								mMixpanel.track("fbLogin Success", firstTime);
+								final String email = loginPreferences.getString(LOGIN_INFO_EMAIL, null);
+								errorJson.put(email, e.toString());
+								User.getInstance(EntryActivity.this).mMixpanel
+										.registerSuperPropertiesOnce(errorJson);
+								Crashlytics.logException(e);
 							} catch (JSONException e1) {
 								Crashlytics.logException(e1);
 							}
-							SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
-							Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
-							intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							EntryActivity.this.startActivity(intent);
-							progressBar.setVisibility(View.GONE);
-							EntryActivity.this.finish();
+						}
+						return;
+					}
+
+					final String email = result.get(LOGIN_INFO_EMAIL) == null ? null : result.get(LOGIN_INFO_EMAIL).getAsString();
+					final String lastName = result.get(LOGIN_INFO_LAST_NAME) == null ? null : result.get(LOGIN_INFO_LAST_NAME).getAsString();
+					final String firstName = result.get(LOGIN_INFO_FIRST_NAME) == null ? null : result.get(LOGIN_INFO_FIRST_NAME).getAsString();
+					final String authToken = result.get(LOGIN_INFO_AUTHTOKEN) == null ? null : result.get(LOGIN_INFO_AUTHTOKEN).getAsString();
+					final String avatarUrl = result.get(LOGIN_INFO_AVATAR_URL) == null ? null : result.get(LOGIN_INFO_AVATAR_URL).getAsString();
+
+					try {
+						loginPrefsEditor.putString(LOGIN_INFO_EMAIL, email);
+						loginPrefsEditor.putString(LOGIN_INFO_LAST_NAME, lastName);
+						loginPrefsEditor.putString(LOGIN_INFO_FIRST_NAME, firstName);
+						loginPrefsEditor.putString(LOGIN_INFO_AUTHTOKEN, authToken);
+						loginPrefsEditor.putString(LOGIN_INFO_AVATAR_URL, avatarUrl);
+						loginPrefsEditor.commit();
+					} catch (NullPointerException ne) {
+						Crashlytics.logException(ne);
+					}
+
+					mMixpanel = MixpanelAPI.getInstance(EntryActivity.this, MIXPANEL_TOKEN);
+					JSONObject firstTime = new JSONObject();
+					try {
+						mMixpanel.alias(email, mMixpanel.getDistinctId());
+						mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
+						firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+						mMixpanel.registerSuperPropertiesOnce(firstTime);
+						mMixpanel.getPeople().increment(FB_LOGIN_COUNT, 1);
+						mMixpanel.track("fbLogin Success", firstTime);
+					} catch (JSONException e1) {
+						Crashlytics.logException(e1);
+					}
+					SocketIOManager.getInstance((BigSpoon) getApplicationContext()).setupSocketIOConnection();
+					Intent intent = new Intent(EntryActivity.this, OutletListActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					EntryActivity.this.startActivity(intent);
+					progressBar.setVisibility(View.GONE);
+					EntryActivity.this.finish();
 						}
 					});
 

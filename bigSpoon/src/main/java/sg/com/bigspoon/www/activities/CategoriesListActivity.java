@@ -45,6 +45,7 @@ import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.SHOULD_SHOW_STEPS_REMINDER;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class CategoriesListActivity extends Activity implements AdapterView.OnItemClickListener {
 	private SharedPreferences loginPreferences;
@@ -137,7 +138,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 	}
 
 	private void loadOutletDetails(final int outletId, final String outletIcon) {
-		Ion.with(this).load(LIST_OUTLETS + "/" + outletId)
+		Ion.with(this).load(getURL(LIST_OUTLETS) + "/" + outletId)
 				.setHeader("Authorization", "Token " + loginPreferences.getString(LOGIN_INFO_AUTHTOKEN, "xxx"))
 				.setHeader("Content-Type", "application/json; charset=utf-8").asJsonObject()
 				.setCallback(new FutureCallback<JsonObject>() {

@@ -46,6 +46,7 @@ import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
 import static sg.com.bigspoon.www.data.Constants.USER_LOGIN;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class EmailLoginActivity extends Activity {
 	private static String ION_LOGGING_LOGIN = "ion-email-login";
@@ -106,7 +107,7 @@ public class EmailLoginActivity extends Activity {
 					final JsonObject json = new JsonObject();
 					json.addProperty("email", mLoginEmailField.getText().toString());
 					json.addProperty("password", "bigspoon");
-					EmailLoginActivity.this.loginFuture = Ion.with(EmailLoginActivity.this).load(USER_LOGIN)
+					EmailLoginActivity.this.loginFuture = Ion.with(EmailLoginActivity.this).load(getURL(USER_LOGIN))
 							.setHeader("Content-Type", "application/json; charset=utf-8").setJsonObjectBody(json)
 							.asJsonObject().setCallback(new FutureCallback<JsonObject>() {
 								@Override
@@ -144,27 +145,27 @@ public class EmailLoginActivity extends Activity {
 										MixpanelAPI mixpanel = MixpanelAPI.getInstance(EmailLoginActivity.this,
 												MIXPANEL_TOKEN);
 										JSONObject firstTime = new JSONObject();
-                                        JSONObject props = new JSONObject();
+										JSONObject props = new JSONObject();
 										try {
 											mixpanel.identify(email);
 											mixpanel.getPeople().identify(email);
 											mixpanel.getPeople().increment(EMAIL_LOGIN_COUNT, 1);
-                                            mixpanel.getPeople().set("Email", email);
-                                            mixpanel.getPeople().set("$email", email);
-                                            props.put("$email", email);
+											mixpanel.getPeople().set("Email", email);
+											mixpanel.getPeople().set("$email", email);
+											props.put("$email", email);
 											firstTime.put(email, new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
-                                            mixpanel.registerSuperPropertiesOnce(props);
+											mixpanel.registerSuperPropertiesOnce(props);
 											mixpanel.registerSuperPropertiesOnce(firstTime);
 										} catch (JSONException e1) {
 											e1.printStackTrace();
 										}
 
-                                        EmailLoginActivity.this.progressBar.setVisibility(View.INVISIBLE);
-										SocketIOManager.getInstance((BigSpoon)getApplicationContext()).setupSocketIOConnection();
+										EmailLoginActivity.this.progressBar.setVisibility(View.INVISIBLE);
+										SocketIOManager.getInstance((BigSpoon) getApplicationContext()).setupSocketIOConnection();
 										Intent intent = new Intent(EmailLoginActivity.this, OutletListActivity.class);
 										intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 										EmailLoginActivity.this.startActivity(intent);
-										
+
 									} catch (NullPointerException nullException) {
 										Toast.makeText(EmailLoginActivity.this,
 												"User not found, please check your email address.", Toast.LENGTH_LONG)

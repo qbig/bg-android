@@ -80,6 +80,7 @@ import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
 import static sg.com.bigspoon.www.data.Constants.POS_FOR_CLICKED_CATEGORY;
+import static sg.com.bigspoon.www.data.Constants.getURL;
 
 
 public class MenuActivity extends ActionBarActivity {
@@ -485,10 +486,10 @@ public class MenuActivity extends ActionBarActivity {
         public void bindDish(DishModel dish) {
             mDish = dish;
             if (mDish.photo.thumbnailLarge.contains(DEFAULT_DISH_PHOTO_URL)) {
-                Ion.with(MenuActivity.this).load(BASE_URL + "media/" + User.getInstance(MenuActivity.this).currentOutlet.defaultDishPhoto)
+                Ion.with(MenuActivity.this).load(getURL(BASE_URL) + "media/" + User.getInstance(MenuActivity.this).currentOutlet.defaultDishPhoto)
                         .intoImageView(imageView);
             } else {
-                Ion.with(MenuActivity.this).load(BASE_URL + mDish.photo.thumbnailLarge)
+                Ion.with(MenuActivity.this).load(getURL(BASE_URL) + mDish.photo.thumbnailLarge)
                         .intoImageView(imageView);
             }
 
