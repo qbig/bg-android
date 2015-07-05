@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.novoda.merlin.MerlinsBeard;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
@@ -84,12 +85,14 @@ public class User {
 	private PendingIntent pendingIntent;
 	private AlarmManager manager;
 	public int storyDisplayCount = 0;
+	public MerlinsBeard merlinsBeard;
 
 	private User(Context context) {
 		setContext(context.getApplicationContext());
 		loginPrefs = context.getSharedPreferences(PREFS_NAME, 0);
 		loginPrefsEditor = loginPrefs.edit();
 		undoToastList = new ArrayList<SuperActivityToast>();
+		merlinsBeard = MerlinsBeard.from((BigSpoon) mContext);
 	}
 	
 	public void startSession(String currentOutletName) {

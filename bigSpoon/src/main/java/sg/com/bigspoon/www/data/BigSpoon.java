@@ -21,6 +21,11 @@ import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.novoda.merlin.Merlin;
+import com.novoda.merlin.NetworkStatus;
+import com.novoda.merlin.registerable.bind.Bindable;
+import com.novoda.merlin.registerable.connection.Connectable;
+import com.novoda.merlin.registerable.disconnection.Disconnectable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,10 +45,13 @@ import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
+import static sg.com.bigspoon.www.data.Constants.NETWORK_CONNECTED;
+import static sg.com.bigspoon.www.data.Constants.NETWORK_DISCONNECTED;
 
-public class BigSpoon extends Application implements Foreground.Listener {
+public class BigSpoon extends Application implements Foreground.Listener, Connectable, Disconnectable, Bindable {
 	final Handler mHandler = new Handler();
 	public boolean onStart = true;
+    private Merlin merlin;
 	private MixpanelAPI mMixpanel;
 	private PowerManager.WakeLock fullWakeLock;
 	private PowerManager.WakeLock partialWakeLock;
@@ -150,6 +158,15 @@ public class BigSpoon extends Application implements Foreground.Listener {
         );
 
 		createWakeLocks();
+        merlin = new Merlin.Builder()
+                .withConnectableCallbacks()
+                .withDisconnectableCallbacks()
+                .withBindableCallbacks()
+                .withLogging(true)
+                .build(this);
+        merlin.registerBindable(this);
+        merlin.registerConnectable(this);
+        merlin.registerDisconnectable(this);
 	}
 
 	@Override
@@ -189,6 +206,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		}
 		onStart = false; // only delay on app start.
         releaseWakeLock();
+        merlin.bind();
 	}
 
 
@@ -202,6 +220,7 @@ public class BigSpoon extends Application implements Foreground.Listener {
 		User.getInstance(this).prevActiveTime= System.currentTimeMillis();
 
 		partialWakeLock.acquire();
+        merlin.unbind();
 	}
 
 	public void checkLocationEnabledByForce() {
@@ -230,4 +249,27 @@ public class BigSpoon extends Application implements Foreground.Listener {
 			loginEditor.commit();
 		}
 	}
+
+
+	@Override
+	public void onBind(NetworkStatus networkStatus) {
+        if (!networkStatus.isAvailable()) {
+            onDisconnect();
+        }
+	}
+
+	@Override
+	public void onConnect() {
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_CONNECTED));
+        //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        Constants.isLocal = false;
+	}
+
+	@Override
+	public void onDisconnect(){
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_DISCONNECTED));
+        //Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
+        Constants.isLocal = true;
+	}
+
 }

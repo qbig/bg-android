@@ -73,6 +73,7 @@ import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
 import sg.com.bigspoon.www.common.Util.Util;
+import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -240,6 +241,14 @@ public class ItemsActivity extends ExpandableListActivity {
             Crashlytics.log("updateOrderedDishCounter npe: " + e.getMessage());
             finish();
         }
+
+		if (User.getInstance(this).merlinsBeard.isConnectedToWifi()) {
+			if (User.getInstance(this).merlinsBeard.isConnected()) {
+				Constants.isLocal = false;
+			} else {
+				Constants.isLocal = true;
+			}
+		}
 	}
 
 	private void dismissKeyboard() {

@@ -159,5 +159,7 @@ public class Constants {
 
     // Table number
     public static final String TABLE_ID = "tableId";
+    public static final String NETWORK_CONNECTED = "networkConnected";
+    public static final String NETWORK_DISCONNECTED = "networkDisconnected";
 
 }
