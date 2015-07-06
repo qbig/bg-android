@@ -74,12 +74,7 @@ public class BrandActivity extends Activity {
         });
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                spinner.setVisibility(View.GONE);
-            }
-        }, 5000);
+        reloadIfNecessary();
         mWebView = (XWalkView) findViewById(R.id.brand_webview);
         if (link == null) {
             finish();
@@ -112,6 +107,18 @@ public class BrandActivity extends Activity {
             }
         };
         mWebView.setOnTouchListener(onSwipeTouchListener);
+    }
+
+    private void reloadIfNecessary (){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (spinner.getVisibility() != View.GONE) {
+                    reloadIfNecessary ();
+                    mWebView.reload(XWalkView.RELOAD_NORMAL);
+                }
+            }
+        }, 5000);
     }
 
     @Override
