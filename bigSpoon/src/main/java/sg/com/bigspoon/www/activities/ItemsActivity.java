@@ -73,7 +73,6 @@ import sg.com.bigspoon.www.adapters.ActionBarMenuAdapter;
 import sg.com.bigspoon.www.adapters.CurrentOrderExpandableAdapter;
 import sg.com.bigspoon.www.adapters.PastOrdersAdapter;
 import sg.com.bigspoon.www.common.Util.Util;
-import sg.com.bigspoon.www.data.Constants;
 import sg.com.bigspoon.www.data.DiningSession;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -242,13 +241,13 @@ public class ItemsActivity extends ExpandableListActivity {
             finish();
         }
 
-		if (User.getInstance(this).merlinsBeard.isConnectedToWifi()) {
-			if (User.getInstance(this).merlinsBeard.isConnected()) {
-				Constants.isLocal = false;
-			} else {
-				Constants.isLocal = true;
-			}
-		}
+//		if (User.getInstance(this).merlinsBeard.isConnectedToWifi()) {
+//			if (User.getInstance(this).merlinsBeard.isConnected()) {
+//				Constants.isLocal = false;
+//			} else {
+//				Constants.isLocal = true;
+//			}
+//		}
 	}
 
 	private void dismissKeyboard() {
@@ -512,8 +511,9 @@ public class ItemsActivity extends ExpandableListActivity {
     }
 
 	private void handleOrderDidGetSent() {
-		User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
-                .getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
+//		User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
+//                .getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
+		User.getInstance(ItemsActivity.this).currentSession.clearPastOrder();
 		User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
 		User.getInstance(ItemsActivity.this).isContainDessert = false;
 		updateDisplay();

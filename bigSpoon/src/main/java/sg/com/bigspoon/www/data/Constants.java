@@ -19,7 +19,7 @@ public class Constants {
     public static final String BASE_URL = "baseUrl";
     public static final String SOCKET_URL_LOCAL = "192.168.1.242";
     public static final String SOCKET_URL = "bigspoon.biz";
-    public static boolean isLocal = false;
+    public static final boolean isLocal = false;
     public static String BASE;
 
     static public void setIsLocal() {
