@@ -69,6 +69,7 @@ public class BrandStoryListsActivity extends Activity {
             setTitle(User.getInstance(this).currentOutlet.name + " Story");
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
+            finish();
         }
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
