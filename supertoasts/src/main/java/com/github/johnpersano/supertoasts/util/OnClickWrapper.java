@@ -19,6 +19,7 @@ package com.github.johnpersano.supertoasts.util;
 
 import android.os.Parcelable;
 import android.view.View;
+
 import com.github.johnpersano.supertoasts.SuperToast;
 
 /**

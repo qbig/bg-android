@@ -24,6 +24,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.facebook.internal.NativeProtocol;
 import com.facebook.widget.FacebookDialog;
 

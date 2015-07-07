@@ -1,13 +1,13 @@
 package com.mixpanel.android.mpmetrics;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 /* package */ class SharedPreferencesLoader {
 

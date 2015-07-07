@@ -1,11 +1,5 @@
 package com.mixpanel.android.mpmetrics;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.mixpanel.android.surveys.SurveyActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,6 +9,12 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.util.Log;
+
+import com.mixpanel.android.surveys.SurveyActivity;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
  * Copyright 2012 Google Inc.

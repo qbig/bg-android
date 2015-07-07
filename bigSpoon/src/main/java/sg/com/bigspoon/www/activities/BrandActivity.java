@@ -19,6 +19,7 @@ import org.xwalk.core.XWalkView;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.common.Util.OnSwipeTouchListener;
+import sg.com.bigspoon.www.data.User;
 
 import static sg.com.bigspoon.www.data.Constants.AUTO;
 import static sg.com.bigspoon.www.data.Constants.CLOSE_BRAND_STORY_SIGNAL;
@@ -38,6 +39,7 @@ public class BrandActivity extends Activity {
     OnSwipeTouchListener onSwipeTouchListener;
     private static String STORY_INTERACTION = "Story Interaction";
     private MixpanelAPI mMixpanel;
+    private boolean touched = false;
 
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
@@ -93,20 +95,26 @@ public class BrandActivity extends Activity {
         mWebView.load(link, null);
         mWebView.setResourceClient(new MyResourceClient(mWebView));
         onSwipeTouchListener = new OnSwipeTouchListener(BrandActivity.this) {
-            public void onSwipeTop() {
-                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
-            }
+            public void onSwipeTop() {trackTouchEvent(); }
             public void onSwipeRight() {
-                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+                trackTouchEvent();
             }
             public void onSwipeLeft() {
-                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+                trackTouchEvent();
             }
             public void onSwipeBottom() {
-                mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+                trackTouchEvent();
             }
         };
         mWebView.setOnTouchListener(onSwipeTouchListener);
+    }
+
+    private void trackTouchEvent() {
+        if (!this.touched){
+            User.getInstance(this).mMixpanel.track("User Touches Story", null);
+            mMixpanel.getPeople().increment(STORY_INTERACTION, 1);
+            this.touched = true;
+        }
     }
 
     private void reloadIfNecessary (){

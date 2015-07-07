@@ -1,10 +1,5 @@
 package com.mixpanel.android.mpmetrics;
 
-import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
@@ -14,6 +9,11 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a class intended for internal use by the library.

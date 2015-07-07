@@ -1,19 +1,18 @@
 package sg.com.bigspoon.www.adapters;
 
-import java.util.ArrayList;
-
-import com.google.android.gms.internal.cu;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.Order;
-import sg.com.bigspoon.www.data.OrderItem;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.Order;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.User;
 
 public class PastOrdersAdapter extends ArrayAdapter<OrderItem> {
 

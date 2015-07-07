@@ -32,14 +32,24 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import com.facebook.*;
+
+import com.facebook.AppEventsLogger;
+import com.facebook.FacebookException;
+import com.facebook.LoggingBehavior;
+import com.facebook.Request;
+import com.facebook.Session;
 import com.facebook.android.R;
 import com.facebook.internal.AnalyticsEvents;
-import com.facebook.model.GraphPlace;
 import com.facebook.internal.Logger;
 import com.facebook.internal.Utility;
+import com.facebook.model.GraphPlace;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlacePickerFragment extends PickerFragment<GraphPlace> {
     /**

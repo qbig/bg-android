@@ -1,11 +1,5 @@
 package com.mixpanel.android.mpmetrics;
 
-import java.io.File;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * SQLite database adapter for MixpanelAPI.

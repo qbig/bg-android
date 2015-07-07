@@ -20,9 +20,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+
 import com.facebook.internal.Logger;
 import com.facebook.internal.Utility;
 import com.facebook.internal.Validate;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

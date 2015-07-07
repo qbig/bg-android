@@ -20,6 +20,7 @@ package com.github.johnpersano.supertoasts.util;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+
 import com.github.johnpersano.supertoasts.R;
 import com.github.johnpersano.supertoasts.SuperToast;
 

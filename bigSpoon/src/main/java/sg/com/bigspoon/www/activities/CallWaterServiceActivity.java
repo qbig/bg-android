@@ -1,9 +1,10 @@
 package sg.com.bigspoon.www.activities;
 
-import sg.com.bigspoon.www.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+
+import sg.com.bigspoon.www.R;
 
 public class CallWaterServiceActivity extends Activity {
 

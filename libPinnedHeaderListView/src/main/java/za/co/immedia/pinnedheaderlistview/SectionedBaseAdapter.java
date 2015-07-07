@@ -4,6 +4,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView.PinnedSectionedHeaderAdapter;
 
 public abstract class SectionedBaseAdapter extends BaseAdapter implements PinnedSectionedHeaderAdapter {

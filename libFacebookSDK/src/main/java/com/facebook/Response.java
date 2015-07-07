@@ -17,9 +17,14 @@
 package com.facebook;
 
 import android.content.Context;
-import com.facebook.internal.*;
+
+import com.facebook.internal.CacheableRequestBatch;
+import com.facebook.internal.FileLruCache;
+import com.facebook.internal.Logger;
+import com.facebook.internal.Utility;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphObjectList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

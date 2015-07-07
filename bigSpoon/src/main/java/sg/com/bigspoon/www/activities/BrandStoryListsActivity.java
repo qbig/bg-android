@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,16 +62,14 @@ public class BrandStoryListsActivity extends Activity {
         mListView.setLayoutManager(llm);
         mListView.setHasFixedSize(true);
 
-
         try {
             storys = User.getInstance(this).currentOutlet.storys;
             storySequence = User.getInstance(this).currentOutlet.storySequence;
+            initCards();
+            setTitle(User.getInstance(this).currentOutlet.name + " Story");
         } catch (NullPointerException npe) {
             Crashlytics.log(npe.getMessage());
         }
-
-        initCards();
-        setTitle(User.getInstance(this).currentOutlet.name + " Story");
 
         if (getIntent().getBooleanExtra(BRAND_WAKE_UP_SIGNAL, false)){
             if(! User.getInstance(this).shouldShowStory()) {

@@ -1,11 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import java.util.ArrayList;
-
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.activities.UserReviewActivity;
-import sg.com.bigspoon.www.data.OrderItem;
-import sg.com.bigspoon.www.data.User;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.activities.UserReviewActivity;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.User;
 
 public class CustomListOfUserReview extends ArrayAdapter<OrderItem> {
 

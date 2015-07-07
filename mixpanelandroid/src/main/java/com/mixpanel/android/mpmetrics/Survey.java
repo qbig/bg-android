@@ -1,15 +1,15 @@
 package com.mixpanel.android.mpmetrics;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a Survey, configured in Mixpanel.

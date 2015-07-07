@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.multidex.MultiDex;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
@@ -36,17 +37,17 @@ import sg.com.bigspoon.www.activities.Foreground;
 import sg.com.bigspoon.www.activities.OutletListActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.NETWORK_CONNECTED;
+import static sg.com.bigspoon.www.data.Constants.NETWORK_DISCONNECTED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import static sg.com.bigspoon.www.data.Constants.NETWORK_CONNECTED;
-import static sg.com.bigspoon.www.data.Constants.NETWORK_DISCONNECTED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 
 public class BigSpoon extends Application implements Foreground.Listener, Connectable, Disconnectable, Bindable {
 	final Handler mHandler = new Handler();
@@ -124,7 +125,7 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 		} catch (UnsupportedOperationException ex) {
 			Crashlytics.logException(ex);
 		}
-		
+
 		Foreground.get(this).addListener(this);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mLocationUpdateReceiver,
 				new IntentFilter(NOTIF_LOCATION_UPDATED));
@@ -152,10 +153,10 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 		}
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/ProximaNovaSemibold.otf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
+						.setDefaultFontPath("fonts/ProximaNovaSemibold.otf")
+						.setFontAttrId(R.attr.fontPath)
+						.build()
+		);
 
 		createWakeLocks();
         merlin = new Merlin.Builder()
@@ -167,6 +168,12 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
         merlin.registerBindable(this);
         merlin.registerConnectable(this);
         merlin.registerDisconnectable(this);
+	}
+
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
 	}
 
 	@Override

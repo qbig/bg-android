@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/com_mixpanel_android_activity_survey_id"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:padding="20dp"
     android:clickable="true"
     android:orientation="vertical"
-    android:visibility="gone" >
+    android:visibility="gone">
 
     <RelativeLayout
         android:layout_width="match_parent"
