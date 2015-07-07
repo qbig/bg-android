@@ -1,8 +1,3 @@
-include ':androidAsync'
-include ':comcrashlyticssdkandroid_answers'
-include ':comcrashlyticssdkandroid_beta'
-include ':comcrashlyticssdkandroid_crashlytics'
-include ':commonJars'
 include ':iofabricsdkandroid_fabric'
 include ':libFacebookSDK'
 include ':libPinnedHeaderListView'
