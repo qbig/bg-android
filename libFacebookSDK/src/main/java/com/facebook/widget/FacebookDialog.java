@@ -24,18 +24,33 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import com.facebook.*;
+
+import com.facebook.AppEventsLogger;
+import com.facebook.FacebookException;
+import com.facebook.FacebookGraphObjectException;
+import com.facebook.NativeAppCallAttachmentStore;
+import com.facebook.NativeAppCallContentProvider;
 import com.facebook.internal.AnalyticsEvents;
 import com.facebook.internal.NativeProtocol;
 import com.facebook.internal.Utility;
 import com.facebook.internal.Validate;
-import com.facebook.model.*;
+import com.facebook.model.GraphObject;
+import com.facebook.model.GraphObjectList;
+import com.facebook.model.OpenGraphAction;
+import com.facebook.model.OpenGraphObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 /*
  * Provides an interface for presenting dialogs provided by the Facebook application for Android. This class

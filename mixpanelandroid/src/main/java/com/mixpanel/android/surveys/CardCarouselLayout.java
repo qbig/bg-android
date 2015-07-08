@@ -1,8 +1,5 @@
 package com.mixpanel.android.surveys;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.DataSetObserver;
@@ -30,6 +27,9 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.mixpanel.android.R;
 import com.mixpanel.android.mpmetrics.Survey;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simple, single-purpose layout for juggling question cards.

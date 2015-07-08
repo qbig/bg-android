@@ -25,7 +25,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.facebook.*;
+
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionDefaultAudience;
+import com.facebook.SessionLoginBehavior;
+import com.facebook.SessionState;
 import com.facebook.android.R;
 import com.facebook.internal.AnalyticsEvents;
 import com.facebook.internal.ImageDownloader;

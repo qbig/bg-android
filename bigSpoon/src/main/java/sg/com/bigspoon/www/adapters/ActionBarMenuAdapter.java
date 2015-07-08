@@ -1,7 +1,6 @@
 
 package sg.com.bigspoon.www.adapters;
 
-import sg.com.bigspoon.www.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
 
 public class ActionBarMenuAdapter extends ArrayAdapter<String> {
 	 Context context;

@@ -1,6 +1,5 @@
 package sg.com.bigspoon.www.adapters;
 
-import sg.com.bigspoon.www.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -13,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
 
 
 

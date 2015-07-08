@@ -18,16 +18,23 @@ package com.facebook;
 
 import android.net.Uri;
 import android.os.Bundle;
-import bolts.AppLink;
-import bolts.AppLinkResolver;
-import bolts.Continuation;
-import bolts.Task;
+
 import com.facebook.model.GraphObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import bolts.AppLink;
+import bolts.AppLinkResolver;
+import bolts.Continuation;
+import bolts.Task;
 
 /**
  * Provides an implementation for the {@link AppLinkResolver AppLinkResolver} interface that uses the Facebook App Link

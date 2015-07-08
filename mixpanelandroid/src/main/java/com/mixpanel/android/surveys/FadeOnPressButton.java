@@ -1,12 +1,10 @@
 package com.mixpanel.android.surveys;
 
+import android.R.attr;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.Button;
-
-import android.R.attr;
 
 @TargetApi(14)
 /* package */ class FadeOnPressButton extends Button {

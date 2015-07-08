@@ -60,6 +60,15 @@ public class DishModel {
 		return price < 0.01;
 	}
 
+	public boolean containsCategoryWithId(int catId) {
+		for(int i = 0; i < this.categories.length; i++) {
+			if (this.categories[i].id == catId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean isServedNow() {
 		final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 

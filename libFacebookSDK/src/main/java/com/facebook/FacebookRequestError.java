@@ -18,6 +18,7 @@ package com.facebook;
 
 import com.facebook.android.R;
 import com.facebook.internal.Utility;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

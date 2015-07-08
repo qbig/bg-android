@@ -729,7 +729,7 @@ public class MenuActivity extends ActionBarActivity {
             }
 
             for (int i = 0, len = mOutletInfo.dishes.length; i < len; i++) {
-                if (mOutletInfo.dishes[i].categories[0].id == mOutletInfo.categoriesDetails[mCurrentSelectedCategoryTabIndex].id) {
+                if (mOutletInfo.dishes[i].containsCategoryWithId(mOutletInfo.categoriesDetails[mCurrentSelectedCategoryTabIndex].id)) {
                     mFilteredDishes.add(mOutletInfo.dishes[i]);
                 }
             }

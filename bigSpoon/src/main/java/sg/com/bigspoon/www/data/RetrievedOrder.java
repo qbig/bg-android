@@ -1,9 +1,9 @@
 package sg.com.bigspoon.www.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.google.gson.annotations.SerializedName;
 
 public class RetrievedOrder {
 	public static class RetrievedOutlet {

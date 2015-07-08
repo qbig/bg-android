@@ -4,10 +4,8 @@ import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,7 +25,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import za.co.immedia.pinnedheaderlistview.PinnedHeaderListView;
 
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_POPUP_DISH_ID;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_MODIFIER_OK;
 import static sg.com.bigspoon.www.data.Constants.MODIFIER_REULST_OK;
 
 public class ModifierActivity extends Activity {

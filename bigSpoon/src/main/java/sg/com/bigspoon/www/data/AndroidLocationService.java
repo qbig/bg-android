@@ -1,12 +1,5 @@
 package sg.com.bigspoon.www.data;
 
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -15,6 +8,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
 
 public class AndroidLocationService {
 	/*

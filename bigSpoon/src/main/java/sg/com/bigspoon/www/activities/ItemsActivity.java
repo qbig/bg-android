@@ -511,7 +511,7 @@ public class ItemsActivity extends ExpandableListActivity {
     }
 
 	private void handleOrderDidGetSent() {
-//		User.getInstance(ItemsActivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
+//		User.getInstance(ItemsA®ctivity.this).currentSession.getPastOrder().mergeWithAnotherOrder(User
 //                .getInstance(ItemsActivity.this).currentSession.getCurrentOrder());
 		User.getInstance(ItemsActivity.this).currentSession.clearPastOrder();
 		User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
@@ -615,7 +615,7 @@ public class ItemsActivity extends ExpandableListActivity {
                     checkingRetryCount = 0;
                     currentOrderRetryCount = 0;
 					performSendOrderRequest();
-                    User.getInstance(ItemsActivity.this).startAlarm();
+                    //User.getInstance(ItemsActivity.this).startAlarm();
 				} else {
 					ItemsActivity.this.showManualPopup("Network is sllloowww :(", "Please try again or order from our friendly staffs.");
 				}
@@ -872,7 +872,7 @@ public class ItemsActivity extends ExpandableListActivity {
 				alertLocationFail.setView(null);
 				alertLocationFail.setButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						User.getInstance(ItemsActivity.this).startAlarm();
+						//User.getInstance(ItemsActivity.this).startAlarm();
 					}
 				});
 				alertLocationFail.show();

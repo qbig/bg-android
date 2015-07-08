@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.webkit.CookieSyncManager;
+
 import com.facebook.android.R;
 import com.facebook.internal.AnalyticsEvents;
 import com.facebook.internal.NativeProtocol;
@@ -33,11 +34,15 @@ import com.facebook.internal.ServerProtocol;
 import com.facebook.internal.Utility;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class AuthorizationClient implements Serializable {
     private static final long serialVersionUID = 1L;

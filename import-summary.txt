@@ -175,9 +175,6 @@ From com-crashlytics-sdk-android_beta:
 From com-crashlytics-sdk-android_crashlytics:
 * build.xml
 * kit-version.properties
-From commonJars:
-* .DS_Store
-* proguard-project.txt
 From io-fabric-sdk-android_fabric:
 * build.xml
 * kit-version.properties

@@ -19,10 +19,15 @@ package com.facebook.widget;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.content.Loader;
-import com.facebook.*;
+
+import com.facebook.FacebookException;
+import com.facebook.FacebookRequestError;
+import com.facebook.Request;
+import com.facebook.RequestBatch;
+import com.facebook.Response;
+import com.facebook.internal.CacheableRequestBatch;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphObjectList;
-import com.facebook.internal.CacheableRequestBatch;
 
 class GraphObjectPagingLoader<T extends GraphObject> extends Loader<SimpleGraphObjectCursor<T>> {
     private final Class<T> graphObjectClass;

@@ -27,10 +27,15 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.facebook.FacebookException;
 import com.facebook.LoggingBehavior;
 import com.facebook.android.R;
-import com.facebook.internal.*;
+import com.facebook.internal.ImageDownloader;
+import com.facebook.internal.ImageRequest;
+import com.facebook.internal.ImageResponse;
+import com.facebook.internal.Logger;
+import com.facebook.internal.Utility;
 
 import java.net.URISyntaxException;
 

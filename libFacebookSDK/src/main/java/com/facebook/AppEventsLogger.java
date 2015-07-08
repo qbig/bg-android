@@ -16,6 +16,22 @@
 
 package com.facebook;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+
+import com.facebook.internal.AttributionIdentifiers;
+import com.facebook.internal.Logger;
+import com.facebook.internal.Utility;
+import com.facebook.internal.Validate;
+import com.facebook.model.GraphObject;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
@@ -35,22 +51,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
-import com.facebook.internal.AttributionIdentifiers;
-import com.facebook.internal.Logger;
-import com.facebook.internal.Utility;
-import com.facebook.internal.Validate;
-import com.facebook.model.GraphObject;
 
 
 /**

@@ -1,14 +1,15 @@
 package sg.com.bigspoon.www.adapters;
 
-import sg.com.bigspoon.www.R;
-import sg.com.bigspoon.www.data.OrderItem;
-import sg.com.bigspoon.www.data.RetrievedOrder;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import sg.com.bigspoon.www.R;
+import sg.com.bigspoon.www.data.OrderItem;
+import sg.com.bigspoon.www.data.RetrievedOrder;
 
 public class OrderHistoryDetailsAdapter extends ArrayAdapter<OrderItem> {
 

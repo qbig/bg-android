@@ -1,8 +1,5 @@
 package com.mixpanel.android.mpmetrics;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -16,6 +13,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Abstracts away possibly non-present system information classes,

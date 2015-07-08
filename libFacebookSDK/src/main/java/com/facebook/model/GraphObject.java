@@ -19,14 +19,25 @@ package com.facebook.model;
 import com.facebook.FacebookGraphObjectException;
 import com.facebook.internal.Utility;
 import com.facebook.internal.Validate;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * GraphObject is the primary interface used by the Facebook SDK for Android to represent objects in the Facebook

@@ -18,16 +18,35 @@ package com.facebook.android;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.net.Uri;
-import android.os.*;
-import com.facebook.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+
+import com.facebook.AccessTokenSource;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.LegacyHelper;
+import com.facebook.Request;
+import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
+import com.facebook.SessionLoginBehavior;
+import com.facebook.SessionState;
+import com.facebook.Settings;
+import com.facebook.TokenCachingStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
