@@ -699,7 +699,7 @@ public class MenuActivity extends ActionBarActivity {
         public int getDishPositionInFilteredList(int dishID) {
             for (int i = 0; i < mFilteredDishes.size(); i++) {
                 if (dishID == mFilteredDishes.get(i).id && mFilteredDishes.get(i).isActive) {
-                    return i;
+                    return i + 1;
                 }
             }
             return -1;
