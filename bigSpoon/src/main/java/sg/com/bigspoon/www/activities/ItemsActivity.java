@@ -227,6 +227,7 @@ public class ItemsActivity extends ExpandableListActivity {
             setupExpandableCurrentOrdersListView();
             setupAddNoteButton();
             loadMenu();
+			mBottomGridView.setVisibility(View.GONE);
             setupPlaceOrderButton();
             setupPlacedOrderListView();
             setupPriceLabels();
