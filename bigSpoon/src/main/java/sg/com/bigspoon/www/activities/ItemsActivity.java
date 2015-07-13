@@ -223,7 +223,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
         try {
-            updateOrderedDishCounter();
+            //updateOrderedDishCounter();
             setupExpandableCurrentOrdersListView();
             setupAddNoteButton();
             loadMenu();
@@ -253,8 +253,13 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	private void dismissKeyboard() {
-		final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+		try {
+			final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+		} catch (NullPointerException npe) {
+			Crashlytics.log(npe.toString());
+		}
+
 	}
 
     private final void scrollToSentItems(){
@@ -328,7 +333,7 @@ public class ItemsActivity extends ExpandableListActivity {
 	}
 
 	protected void updateDisplay() {
-		updateOrderedDishCounter();
+		//updateOrderedDishCounter();
 		updatePriceLabels();
 		mCurrentOrderAdapter.notifyDataSetChanged();
 		mPastOrderAdapter.notifyDataSetChanged();
