@@ -37,17 +37,17 @@ import sg.com.bigspoon.www.activities.Foreground;
 import sg.com.bigspoon.www.activities.OutletListActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NETWORK_CONNECTED;
 import static sg.com.bigspoon.www.data.Constants.NETWORK_DISCONNECTED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 
 public class BigSpoon extends Application implements Foreground.Listener, Connectable, Disconnectable, Bindable {
 	final Handler mHandler = new Handler();
@@ -138,20 +138,6 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 		mMixpanel.getPeople().identify(mMixpanel.getDistinctId());
 
 		User.getInstance(this).mMixpanel = this.mMixpanel;
-		final SharedPreferences pref = getSharedPreferences(PREFS_NAME, 0);
-		if (pref.contains(LOGIN_INFO_EMAIL)) {
-			final String email = pref.getString(LOGIN_INFO_EMAIL, null);
-			if (email != null) {
-				JSONObject props = new JSONObject();
-				try {
-					props.put("user", email);
-					mMixpanel.track("Usage starts", props);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 						.setDefaultFontPath("fonts/ProximaNovaSemibold.otf")
 						.setFontAttrId(R.attr.fontPath)
@@ -189,6 +175,20 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 	// Foreground Callback
 	@Override
 	public void onBecameForeground() {
+		final SharedPreferences pref = getSharedPreferences(PREFS_NAME, 0);
+		if (pref.contains(LOGIN_INFO_EMAIL)) {
+			final String email = pref.getString(LOGIN_INFO_EMAIL, null);
+			if (email != null) {
+				JSONObject props = new JSONObject();
+				try {
+					props.put("user", email);
+					mMixpanel.track("Usage starts", props);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		//User.getInstance(getApplicationContext()).updateOrder();
 		final User user = User.getInstance(this);
         user.tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
