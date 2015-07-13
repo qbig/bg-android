@@ -30,6 +30,47 @@
         android:paddingRight="15dp"
         android:src="@drawable/orange_add_bt" />
 
+    <LinearLayout
+        android:id="@+id/menu_add_minus_layout"
+        android:layout_width="120dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/menu_add_minus_background"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+        <ImageButton
+            android:id="@+id/menu_plus_bt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:src="@drawable/menu_plus_bt"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"/>
+        <TextView
+            android:id="@+id/single_dish_count"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="14"
+            android:textSize="18sp"
+            android:textAppearance="@style/FontProxiSemiBold"
+            android:textColor="@color/BigSpoonGray" />
+        <ImageButton
+            android:id="@+id/menu_minus_bt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:src="@drawable/menu_minus_bt"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/itemdesc"
         android:layout_width="match_parent"

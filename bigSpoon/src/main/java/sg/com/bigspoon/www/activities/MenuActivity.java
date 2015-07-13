@@ -17,7 +17,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,13 +35,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -55,9 +52,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.johnpersano.supertoasts.SuperActivityToast;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 import com.koushikdutta.ion.Ion;
 
 import org.apache.commons.lang3.StringUtils;
@@ -72,6 +66,7 @@ import java.util.Vector;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
 import sg.com.bigspoon.www.data.DishModel;
+import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
 import sg.com.bigspoon.www.data.User;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -95,7 +90,6 @@ public class MenuActivity extends ActionBarActivity {
     private int mCategoryPosition = 0;
     public Handler mHandler;
     private Drawable outOfStockBackground;
-    private SuperActivityToast mSuperActivityToast;
     private static final float PHOTO_ITEM_HEIGHT = 242;
     private static final long DURATION_LONG = 1000;
     private static final long DURATION_SHORT = 500;
@@ -124,12 +118,12 @@ public class MenuActivity extends ActionBarActivity {
             if (context != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
                 try {
                     updateOrderCountAndDisplay();
+                    ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
                     animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
 
                     if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
                         MenuActivity.this.showClearOrderPopup();
                     }
-                    User.getInstance(MenuActivity.this).showUndoDishPopup();
                 } catch (Exception e) {
                     Crashlytics.log(e.toString());
                 }
@@ -159,7 +153,6 @@ public class MenuActivity extends ActionBarActivity {
         setupToolbar();
         setupViewPager();
         setupTabs();
-        initSuperToast();
 
         User.getInstance(this).currentOutlet.dishes = filterInactiveDish(User.getInstance(this).currentOutlet.dishes);
         mHandler = new Handler();
@@ -169,27 +162,6 @@ public class MenuActivity extends ActionBarActivity {
                 new IntentFilter(NOTIF_UNDO_ORDER));
         LocalBroadcastManager.getInstance(this).registerReceiver(mAfterModifierPopupReceiver,
                 new IntentFilter(NOTIF_MODIFIER_OK));
-    }
-
-    private void initSuperToast() {
-        mSuperActivityToast = new SuperActivityToast(this,
-                SuperToast.Type.STANDARD);
-        mSuperActivityToast.setText("Saved to 'Unsent Order'. Tab 'Orders' to view.");
-        mSuperActivityToast.setTextSize(SuperToast.TextSize.LARGE);
-        mSuperActivityToast.setAnimations(SuperToast.Animations.POPUP);
-        mSuperActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
-        mSuperActivityToast.setBackground(SuperToast.Background.ORANGE);
-        mSuperActivityToast.setOnClickWrapper(
-                new OnClickWrapper("superactivitytoast",
-                        new SuperToast.OnClickListener() {
-                            @Override
-                            public void onClick(View view, Parcelable token) {
-                                mSuperActivityToast.dismiss();
-                            }
-                        }
-                )
-        );
-        mSuperActivityToast.setIcon(SuperToast.Icon.Dark.INFO, SuperToast.IconPosition.LEFT);
     }
 
     private void setupTabs() {
@@ -462,11 +434,42 @@ public class MenuActivity extends ActionBarActivity {
 
     private class ListPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView, overlay;
-        TextView textItemPrice, textItemName, textItemDesc;
+        TextView textItemPrice, textItemName, textItemDesc, singleItemCount;
         ImageButton imageAddButton;
+        ImageButton imagePlusButton;
+        ImageButton imageMinusButton;
+        LinearLayout plusMinusContainer;
         private static final String DEFAULT_DISH_PHOTO_URL = "default.jpg";
         private DishModel mDish;
         private int mPosition;
+        private View.OnClickListener addButtonClickedListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemView.performClick();
+            }
+        };
+
+        private void updateDishChangeWidget(int updatedQuantity) {
+            if (updatedQuantity == 0) {
+                imageAddButton.setVisibility(View.VISIBLE);
+                plusMinusContainer.setVisibility(View.GONE);
+            } else {
+                imageAddButton.setVisibility(View.GONE);
+                plusMinusContainer.setVisibility(View.VISIBLE);
+                singleItemCount.setText("" + updatedQuantity);
+            }
+        }
+
+        private View.OnClickListener minusClickedListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Order currentOrder = User.getInstance(MenuActivity.this).currentSession.getCurrentOrder();
+                currentOrder.minusDish(mDish);
+                int updatedQuantity = currentOrder.getQuantityOfDishByID(mDish.id);
+                updateDishChangeWidget(updatedQuantity);
+                updateOrderedDishCounter();
+            }
+        };
 
         public ListPhotoItemViewHolder(final View itemView) {
             super(itemView);
@@ -477,13 +480,17 @@ public class MenuActivity extends ActionBarActivity {
             textItemPrice.bringToFront();
             textItemName = (TextView) itemView.findViewById(R.id.textitemname);
             imageAddButton = (ImageButton) itemView.findViewById(R.id.addbutton);
-            imageAddButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemView.performClick();
-                }
-            });
+            imageAddButton.setOnClickListener(addButtonClickedListener);
             itemView.setOnClickListener(this);
+            plusMinusContainer = (LinearLayout) itemView.findViewById(R.id.menu_add_minus_layout);
+            if (plusMinusContainer == null) {
+                return;
+            }
+            singleItemCount = (TextView) plusMinusContainer.findViewById(R.id.single_dish_count);
+            imagePlusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_plus_bt);
+            imagePlusButton.setOnClickListener(addButtonClickedListener);
+            imageMinusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_minus_bt);
+            imageMinusButton.setOnClickListener(minusClickedListener);
         }
 
         public void bindDish(DishModel dish) {
@@ -511,8 +518,11 @@ public class MenuActivity extends ActionBarActivity {
             if (mDish.isDummyDish()) {
                 imageAddButton.setVisibility(View.GONE);
                 textItemPrice.setVisibility(View.GONE);
+                plusMinusContainer.setVisibility(View.GONE);
             } else {
-                imageAddButton.setVisibility(View.VISIBLE);
+                Order currentOrder = User.getInstance(MenuActivity.this).currentSession.getCurrentOrder();
+                int updatedQuantity = currentOrder.getQuantityOfDishByID(mDish.id);
+                updateDishChangeWidget(updatedQuantity);
                 textItemPrice.setVisibility(View.VISIBLE);
             }
         }
@@ -523,7 +533,6 @@ public class MenuActivity extends ActionBarActivity {
                 return;
             }
 
-            mSuperActivityToast.dismiss();
             if (!mDish.isServedNow()) {
                 AlertDialog alertLocationFail = new AlertDialog.Builder(MenuActivity.this).create();
                 alertLocationFail.setTitle("Sorry");
@@ -562,13 +571,13 @@ public class MenuActivity extends ActionBarActivity {
                 MenuActivity.this
                         .startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
             } else {
-
-                User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().addDish(mDish);
-                User.getInstance(MenuActivity.this).showUndoDishPopup();
+                Order currentOrder = User.getInstance(MenuActivity.this).currentSession.getCurrentOrder();
+                currentOrder.addDish(mDish);
+                int updatedQuantity = currentOrder.getQuantityOfDishByID(mDish.id);
+                updateDishChangeWidget(updatedQuantity);
                 updateOrderCountAndDisplay();
 
                 if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
-                    //mSuperActivityToast.show();
                     if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
                         showClearOrderPopup();
                     }

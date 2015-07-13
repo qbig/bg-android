@@ -1,26 +1,19 @@
 package sg.com.bigspoon.www.data;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +43,6 @@ import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_FIRST_NAME;
 import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_LAST_NAME;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_UNDO_ORDER;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
 import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
@@ -295,30 +287,6 @@ public class User {
 				System.out.println("Cleared");
 			}
 		});
-	}
-
-	public void showUndoDishPopup() {
-		SuperActivityToast superActivityToast = new SuperActivityToast((Activity)mContext, SuperToast.Type.BUTTON);
-		superActivityToast.setDuration(SuperToast.Duration.VERY_SHORT);
-		superActivityToast.setText("Saved to 'Unsent Order'.");
-		superActivityToast.setTextColor(Color.WHITE);
-		superActivityToast.setBackground(SuperToast.Background.ORANGE);
-		superActivityToast.setButtonIcon(SuperToast.Icon.Light.UNDO, "UNDO");
-		superActivityToast.setGravity(Gravity.BOTTOM, 50, 100);
-		superActivityToast.setOnClickWrapper(
-				new OnClickWrapper("superactivitytoast",
-						new SuperToast.OnClickListener() {
-							@Override
-							public void onClick(View view, Parcelable token) {
-								User.getInstance(mContext).currentSession.getCurrentOrder().pop();
-								Intent intent = new Intent(NOTIF_UNDO_ORDER);
-								LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-							}
-						}
-				)
-		);
-		superActivityToast.show();
-		this.undoToastList.add(superActivityToast);
 	}
 
 	public void clearUndoPopup() {
