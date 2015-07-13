@@ -99,6 +99,24 @@ public class OutletDetailsModel {
         return outletDetails;
     }
 
+    public JsonObject toJsonObject() {
+        final Gson gson = new Gson();
+        final JsonObject result = (JsonObject) gson.toJsonTree(this, OutletDetailsModel.class);
+
+        result.add("tables", gson.toJsonTree(this.tables, TableModel[].class));
+        result.add("categories", gson.toJsonTree(this.categoriesDetails, CategoryModel[].class));
+        result.add("categories_order", gson.toJsonTree(this.categoriesOrder, CategoryOrder[].class));
+        result.add("dishes", gson.toJsonTree(this.dishes, DishModel[].class));
+
+        try {
+            result.add("story_json_array", gson.toJsonTree(this.storySequence, Integer[].class));
+        } catch (Exception exp) {
+            Crashlytics.log(exp.toString());
+        }
+
+        return result;
+    }
+
     public DishModel getDishWithId(int dishId) {
         for (int i = 0, len = dishes.length; i < len; i++) {
             if (dishes[i].id == dishId) {

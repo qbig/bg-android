@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -209,6 +210,12 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 					progressBar.setVisibility(View.GONE);
 					loadCount = 0;
 					outlets = result;
+					// Test
+					Gson gson = new Gson();
+					System.out.println(gson.toJsonTree(outlets).toString());
+
+					outlets = gson.fromJson(gson.toJsonTree(outlets).toString(), new TypeToken<List<OutletModel>>() {}.getType());
+					// Test -- End
 					updateListData();
 					OutletListActivity.this.navigateToPresetOutletIfNecessary();
 				} else {
