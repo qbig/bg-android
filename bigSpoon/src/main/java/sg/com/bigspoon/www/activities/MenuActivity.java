@@ -36,10 +36,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -571,7 +574,7 @@ public class MenuActivity extends ActionBarActivity {
                     }
                 }
 
-                animatePhotoItemToCorner(v, mPosition, DURATION_SHORT);
+                animatePhotoItemToCorner(v, mPosition, DURATION_LONG);
             }
         }
     }
@@ -654,6 +657,7 @@ public class MenuActivity extends ActionBarActivity {
         AnimationSet animSet = new AnimationSet(true);
         animSet.setFillAfter(true);
         animSet.setDuration(duration);
+        animSet.setInterpolator(new AccelerateInterpolator());
         ScaleAnimation scale = new ScaleAnimation(1, 0, 1, 0);
         animSet.addAnimation(scale);
 
