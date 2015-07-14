@@ -17,6 +17,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -104,6 +105,8 @@ public class MenuActivity extends ActionBarActivity {
     public View mClickedViewToAnimate;
     public int mClickedPos;
     private boolean isAnimating;
+    private ImageView viewToAnimate;
+    private CoordinatorLayout mainContainer;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -123,8 +126,12 @@ public class MenuActivity extends ActionBarActivity {
             if (context != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
                 try {
                     startCornerCountAnim();
-                    ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
-                    animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                        }
+                    },200);
 
                     if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
                         MenuActivity.this.showClearOrderPopup();
@@ -154,11 +161,12 @@ public class MenuActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_tabs);
+        mainContainer = (CoordinatorLayout) findViewById(R.id.tabanim_maincontent);
         setupBottomActionBar();
         setupToolbar();
         setupViewPager();
         setupTabs();
-
+        viewToAnimate = new ImageView(MenuActivity.this);
         User.getInstance(this).currentOutlet.dishes = filterInactiveDish(User.getInstance(this).currentOutlet.dishes);
         mHandler = new Handler();
         this.outOfStockBackground = getResources().getDrawable(R.drawable.out_of_stock);
@@ -243,9 +251,11 @@ public class MenuActivity extends ActionBarActivity {
     }
 
     private void updateOrderedDishCounter() {
+        ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
         final int orderCount = User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity();
         if (orderCount != 0) {
             startCornerCountAnim();
+            mBottomActionButton.setImageResource(R.drawable.menu_bottom_send_bt);
             if (mBottomActionButton.getVisibility() == View.GONE) {
                 mBottomActionButton.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.SlideInUp)
@@ -262,17 +272,15 @@ public class MenuActivity extends ActionBarActivity {
                             public void onAnimationRepeat(Animator animation) {}
                         })
                         .playOn(mBottomActionButton);
-                ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
             }
         } else {
             mOrderedDishCounterText.clearAnimation();
             mOrderedDishCounterText.setVisibility(View.GONE);
-            mBottomActionButton.setVisibility(View.GONE);
             final int pastOrderCount = User.getInstance(this).currentSession.getPastOrder().getTotalQuantity();
             if (pastOrderCount != 0) {
                 if (mBottomActionButton.getVisibility() == View.GONE) {
                     mBottomActionButton.setVisibility(View.VISIBLE);
-                    mBottomActionButton.setBackgroundResource(R.drawable.menu_bottom_view_bt);
+                    mBottomActionButton.setImageResource(R.drawable.menu_bottom_view_bt);
                     YoYo.with(Techniques.SlideInUp)
                             .duration(600)
                             .interpolate(new AccelerateDecelerateInterpolator())
@@ -280,9 +288,13 @@ public class MenuActivity extends ActionBarActivity {
                                 @Override
                                 public void onAnimationStart(Animator animation) {}
                                 @Override
-                                public void onAnimationEnd(Animator animation) {}
+                                public void onAnimationEnd(Animator animation) {
+                                    mBottomActionButton.setVisibility(View.VISIBLE);
+                                }
                                 @Override
-                                public void onAnimationCancel(Animator animation) {}
+                                public void onAnimationCancel(Animator animation) {
+                                    mBottomActionButton.setVisibility(View.VISIBLE);
+                                }
                                 @Override
                                 public void onAnimationRepeat(Animator animation) {}
                             })
@@ -291,7 +303,7 @@ public class MenuActivity extends ActionBarActivity {
             } else {
                 if ( mBottomActionButton.getVisibility() == View.VISIBLE) {
                     YoYo.with(Techniques.SlideOutDown)
-                            .duration(1200)
+                            .duration(600)
                             .interpolate(new AccelerateDecelerateInterpolator())
                             .withListener(new Animator.AnimatorListener() {
                                 @Override
@@ -301,7 +313,9 @@ public class MenuActivity extends ActionBarActivity {
                                     mBottomActionButton.setVisibility(View.GONE);
                                 }
                                 @Override
-                                public void onAnimationCancel(Animator animation) {}
+                                public void onAnimationCancel(Animator animation) {
+                                    mBottomActionButton.setVisibility(View.GONE);
+                                }
                                 @Override
                                 public void onAnimationRepeat(Animator animation) {}
                             })
@@ -522,35 +536,25 @@ public class MenuActivity extends ActionBarActivity {
         private void updateDishChangeWidget(int updatedQuantity) {
             if (updatedQuantity == 0) {
                 imageAddButton.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.FadeOut)
-                        .duration(500)
-                        .interpolate(new AccelerateDecelerateInterpolator())
-                        .withListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {}
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                plusMinusContainer.setVisibility(View.GONE);
-                            }
-                            @Override
-                            public void onAnimationCancel(Animator animation) {}
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {}
-                        })
-                        .playOn(plusMinusContainer);
+                plusMinusContainer.setVisibility(View.GONE);
             } else {
+                // updatedQuantity != 0
                 if (plusMinusContainer.getVisibility() == View.GONE) {
                     plusMinusContainer.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.Shake)
-                            .duration(1200)
+                            .duration(300)
                             .interpolate(new AccelerateDecelerateInterpolator())
                             .withListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animation) {}
                                 @Override
-                                public void onAnimationEnd(Animator animation) {}
+                                public void onAnimationEnd(Animator animation) {
+                                    plusMinusContainer.setVisibility(View.VISIBLE);
+                                }
                                 @Override
-                                public void onAnimationCancel(Animator animation) {}
+                                public void onAnimationCancel(Animator animation) {
+                                    plusMinusContainer.setVisibility(View.VISIBLE);
+                                }
                                 @Override
                                 public void onAnimationRepeat(Animator animation) {}
                             })
@@ -669,10 +673,10 @@ public class MenuActivity extends ActionBarActivity {
                 return;
             }
 
+            mClickedViewToAnimate = v;
+            mClickedPos = mPosition;
             if (mDish.customizable) {
                 final Intent intentForModifier = new Intent(MenuActivity.this, ModifierActivity.class);
-                mClickedViewToAnimate = v;
-                mClickedPos = mPosition;
                 intentForModifier.putExtra(MODIFIER_POPUP_DISH_ID, mDish.id);
                 MenuActivity.this
                         .startActivityForResult(intentForModifier, MODIFIER_POPUP_REQUEST);
@@ -688,8 +692,12 @@ public class MenuActivity extends ActionBarActivity {
                         showClearOrderPopup();
                     }
                 }
-
-                animatePhotoItemToCorner(v, mPosition, DURATION_LONG);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        animatePhotoItemToCorner(mClickedViewToAnimate, mPosition, DURATION_LONG);
+                    }
+                },200);
             }
         }
     }
@@ -754,12 +762,11 @@ public class MenuActivity extends ActionBarActivity {
 
     private void animatePhotoItemToCorner(View view, final Integer itemPosition, long duration) {
         ImageView imageViewToCopy = (ImageView) view.findViewById(R.id.menuitem);
-        ImageView viewToAnimate = new ImageView(MenuActivity.this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imageViewToCopy.getWidth(),
                 imageViewToCopy.getHeight());
         viewToAnimate.setLayoutParams(params);
         viewToAnimate.setImageDrawable(imageViewToCopy.getDrawable());
-        ((ViewGroup) view.getParent().getParent()).addView(viewToAnimate);
+        mainContainer.addView(viewToAnimate);
         moveViewToScreenCorner(itemPosition, viewToAnimate, duration);
     }
 
@@ -772,7 +779,7 @@ public class MenuActivity extends ActionBarActivity {
         float startX = fromLoc[0];
         float startY = fromLoc[1];
         position -= firstVisiblePosition;
-        startY += (position - 1) * PHOTO_ITEM_HEIGHT;
+        startY += position * PHOTO_ITEM_HEIGHT;
 
         int toLoc[] = new int[2];
         menuFrag.mRecyclerView.getLocationOnScreen(toLoc);
@@ -795,15 +802,13 @@ public class MenuActivity extends ActionBarActivity {
             public void onAnimationStart(Animation animation) {
                 isAnimating = true;
             }
-
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
+            public void onAnimationRepeat(Animation animation) {}
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((ViewGroup) start.getParent()).removeView(start);
+                mainContainer.removeView(start);
                 isAnimating = false;
+                //((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
             }
         });
 

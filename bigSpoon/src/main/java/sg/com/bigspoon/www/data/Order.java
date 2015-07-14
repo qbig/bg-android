@@ -48,9 +48,9 @@ public class Order {
             for (int i = mItems.size() - 1; i > -1; i--) {
                 OrderItem item = mItems.get(i);
                 if (item.dish.id == dish.id) {
+                    item.dish.quantity += 1;
                     if (item.quantity > 1) {
                         item.quantity--;
-                        item.dish.quantity += 1;
                     } else {
                         mItems.remove(item);
                     }
