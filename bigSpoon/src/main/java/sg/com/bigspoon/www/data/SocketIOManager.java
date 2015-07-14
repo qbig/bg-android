@@ -162,7 +162,7 @@ public class SocketIOManager {
 
 	private void connectToSocketIO(final ConnectCallback callback) {
 		try {
-			SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), "http://" + getURL(SOCKET_URL) + ":" + PORT, callback);
+			SocketIOClient.connect(AsyncHttpClient.getDefaultInstance(), getURL(SOCKET_URL) + ":" + PORT, callback);
 		} catch (NullPointerException npe) {
 			if (npe != null && npe.toString() != null)
 			Crashlytics.log(npe.toString());

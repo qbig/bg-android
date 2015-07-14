@@ -35,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -52,7 +53,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.koushikdutta.ion.Ion;
+import com.nineoldandroids.animation.Animator;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,6 +91,7 @@ public class MenuActivity extends ActionBarActivity {
     private android.support.v7.widget.SearchView mSearchView;
     private View bottomActionBar;
     private TextView mOrderedDishCounterText;
+    private ImageButton mBottomActionButton;
     private int mCategoryPosition = 0;
     public Handler mHandler;
     private Drawable outOfStockBackground;
@@ -117,7 +122,7 @@ public class MenuActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             if (context != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
                 try {
-                    updateOrderCountAndDisplay();
+                    startCornerCountAnim();
                     ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
                     animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
 
@@ -226,18 +231,83 @@ public class MenuActivity extends ActionBarActivity {
         bottomActionBar = findViewById(R.id.gv_action_menu);
         bottomActionBar.getBackground().setAlpha(230);
         mOrderedDishCounterText = (TextView) findViewById(R.id.corner);
+        mBottomActionButton = (ImageButton) findViewById(R.id.menu_bottom_action_bt);
+        mBottomActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MenuActivity.this, ItemsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        });
     }
 
     private void updateOrderedDishCounter() {
         final int orderCount = User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity();
         if (orderCount != 0) {
-            mOrderedDishCounterText.setVisibility(View.VISIBLE);
-            mOrderedDishCounterText.setText(String.valueOf(orderCount));
-            final Animation a = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-            mOrderedDishCounterText.startAnimation(a);
+            startCornerCountAnim();
+            if (mBottomActionButton.getVisibility() == View.GONE) {
+                mBottomActionButton.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.SlideInUp)
+                        .duration(600)
+                        .interpolate(new AccelerateDecelerateInterpolator())
+                        .withListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {}
+                            @Override
+                            public void onAnimationEnd(Animator animation) {}
+                            @Override
+                            public void onAnimationCancel(Animator animation) {}
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {}
+                        })
+                        .playOn(mBottomActionButton);
+                ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
+            }
         } else {
             mOrderedDishCounterText.clearAnimation();
             mOrderedDishCounterText.setVisibility(View.GONE);
+            mBottomActionButton.setVisibility(View.GONE);
+            final int pastOrderCount = User.getInstance(this).currentSession.getPastOrder().getTotalQuantity();
+            if (pastOrderCount != 0) {
+                if (mBottomActionButton.getVisibility() == View.GONE) {
+                    mBottomActionButton.setVisibility(View.VISIBLE);
+                    mBottomActionButton.setBackgroundResource(R.drawable.menu_bottom_view_bt);
+                    YoYo.with(Techniques.SlideInUp)
+                            .duration(600)
+                            .interpolate(new AccelerateDecelerateInterpolator())
+                            .withListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {}
+                                @Override
+                                public void onAnimationEnd(Animator animation) {}
+                                @Override
+                                public void onAnimationCancel(Animator animation) {}
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {}
+                            })
+                            .playOn(mBottomActionButton);
+                }
+            } else {
+                if ( mBottomActionButton.getVisibility() == View.VISIBLE) {
+                    YoYo.with(Techniques.SlideOutDown)
+                            .duration(1200)
+                            .interpolate(new AccelerateDecelerateInterpolator())
+                            .withListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {}
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    mBottomActionButton.setVisibility(View.GONE);
+                                }
+                                @Override
+                                public void onAnimationCancel(Animator animation) {}
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {}
+                            })
+                            .playOn(mBottomActionButton);
+                }
+            }
         }
     }
 
@@ -452,10 +522,41 @@ public class MenuActivity extends ActionBarActivity {
         private void updateDishChangeWidget(int updatedQuantity) {
             if (updatedQuantity == 0) {
                 imageAddButton.setVisibility(View.VISIBLE);
-                plusMinusContainer.setVisibility(View.GONE);
+                YoYo.with(Techniques.FadeOut)
+                        .duration(500)
+                        .interpolate(new AccelerateDecelerateInterpolator())
+                        .withListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {}
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                plusMinusContainer.setVisibility(View.GONE);
+                            }
+                            @Override
+                            public void onAnimationCancel(Animator animation) {}
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {}
+                        })
+                        .playOn(plusMinusContainer);
             } else {
+                if (plusMinusContainer.getVisibility() == View.GONE) {
+                    plusMinusContainer.setVisibility(View.VISIBLE);
+                    YoYo.with(Techniques.Shake)
+                            .duration(1200)
+                            .interpolate(new AccelerateDecelerateInterpolator())
+                            .withListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {}
+                                @Override
+                                public void onAnimationEnd(Animator animation) {}
+                                @Override
+                                public void onAnimationCancel(Animator animation) {}
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {}
+                            })
+                            .playOn(plusMinusContainer);
+                }
                 imageAddButton.setVisibility(View.GONE);
-                plusMinusContainer.setVisibility(View.VISIBLE);
                 singleItemCount.setText("" + updatedQuantity);
             }
         }
@@ -473,24 +574,29 @@ public class MenuActivity extends ActionBarActivity {
 
         public ListPhotoItemViewHolder(final View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.menuitem);
-            overlay = (ImageView) itemView.findViewById(R.id.overlay);
-            textItemDesc = (TextView) itemView.findViewById(R.id.itemdesc);
-            textItemPrice = (TextView) itemView.findViewById(R.id.textitemprice);
-            textItemPrice.bringToFront();
-            textItemName = (TextView) itemView.findViewById(R.id.textitemname);
-            imageAddButton = (ImageButton) itemView.findViewById(R.id.addbutton);
-            imageAddButton.setOnClickListener(addButtonClickedListener);
-            itemView.setOnClickListener(this);
-            plusMinusContainer = (LinearLayout) itemView.findViewById(R.id.menu_add_minus_layout);
-            if (plusMinusContainer == null) {
-                return;
+            try {
+                imageView = (ImageView) itemView.findViewById(R.id.menuitem);
+                overlay = (ImageView) itemView.findViewById(R.id.overlay);
+                textItemDesc = (TextView) itemView.findViewById(R.id.itemdesc);
+                textItemPrice = (TextView) itemView.findViewById(R.id.textitemprice);
+                textItemPrice.bringToFront();
+                textItemName = (TextView) itemView.findViewById(R.id.textitemname);
+                imageAddButton = (ImageButton) itemView.findViewById(R.id.addbutton);
+                imageAddButton.setOnClickListener(addButtonClickedListener);
+                itemView.setOnClickListener(this);
+                plusMinusContainer = (LinearLayout) itemView.findViewById(R.id.menu_add_minus_layout);
+                if (plusMinusContainer == null) {
+                    return;
+                }
+                singleItemCount = (TextView) plusMinusContainer.findViewById(R.id.single_dish_count);
+                imagePlusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_plus_bt);
+                imagePlusButton.setOnClickListener(addButtonClickedListener);
+                imageMinusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_minus_bt);
+                imageMinusButton.setOnClickListener(minusClickedListener);
+            } catch (NullPointerException npe) {
+                Crashlytics.log(npe.toString());
+                System.out.println(npe.toString());
             }
-            singleItemCount = (TextView) plusMinusContainer.findViewById(R.id.single_dish_count);
-            imagePlusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_plus_bt);
-            imagePlusButton.setOnClickListener(addButtonClickedListener);
-            imageMinusButton = (ImageButton) plusMinusContainer.findViewById(R.id.menu_minus_bt);
-            imageMinusButton.setOnClickListener(minusClickedListener);
         }
 
         public void bindDish(DishModel dish) {
@@ -575,7 +681,7 @@ public class MenuActivity extends ActionBarActivity {
                 currentOrder.addDish(mDish);
                 int updatedQuantity = currentOrder.getQuantityOfDishByID(mDish.id);
                 updateDishChangeWidget(updatedQuantity);
-                updateOrderCountAndDisplay();
+                updateOrderedDishCounter();
 
                 if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() <= 3) {
                     if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
@@ -589,12 +695,22 @@ public class MenuActivity extends ActionBarActivity {
     }
 
     private class PlaceHolderViewHolder extends ListPhotoItemViewHolder {
+        public ImageButton bottomActionButton;
         public PlaceHolderViewHolder(View itemView) {
             super(itemView);
+            bottomActionButton = (ImageButton) itemView.findViewById(R.id.place_holder_bottom_bt);
+            bottomActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(MenuActivity.this, ItemsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
+            });
         }
     }
 
-    private void updateOrderCountAndDisplay() {
+    private void startCornerCountAnim() {
         mCornerText.setVisibility(View.VISIBLE);
         mCornerText.setText(String.valueOf(User.getInstance(this).currentSession.getCurrentOrder()
                 .getTotalQuantity()));
@@ -769,7 +885,9 @@ public class MenuActivity extends ActionBarActivity {
 
         @Override
         public int getItemCount() {
-            return mFilteredDishes.size() + 1;
+            int count = mFilteredDishes.size();
+            count += (count > 2 ? 1 : 0);
+            return count;
         }
 
         @Override
@@ -797,12 +915,11 @@ public class MenuActivity extends ActionBarActivity {
 
         @Override
         public void onBindViewHolder(ListPhotoItemViewHolder holder, int pos) {
-            if (pos >= mFilteredDishes.size()) {
-                return;
+            if (pos < mFilteredDishes.size()) {
+                DishModel dish = mFilteredDishes.get(pos);
+                holder.mPosition = pos;
+                holder.bindDish(dish);
             }
-            DishModel dish = mFilteredDishes.get(pos);
-            holder.mPosition = pos;
-            holder.bindDish(dish);
         }
     }
 

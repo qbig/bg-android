@@ -289,13 +289,6 @@ public class User {
 		});
 	}
 
-	public void clearUndoPopup() {
-		for(SuperActivityToast toast : this.undoToastList){
-			toast.dismiss();
-		}
-		this.undoToastList = new ArrayList<SuperActivityToast>();
-	}
-
 	public void scheduleClearPastOrders(int delay) {
 
 		final ScheduledExecutorService scheduler =

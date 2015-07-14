@@ -42,8 +42,17 @@
         android:horizontalSpacing="2dp"
         android:numColumns="3"
         android:scrollbars="none"
-        android:stretchMode="columnWidth" >
+        android:stretchMode="columnWidth"
+        android:visibility="gone">
     </GridView>
+    
+    <ImageButton
+        android:id="@+id/menu_bottom_action_bt"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:src="@drawable/menu_bottom_send_bt"
+        android:visibility="gone"
+        android:layout_height="60dp" />
 
     <TextView
         android:id="@+id/corner"

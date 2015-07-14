@@ -24,9 +24,9 @@ public class Constants {
 
     static public void setIsLocal() {
         if (isLocal) {
-            BASE = "http://" + SOCKET_URL_LOCAL + "/";
+            BASE = "http://" + SOCKET_URL_LOCAL;
         } else {
-            BASE = "http://" + SOCKET_URL + "/";
+            BASE = "http://" + SOCKET_URL;
         }
     }
 
@@ -35,31 +35,31 @@ public class Constants {
         Constants.setIsLocal();
         switch (name) {
             case USER_SIGNUP:
-                return BASE + "api/v1/user";
+                return BASE + "/api/v1/user";
             case USER_LOGIN:
-                return BASE + "api/v1/login";
+                return BASE + "/api/v1/login";
             case USER_LOGIN_WITH_FB:
-                return BASE + "api/v1/fblogin";
+                return BASE + "/api/v1/fblogin";
             case LIST_OUTLETS:
-                return BASE + "api/v1/outlets";
+                return BASE + "/api/v1/outlets";
             case REQUEST_URL:
-                return BASE + "api/v1/request";
+                return BASE + "/api/v1/request";
             case PROFILE_URL:
-                return BASE + "api/v1/profile";
+                return BASE + "/api/v1/profile";
             case ORDER_URL:
-                return BASE + "api/v1/meal";
+                return BASE + "/api/v1/meal";
             case CLEAR_BILL_URL:
-                return BASE + "api/v1/clearbill";
+                return BASE + "/api/v1/clearbill";
             case BILL_URL:
-                return BASE + "api/v1/askbill";
+                return BASE + "/api/v1/askbill";
             case RATING_URL:
-                return BASE + "api/v1/rating";
+                return BASE + "/api/v1/rating";
             case FEEDBACK_URL:
-                return BASE + "api/v1/review";
+                return BASE + "/api/v1/review";
             case DISH_CATEGORY_URL:
-                return BASE + "api/v1/categories";
+                return BASE + "/api/v1/categories";
             case ORDER_HISTORY_URL:
-                return BASE + "api/v1/mealhistory";
+                return BASE + "/api/v1/mealhistory";
         }
         // SOCKET_URL
         return BASE;

@@ -115,7 +115,6 @@ public class ActionBarActivity extends AppCompatActivity {
 				case 2:
 					Intent i = new Intent(ctx, ItemsActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					User.getInstance(ActionBarActivity.this).clearUndoPopup();
 					startActivity(i);
 					break;
 				}
