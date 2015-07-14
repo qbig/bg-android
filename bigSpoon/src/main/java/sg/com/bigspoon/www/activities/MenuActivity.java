@@ -542,7 +542,7 @@ public class MenuActivity extends ActionBarActivity {
                 if (plusMinusContainer.getVisibility() == View.GONE) {
                     plusMinusContainer.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.Shake)
-                            .duration(300)
+                            .duration(600)
                             .interpolate(new AccelerateDecelerateInterpolator())
                             .withListener(new Animator.AnimatorListener() {
                                 @Override
