@@ -129,7 +129,7 @@ public class MenuActivity extends ActionBarActivity {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_LONG);
+                            animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_SHORT);
                         }
                     },200);
 
@@ -695,7 +695,7 @@ public class MenuActivity extends ActionBarActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        animatePhotoItemToCorner(mClickedViewToAnimate, mPosition, DURATION_LONG);
+                        animatePhotoItemToCorner(mClickedViewToAnimate, mPosition, DURATION_SHORT);
                     }
                 },200);
             }
