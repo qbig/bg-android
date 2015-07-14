@@ -808,7 +808,7 @@ public class MenuActivity extends ActionBarActivity {
             public void onAnimationEnd(Animation animation) {
                 mainContainer.removeView(start);
                 isAnimating = false;
-                //((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
+                ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
             }
         });
 
