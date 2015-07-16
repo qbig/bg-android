@@ -89,6 +89,7 @@ import static sg.com.bigspoon.www.data.Constants.getURL;
 public class MenuActivity extends ActionBarActivity {
 
     private EditText mSearchField;
+    private boolean mSearchComplete = true;
     private android.support.v7.widget.SearchView mSearchView;
     private View bottomActionBar;
     private TextView mOrderedDishCounterText;
@@ -131,7 +132,7 @@ public class MenuActivity extends ActionBarActivity {
                         public void run() {
                             animatePhotoItemToCorner(mClickedViewToAnimate, mClickedPos, DURATION_SHORT);
                         }
-                    },200);
+                    }, 200);
 
                     if (User.getInstance(MenuActivity.this).currentSession.getCurrentOrder().getTotalQuantity() == 1 && User.getInstance(MenuActivity.this).currentSession.getPastOrder().getTotalQuantity() != 0) {
                         MenuActivity.this.showClearOrderPopup();
@@ -360,15 +361,17 @@ public class MenuActivity extends ActionBarActivity {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                mSearchField.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSearchField.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(mSearchField, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                });
-                searchDishAndLoadResult(query);
+                if (!mSearchComplete) {
+                    mSearchField.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSearchField.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(mSearchField, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+                    searchDishAndLoadResult(query);
+                }
                 return true;
 
             }
@@ -386,24 +389,26 @@ public class MenuActivity extends ActionBarActivity {
         mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
+                mSearchComplete = true;
                 User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
-                mSearchView.setQuery(feedName, false);
                 mSearchView.clearFocus();
                 mSearchField.clearFocus();
+                mSearchView.setQuery(feedName, true);
                 return true;
             }
 
             @Override
             public boolean onSuggestionClick(int position) {
+                mSearchComplete = true;
                 User.getInstance(MenuActivity.this).mMixpanel.track("Search Suggestion Selected", null);
                 Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
                 String feedName = cursor.getString(1);
-                mSearchView.setQuery(feedName, false);
+                mSearchView.setQuery(feedName, true);
                 mSearchView.clearFocus();
-                displayDish(feedName);
                 mSearchField.clearFocus();
+                displayDish(feedName);
                 return true;
             }
         });
@@ -412,7 +417,10 @@ public class MenuActivity extends ActionBarActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    mSearchComplete = false;
                     User.getInstance(MenuActivity.this).mMixpanel.track("Dish Search Start", null);
+                } else {
+                    mSearchComplete = true;
                 }
             }
         });
@@ -423,11 +431,23 @@ public class MenuActivity extends ActionBarActivity {
     }
 
     private void displayDish(String name) {
-        DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(name);
+        final DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(name);
         mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
         mViewPager.setCurrentItem(mCategoryPosition);
         final MenuTabFragment menuFrag = (MenuTabFragment) mFragAdapter.getItem(mCategoryPosition);
-        menuFrag.mRecyclerView.smoothScrollToPosition(menuFrag.adapter.getDishPositionInFilteredList(searchedDish.id));
+        final int dishPos = menuFrag.adapter.getDishPositionInFilteredList(searchedDish.id);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                menuFrag.mRecyclerView.smoothScrollToPosition(dishPos);
+            }
+        },100);
+
+    }
+
+    private void dismissSearchKeyboard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mSearchField.getWindowToken(), 0);
     }
 
     private String strElipsize(String str, int lengthLimit) {
@@ -697,7 +717,7 @@ public class MenuActivity extends ActionBarActivity {
                     public void run() {
                         animatePhotoItemToCorner(mClickedViewToAnimate, mPosition, DURATION_SHORT);
                     }
-                },200);
+                }, 200);
             }
         }
     }
@@ -982,6 +1002,16 @@ public class MenuActivity extends ActionBarActivity {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(adapter);
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState != RecyclerView.SCROLL_STATE_IDLE){
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    }
+                }
+            });
 
             return view;
         }
