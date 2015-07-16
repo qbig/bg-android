@@ -191,6 +191,18 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 								OutletDetailsModel persistedOutlet = OutletDetailsModel.getPersistedOutlet(CategoriesListActivity.this, outletId);
 								if (persistedOutlet != null) {
 									user.currentOutlet = persistedOutlet;
+
+
+									user.currentOutlet.sortOrder();
+									if (user.currentSession == null){
+										user.startSession(user.currentOutlet.name);
+									}
+									user.currentSession.getCurrentOrder(user.currentOutlet.name);
+									final TextView title = (TextView) mActionBarView.findViewById(R.id.title);
+									title.setText(user.currentOutlet.name);
+									CategoriesAdapter categoriesAdapter = new CategoriesAdapter(CategoriesListActivity.this,
+											user.currentOutlet, mOutletIcon);
+									catrgoriesList.setAdapter(categoriesAdapter);
 								} else {
 									SuperToast.create(getApplicationContext(), "Sorry:( Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
 									finish();

@@ -96,7 +96,7 @@ public class User {
 	}
 
 	public void persistPrefStringWithKey(String str, String key) {
-		loginPrefsEditor.putString(str, key);
+		loginPrefsEditor.putString(key, str);
 		loginPrefsEditor.commit();
 	}
 
