@@ -268,14 +268,12 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 	@Override
 	public void onConnect() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_CONNECTED));
-        //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         Constants.isLocal = false;
 	}
 
 	@Override
 	public void onDisconnect(){
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_DISCONNECTED));
-        //Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
         Constants.isLocal = true;
 	}
 

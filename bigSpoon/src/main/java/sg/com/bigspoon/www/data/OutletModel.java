@@ -1,6 +1,16 @@
 package sg.com.bigspoon.www.data;
 
+import android.content.Context;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
+import static sg.com.bigspoon.www.data.Constants.PERSIST_OUTLET_LIST;
 
 public class OutletModel {
 
@@ -69,5 +79,19 @@ public class OutletModel {
 
 	public double distanceFrom() {
 		return 0;
+	}
+
+	public static void persistList(Context context, List<OutletModel> lists) {
+		Gson gson = new Gson();
+		User.getInstance(context).persistPrefStringWithKey(gson.toJsonTree(lists).toString(), PERSIST_OUTLET_LIST);
+	}
+
+	public static List<OutletModel> getPersistedList(Context context) {
+		String persistString = User.getInstance(context).getPrefStringWithKey(PERSIST_OUTLET_LIST);
+		if (StringUtils.isNoneEmpty(persistString)) {
+			Gson gson = new Gson();
+			return gson.fromJson(persistString, new TypeToken<List<OutletModel>>() {}.getType());
+		}
+		return null;
 	}
 }

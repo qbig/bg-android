@@ -94,6 +94,15 @@ public class User {
 		undoToastList = new ArrayList<SuperActivityToast>();
 		merlinsBeard = MerlinsBeard.from((BigSpoon) mContext);
 	}
+
+	public void persistPrefStringWithKey(String str, String key) {
+		loginPrefsEditor.putString(str, key);
+		loginPrefsEditor.commit();
+	}
+
+	public String getPrefStringWithKey(String key) {
+		return loginPrefs.getString(key, "");
+	}
 	
 	public void startSession(String currentOutletName) {
 		this.currentSession = new DiningSession(currentOutletName);

@@ -2,6 +2,9 @@ package sg.com.bigspoon.www.data;
 
 public class Constants {
     public static final String PREFS_NAME = "MyPrefsFile";
+    public static final String PERSIST_OUTLET_LIST = "persistedOutletList";
+    public static final String PERSIST_OUTLET_PREFIX = "persistOutletPrefix";
+
 
     public static final String USER_SIGNUP = "userSignup";
     public static final String USER_LOGIN = "userLogin";

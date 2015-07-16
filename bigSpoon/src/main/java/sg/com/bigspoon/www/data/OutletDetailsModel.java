@@ -1,13 +1,19 @@
 package sg.com.bigspoon.www.data;
 
+import android.content.Context;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.Comparator;
+
+import static sg.com.bigspoon.www.data.Constants.PERSIST_OUTLET_PREFIX;
 
 public class OutletDetailsModel {
     public DishModel[] dishes;
@@ -197,5 +203,20 @@ public class OutletDetailsModel {
                 return cat1Index - cat2Index;
             }
         });
+    }
+
+    public void persist(Context context) {
+        Gson gson = new Gson();
+        String jsonStr = gson.fromJson(this.toJsonObject().toString(), JsonObject.class).toString();
+        User.getInstance(context).persistPrefStringWithKey(jsonStr, PERSIST_OUTLET_PREFIX + this.outletID);
+    }
+
+    public static OutletDetailsModel getPersistedOutlet(Context context, int outletId) {
+        String jsonStr = User.getInstance(context).getPrefStringWithKey(PERSIST_OUTLET_PREFIX + outletId);
+        if (StringUtils.isNotEmpty(jsonStr)) {
+            Gson gson = new Gson();
+            return OutletDetailsModel.getInstanceFromJsonObject(gson.fromJson(jsonStr, JsonObject.class));
+        }
+        return null;
     }
 }

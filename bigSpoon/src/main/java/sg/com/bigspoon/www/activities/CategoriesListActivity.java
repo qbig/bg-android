@@ -24,21 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.CategoriesAdapter;
@@ -172,40 +162,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 							}
 
 							user.currentOutlet = outletDetails;
-
-							// Test
-							Manager manager;
-							final String TAG = "HelloWorld";
-							try {
-								manager = new Manager(new AndroidContext(CategoriesListActivity.this), Manager.DEFAULT_OPTIONS);
-								com.couchbase.lite.util.Log.d(TAG, "Manager created");
-								final String dbname = "hello";
-								Database database = manager.getDatabase(dbname);
-								Map<String, Object> docContent = new HashMap<String, Object>();
-								docContent.put("outletDetails", outletDetails);
-								Document document = database.createDocument();
-								document.putProperties(docContent);
-
-								String docID = document.getId();
-								Document retrievedDocument = database.getDocument(docID);
-								System.out.println(retrievedDocument.toString());
-							} catch (IOException e1) {
-								com.couchbase.lite.util.Log.e(TAG, "Cannot create manager object");
-								return;
-							} catch (CouchbaseLiteException e2) {
-								com.couchbase.lite.util.Log.e(TAG, "Cannot get database");
-								return;
-							}
-
-							user.currentOutlet = OutletDetailsModel
-									.getInstanceFromJsonObject(outletDetails.toJsonObject());
-							result = outletDetails.toJsonObject();
-							Gson gson = new Gson();
-							System.out.println(gson.toJsonTree(result).toString());
-
-							result = gson.fromJson(gson.toJsonTree(result).toString(), JsonObject.class);
-							// Test -- End
-
+							outletDetails.persist(CategoriesListActivity.this);
 							mProgressBar.setVisibility(View.GONE);
 
 							try {
@@ -231,13 +188,20 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 									user.mMixpanel.track("Categories loading failed, WIFI Disconnected", null);
 								}
 								mProgressBar.setVisibility(View.GONE);
-								SuperToast.create(getApplicationContext(), "Sorry:( Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
-								finish();
+								OutletDetailsModel persistedOutlet = OutletDetailsModel.getPersistedOutlet(CategoriesListActivity.this, outletId);
+								if (persistedOutlet != null) {
+									user.currentOutlet = persistedOutlet;
+								} else {
+									SuperToast.create(getApplicationContext(), "Sorry:( Please order directly from the counter.", SuperToast.Duration.EXTRA_LONG).show();
+									finish();
+								}
 							}
 						}
 					}
 				});
 	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
