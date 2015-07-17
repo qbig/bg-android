@@ -76,7 +76,7 @@ public class BrandActivity extends Activity {
         });
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
-        reloadIfNecessary(5000);
+        reloadIfNecessary(10000);
         mWebView = (XWalkView) findViewById(R.id.brand_webview);
         if (link == null) {
             finish();
