@@ -53,7 +53,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daimajia.androidanimations.library.Techniques;
@@ -112,6 +111,8 @@ public class MenuActivity extends ActionBarActivity {
     private ImageView viewToAnimate;
     private CoordinatorLayout mainContainer;
     OnSwipeTouchListener onSwipeTouchListener;
+    private boolean switchTabBufferStart = false;
+    private boolean switchTabBufferEnd = false;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -233,9 +234,24 @@ public class MenuActivity extends ActionBarActivity {
             public void onSwipeTop() {
                 MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
                 if (pageFrag.isAtBottom()){
-                    if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
-                        mCategoryPosition++;
-                        mViewPager.setCurrentItem(mCategoryPosition);
+                    if (switchTabBufferStart && switchTabBufferEnd) {
+                            if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
+                                mCategoryPosition++;
+                                mViewPager.setCurrentItem(mCategoryPosition);
+                                ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+                            }
+                        switchTabBufferEnd = false;
+                        switchTabBufferStart = false;
+                    } else {
+                        if (!switchTabBufferEnd && !switchTabBufferStart){
+                            switchTabBufferStart = true;
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    switchTabBufferEnd = true;
+                                }
+                            }, 200);
+                        }
                     }
                 }
             }
@@ -244,9 +260,24 @@ public class MenuActivity extends ActionBarActivity {
             public void onSwipeBottom() {
                 MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
                 if(pageFrag.isAtTop()) {
-                    if (mCategoryPosition > 0){
-                        mCategoryPosition--;
-                        mViewPager.setCurrentItem(mCategoryPosition);
+                    if (switchTabBufferStart && switchTabBufferEnd) {
+                        if (mCategoryPosition > 0){
+                            mCategoryPosition--;
+                            mViewPager.setCurrentItem(mCategoryPosition);
+                            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+                        }
+                        switchTabBufferEnd = false;
+                        switchTabBufferStart = false;
+                    } else {
+                        if (!switchTabBufferEnd && !switchTabBufferStart){
+                            switchTabBufferStart = true;
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    switchTabBufferEnd = true;
+                                }
+                            }, 200);
+                        }
                     }
                 }
             }
