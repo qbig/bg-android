@@ -34,6 +34,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -52,6 +53,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daimajia.androidanimations.library.Techniques;
@@ -70,6 +72,7 @@ import java.util.Vector;
 
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.adapters.MenuSearchSuggestionAdapter;
+import sg.com.bigspoon.www.common.Util.OnSwipeTouchListener;
 import sg.com.bigspoon.www.data.DishModel;
 import sg.com.bigspoon.www.data.Order;
 import sg.com.bigspoon.www.data.OutletDetailsModel;
@@ -108,6 +111,7 @@ public class MenuActivity extends ActionBarActivity {
     private boolean isAnimating;
     private ImageView viewToAnimate;
     private CoordinatorLayout mainContainer;
+    OnSwipeTouchListener onSwipeTouchListener;
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -216,14 +220,44 @@ public class MenuActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        onSwipeTouchListener.gestureDetector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
     private void setupViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
         mFragAdapter = new MenuTabPagerFragmentAdapter(getSupportFragmentManager());
+        onSwipeTouchListener = new OnSwipeTouchListener(MenuActivity.this) {
+            public void onSwipeTop() {
+                MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
+                if (pageFrag.isAtBottom()){
+                    if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
+                        mCategoryPosition++;
+                        mViewPager.setCurrentItem(mCategoryPosition);
+                    }
+                }
+            }
+            public void onSwipeRight() {}
+            public void onSwipeLeft() {}
+            public void onSwipeBottom() {
+                MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
+                if(pageFrag.isAtTop()) {
+                    if (mCategoryPosition > 0){
+                        mCategoryPosition--;
+                        mViewPager.setCurrentItem(mCategoryPosition);
+                    }
+                }
+            }
+        };
+        mainContainer.setOnTouchListener(onSwipeTouchListener);
 
         try {
             for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
                 MenuAdapter adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet, i);
-                mFragAdapter.addFrag(new MenuTabFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter), User.getInstance(this).currentOutlet.categoriesDetails[i].name);
+                MenuPageFragment pageFrag = new MenuPageFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter);
+                mFragAdapter.addFrag(pageFrag, User.getInstance(this).currentOutlet.categoriesDetails[i].name);
             }
             mViewPager.setAdapter(mFragAdapter);
         } catch (NullPointerException e) {
@@ -232,7 +266,6 @@ public class MenuActivity extends ActionBarActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
     }
 
 
@@ -252,7 +285,7 @@ public class MenuActivity extends ActionBarActivity {
     }
 
     private void updateOrderedDishCounter() {
-        ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
+        ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
         final int orderCount = User.getInstance(this).currentSession.getCurrentOrder().getTotalQuantity();
         if (orderCount != 0) {
             startCornerCountAnim();
@@ -434,7 +467,7 @@ public class MenuActivity extends ActionBarActivity {
         final DishModel searchedDish = User.getInstance(MenuActivity.this).currentOutlet.getDishWithName(name);
         mCategoryPosition = User.getInstance(MenuActivity.this).currentOutlet.getCategoryPositionWithDishId(searchedDish.id);
         mViewPager.setCurrentItem(mCategoryPosition);
-        final MenuTabFragment menuFrag = (MenuTabFragment) mFragAdapter.getItem(mCategoryPosition);
+        final MenuPageFragment menuFrag = (MenuPageFragment) mFragAdapter.getItem(mCategoryPosition);
         final int dishPos = menuFrag.adapter.getDishPositionInFilteredList(searchedDish.id);
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -792,7 +825,7 @@ public class MenuActivity extends ActionBarActivity {
 
     private void moveViewToScreenCorner(int position, final View start, long duration) {
         int fromLoc[] = new int[2];
-        final MenuTabFragment menuFrag = (MenuTabFragment) mFragAdapter.getItem(mCategoryPosition);
+        final MenuPageFragment menuFrag = (MenuPageFragment) mFragAdapter.getItem(mCategoryPosition);
         LinearLayoutManager layoutManager = (LinearLayoutManager) menuFrag.mRecyclerView.getLayoutManager();
         int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
         start.getLocationOnScreen(fromLoc);
@@ -828,7 +861,7 @@ public class MenuActivity extends ActionBarActivity {
             public void onAnimationEnd(Animation animation) {
                 mainContainer.removeView(start);
                 isAnimating = false;
-                ((MenuTabFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
+                ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).adapter.notifyDataSetChanged();
             }
         });
 
@@ -978,20 +1011,29 @@ public class MenuActivity extends ActionBarActivity {
         }
     }
 
-    static class MenuTabFragment extends Fragment {
+    static class MenuPageFragment extends Fragment {
         MenuAdapter adapter;
         ArrayList<DishModel> dishes;
         String categoryName;
         RecyclerView mRecyclerView;
+        LinearLayoutManager mLayoutManager;
 
-        public MenuTabFragment() {
+        public MenuPageFragment() {
         }
 
         @SuppressLint("ValidFragment")
-        public MenuTabFragment(String categoryName, MenuAdapter adapter) {
+        public MenuPageFragment(String categoryName, MenuAdapter adapter) {
             this.categoryName = categoryName;
             this.adapter = adapter;
             this.dishes = adapter.mFilteredDishes;
+        }
+
+        public boolean isAtTop() {
+            return mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        }
+
+        private boolean isAtBottom () {
+            return mLayoutManager.findLastCompletelyVisibleItemPosition() == this.dishes.size();
         }
 
         @Override
@@ -999,7 +1041,8 @@ public class MenuActivity extends ActionBarActivity {
             View view = inflater.inflate(R.layout.menu_tab_frag, container, false);
 
             mRecyclerView = (RecyclerView) view.findViewById(R.id.menu_tab_frag_scrollableview);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+            mLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
