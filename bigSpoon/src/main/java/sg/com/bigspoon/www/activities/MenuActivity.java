@@ -231,7 +231,7 @@ public class MenuActivity extends ActionBarActivity {
         if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
             mCategoryPosition++;
             mViewPager.setCurrentItem(mCategoryPosition);
-            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.scrollToPosition(0);
         }
         switchTabBufferEnd = false;
         switchTabBufferStart = false;
@@ -241,7 +241,7 @@ public class MenuActivity extends ActionBarActivity {
         if (mCategoryPosition > 0){
             mCategoryPosition--;
             mViewPager.setCurrentItem(mCategoryPosition);
-            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.scrollToPosition(0);
         }
         switchTabBufferEnd = false;
         switchTabBufferStart = false;

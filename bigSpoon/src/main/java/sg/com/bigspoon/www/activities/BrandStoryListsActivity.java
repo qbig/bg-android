@@ -24,10 +24,8 @@ import sg.com.bigspoon.www.data.BigSpoon;
 import sg.com.bigspoon.www.data.StoryModel;
 import sg.com.bigspoon.www.data.User;
 
-import static sg.com.bigspoon.www.data.Constants.AUTO;
 import static sg.com.bigspoon.www.data.Constants.BRAND_WAKE_UP_SIGNAL;
 import static sg.com.bigspoon.www.data.Constants.CLOSE_BRAND_STORY_SIGNAL;
-import static sg.com.bigspoon.www.data.Constants.STORY_LINK;
 
 /**
  * Created by qiaoliang89 on 1/6/15.
@@ -79,11 +77,11 @@ public class BrandStoryListsActivity extends Activity {
             }
             unlockScreen();
             LocalBroadcastManager.getInstance(this).registerReceiver(mCloseSignalReceiver, new IntentFilter(CLOSE_BRAND_STORY_SIGNAL));
-            Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
-            i.putExtra(STORY_LINK, getStory(storySequence[User.getInstance(this).storyDisplayCount]).url);
+            //Intent i = new Intent(BrandStoryListsActivity.this, BrandActivity.class);
+            //i.putExtra(STORY_LINK, getStory(storySequence[User.getInstance(this).storyDisplayCount]).url);
             User.getInstance(this).storyDisplayCount++;
-            i.putExtra(AUTO, true);
-            BrandStoryListsActivity.this.startActivity(i);
+            //i.putExtra(AUTO, true);
+            //BrandStoryListsActivity.this.startActivity(i);
             sleepScreen();
         }
     }
