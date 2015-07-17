@@ -227,21 +227,35 @@ public class MenuActivity extends ActionBarActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+    private void moveToNextTab() {
+        if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
+            mCategoryPosition++;
+            mViewPager.setCurrentItem(mCategoryPosition);
+            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+        }
+        switchTabBufferEnd = false;
+        switchTabBufferStart = false;
+    }
+
+    private void moveToPreviousTab() {
+        if (mCategoryPosition > 0){
+            mCategoryPosition--;
+            mViewPager.setCurrentItem(mCategoryPosition);
+            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
+        }
+        switchTabBufferEnd = false;
+        switchTabBufferStart = false;
+    }
+
     private void setupViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
         mFragAdapter = new MenuTabPagerFragmentAdapter(getSupportFragmentManager());
         onSwipeTouchListener = new OnSwipeTouchListener(MenuActivity.this) {
             public void onSwipeTop() {
-                MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
+                final MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
                 if (pageFrag.isAtBottom()){
                     if (switchTabBufferStart && switchTabBufferEnd) {
-                            if (mCategoryPosition < User.getInstance(MenuActivity.this).currentOutlet.categoriesDetails.length - 1){
-                                mCategoryPosition++;
-                                mViewPager.setCurrentItem(mCategoryPosition);
-                                ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
-                            }
-                        switchTabBufferEnd = false;
-                        switchTabBufferStart = false;
+                        moveToNextTab();
                     } else {
                         if (!switchTabBufferEnd && !switchTabBufferStart){
                             switchTabBufferStart = true;
@@ -249,6 +263,9 @@ public class MenuActivity extends ActionBarActivity {
                                 @Override
                                 public void run() {
                                     switchTabBufferEnd = true;
+                                    if (pageFrag.mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING){
+                                        moveToNextTab();
+                                    }
                                 }
                             }, 200);
                         }
@@ -258,16 +275,10 @@ public class MenuActivity extends ActionBarActivity {
             public void onSwipeRight() {}
             public void onSwipeLeft() {}
             public void onSwipeBottom() {
-                MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
+                final MenuPageFragment pageFrag = (MenuPageFragment)mFragAdapter.getItem(mCategoryPosition);
                 if(pageFrag.isAtTop()) {
                     if (switchTabBufferStart && switchTabBufferEnd) {
-                        if (mCategoryPosition > 0){
-                            mCategoryPosition--;
-                            mViewPager.setCurrentItem(mCategoryPosition);
-                            ((MenuPageFragment)mFragAdapter.getItem(mCategoryPosition)).mRecyclerView.smoothScrollToPosition(0);
-                        }
-                        switchTabBufferEnd = false;
-                        switchTabBufferStart = false;
+                        moveToPreviousTab();
                     } else {
                         if (!switchTabBufferEnd && !switchTabBufferStart){
                             switchTabBufferStart = true;
@@ -275,6 +286,9 @@ public class MenuActivity extends ActionBarActivity {
                                 @Override
                                 public void run() {
                                     switchTabBufferEnd = true;
+                                    if (pageFrag.mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING){
+                                        moveToPreviousTab();
+                                    }
                                 }
                             }, 200);
                         }
@@ -287,7 +301,16 @@ public class MenuActivity extends ActionBarActivity {
         try {
             for (int i = 0, len = User.getInstance(this).currentOutlet.categoriesDetails.length; i < len; i++) {
                 MenuAdapter adapter = new MenuAdapter(this, User.getInstance(this).currentOutlet, i);
-                MenuPageFragment pageFrag = new MenuPageFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter);
+                MenuPageFragment pageFrag = new MenuPageFragment(User.getInstance(this).currentOutlet.categoriesDetails[i].name, adapter, new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState != RecyclerView.SCROLL_STATE_IDLE){
+                            InputMethodManager imm = (InputMethodManager)MenuActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(MenuActivity.this.getCurrentFocus().getWindowToken(), 0);
+                        }
+                    }
+                });
                 mFragAdapter.addFrag(pageFrag, User.getInstance(this).currentOutlet.categoriesDetails[i].name);
             }
             mViewPager.setAdapter(mFragAdapter);
@@ -1048,15 +1071,17 @@ public class MenuActivity extends ActionBarActivity {
         String categoryName;
         RecyclerView mRecyclerView;
         LinearLayoutManager mLayoutManager;
+        RecyclerView.OnScrollListener scrollLister;
 
         public MenuPageFragment() {
         }
 
         @SuppressLint("ValidFragment")
-        public MenuPageFragment(String categoryName, MenuAdapter adapter) {
+        public MenuPageFragment(String categoryName, MenuAdapter adapter, RecyclerView.OnScrollListener scrollLister) {
             this.categoryName = categoryName;
             this.adapter = adapter;
             this.dishes = adapter.mFilteredDishes;
+            this.scrollLister = scrollLister;
         }
 
         public boolean isAtTop() {
@@ -1076,16 +1101,7 @@ public class MenuActivity extends ActionBarActivity {
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(adapter);
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState != RecyclerView.SCROLL_STATE_IDLE){
-                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    }
-                }
-            });
+            mRecyclerView.addOnScrollListener(this.scrollLister);
 
             return view;
         }
