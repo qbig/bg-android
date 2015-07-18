@@ -814,14 +814,14 @@ public class MenuActivity extends ActionBarActivity {
         public PlaceHolderViewHolder(View itemView) {
             super(itemView);
             bottomActionButton = (ImageButton) itemView.findViewById(R.id.place_holder_bottom_bt);
-            bottomActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(MenuActivity.this, ItemsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                }
-            });
+//            bottomActionButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent i = new Intent(MenuActivity.this, ItemsActivity.class);
+//                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(i);
+//                }
+//            });
         }
     }
 
