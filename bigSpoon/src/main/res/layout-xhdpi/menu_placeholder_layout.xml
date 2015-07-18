@@ -9,7 +9,7 @@
         android:id="@+id/place_holder_bottom_bt"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/BigSpoonOrange"
+        android:background="@color/white"
         android:visibility="visible"/>
 
 </RelativeLayout>
