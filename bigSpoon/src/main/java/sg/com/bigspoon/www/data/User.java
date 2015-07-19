@@ -449,6 +449,12 @@ public class User {
 	}
 
 	public boolean shouldShowStory(){
-		return storyDisplayCount < currentOutlet.storySequence.length;
+		try {
+			return storyDisplayCount < currentOutlet.storySequence.length;
+		} catch (NullPointerException npe) {
+			Crashlytics.log(npe.toString());
+			return false;
+		}
+
 	}
 }
