@@ -132,6 +132,7 @@ public class MenuActivity extends ActionBarActivity {
             if (context != null && intent != null && intent.getAction() != null && intent.getAction().equals(NOTIF_MODIFIER_OK)) {
                 try {
                     startCornerCountAnim();
+                    isAnimating = true;
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -799,6 +800,7 @@ public class MenuActivity extends ActionBarActivity {
                         showClearOrderPopup();
                     }
                 }
+                isAnimating = true;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

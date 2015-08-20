@@ -126,10 +126,12 @@ public class Constants {
     public static final String SOCKET_IO_TOKEN_BILL_CLOSED = "bill has been closed";
     public static final String TUTORIAL_SET = "Tutorial Set";
     public static final String MODIFIER_POPUP_DISH_ID = "ModifierDishId";
+    public static final String PHONE_NUM_KEY = "phoneNum";
 
     //VALUE
     public static final int DESSERT_CATEGORY_ID = 4;
     public static final int MODIFIER_REULST_OK = 1;
+    public static final String TAKE_AWAY_TABLE_CODE = "takeaway";
 
     //BROADCAST MESSAGE KEY
     public static final String NOTIF_NEW_DISH_INFO_RETRIEVED = "RetrievedNewDishesAndTableInfo";

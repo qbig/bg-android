@@ -181,7 +181,7 @@ public class CategoriesListActivity extends Activity implements AdapterView.OnIt
 								}, 1000);
 							} else {
 								loadCount = 0;
-								if (user.wifiIsConnected()){
+								if (user.merlinsBeard.isConnectedToWifi()){
 									user.mMixpanel.track("Categories loading failed, WIFI Connected", null);
 								} else {
 									user.mMixpanel.track("Categories loading failed, WIFI Disconnected", null);

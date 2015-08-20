@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
@@ -66,7 +64,7 @@ public class User {
 	private int currentRetryCount = 0;
 	public int tableId = -1;
 	public boolean isContainDessert = false;
-	public boolean isForTakeAway = false;
+	public boolean isForTakeAway = true;
 	public MixpanelAPI mMixpanel;
     public boolean shouldShowRemidnerPopup = false;
 	public boolean shouldGoToOutlet = true;
@@ -196,12 +194,6 @@ public class User {
 						}
 					}
 				});
-	}
-
-	public boolean wifiIsConnected() {
-		final ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		return mWifi != null && mWifi.isConnected();
 	}
 
 	public JsonObject getTableId() {
@@ -385,6 +377,20 @@ public class User {
 		requestWithType(FOR_WAITER, waiterServiceInfo);
 	}
 
+	public boolean setTableForCurrentOutlet(String tableCode) {
+		for (int k = 0; k < currentOutlet.tables.length; k++) {
+			if (currentOutlet.tables[k].code.toLowerCase().equals(
+					tableCode.toLowerCase())) {
+				tableId = currentOutlet.tables[k].id;
+				isForTakeAway = currentOutlet.tables[k].isForTakeAway;
+				mMixpanel.getPeople().setOnce("Type", "Restaurant");
+				mMixpanel.getPeople().increment("Orders Placed", 1);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean isTableValidForCurrentOutlet() {
 		return currentOutlet.hasTable(tableId);
 	}
@@ -455,6 +461,5 @@ public class User {
 			Crashlytics.log(npe.toString());
 			return false;
 		}
-
 	}
 }

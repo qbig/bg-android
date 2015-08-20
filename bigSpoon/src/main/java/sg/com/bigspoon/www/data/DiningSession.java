@@ -9,6 +9,7 @@ public class DiningSession {
 	private HashMap<String, Order> currentOrders;
 	private HashMap<String, Order> pastOrders;
 	private String currentOutletName;
+	public String pickupTime;
 	
 	public void swithToOulet(String outletName) {
 		this.currentOutletName = outletName;

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -61,6 +62,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,10 +89,9 @@ import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ITEM_REMOVE_CLICK;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_ORDER_UPDATE;
 import static sg.com.bigspoon.www.data.Constants.ORDER_URL;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_NAME;
+import static sg.com.bigspoon.www.data.Constants.PHONE_NUM_KEY;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
-import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
+import static sg.com.bigspoon.www.data.Constants.TAKE_AWAY_TABLE_CODE;
 import static sg.com.bigspoon.www.data.Constants.getURL;
 
 public class ItemsActivity extends ExpandableListActivity {
@@ -224,6 +225,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
         try {
             //updateOrderedDishCounter();
+			User.getInstance(ItemsActivity.this).setTableForCurrentOutlet(TAKE_AWAY_TABLE_CODE);
             setupExpandableCurrentOrdersListView();
             setupAddNoteButton();
             loadMenu();
@@ -523,13 +525,8 @@ public class ItemsActivity extends ExpandableListActivity {
 		User.getInstance(ItemsActivity.this).currentSession.clearCurrentOrder();
 		User.getInstance(ItemsActivity.this).isContainDessert = false;
 		updateDisplay();
-		//scrollToSentItems();
+		scrollToSentItems();
 		Toast.makeText(ItemsActivity.this, "Sent :)", Toast.LENGTH_LONG).show();
-		Intent i = new Intent(ItemsActivity.this, CategoriesListActivity.class);
-		User.getInstance(ItemsActivity.this).shouldShowRemidnerPopup = true;
-		i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-		User.getInstance(ItemsActivity.this).scheduleClearPastOrders(mCurrentOutlet.clearPastOrdersInterval);
 		User.getInstance(ItemsActivity.this).prevOrderTime = System.currentTimeMillis();
 	}
 
@@ -611,7 +608,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		});
 		alertbuilder.setPositiveButton("Pay Next", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				if (User.getInstance(ItemsActivity.this).wifiIsConnected()){
+				if (User.getInstance(ItemsActivity.this).merlinsBeard.isConnected()){
 					ItemsActivity.this.progressBar.setVisibility(View.VISIBLE);
 					Toast.makeText(ItemsActivity.this, "Sending...", Toast.LENGTH_LONG).show();
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -913,13 +910,17 @@ public class ItemsActivity extends ExpandableListActivity {
 	@SuppressWarnings("deprecation")
 	private void takeAwayPopup() {
 		final AlertDialog alertTakeAway = new AlertDialog.Builder(this).create();
-		alertTakeAway.setTitle("Pick a time :)");
-		alertTakeAway.setMessage("and leave your phone number");
+		final String grayColorStr = Integer.toHexString(getResources().getColor(R.color.BigSpoonLightGray) & 0x00ffffff);
+		alertTakeAway.setTitle(Html.fromHtml("<font color='" + grayColorStr  + "'>Pick a time :)</font>"));
+		alertTakeAway.setMessage(Html.fromHtml("<font color='" + grayColorStr  + "'>and leave your phone number</font>"));
 		LinearLayout textInputLayoutHolder = new LinearLayout(this);
 		textInputLayoutHolder.setOrientation(LinearLayout.VERTICAL);
 		textInputLayoutHolder.setPadding(30, 0, 30, 30);
 		textTime = new EditText(this);
 		textTime.setHint("Time to pick up");
+		if (StringUtils.isNotEmpty(User.getInstance(ItemsActivity.this).currentSession.pickupTime)) {
+			textTime.setText(User.getInstance(ItemsActivity.this).currentSession.pickupTime);
+		}
 		textInputLayoutHolder.addView(textTime);
 		textTime.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -931,6 +932,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		final EditText textPhoneNumber = new EditText(this);
 		textPhoneNumber.setHint("Your phone number");
 		textPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+		textPhoneNumber.setText(loginPreferences.getString(PHONE_NUM_KEY, ""));
 		textInputLayoutHolder.addView(textPhoneNumber);
 		alertTakeAway.setView(textInputLayoutHolder);
 
@@ -949,6 +951,10 @@ public class ItemsActivity extends ExpandableListActivity {
 						|| textPhoneNumber.getText().toString().length() != 8) {
 					takeAwayPopup();
 				} else {
+					SharedPreferences.Editor edit = loginPreferences.edit();
+					edit.putString(PHONE_NUM_KEY, textPhoneNumber.getText().toString());
+					edit.commit();
+					User.getInstance(ItemsActivity.this).currentSession.pickupTime = textTime.getText().toString();
 					showOrderDetailsPopup();
 				}
 			}
@@ -1165,20 +1171,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alert.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String tableCode = input.getText().toString();
-				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
-					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code.toLowerCase().equals(
-							tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
-						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
-						mMixpanel.getPeople().setOnce("Type", "Restaurant");
-						mMixpanel.getPeople().increment("Orders Placed", 1);
-                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
-                        loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
-						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
-						loginEditor.putString(OUTLET_NAME, User.getInstance(ItemsActivity.this).currentOutlet.name);
-                        loginEditor.commit();
-					}
-				}
+				User.getInstance(ItemsActivity.this).setTableForCurrentOutlet(tableCode);
 				if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {
@@ -1234,18 +1227,7 @@ public class ItemsActivity extends ExpandableListActivity {
 		alertIncorrect.setButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String tableCode = inputIncorrect.getText().toString();
-				for (int k = 0; k < User.getInstance(ItemsActivity.this).currentOutlet.tables.length; k++) {
-					if (User.getInstance(ItemsActivity.this).currentOutlet.tables[k].code.toLowerCase().equals(
-							tableCode.toLowerCase())) {
-						User.getInstance(ItemsActivity.this).tableId = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].id;
-						User.getInstance(ItemsActivity.this).isForTakeAway = User.getInstance(ItemsActivity.this).currentOutlet.tables[k].isForTakeAway;
-                        final SharedPreferences.Editor loginEditor = loginPreferences.edit();
-                        loginEditor.putInt(TABLE_ID, User.getInstance(ItemsActivity.this).tableId);
-						loginEditor.putInt(OUTLET_ID, User.getInstance(ItemsActivity.this).currentOutlet.outletID);
-						loginEditor.putString(OUTLET_NAME, User.getInstance(ItemsActivity.this).currentOutlet.name);
-                        loginEditor.commit();
-					}
-				}
+				User.getInstance(ItemsActivity.this).setTableForCurrentOutlet(tableCode);
 				if (! User.getInstance(ItemsActivity.this).isTableValidForCurrentOutlet()) {
 					incorrectTableCodePopup(requestCode);
 				} else {

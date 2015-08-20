@@ -222,7 +222,7 @@ public class OutletListActivity extends Activity implements AdapterView.OnItemCl
 						}, 1000);
 					} else {
 						loadCount = 0;
-						if (user.wifiIsConnected()) {
+						if (user.merlinsBeard.isConnectedToWifi()) {
 							user.mMixpanel.track("Outlets loading failed, WIFI Connected", null);
 						} else {
 							user.mMixpanel.track("Outlets loading failed, WIFI Disconnected", null);

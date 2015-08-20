@@ -34,20 +34,18 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import sg.com.bigspoon.www.R;
 import sg.com.bigspoon.www.activities.Foreground;
-import sg.com.bigspoon.www.activities.OutletListActivity;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
+import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
+import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
 import static sg.com.bigspoon.www.data.Constants.NETWORK_CONNECTED;
 import static sg.com.bigspoon.www.data.Constants.NETWORK_DISCONNECTED;
 import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_KEY;
-import static sg.com.bigspoon.www.data.Constants.OUTLET_ID;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
+import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
 import static sg.com.bigspoon.www.data.Constants.PREFS_NAME;
 import static sg.com.bigspoon.www.data.Constants.TABLE_ID;
 import static sg.com.bigspoon.www.data.Constants.TUTORIAL_SET;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_LOCATION_UPDATED;
-import static sg.com.bigspoon.www.data.Constants.NOTIF_TO_START_LOCATION_SERVICE;
-import static sg.com.bigspoon.www.data.Constants.MIXPANEL_TOKEN;
-import static sg.com.bigspoon.www.data.Constants.LOGIN_INFO_EMAIL;
 
 public class BigSpoon extends Application implements Foreground.Listener, Connectable, Disconnectable, Bindable {
 	final Handler mHandler = new Handler();
@@ -189,30 +187,14 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 	// Foreground Callback
 	@Override
 	public void onBecameForeground() {
-		//User.getInstance(getApplicationContext()).updateOrder();
 		final User user = User.getInstance(this);
+		user.updateOrder();
         user.tableId = getSharedPreferences(PREFS_NAME, 0).getInt(TABLE_ID, -1);
 		SocketIOManager.getInstance(this).setupSocketIOConnection();
 		this.startService(new Intent(this, BGLocationService.class));
 		checkLocationEnabledIfTutorialHasShown();
 		LocationLibrary.startAlarmAndListener(this);
-		final int outletId = getSharedPreferences(PREFS_NAME, 0).getInt(OUTLET_ID, -1);
-		final int delay = onStart ? 5000 : 0;
-		if (outletId != -1){
-			// fix on app start, popup gets dismissed.
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					if (user.shouldGoToOutlet) {
-						Intent intent = new Intent(BigSpoon.this, OutletListActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						BigSpoon.this.startActivity(intent);
-					}
-				}
-			}, delay);
-		}
-		onStart = false; // only delay on app start.
-        releaseWakeLock();
+		releaseWakeLock();
         merlin.bind();
 	}
 
@@ -268,14 +250,12 @@ public class BigSpoon extends Application implements Foreground.Listener, Connec
 	@Override
 	public void onConnect() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_CONNECTED));
-        //Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         Constants.isLocal = false;
 	}
 
 	@Override
 	public void onDisconnect(){
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(NETWORK_DISCONNECTED));
-        //Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
         Constants.isLocal = true;
 	}
 
